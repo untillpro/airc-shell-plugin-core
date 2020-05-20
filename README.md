@@ -1,0 +1,1 @@
+# airc-shell-plugin-core
