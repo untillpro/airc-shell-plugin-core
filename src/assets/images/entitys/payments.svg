@@ -1,0 +1,13 @@
+
+<svg width="16px" height="15px" viewBox="0 0 16 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g fill="#0277E7" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g transform="translate(-398.000000, -299.000000)">
+            <g transform="translate(398.000000, 297.000000)">
+                <g transform="translate(0.000000, 2.000000)">
+                    <polygon opacity="0.5" points="11 15 9 15 9 13 14 8 16 10"></polygon>
+                    <path d="M2,6 L16,6 L16,1 C16,0.448 15.553,0 15,0 L1,0 C0.447,0 0,0.448 0,1 L0,11 C0,11.552 0.447,12 1,12 L7,12 L7,10 L2,10 L2,6 Z M2,2 L14,2 L14,4 L2,4 L2,2 Z" fill-rule="nonzero"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

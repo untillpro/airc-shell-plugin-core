@@ -1,0 +1,55 @@
+/* table */
+body {
+    min-width: 1024px;
+}
+
+.bo-table-columns-toggler {
+    display: inline-block;
+    margin-left: 10pt;
+
+    position: relative;
+}
+
+.temp-location-selector-style {
+    /* //TODO */
+}
+
+.edit-form-header {
+    white-space: nowrap;
+}
+
+.edit-form-header h1 {
+    max-width: calc(80%);
+    text-overflow: ellipsis;
+    overflow:hidden;
+}
+
+/*****************/
+
+.example-enter {
+  opacity: 0.01;
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.example-leave {
+  opacity: 1;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transition: opacity 500ms ease-in;
+}
+
+.plugin-version {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  font-size: 12px;
+  color: #aeaeae;
+
+  z-index: 10000;
+}

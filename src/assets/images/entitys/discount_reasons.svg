@@ -1,0 +1,14 @@
+<svg width="16px" height="13px" viewBox="0 0 16 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g fill="#0277E7" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g transform="translate(-120.000000, -495.000000)">
+            <g transform="translate(120.000000, 491.000000)">
+                <g transform="translate(0.000000, 4.000000)">
+                    <rect opacity="0.5" x="4" y="6" width="3" height="3"></rect>
+                    <rect opacity="0.5" x="8" y="6" width="4" height="1"></rect>
+                    <rect opacity="0.5" x="8" y="8" width="4" height="1"></rect>
+                    <path d="M15,0 L13,0 C12.4,0 12,0.4 12,1 C12,1.6 11.6,2 11,2 C10.4,2 10,1.6 10,1 C10,0.4 9.6,0 9,0 L7,0 C6.4,0 6,0.4 6,1 C6,1.6 5.6,2 5,2 C4.4,2 4,1.6 4,1 C4,0.4 3.6,0 3,0 L1,0 C0.4,0 0,0.4 0,1 L0,12 C0,12.6 0.4,13 1,13 L15,13 C15.6,13 16,12.6 16,12 L16,1 C16,0.4 15.6,0 15,0 Z M14,11 L2,11 L2,2 L2.2,2 C2.6,3.2 3.7,4 5,4 C6.3,4 7.4,3.2 7.8,2 L8.1,2 C8.6,3.2 9.7,4 11,4 C12.3,4 13.4,3.2 13.8,2 L14,2 L14,11 Z" fill-rule="nonzero"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
