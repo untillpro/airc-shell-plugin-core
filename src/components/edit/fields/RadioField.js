@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 
-import { Radio } from 'base/components'
+import { Radio } from '../../../base/components'
 
 class RadioField extends Component {
     handleChange(event) {

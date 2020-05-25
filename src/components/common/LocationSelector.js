@@ -6,9 +6,8 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Form, Input, Button } from 'antd';
-import { Grid } from 'base/components'    
-
-import { setLocation } from 'actions';
+import { Grid } from '../../base/components'    
+import { setLocation } from '../../actions/';
 
 class LocationSelector extends Component {
     constructor() {

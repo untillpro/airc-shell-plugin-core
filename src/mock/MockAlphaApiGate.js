@@ -5,7 +5,8 @@
 import _ from 'lodash';
 import Axios from 'axios';
 import { message } from 'antd';
-import SProtBuilder from 'base/classes/SProtBuilder';
+
+import SProtBuilder from '../base/classes/SProtBuilder';
 
 const operationKeys = [ 'ID', 'Type', 'ParentID', 'ParentType', /*'PartID', 'PartType',*/ 'DocID', 'DocType', 'Data'];
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjI1NTM2LCJEZXZpY2VJRCI6MSwiZXhwIjoxNTc3NTE5MDQzfQ.dXnbwFUtjcue8_LXNpir3lltj0qoDUarbZ1BDkj5Zno';

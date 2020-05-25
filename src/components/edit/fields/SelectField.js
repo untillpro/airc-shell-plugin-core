@@ -4,12 +4,12 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { Select } from 'base/components';
 import { isNull, isUndefined } from 'util';
 
+import { Select } from '../../../base/components';
 import {
     buildData
-} from 'classes/EntityUtils';
+} from '../../../classes/EntityUtils';
 
 const { Option, OptGroup } = Select;
 

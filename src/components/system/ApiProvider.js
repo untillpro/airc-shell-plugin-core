@@ -4,19 +4,17 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import isProd from 'is-prod';
 
-import ApiContext from 'context/ApiContext';
+import ApiContext from '../../context/ApiContext';
 
 import {
     sendData,
     sendSelectViewMessage
-} from 'actions';
+} from '../../actions/';
 
-import isProd from 'is-prod';
-
-import UShellAPIGate from 'base/classes/UShellAPIGate'; //enable on production 
-//import MockUShellAPIGate from 'mock/MockApiGate';
-import MockAlphaApiGate from 'mock/MockAlphaApiGate';
+import UShellAPIGate from '../../base/classes/UShellAPIGate';
+import MockAlphaApiGate from '../../mock/MockAlphaApiGate';
 
 class ApiProvider extends Component {
     constructor() {

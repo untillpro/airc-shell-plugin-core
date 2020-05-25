@@ -5,11 +5,12 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 
-import { Button, Table, Modal } from 'base/components';
+import { Button, Table, Modal } from '../../../base/components';
+import EMEditForm from '../EMEditForm';
+import EMListPaginator from '../../table/EMListPaginator';
 
-import { EMListPaginator, EMEditForm } from 'components';
+import { reduce } from '../../../classes/Utils';
 
-import { reduce } from 'classes/Utils';
 /**
  * All API communications are realized in-component not in state machine cause of BO Reducer State intersections. 
  * 

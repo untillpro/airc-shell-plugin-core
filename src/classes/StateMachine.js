@@ -2,7 +2,7 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-import log from 'Log';
+import log from './Log';
 
 export default class StateMachine {
     constructor() {

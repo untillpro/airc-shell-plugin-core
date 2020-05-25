@@ -4,16 +4,16 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ApiContext from 'context/ApiContext';
+import ApiContext from '../../context/ApiContext';
 
 import {
     Button,
     Message
-} from 'base/components';
+} from '../../base/components';
 
 import {
     sendCancelMessage
-} from 'actions';
+} from '../../actions/';
 
 class ErrorBoundary extends Component {
     constructor() {

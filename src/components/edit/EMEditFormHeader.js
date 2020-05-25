@@ -9,11 +9,9 @@ import { confirmAlert } from 'react-confirm-alert';
 
 import {
     Button, ConfirmModal, Toggler, Icon
-} from 'base/components';
+} from '../../base/components/';
 
-import {
-    HeaderBackButton
-} from 'components';
+import { HeaderBackButton } from '../common';
 
 import {
     sendCancelMessage,
@@ -22,7 +20,7 @@ import {
     sendNeedEditFormMessage,
     sendNeedCopyFormMessage,
     sendNeedUnifyFormMessage
-} from 'actions';
+} from '../../actions/';
 
 
 class EMEditFormHeader extends Component {

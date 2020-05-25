@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 
-import { NumberInput } from 'base/components'
+import { NumberInput } from '../../../base/components'
 
 class NumberField extends Component {
     handleChange(value = null) {

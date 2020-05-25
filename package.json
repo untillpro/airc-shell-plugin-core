@@ -1,6 +1,6 @@
 {
-  "name": "untill-air-shell-bo",
-  "version": "0.2.4",
+  "name": "airc-shell-plugin-core",
+  "version": "0.0.1",
   "private": true,
   "homepage": ".",
   "dependencies": {

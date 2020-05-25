@@ -7,62 +7,74 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { Grid, Card, Message } from 'base/components';
-import { sendSelectViewMessage } from 'actions';
-
-import * as Views from 'contributors/applicationViews';
+import { Grid, Card, Message } from '../../base/components';
+import { sendSelectViewMessage } from '../../actions';
 
 import LocationSelector from './LocationSelector';
 
-import * as Errors from 'const/Errors';
+import Logger from '../../base/classes/Logger';
+
+import * as Errors from '../../const/Errors';
 
 class ViewsGrid extends Component {
+    _checkDeclaration(declaration) {
+        if (!declaration ||
+            !_.isObject(declaration) ||
+            !_.has(declaration, "name") ||
+            !_.has(declaration, "code")) {
+            return false;
+        }
+
+        return true;
+    }
+
     onViewClick(view) {
         this.props.sendSelectViewMessage(view);
     }
 
     renderViewsGrid(views) {
-        const { contributions } = this.props; 
+        const { contributions } = this.props;
         const declarations = [];
- 
-        _.each(views, (view) => {
-            const viewPoint = contributions.getPoint('views', view);
-            if (viewPoint) {
-                const viewClass = viewPoint.getContributuionValue('class');
 
-                if (viewClass && Views[viewClass]) {
-                    const vc = new Views[viewClass](); // ViewClass
-                    const info = vc.declare();
-    
-                    if (info) {
-                        info.code = vc.getName();
-                        declarations.push(info);
-                    }
-                }
+        _.each(views, (view) => {
+            const viewDeclaration = contributions.getPoint('views', view);
+
+            const declare = {};
+
+            declare.name = viewDeclaration.getContributuionValue('name');
+            declare.code = viewDeclaration.getContributuionValue('code');
+            declare.description = viewDeclaration.getContributuionValue('description');
+            declare.ico = viewDeclaration.getContributuionValue('ico');
+            declare.order = viewDeclaration.getContributuionValue('order');
+
+            if (this._checkDeclaration(declare)) {
+                declarations.push(declare);
+            } else {
+                Logger.log(viewDeclaration, `View "${view}" declaration malformed`, "ViewsGrid");
             }
         });
-        
+
         if (declarations && declarations.length > 0) {
             _.sortBy(declarations, (o) => o.order);
-            
+
             return (
                 <div className='content-container'>
                     <LocationSelector />
-                    <Grid 
-                        cols={3} 
+                    <Grid
+                        cols={3}
                         gap={32}
                     >
                         {
                             declarations.map((declarationInfo) => {
                                 return (
-                                    <Card 
+                                    <Card
                                         align='center'
                                         valign='center'
                                         title={declarationInfo.name}
                                         text={declarationInfo.description}
                                         ico={declarationInfo.ico}
                                         key={declarationInfo.name}
-                                        onClick={() => this.onViewClick(declarationInfo.code)} 
+                                        onClick={() => this.onViewClick(declarationInfo.code)}
                                     />
                                 );
                             })

@@ -4,14 +4,14 @@
 
 import _ from 'lodash';
 import React from 'react';
-import { Button } from 'base/components';
 
+import { Button } from '../../../base/components';
 import EmbeddedManagerField from './EmbeddedManagerField';
 
 import {
     buildData,
     getEntityFields
-} from 'classes/EntityUtils';
+} from '../../../classes/EntityUtils';
 
 /**
  * All API communications are realized in-component not in state machine cause of BO Reducer State intersections. 

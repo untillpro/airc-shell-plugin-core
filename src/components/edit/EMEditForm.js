@@ -14,14 +14,14 @@ import {
     Button,
     Sections,
     SectionItem
-} from 'base/components';
+} from '../../base/components';
 
-import FieldValidator from 'classes/FieldValidator';
+import FieldValidator from '../../classes/FieldValidator';
 
-import { sendCancelMessage } from 'actions';
+import { sendCancelMessage } from '../../actions/';
 
-import { mergeDeep } from 'classes/Utils';
-import log from 'Log';
+import { mergeDeep } from '../../classes/Utils';
+import log from '../../classes/Log';
 
 class EMEditForm extends Component {
     constructor() {

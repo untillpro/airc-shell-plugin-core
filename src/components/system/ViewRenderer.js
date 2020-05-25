@@ -6,13 +6,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import ContributionsContext from 'context/ContributionsContext';
+import ContributionsContext from '../../context/ContributionsContext';
+
+import ViewEntityGrid from '../common/ViewEntityGrid';
 
 import {
     sendCancelMessage
-} from 'actions';
-
-import * as Views from 'contributors/applicationViews';
+} from '../../actions/';
 
 class ViewRenderer extends Component {
     renderWithContext(context) {
@@ -21,12 +21,11 @@ class ViewRenderer extends Component {
         if (view) {
             const viewPoint = context.getPoint('views', view);
 
-            if (viewPoint) {
-                const viewClass = viewPoint.getContributuionValue('class');
-    
-                if (viewClass && Views[viewClass]) {
-                    return new Views[viewClass]().render();
-                }
+            const type = viewPoint.getContributuionValue('type');
+
+            switch(type) {
+                case 'grid': return <ViewEntityGrid view={view} contributions={context} />
+                default: throw new Error(`Unsupported type "${view}" of view ${type}`);
             }
         }
 

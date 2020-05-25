@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 
-import { TextInput } from 'base/components'
+import { TextInput } from '../../../base/components'
 
 //TODO regexp and max length
 

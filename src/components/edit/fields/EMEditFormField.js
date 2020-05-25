@@ -4,10 +4,10 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
-import ApiContext from 'context/ApiContext';
-import ContributionsContext from 'context/ContributionsContext';
+import ApiContext from '../../../context/ApiContext';
+import ContributionsContext from '../../../context/ContributionsContext';
 
-import { Label, FieldError, Tip } from 'base/components'
+import { Label, FieldError, Tip } from '../../../base/components'
 
 import {
     TextField,

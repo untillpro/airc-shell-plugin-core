@@ -6,7 +6,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 
-import { EMListPaginatorPages, EMListPaginatorSize, EMListPaginatorInfo } from 'components';
+import EMListPaginatorPages from './EMListPaginatorPages';
+import EMListPaginatorSize from './EMListPaginatorSize';
+import EMListPaginatorInfo from './EMListPaginatorInfo';
 
 class EMListPaginator extends Component {
     renderPages() {

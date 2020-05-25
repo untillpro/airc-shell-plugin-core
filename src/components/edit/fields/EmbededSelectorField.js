@@ -4,7 +4,7 @@
 
 import React, { Component, Fragment } from 'react';
 
-import { Modal, TextInput, Icon } from 'base/components';
+import { Modal, TextInput, Icon } from '../../../base/components';
 import EmbeddedManagerSelectField from './EmbeddedManagerSelectField'
 
 

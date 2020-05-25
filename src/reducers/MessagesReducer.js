@@ -7,7 +7,7 @@ import {
     SEND_INFO_MESSAGE,
     SEND_SUCCESS_MESSAGE,
     SEND_WARNING_MESSAGE
-} from 'actions/Types';
+} from '../actions/Types';
 
 const INITIAL_STATE = {
     error: null,

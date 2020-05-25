@@ -9,7 +9,7 @@ import EmbeddedManagerField from './EmbeddedManagerField';
 import {
     fetchData,
     processData
-} from 'classes/EntityUtils';
+} from '../../../classes/EntityUtils';
 
 class EmbeddedManagerSelectField extends EmbeddedManagerField {
     componentDidMount() {

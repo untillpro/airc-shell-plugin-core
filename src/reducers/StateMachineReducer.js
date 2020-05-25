@@ -2,8 +2,8 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-import * as Messages from 'classes/messages';
-import * as Types from 'actions/Types';
+import * as Messages from '../classes/messages';
+import * as Types from '../actions/Types';
 
 const INITIAL_STATE = {
     message: new Messages.MessageInit(),

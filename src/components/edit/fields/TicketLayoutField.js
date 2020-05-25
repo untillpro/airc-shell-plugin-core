@@ -5,18 +5,17 @@
 import _ from 'lodash';
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Message, Select, Button } from 'base/components';
+import { Empty } from 'antd';
 
+import { Message, Select, Button } from '../../../base/components';
 import EMEditFormFieldsBuilder from './EMEditFormFieldsBuilder';
 import TicketLayoutPreview from './TicketLayoutPreview';
 
-import { Empty } from 'antd';
-
 import {
     sendError
-} from 'actions/MessagesActions';
+} from '../../../actions/MessagesActions';
 
-import * as Errors from 'const/Errors';
+import * as Errors from '../../../const/Errors';
 
 const Buffer = require('buffer').Buffer;
 

@@ -12,10 +12,10 @@ import ViewRenderer from './ViewRenderer';
 import EntityRenderer from './EntityRenderer';
 import EntityEditor from './EntityEditor';
 
-import ContributionsContext from 'context/ContributionsContext';
+import ContributionsContext from '../../context/ContributionsContext';
 
-import log from 'Log';
-import { initBO, toggleLocationSelector } from 'actions';
+import log from '../../classes/Log';
+import { initBO, toggleLocationSelector } from '../../actions/';
 
 // import { ViewsGrid } from 'components';
 

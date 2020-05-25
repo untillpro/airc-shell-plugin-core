@@ -8,13 +8,13 @@ import { connect } from 'react-redux';
 import { 
     EMEditForm,
     EMMassEditForm
-} from 'components';
+} from '../../components';
 
 import {
     sendNeedProccessMessage,
     sendNeedValidateMessage,
     sendNeedFormNavigation
-} from 'actions';
+} from '../../actions/';
 
 class EntityEditor extends Component {
     componentDidMount() {

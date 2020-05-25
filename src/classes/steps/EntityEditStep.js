@@ -4,7 +4,7 @@
 
 import _ from 'lodash';
 import StateMachineStep from '../StateMachineStep';
-import log from 'Log';
+import Logger from '../../base/classes/Logger';
 import { MessageInit, MessageNotify } from '../messages';
 
 import {
@@ -51,7 +51,7 @@ class EntityEditStep extends StateMachineStep {
                 );
             }
 
-            log('EntityEditStep.MessageInit() fetched data:', data);
+            Logger.log(data, 'EntityEditStep.MessageInit() fetched data:', "EntityEditStep.MessageInit");
 
             return {
                 changedData: {

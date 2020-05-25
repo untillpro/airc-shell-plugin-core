@@ -7,18 +7,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { Message, Grid, Card } from 'base/components';
+import { Message, Grid, Card } from '../../base/components';
 
 import {
     HeaderBackButton
-} from 'components';
+} from '../../components/';
 
 import {
     sendSelectEntityMessage,
     sendCancelMessage
-} from 'actions';
-
-import * as EntityManagers from 'contributors/entityManagers';
+} from '../../actions/';
 
 class ViewEntityGrid extends Component {
     onViewClick(entity) {
@@ -45,27 +43,23 @@ class ViewEntityGrid extends Component {
         );
     }
 
-    renderViewsGrid(entities) {
+    renderEntitiesGrid(entities) {
         const { contributions } = this.props;
 
         const declarations = [];
 
         _.each(entities, (entityName) => {
 
-            const entityManagerPoint = contributions.getPoint('managers', entityName);
+            const entityManagerPoint = contributions.getPoint('entities', entityName);
 
             if (entityManagerPoint) {
-                const emClass = entityManagerPoint.getContributuionValue('class');
-
-                if ( EntityManagers[emClass] ) {
-                    const emc = new EntityManagers[emClass]();
-                    const declarationInfo = emc.declare();
-
-                    if (declarationInfo) {
-                        declarationInfo.code = emc.getName();
-                        declarations.push(declarationInfo);
-                    }
-                }
+                declarations.push({
+                    "name": entityManagerPoint.getContributuionValue("name"),
+                    "code": entityName,
+                    "description": entityManagerPoint.getContributuionValue("description"),
+                    "ico": entityManagerPoint.getContributuionValue("ico"),
+                    "order": entityManagerPoint.getContributuionValue("order")
+                });
             }
         });
 
@@ -111,7 +105,7 @@ class ViewEntityGrid extends Component {
         const EMViews = viewPoint.managers;
 
         if (EMViews  && EMViews.length > 0) {
-            return this.renderViewsGrid(EMViews);
+            return this.renderEntitiesGrid(EMViews);
         }
 
         return (

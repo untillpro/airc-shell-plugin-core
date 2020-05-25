@@ -5,16 +5,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Toggler, Button } from 'base/components';
+import { Toggler, Button } from '../../base/components/';
 
-import { ColumnsToggler } from 'components';
+import ColumnsToggler from './ColumnsToggler';
 import { 
     setListShowDeleted,
     sendNeedEditFormMessage,
     sendNeedMassEditFormMessage,
     sendNeedRemoveMessage,
     sendNeedRefreshListDataMessage
-} from 'actions';
+} from '../../actions/';
 
 class EMListHeader extends Component {
     handleHeaderAction(action) {

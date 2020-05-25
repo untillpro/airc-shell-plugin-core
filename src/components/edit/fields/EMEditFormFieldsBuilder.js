@@ -6,7 +6,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 
 import EMEditFormFieldsGroup from './EMEditFormFieldsGroup';
-import * as Utils from 'classes/Utils';
+import * as Utils from '../../../classes/Utils';
 
 class EMEditFormFieldsBuilder extends Component {
     constructor() {

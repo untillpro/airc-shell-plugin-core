@@ -4,8 +4,8 @@
 
 import React, { Component } from 'react';
 
-import ContributionsContext from 'context/ContributionsContext';
-import { ViewsGrid } from 'components';
+import ContributionsContext from '../../context/ContributionsContext';
+import ViewsGrid from '../common/ViewsGrid';
 
 class RootRenderer extends Component {
     render() {

@@ -3,10 +3,9 @@
  */
 
 import React, { Component } from 'react';
-
-import { ColorPicker, ColorPreview } from 'base/components';
-
 import { Popover, Button } from 'antd';
+
+import { ColorPicker, ColorPreview } from '../../../base/components';
 
 class ColorPickerField extends Component {
     constructor() {

@@ -5,14 +5,14 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Table, Search } from 'base/components';
-import log from "Log";
+import { Table, Search } from '../../base/components';
+import log from "../../classes/Log";
 
-import { 
-    HeaderBackButton,
-    EMListHeader, 
-    EMListPaginator, 
-    EMListRowAction } from 'components';
+import HeaderBackButton from '../common/HeaderBackButton';
+
+import EMListHeader from './EMListHeader';
+import EMListPaginator from './EMListPaginator';
+import EMListRowAction from './EMListRowAction';
 
 import { 
     setColumnsVisibility,
@@ -26,7 +26,7 @@ import {
     setListOrder,
 
     saveResolvedData
-} from 'actions';
+} from '../../actions/';
 
 class EMList extends Component {
     constructor(props) {
@@ -393,10 +393,20 @@ class EMList extends Component {
         });
     }
 
+    renderEntityName() {
+        const { entity, contributions } = this.props;
+
+        if (entity) {
+            contributions.getPointContributionValue('', entity, 'name');
+        }
+
+        return '<Noname>'; //todo default name.
+    }
+
     render() { 
         log('%c Render Table List', 'color: green; font-size: 120%');
 
-        const { columnsVisibility, info, data, pages, page, pageSize, manual, order, total } = this.props;
+        const { columnsVisibility, data, pages, page, pageSize, manual, order, total } = this.props;
         const { selectedRows, columns } = this.state;
         const { component, properties } = this;
         
@@ -458,7 +468,7 @@ class EMList extends Component {
                             <HeaderBackButton 
                                 onClick={() => this.props.sendCancelMessage()}
                             />
-                            <h1>{ info ? info.name : ''}</h1>
+                            <h1>{this.renderEntityName()}</h1>
                         </div>
 
                         <div className="cell align-right">

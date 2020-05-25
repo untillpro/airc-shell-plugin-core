@@ -4,13 +4,13 @@
 
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { ImageSelector, Tip } from 'base/components'
+import { ImageSelector, Tip } from '../../../base/components'
 
 import {
     sendError
-} from 'actions/MessagesActions';
+} from '../../../actions/MessagesActions';
 
-import { getFileSize } from 'classes/Utils';
+import { getFileSize } from '../../../classes/Utils';
 
 class NumberField extends Component {
     handleChange(value = null) {

@@ -6,15 +6,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import StateMachine from 'classes/StateMachine';
+import StateMachine from '../../classes/StateMachine';
 //import * as Messages from 'classes/StateMachine/messages';
-import { RootStep } from 'classes/steps/';
+import { RootStep } from '../../classes/steps/';
 
-import ApiContext from 'context/ApiContext';
+import ApiContext from '../../context/ApiContext';
 
 import {
     sendStateMachineResult
-} from 'actions';
+} from '../../actions/';
 
 class StateMachineProvider extends Component {
     constructor() {
