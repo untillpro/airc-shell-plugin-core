@@ -397,7 +397,11 @@ class EMList extends Component {
         const { entity, contributions } = this.props;
 
         if (entity) {
-            contributions.getPointContributionValue('', entity, 'name');
+            const name = contributions.getPointContributionValue('entities', entity, 'name');
+
+            if (name) {
+                return name;
+            }
         }
 
         return '<Noname>'; //todo default name.

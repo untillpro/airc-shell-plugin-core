@@ -15,12 +15,14 @@ import {
 
 import {
     sendSelectEntityMessage,
-    sendCancelMessage
+    sendCancelMessage,
 } from '../../actions/';
 
 class ViewEntityGrid extends Component {
-    onViewClick(entity) {
-        this.props.sendSelectEntityMessage(entity);
+    selectEntity(entity) {
+        if (entity && typeof entity === 'string') {
+            this.props.sendSelectEntityMessage(entity);
+        }
     }
 
     renderHeader() {
@@ -85,7 +87,7 @@ class ViewEntityGrid extends Component {
                                         text={declarationInfo.description}
                                         ico={declarationInfo.ico}
                                         key={declarationInfo.name}
-                                        onClick={() => this.onViewClick(declarationInfo.code)} 
+                                        onClick={() => this.selectEntity(declarationInfo.code)} 
                                     />
                                 );
                             })
@@ -102,10 +104,10 @@ class ViewEntityGrid extends Component {
         const { view, contributions } = this.props;
         const viewPoint = contributions.getPointContributions('views', view);
         
-        const EMViews = viewPoint.managers;
+        const entities = viewPoint.managers;
 
-        if (EMViews  && EMViews.length > 0) {
-            return this.renderEntitiesGrid(EMViews);
+        if (entities  && entities.length > 0) {
+            return this.renderEntitiesGrid(entities);
         }
 
         return (
