@@ -50,7 +50,7 @@ class ContibutionManager {
     }
 
     getPoint(type, name) {
-        if (this.points[type][name]) {
+        if (this.points && this.points[type] && this.points[type][name]) {
             return this.points[type][name];
         }
 
@@ -58,7 +58,7 @@ class ContibutionManager {
     }
 
     getPoints(type) {
-        if (this.points[type]) {
+        if (this.points && this.points[type]) {
             return Object.keys(this.points[type]);
         }
 
@@ -66,7 +66,7 @@ class ContibutionManager {
     }
 
     getPointContributions(type, pointName) {
-        if (this.points[type][pointName]) {
+        if (this.points && this.points[type] && this.points[type][pointName]) {
             return this.points[type][pointName].getContributuions();
         }
 
@@ -82,7 +82,7 @@ class ContibutionManager {
      */
 
     getPointContributionValue(type, pointName, contribution) {
-        if (this.points[type][pointName]) {
+        if (this.points && this.points[type] && this.points[type][pointName]) {
             return this.points[type][pointName].getContributuionValue(contribution);
         }
 
