@@ -13,7 +13,7 @@ import rootReducer from './reducers';
 const persistConfigDefauult = {
     key: 'plugin',
     storage,
-    blacklist: ['list', 'machine'] 
+    blacklist: ['list', 'machine', 'options'] 
 };
  
 export default (persistConfig) => {
