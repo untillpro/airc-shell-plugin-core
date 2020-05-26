@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import * as Utils from "../../src/classes/EntityUtils";
 import Data from '../data/department_data.json';
 
