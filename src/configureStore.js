@@ -10,15 +10,21 @@ import ReduxThunk from 'redux-thunk';
 
 import rootReducer from './reducers';
  
-const persistConfig = {
-    key: 'root',
+const persistConfigDefauult = {
+    key: 'plugin',
     storage,
-    blacklist: ['bo', 'list', 'machine'] 
+    blacklist: ['list', 'machine'] 
 };
  
-const persistedReducer = persistReducer(persistConfig, rootReducer);
- 
-export default () => {
+export default (persistConfig) => {
+    let config = persistConfigDefauult;
+
+    if (persistConfig && typeof persistConfig === 'object') {
+        config = { ...config, persistConfig };
+    }
+
+    const persistedReducer = persistReducer(config, rootReducer);
+
     const store = createStore(persistedReducer, {}, applyMiddleware(ReduxThunk));
     const persistor = persistStore(store);
   

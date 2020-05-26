@@ -29,13 +29,13 @@ import './assets/css/ticket.css';
 
 class PluginCore extends Component {
     render() {
-        const { contributions } = this.props;
+        const { contributions, persistConfig } = this.props;
 
         if (!contributions || _.size(contributions) <= 0) {
             throw new Error("No contributions were provided to Plugin Core");
         }
 
-        const cfg = configureStore();
+        const cfg = configureStore(persistConfig);
         const manager = ContributionFactory(contributions);
         
         return (
