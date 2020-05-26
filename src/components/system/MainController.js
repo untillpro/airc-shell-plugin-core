@@ -100,7 +100,7 @@ MainController.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-    const { step } = state.bo;
+    const { step } = state.plugin;
     
     return { step };
 };

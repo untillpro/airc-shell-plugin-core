@@ -40,12 +40,12 @@ class StateMachineProvider extends Component {
         /**
          * if message was specified then send it to state machine
          * 
-         * state.bo - context for state machine
+         * state.plugin - context for state machine
          */
         if (message) {
             const context = {
                 api,
-                state: state.bo,
+                state: state.plugin, // TODO
                 contributions: manager
             };
 

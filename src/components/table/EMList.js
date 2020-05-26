@@ -506,7 +506,7 @@ class EMList extends Component {
 }
 
 const mapStateToProps = (state) => {
-    const { list, columnsVisibility } = state.bo;
+    const { list, columnsVisibility } = state.plugin;
     const { data, showDeleted, pages, page, manual, pageSize, order, total } = list;
 
     return { 

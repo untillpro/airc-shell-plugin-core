@@ -36,7 +36,7 @@ class EMEditFormField extends Component {
         };
     }
 
-    shouldComponentUpdate(nextProps) {        
+    shouldComponentUpdate(nextProps) {
         const { data, field, errors, embedded_type } = nextProps;
         const { accessor } = field;
 

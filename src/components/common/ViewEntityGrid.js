@@ -127,7 +127,7 @@ ViewEntityGrid.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-    const { view } = state.bo;
+    const { view } = state.plugin;
 
     return { view };
 };

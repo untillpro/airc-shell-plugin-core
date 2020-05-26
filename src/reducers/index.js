@@ -4,13 +4,13 @@
 
 import { combineReducers } from 'redux';
 
-import BoReducer from './BoReducer';
+import PluginReducer from './PluginReducer';
 import StateMachineReducer from './StateMachineReducer';
 import MessagesReducer from './MessagesReducer';
 import AppOptions from './AppOptions';
 
 export default combineReducers({
-    bo: BoReducer,
+    plugin: PluginReducer,
     machine: StateMachineReducer,
     messages: MessagesReducer,
     options: AppOptions

@@ -168,7 +168,7 @@ class SelectField extends Component {
             const opt_val = value_accessor ? _.get(value, value_accessor) : value;
             const opt_text = String(text_accessor ? _.get(value, text_accessor) : text);
             
-            console.log('select field option: ', text, ":", text_accessor, ':' ,value);
+            console.log('select field option: ', opt_text, ":", text_accessor, ':' ,opt_val);
 
             if (text && String(text).indexOf("---") === 0) {
                 if (group !== null) {

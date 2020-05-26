@@ -76,7 +76,7 @@ EMListPaginator.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-    const { list } = state.bo;
+    const { list } = state.plugin;
     const { manual, total } = list;
 
     return { 

@@ -63,7 +63,7 @@ EntityRenderer.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-    const { entity } = state.bo;
+    const { entity } = state.plugin;
 
     return { entity };
 };

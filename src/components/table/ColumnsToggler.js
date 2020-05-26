@@ -112,7 +112,7 @@ ColumnsToggler.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-    const { columnsVisibility } = state.bo;
+    const { columnsVisibility } = state.plugin;
     
     return { 
         visibility: columnsVisibility || {}

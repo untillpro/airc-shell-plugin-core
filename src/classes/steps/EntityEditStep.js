@@ -151,6 +151,8 @@ class EntityEditStep extends StateMachineStep {
             this.error('Cant fetch entity item data.', api, contributions, state, entity);
         }
 
+        console.log("selected locations: ", locations);
+
         if (locations && _.isArray(locations) && locations.length > 0) {
             wsid = locations[0];
         } else {

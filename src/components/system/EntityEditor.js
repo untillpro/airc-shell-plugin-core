@@ -69,7 +69,7 @@ class EntityEditor extends Component {
 }
 
 const mapStateToProps = (state) => {
-    const { entity, entityData, isCopy, isNew, locations } = state.bo;
+    const { entity, entityData, isCopy, isNew, locations } = state.plugin;
 
     return { 
         isCopy,

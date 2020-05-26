@@ -171,7 +171,7 @@ EMListHeader.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-    const { list } = state.bo;
+    const { list } = state.plugin;
     const { showDeleted } = list;
 
     return { showDeleted };

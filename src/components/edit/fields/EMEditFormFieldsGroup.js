@@ -10,6 +10,9 @@ import EMEditFormField from './EMEditFormField';
 
 class EMEditFormFieldsGroup extends Component {
     
+    /*
+    // check Perfomance with profiler
+    
     shouldComponentUpdate(nextProps) {
         let oldValues = this.props.changedData;
         let newValues = nextProps.changedData;
@@ -52,6 +55,7 @@ class EMEditFormFieldsGroup extends Component {
 
         return false;
     }
+    */
 
     render() {
         const { parent, embedded, fields, group } = this.props;
