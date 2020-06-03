@@ -3,7 +3,7 @@
  */
 
 import _ from 'lodash';
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -11,6 +11,8 @@ import { Grid, Card, Message, LocationSelector } from '../../base/components';
 import { sendSelectViewMessage, setLocation } from '../../actions';
 
 import Logger from '../../base/classes/Logger';
+
+import TestLocationSelector from './TestLocationSelector';
 
 import * as Errors from '../../const/Errors';
 
@@ -56,7 +58,7 @@ class ViewsGrid extends Component {
             return selectedLocations[0];
         } else if (_.isNumber(selectedLocations) && selectedLocations > 0) {
             return selectedLocations;
-        } 
+        }
 
         return null;
     }
@@ -85,18 +87,18 @@ class ViewsGrid extends Component {
 
         if (declarations && declarations.length > 0) {
             const currentLocation = this.getCurrentLocation();
-            
+
             _.sortBy(declarations, (o) => o.order);
 
             return (
                 <div className={`content-container ${showSelector ? 'flex-content row' : ''}`}>
-                    { showSelector ? <LocationSelector 
-                        locations={locations} 
-                        value={currentLocation} 
+                    {showSelector ? <LocationSelector
+                        locations={locations}
+                        value={currentLocation}
                         title="Location: "
                         onChange={(location) => this.setLocation(location)}
-                    /> : null }
-                    
+                    /> : null}
+
                     <Grid
                         cols={3}
                         gap={32}
@@ -129,7 +131,13 @@ class ViewsGrid extends Component {
         const views = contributions.getPoints('views');
 
         if (_.size(views) > 0) {
-            return this.renderViewsGrid(views);
+
+            return (
+                <Fragment>
+                    <TestLocationSelector />
+                    {this.renderViewsGrid(views)}
+                </Fragment>
+            );
         }
 
         return (
@@ -146,8 +154,8 @@ const mapStateToProps = (state) => {
     const { locations: selectedLocations } = state.plugin;
     const { showLocationSelector: showSelector, locations } = state.options;
 
-    return { 
-        showSelector, 
+    return {
+        showSelector,
         locations,
         selectedLocations
     };

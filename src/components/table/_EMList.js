@@ -5,8 +5,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Table } from 'antd';
-import { Search } from '../../base/components';
+import { Table, Search } from '../../base/components';
 import log from "../../classes/Log";
 
 import HeaderBackButton from '../common/HeaderBackButton';
@@ -15,7 +14,7 @@ import EMListHeader from './EMListHeader';
 import EMListPaginator from './EMListPaginator';
 import EMListRowAction from './EMListRowAction';
 
-import {
+import { 
     setColumnsVisibility,
     sendCancelMessage,
     sendNeedFetchListDataMessage,
@@ -27,12 +26,12 @@ import {
     setListOrder,
 
     saveResolvedData
-} from '../../actions/';
+} from '../../actions';
 
 class EMList extends Component {
     constructor(props) {
         super(props);
-
+        
         this.state = {
             loading: false,
             columns: [],
@@ -47,8 +46,8 @@ class EMList extends Component {
 
     componentDidMount() {
         const { data } = this.props;
-
-        this.prepareProps();
+        
+        this.prepareProps(); 
         this.getColumns(data);
     }
 
@@ -66,7 +65,7 @@ class EMList extends Component {
 
                     if (i >= 0) rows.push(id);
                 });
-
+                
                 if (rows.length !== selectedRows.length) {
                     resState.selectedRows = rows;
                 }
@@ -81,7 +80,7 @@ class EMList extends Component {
             }
         }
 
-
+        
     }
 
     handleRowClick(event, row) {
@@ -107,23 +106,23 @@ class EMList extends Component {
                     this.setState({ selectedRows: [...selectedRows, id] });
                 }
             } else {
-                this.setState({ selectedRows: [id] });
+                this.setState({ selectedRows: [ id ] });
             }
         }
     }
 
     handleRowDoubleClick(event, row) {
         const { actions, component } = this;
-
+        
         if (actions.indexOf('edit') >= 0 || component.actions.indexOf('edit') >= 0) {
             event.stopPropagation();
 
             let id = null;
             const { original } = row;
-
+    
             if (original && original.id) id = original.id;
-
-            if (id && id > 0) this.props.sendNeedEditFormMessage([id]);
+    
+            if (id && id > 0) this.props.sendNeedEditFormMessage([id]); 
         }
     }
 
@@ -169,7 +168,7 @@ class EMList extends Component {
             if (resolvedData && resolvedData.length > 0) {
                 //this.props.saveResolvedData(resolvedData)
             }
-        }
+        } 
     }
 
     handleTableSortedChanged(newOrder) {
@@ -216,6 +215,16 @@ class EMList extends Component {
 
         let columns = [];
 
+        if (component.showPositionColum) {
+            columns.push({
+                'Header': () => this.renderRowsSelector(),
+                'width': 40,
+                'Cell': (props) => this.renderPosition(props),
+                'sortable': false,
+                'fixed': "left"
+            });
+        }
+        
         const entityListContributions = contributions.getPointContributions('list', entity);
 
         if (entityListContributions.columns) {
@@ -223,17 +232,11 @@ class EMList extends Component {
                 if (column.dynamic) {
                     //columns = [...columns, ...this.getDynamicColumns(column, data)];  // TODO
                 } else {
-                    console.log(column);
-                    columns.push({
-                        "key": column.accessor,
-                        "title": column.Header,
-                        "dataIndex": column.accessor
-                    });
+                    columns.push(column);
                 }
             });
         }
 
-        /*
         if (actions && actions.length > 0) {
             columns.push({
                 'title': 'Actions',
@@ -242,8 +245,7 @@ class EMList extends Component {
                 "fixed": "right"
             });
         }
-        */
-
+        
         if (columns.length > 0) {
             const visibility = {};
 
@@ -296,18 +298,18 @@ class EMList extends Component {
 
                 switch (type) {
                     case 'table':
-                        tableProps = { ...tableProps, ...contribution[0] };
+                        tableProps  = { ...tableProps, ...contribution[0] };
                         break;
 
                     case 'component':
-                        componentProps = { ...componentProps, ...contribution[0] };
+                        componentProps  = { ...componentProps, ...contribution[0] };
                         break;
 
                     case 'actions':
                         actions = contribution;
                         break;
 
-                    default:
+                    default: 
                         break;
                 }
             });
@@ -327,26 +329,6 @@ class EMList extends Component {
         this.actions = actions;
     }
 
-    prepareRowSelection() {
-        const { component } = this;
-        const { allowMultyselect, allowSelection } = component;
-
-        if (!allowSelection) return null;
-
-        return {
-            type: allowMultyselect ? "checkbox" : "radio",
-            onChange: (selectedRowKeys, selectedRows) => {
-                console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-            },
-            onSelect: (record, selected, selectedRows) => {
-                console.log(record, selected, selectedRows);
-            },
-            onSelectAll: (selected, selectedRows, changeRows) => {
-                console.log(selected, selectedRows, changeRows);
-            }
-        };
-    }
-
     renderRowsSelector() {
         const { selectedRows } = this.state;
         const { component } = this;
@@ -354,8 +336,8 @@ class EMList extends Component {
 
         if (allowSelection) {
             return (
-                <input
-                    type='checkbox'
+                <input 
+                    type='checkbox' 
                     onChange={(event) => this.handleRowsSelectorChange(event)}
                     checked={selectedRows.length > 0}
                 />
@@ -366,10 +348,10 @@ class EMList extends Component {
     }
 
     renderPosition(row) {
-        const { page, pageSize, manual } = this.props;
+        const { page, pageSize, manual} = this.props;
         const { selectedRows } = this.state;
         const { original } = row;
-
+        
         let id = null;
 
         if (original && original.id) {
@@ -379,14 +361,14 @@ class EMList extends Component {
         if (id > 0) {
             if (selectedRows.indexOf(id) >= 0) {
                 return (
-                    <input
+                    <input 
                         className={'small'}
                         key={`row_${id}`}
-                        type='checkbox'
-                        onChange={(e) => this.handleRowClick(e, row)}
+                        type='checkbox' 
+                        onChange={(e) => this.handleRowClick(e, row)} 
                         checked
                     />
-                );
+                );   
             }
         }
 
@@ -399,13 +381,13 @@ class EMList extends Component {
 
     renderActions(props, actions) {
         const { entity } = this.props;
-
+        
         return actions.map((action) => {
             return (
-                <EMListRowAction
+                <EMListRowAction 
                     key={`action_${action}`}
-                    type={action}
-                    entity={entity}
+                    type={action} 
+                    entity={entity} 
                     data={props.original}
                 />
             );
@@ -426,14 +408,14 @@ class EMList extends Component {
         return '<Noname>'; //todo default name.
     }
 
-    render() {
+    render() { 
         log('%c Render Table List', 'color: green; font-size: 120%');
 
         const { columnsVisibility, pages, page, pageSize, manual, order, total, data } = this.props;
         const { selectedRows, columns } = this.state;
         const { component, properties } = this;
-
-        const cols = [...columns];
+        
+        const cols = [ ...columns ];
 
         for (let i = 0; i < cols.length; i++) {
             if (typeof cols[i].Header === 'string') {
@@ -461,10 +443,10 @@ class EMList extends Component {
             pageSize,
 
             sorted: order,
-
+            
             onPageChange: (pageIndex) => this.handlePageChange(pageIndex), // Called when the page index is changed by the user
             onPageSizeChange: (pageSize, pageIndex) => this.handlePageSizeChange(pageSize, pageIndex),
-
+            
             getTrProps: (state, row) => {
                 return {
                     onClick: (e) => this.handleRowClick(e, row),
@@ -487,7 +469,7 @@ class EMList extends Component {
                 <div className="content-header">
                     <div className="grid clo-2 row-1">
                         <div className="cell">
-                            <HeaderBackButton
+                            <HeaderBackButton 
                                 onClick={() => this.props.sendCancelMessage()}
                             />
                             <h1>{this.renderEntityName()}</h1>
@@ -497,43 +479,36 @@ class EMList extends Component {
                             <Search />
                         </div>
                     </div>
-
+                    
                 </div>
                 <div className='untill-base-table'>
-                    <EMListHeader
-                        rows={selectedRows}
-                        component={component}
+                    <EMListHeader 
+                        rows={selectedRows} 
+                        component={component} 
                     />
 
                     <div className='untill-base-table-body'>
                         <Table
-                            loading={this.state.loading}
-                            columns={cols}
-                            dataSource={data}
-                            rowSelection={this.prepareRowSelection()}
-                            onRow={(row, rowIndex) => {
-                                return {
-                                    onClick: e => this.handleRowClick(e, row), // click row
-                                    onDoubleClick: (e) => this.handleRowDoubleClick(e, row), // double click row
-                                };
+                            data={data}
+                            {...tableConfig}
+                        >
+                            {(state, makeTable, instance) => {
+                                this.tableState = state;
+                                return makeTable();
                             }}
-                            pagination={{
-                                hideOnSinglePage: true,
-                                position: ['topLeft', 'bottomRight']
-                            }}
-                        />
+                        </Table>
                     </div>
                 </div>
             </div>
         );
-    }
+    }    
 }
 
 const mapStateToProps = (state) => {
     const { list, columnsVisibility } = state.plugin;
     const { data, showDeleted, pages, page, manual, pageSize, order, total } = list;
 
-    return {
+    return { 
         total,
         order: order || [],
         data: data || [],
@@ -546,7 +521,7 @@ const mapStateToProps = (state) => {
     };
 };
 
-export default connect(mapStateToProps, {
+export default connect(mapStateToProps, { 
     sendNeedEditFormMessage,
     sendNeedFetchListDataMessage,
     setColumnsVisibility,

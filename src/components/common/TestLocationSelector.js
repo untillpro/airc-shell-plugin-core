@@ -117,7 +117,7 @@ class TestLocationSelector extends Component {
         if (!show_selector) return null;
 
         return (
-            <div style={styles.container}>
+            <div className="content-container" Astyle={styles.container}>
                 <Grid rows={1} cols={2}>
                     {this.renderSelector()}
                     {this.renderLocations()}

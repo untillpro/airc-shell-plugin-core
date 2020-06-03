@@ -167,23 +167,30 @@ export const processClassifier = (item, classifiers, entity) => {
 
 export const resolveData = (data) => {
     let resultData = [];
-
+    console.log("resolveData() func: ", data);
     _.each(data, (o) => {
         const arr = Object.values(o);
-        const item = arr[0];
+        const item = { ...arr[0] };
+        item.children = [];
 
         if (item && typeof item === 'object') {
             item.linked = _.map(o, (row, loc) => {
+                item.children.push({ ...row });
+
                 return {
                     id: Number(row.id),
                     wsid: Number(loc)
                 };
             });
 
+            
+
             resultData.push(item);
         }
         return item;
     });
+
+    console.log('resultData: ', resultData);
 
     return resultData;
 };
