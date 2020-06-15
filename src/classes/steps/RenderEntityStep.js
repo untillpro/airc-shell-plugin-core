@@ -30,6 +30,7 @@ const INITIAL_STATE = {
         }
     ],
     filter: [],
+    locations: []
 }
 
 class RenderEntityStep extends StateMachineStep {
@@ -46,7 +47,14 @@ class RenderEntityStep extends StateMachineStep {
     }
 
     async MessageInit(msg, context) {
-        const { contributions } = context;
+        const { contributions, locations } = context;
+
+        if (!locations || !_.isArray(locations) || locations.length === 0) {
+            this.error('RenderEntityStep.MessageInit() exception: locations are not specified');
+        }
+
+        this.locations = locations;
+
         if (msg.entity && typeof msg.entity === 'string') {
             this.entity = msg.entity;
 
@@ -55,7 +63,7 @@ class RenderEntityStep extends StateMachineStep {
             return this.fetchListData(context);
         }
 
-        throw new Error('RenderEntityStep.MessageInit() exception: entity not defined');
+        this.error('RenderEntityStep.MessageInit() exception: entity not defined');
     }
 
     async MessageNotify(msg, context) {
@@ -261,8 +269,6 @@ class RenderEntityStep extends StateMachineStep {
             TODO for manual mode - в том плане, что если навигацией достигается конец resolvedData, то для мануального режима надо попробовать взять 
             следующую страницу, и если это удается, то переписать переменные в степе, включая data и resolvedData
         */
-
-        const { entityData } = context.state;
         const { id } = msg;
 
         let prev = null;
@@ -287,7 +293,6 @@ class RenderEntityStep extends StateMachineStep {
         return {
             changedData: {
                 entityData: {
-                    ...entityData,
                     prev,
                     next
                 }
@@ -296,42 +301,48 @@ class RenderEntityStep extends StateMachineStep {
     }
 
     async fetchListData(context) {
-        const { entity, page, pageSize, showDeleted, manual } = this;
-        const { api, contributions, state } = context;
-        const { locations } = state;
+        const { entity, page, pageSize, showDeleted, manual, locations } = this;
+        const { api, contributions } = context;
+        const listProps = contributions.getPointContributions('list', entity);
 
         if (!locations || (!_.isNumber(locations) && !_.isArray(locations))) {
             this.error('MessageFetchListData error: locations are not specified or wrong given.')
         }
 
-        let doProps = {
-            wsid: _.isArray(locations) ? locations : [locations]
-        };
+        let doProps = {};
+
+        if (listProps.required_fields && listProps.required_fields.length > 0) {
+            doProps["required_fields"] = listProps.required_fields;
+        }
+    
+        if (listProps.required_classifiers && listProps.required_classifiers.length > 0) {
+            doProps["required_classifiers"] = listProps.required_classifiers;
+        }
 
         if (manual) {
             //if ReactTable works in server-side mode page and pageeSize should be sent to server
             doProps = {
-                ...doProps,
                 show_deleted: showDeleted ? 0 : 1,
                 page: page + 1,
                 page_size: pageSize,
-                //order_by: {} //TODO
+                required_classifiers: ['prices'] // TODO
             };
         }
 
         try {
-            return fetchData(entity, api, contributions, doProps)
+            return fetchData(entity, locations, api, contributions, doProps)
                 .then((response) => {
-                    const { data, resolvedData, Data } = response;
+                    const { data, resolvedData, meta, classifiers } = response;
 
                     if (resolvedData) {
                         this.resolvedData = resolvedData;
                         this.linkedItemsData = resolvedData ? _.chain(resolvedData).keyBy("id").mapValues('linked').value() : {};
                     }
 
-                    if (data) this.data = data;
-
-                    let t = _.get(Data, ["meta", "total"]);
+                    this.data = data || [];
+                    this.classifiers = classifiers || {};
+                   
+                    let t = _.get(meta, ["total"]);
 
                     if (t && t > 0 && pageSize > 0) {
                         this.total = parseInt(t);
@@ -339,6 +350,7 @@ class RenderEntityStep extends StateMachineStep {
                     } else {
                         this.pages = 0;
                     }
+
                     return {
                         changedData: {
                             list: this.list()
@@ -388,7 +400,8 @@ class RenderEntityStep extends StateMachineStep {
             manual,
             resolvedData,
             showDeleted,
-            order
+            order,
+            classifiers
         } = this;
 
         return {
@@ -398,6 +411,7 @@ class RenderEntityStep extends StateMachineStep {
             total,
             manual,
             data: this.buildData(resolvedData),
+            classifiers,
             showDeleted,
             order
         };

@@ -25,11 +25,11 @@ class EntityEditor extends Component {
         }
     }
 
-   componentDidUpdate(nextProps) {
+   componentDidUpdate(prevProps) {
         const { id } = this.props;
 
-        if (id !== nextProps.id) {
-            this.props.sendNeedFormNavigation(nextProps.id);
+        if (id !== prevProps.id) {
+            this.props.sendNeedFormNavigation(id);
         }
     }
 

@@ -84,7 +84,7 @@ class SelectField extends Component {
             throw new Error(`Please select location for data fetch.`);
         }
 
-        api.collection(fetchUrl.resource, _.slice(locations, 0, 1))
+        api.collection(fetchUrl.resource, _.slice(locations, 0, 1), {})
             .then((Data) => {
                 this.setState({
                     fetched: true,
@@ -121,7 +121,7 @@ class SelectField extends Component {
 
         if (manual && !fetched) {
             this.fetchData();
-        }
+        } 
     }
 
     getComponentProps() {

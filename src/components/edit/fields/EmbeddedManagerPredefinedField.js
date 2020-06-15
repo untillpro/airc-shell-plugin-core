@@ -104,7 +104,7 @@ class EmbeddedManagerPredefinedField extends EmbeddedManagerField {
             throw new Error(`EmbeddedManagerPredefinedField.fetchData() exception: location not specified or wrong given`);
         }
 
-        return  api.collection(url.resource, [ loc ]);
+        return  api.collection(url.resource, [ loc ], {});
     }
 
 

@@ -35,7 +35,7 @@ class StateMachineProvider extends Component {
     }
 
     renderWithContext(api) {
-        const { message, state, manager, isGlobal, shouldPop } = this.props;
+        const { locations, entity, message, manager, isGlobal, shouldPop } = this.props;
         
         /**
          * if message was specified then send it to state machine
@@ -45,7 +45,8 @@ class StateMachineProvider extends Component {
         if (message) {
             const context = {
                 api,
-                state: state.plugin, // TODO
+                locations,
+                entity,
                 contributions: manager
             };
 
@@ -89,14 +90,14 @@ class StateMachineProvider extends Component {
 StateMachineProvider.propTypes = {
     children: PropTypes.node,
     message: PropTypes.object,
-    state: PropTypes.object,
     sendStateMachineResult: PropTypes.func
 };
 
 const mapStateToProps = (state) => {
+    const { locations, entity } = state.plugin;
     const { message, isGlobal, shouldPop } = state.machine; 
 
-    return { state, message, isGlobal, shouldPop };
+    return { locations, entity, message, isGlobal, shouldPop };
 };
 
 export default connect(mapStateToProps, { 

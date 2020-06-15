@@ -125,11 +125,7 @@ class EmbeddedManagerSelectField extends EmbeddedManagerField {
 
         if (!entity) return;
 
-        const props = {
-            wsid: locations
-        };
-
-        return fetchData(entity, api, contributions, props).then(({ resolvedData }) => {
+        return fetchData(entity, locations, api, contributions, {}).then(({ resolvedData }) => {
             return resolvedData;
         });
     }

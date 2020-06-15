@@ -28,7 +28,7 @@ class EMEditFormHeader extends Component {
         if (id) {
             this.performWithCheckChanges(() => {
                 this.props.sendNeedEditFormMessage(id);
-                this.componentDidMount();
+                //this.componentDidMount();
             });
         };
     }
@@ -155,7 +155,6 @@ class EMEditFormHeader extends Component {
     renderNavigation() {
         const { id, entityData } = this.props;
         const { prev, next } = entityData ? entityData : {};
-
         if (id) {
             return (
                 <div className="header-navigation">

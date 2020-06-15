@@ -38,7 +38,7 @@ class EmbeddedManagerField extends Component {
     }
 
     componentDidMount() {
-        const { value, field } = this.props;
+        const { field } = this.props;
 
         if (!field) throw new Error('EmbeddedManagerField exception: "field" prop not specified', field);
 
@@ -51,11 +51,22 @@ class EmbeddedManagerField extends Component {
         this.entity = entity;
 
         this.prepareProps();
+        this.normolizeData();
+    }
 
-        this.setState({
-            data: _.map(value, (o) => o) || {}
-        });
-        
+    normolizeData() {
+        const { value } = this.props;
+        let d;
+
+        if (value && typeof value === 'object') {
+            if (_.isArray(value)) {
+                d = _.map(value, (o) => o) || {};
+            } else {
+                d = Object.values(value) || {};
+            }
+        }
+
+        this.setState({data: d || []})
     }
 
     //actions
@@ -149,6 +160,13 @@ class EmbeddedManagerField extends Component {
         }
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.value !== this.props.value) {
+            this.normolizeData();
+        }
+    }
+
+    /*
     UNSAFE_componentWillReceiveProps(newProps) {
         const { value } = newProps;
 
@@ -157,6 +175,7 @@ class EmbeddedManagerField extends Component {
             this.setState({ data: normolizedValue });
         }
     }
+    */
 
     handleHeaderAction(action) {
         switch (action) {
@@ -416,7 +435,6 @@ class EmbeddedManagerField extends Component {
 
         const res = [];
 
-
         if (data) {
             _.each(data, (item) => {
                 if (item) {
@@ -431,7 +449,7 @@ class EmbeddedManagerField extends Component {
     render() {
         const { entity } = this;
         const { field, disabled } = this.props;
-        const { properties } = this.state;
+        const { properties, data } = this.state;
 
         if (!field || !entity) return null;
 
@@ -439,8 +457,7 @@ class EmbeddedManagerField extends Component {
 
         const columns = this.getColumns();
 
-        const data = this.getData();
-
+        console.log('embedded field data: ', data);
         const tableConfig = {
             data,
             columns,

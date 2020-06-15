@@ -37,9 +37,7 @@ export const toggleDeletedRowsView = () => {
     };
 };
 
-// TEMP FUNCTION - ONLY FOR TESTING AND DEBUGING
 export const setLocation = (locations) => {
-    //TODO right
     return {
         type: Types.SET_LOCAIOTNS,
         payload: locations

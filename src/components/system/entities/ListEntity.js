@@ -3,7 +3,7 @@
  */
 
 import React, { Component } from 'react';
-import { EMList } from '../../table/';
+import { EMListAntd } from '../../table/';
 
 import ApiContext from '../../../context/ApiContext';
 import ContributionsContext from '../../../context/ContributionsContext';
@@ -20,7 +20,7 @@ class ListEntity extends Component {
                         <ApiContext.Consumer>
                             {
                                 (api) => (
-                                    <EMList 
+                                    <EMListAntd 
                                         entity={entity}
                                         contributions={contributions} 
                                         api={api} 

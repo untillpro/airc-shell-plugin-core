@@ -79,8 +79,6 @@ class EMList extends Component {
                 this.setState(resState);
             }
         }
-
-        
     }
 
     handleRowClick(event, row) {
@@ -90,6 +88,7 @@ class EMList extends Component {
         const { allowMultyselect = true, allowSelection = true } = component;
 
         let id = null;
+        console.log('handleRowClick: ', row);
 
         event.preventDefault();
         event.stopPropagation();
@@ -179,7 +178,51 @@ class EMList extends Component {
         if (manual) this.setState({ loading: true });
     }
 
-    getDynamicColumns(props, data) {
+    getClassifierColumns(props, data) {
+        const columns = {};
+        const { classifiers } = this.props;
+        const { name, getter } = props;
+
+        let entities = {};
+
+        if (name && typeof name === 'string') {
+            console.log(name);
+
+            _.forEach(classifiers, (cl, wsid) => {
+                if (cl[name]) {
+                    _.forEach(cl[name], entity => {
+                        const { id, name } = entity;
+
+                        if (!entities[name]) {
+                            entities[name] = {};
+                        }
+
+                        entities[name][wsid] = id
+                    });
+                }
+            })
+        }
+
+        _.forEach(entities, (ids, header) => {
+            const id = String(header).toLowerCase();
+
+            columns[id] = {
+                "Header": header,
+                "id": id,
+                "accessor": (d) => getter(d, ids[d.wsid])
+            };
+        });
+
+        return Object.values(columns);
+    }
+
+    getClassifierCellData(item, ids) {
+
+        console.log('getClassifierCellData: ', item);
+        return '--';
+    }
+
+    getItterationColumns(props, data) {
         const columns = {};
 
         if (data && data.length > 0) {
@@ -209,6 +252,15 @@ class EMList extends Component {
         return Object.values(columns);
     }
 
+    getDynamicColumns(props, data) {
+        console.log("getDynamicColumns: ", props, data);
+
+        switch(props.type) {
+            case "classificator": return this.getClassifierColumns(props, data)
+            default: return this.getItterationColumns(props, data)
+        }
+    }
+
     getColumns(data = null) {
         const { contributions, entity, columnsVisibility } = this.props;
         const { actions, component } = this;
@@ -223,13 +275,18 @@ class EMList extends Component {
                 'sortable': false
             });
         }
-        
+
+        columns.push({
+            expander: true,
+            Header: () => <strong>More</strong>,
+        });
+
         const entityListContributions = contributions.getPointContributions('list', entity);
 
         if (entityListContributions.columns) {
             _.each(entityListContributions.columns, (column) => {
                 if (column.dynamic) {
-                    //columns = [...columns, ...this.getDynamicColumns(column, data)];  // TODO
+                    columns = [...columns, ...this.getDynamicColumns(column, data)];  // TODO
                 } else {
                     columns.push(column);
                 }
@@ -449,14 +506,23 @@ class EMList extends Component {
             
             getTrProps: (state, row) => {
                 return {
-                    onClick: (e) => this.handleRowClick(e, row),
+                    Expander: row.index % 2 === 0 ? false : true,
+                    //onClick: (e) => this.handleRowClick(e, row),
                     onDoubleClick: (e) => this.handleRowDoubleClick(e, row),
                     className: this.getRowClass(row)
                 };
             },
 
             onSortedChange: (newSorted, column, shiftKey) => this.handleTableSortedChanged(newSorted, column, shiftKey),
-            onFilteredChange: (filtered, column) => this.handleTableFilteredChange(filtered, column)
+            onFilteredChange: (filtered, column) => this.handleTableFilteredChange(filtered, column),
+            SubComponent: (row) => {
+                console.log('row sub: ', row);
+                if (row.index % 2 === 0) {
+                    return null;
+                } else {
+                    return <div style={{padding: '10px'}}>Hello</div>;
+                }
+            }
         };
 
         if (manual) {
@@ -507,10 +573,11 @@ class EMList extends Component {
 
 const mapStateToProps = (state) => {
     const { list, columnsVisibility } = state.plugin;
-    const { data, showDeleted, pages, page, manual, pageSize, order, total } = list;
+    const { data, classifiers, showDeleted, pages, page, manual, pageSize, order, total } = list;
 
     return { 
         total,
+        classifiers: classifiers || {},
         order: order || [],
         data: data || [],
         pages: pages || -1,

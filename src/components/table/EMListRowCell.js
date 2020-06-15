@@ -1,9 +1,27 @@
-/*
- * Copyright (c) 2020-present unTill Pro, Ltd.
+import React, { PureComponent } from 'react';
+
+/**
+ * props:
+ * - type
+ *  - string (default)
+ *  - number
+ *  - price
+ * 
+ * 
+ * - ops for types:
+ *  - string:
+ *   - maxLength
+ * 
+ * - number:
+ *  - precision
  */
 
-//import React from 'react';
+class EMListRowCell extends PureComponent {
+    render() {
+        const { value } = this.props;
 
-export default () => {
-    return null;
-};
+    return <div className="cell-value">{value}</div>;
+    }
+}
+
+export default EMListRowCell;

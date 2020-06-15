@@ -95,25 +95,34 @@ class EntityEditStep extends StateMachineStep {
     }
 
     async MessageProceed(msg, context) {
-        const { api, contributions, state } = context;
-        let { entries } = this;
-        let { entity, locations } = state;
-
-        const { data } = msg;
+        const { api, contributions } = context;
+        let entity = null;
+        let locations = null;
+        let entries = null;
 
         if (msg.entity && typeof msg.entity === 'string') {
             entity = msg.entity
+        } else if (context.entity && typeof context.entity === 'string') {
+            entity = context.entity
+        } else {
+            this.error('EntityEditStep: entity type not specified or wrong given');
         }
 
-        if (msg.locations) {
-            locations = _.isArray(msg.locations) ? msg.locations : [msg.locations];
+        if (msg.locations && _.isArray(msg.locations) && msg.locations.length > 0) {
+            locations = msg.locations;
+        } else if (context.locations &&  _.isArray(context.locations) && context.locations.length > 0) {
+            locations = context.locations
+        } else {
+            this.error('EntityEditStep: locations are not specified or wrong given');
         }
 
-        if ("entries" in msg) {
+        if (msg.entries && _.isArray(msg.entries)) {
             entries = msg.entries;
+        } else if (this.entries && this.entries.length > 0) {
+            entries = this.entries;
         }
 
-        if (!entries || entries.length <= 0) {
+        if (!entries || entries.length === 0) {
             if (locations && locations.length > 0) {
                 entries = locations.map((wsid) => {
                     return { id: null, wsid };
@@ -123,7 +132,7 @@ class EntityEditStep extends StateMachineStep {
             }
         }
 
-        return processData(entity, data, entries, api, contributions).then((res) => {
+        return processData(entity, msg.data, entries, api, contributions).then((res) => {
             return {
                 pop: true,
                 message: new MessageNotify({ refresh: true }),
@@ -132,7 +141,6 @@ class EntityEditStep extends StateMachineStep {
                 }
             };
         }).catch((e) => {
-            console.log(e.toString());
             this.error(e.toString());
         });
     }
@@ -142,31 +150,15 @@ class EntityEditStep extends StateMachineStep {
     }
 
     async fetchEntityData(items, context) {
-        const { api, contributions, state } = context;
-        const { entity, locations } = state;
+        const { api, contributions, entity, locations } = context;
 
-        let wsid = null;
-        
-        if (!api || !contributions || !state || !entity) {
-            this.error('Cant fetch entity item data.', api, contributions, state, entity);
-        }
-
-        console.log("selected locations: ", locations);
-
-        if (locations && _.isArray(locations) && locations.length > 0) {
-            wsid = locations[0];
-        } else {
-            this.error('No location selected.', api, contributions, state, entity);
+        if (!api || !contributions || !entity) {
+            this.error('Cant fetch entity item data.', api, contributions, entity);
         }
 
         let entries = this.buildRequestEntires(items);
 
-        const doProps = { 
-            entries, 
-            wsid 
-        };
-
-        return fetchData(entity, api, contributions, doProps)
+        return fetchData(entity, locations, api, contributions, { entries })
             .then(({ data, Data, resolvedData }) => {
                 if (resolvedData && resolvedData.length > 0) {
                     return this.checkForEmbededTypes(resolvedData[0], context);
@@ -176,8 +168,7 @@ class EntityEditStep extends StateMachineStep {
     }
 
     checkForEmbededTypes(data, context) {
-        const { contributions, state } = context;
-        const { entity } = state;
+        const { contributions, entity } = context;
 
         if (!contributions || !entity) return data;
 

@@ -6,7 +6,7 @@ import _ from 'lodash';
 import { generateId } from './Utils';
 import ForeignKeys from '../const/ForeignKeys';
 
-export const fetchData = async (entity, api, contributions, props) => {
+export const fetchData = async (entity, locations, api, contributions, props) => {
     const getUrl = contributions.getPointContributionValue('url', entity, 'getUrl');
 
     let urlProps = { ...props };
@@ -25,15 +25,15 @@ export const fetchData = async (entity, api, contributions, props) => {
     }
 
     if (resource && api) {
-        const { wsid, page, page_size, entries, show_deleted } = urlProps;
+        let wsids = _.isArray(locations) ? locations : [locations];
 
-        let wsids = _.isArray(wsid) ? wsid : [ wsid ];
-
-        return api.collection(resource, wsids, entries, page, page_size, show_deleted)
-            .then((Data) => {
-                if (Data) {
-                    result.Data = Data;
-                    result.data = applyClassifiers(Data, entity);
+        //return api.collection(resource, wsids, entries, page, page_size, show_deleted)
+        return api.collection(resource, wsids, urlProps)
+            .then(({ data, classifiers, meta }) => {
+                if (data) {
+                    result.data = applyClassifiers(data, classifiers, entity);
+                    result.meta = meta;
+                    result.classifiers = classifiers
 
                     if (result.data) result.resolvedData = resolveData(result.data);
                 }
@@ -115,9 +115,7 @@ export const getEntityFields = (entity, contributions, nonEmbedded = false) => {
     return fields;
 }
 
-export const applyClassifiers = (Data, Entity) => {
-    const { data, classifiers } = Data;
-
+export const applyClassifiers = (data, classifiers, Entity) => {
     let entity = String(Entity).toLowerCase();
     let result = { ...data };
 
@@ -173,15 +171,25 @@ export const resolveData = (data) => {
         const item = arr[0];
 
         if (item && typeof item === 'object') {
-            item.linked = _.map(o, (row, loc) => {
-                return {
+            item.childs = [];
+            item.linked = [];
+
+            _.forEach(o, (row, loc) => {
+                row.wsid = Number(loc);
+
+                /*
+                item.linked.push({
                     id: Number(row.id),
                     wsid: Number(loc)
-                };
+                });
+                */
+               
+                item.childs.push(row)
             });
 
             resultData.push(item);
         }
+
         return item;
     });
 
@@ -233,7 +241,7 @@ export const proccessEntry = async (entityId, type, wsid, data, context) => {
     let operations = getOperation(data, id, type, 0, '', 0, '', context);
 
     operations.reverse();
-    
+
     // embeded types
 
     const embeddedTypes = getEntityEmbeddedTypes(type, contributions);
@@ -256,10 +264,10 @@ export const proccessEntry = async (entityId, type, wsid, data, context) => {
 
     const offset = 0; // TODO - ask Maxim about that offset
 
-    return api.conf(operations, [ wsid ], timestamp, offset).then((Data) => {
+    return api.conf(operations, [wsid], timestamp, offset).then((Data) => {
         return {
             ...Data,
-            ID: entityId, 
+            ID: entityId,
             WSID: wsid
         };
     });

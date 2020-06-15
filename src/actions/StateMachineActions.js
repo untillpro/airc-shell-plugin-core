@@ -9,6 +9,7 @@ import {
     SEND_SELECT_ENTITY_MESSAGE,
     SEND_NEED_FETCH_LIST_DATA,
     SEND_NEED_EDIT_FORM_MESSAGE,
+    SEND_NEED_MODAL_EDIT_FORM_MESSAGE,
     SEND_NEED_MASSEDIT_FORM_MESSAGE,
     SEND_NEED_DUPLICATE_ITEM_MESSAGE,
     SEND_NEED_UNIFY_ITEM_MESSAGE,
@@ -68,6 +69,13 @@ export const sendNeedRefreshListDataMessage = () => {
 export const sendNeedEditFormMessage = (ids = null) => {
     return {
         type: SEND_NEED_EDIT_FORM_MESSAGE,
+        payload: ids
+    };
+};
+
+export const sendNeedModalEditFormMessage = (ids = null) => {
+    return {
+        type: SEND_NEED_MODAL_EDIT_FORM_MESSAGE,
         payload: ids
     };
 };

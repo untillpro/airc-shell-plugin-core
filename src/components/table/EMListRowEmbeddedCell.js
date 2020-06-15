@@ -1,6 +1,11 @@
 import React, { PureComponent } from 'react';
 
-class EMListRowEditableCell extends PureComponent {
+/*
+    props: 
+        - wsid
+        - id
+*/
+class EMListRowEmbeddedCell extends PureComponent {
     render() {
         const { value } = this.props;
 
@@ -8,4 +13,4 @@ class EMListRowEditableCell extends PureComponent {
     }
 }
 
-export default EMListRowEditableCell;
+export default EMListRowEmbeddedCell;

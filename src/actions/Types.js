@@ -27,6 +27,7 @@ export const SEND_SELECT_ENTITY_MESSAGE = 'message_select_entity';
 export const SEND_NEED_FETCH_LIST_DATA = 'message_need_fetch_list_data';
 export const SEND_NEED_LIST_DATA_REFRESH = 'message_need_list_data_refresh';
 export const SEND_NEED_EDIT_FORM_MESSAGE = 'message_need_edit_form';
+export const SEND_NEED_MODAL_EDIT_FORM_MESSAGE = 'message_need_modal_edit_form';
 export const SEND_NEED_MASSEDIT_FORM_MESSAGE = 'message_need_massedit_form';
 
 export const SEND_NEED_DUPLICATE_ITEM_MESSAGE = 'message_duplicate_items';

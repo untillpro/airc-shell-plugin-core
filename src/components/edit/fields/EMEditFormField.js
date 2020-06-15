@@ -112,6 +112,8 @@ class EMEditFormField extends Component {
         const { data, field, embedded_type } = this.props;
         const { accessor } = field;
 
+        console.log(`Field: ${accessor}`, data, field, embedded_type);
+
         let val = '';
         let path = accessor;
 
@@ -124,6 +126,8 @@ class EMEditFormField extends Component {
             val =  _.get(data, path);
         }
 
+        console.log(`Field: ${accessor} result value: `, val);
+        
         return val;
     }
 

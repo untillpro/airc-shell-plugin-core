@@ -3,6 +3,7 @@
  */
 
 import EMList from './EMList';
+import EMListAntd from './EMListAntd';
 import EMListHeader from './EMListHeader';
 import EMListPaginator from './EMListPaginator';
 import EMListPaginatorPages from './EMListPaginatorPages';
@@ -16,6 +17,7 @@ import ColumnsToggler from './ColumnsToggler';
 
 export {
     EMList,
+    EMListAntd,
     EMListHeader,
     EMListPaginator,
     EMListPaginatorPages,

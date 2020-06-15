@@ -128,65 +128,78 @@ class MockAlphaApiGate {
         return this.do("airs-bp", `${location}/conf`, params, "post");
     }
 
-    async collection(type, wsids, entries, page, page_size, show_deleted) {
-        //${this.host}/${queueId}/${resource}
-        let resultData = {};
+    async collection(type, wsids, props) {
+        const { 
+            entries, 
+            page, 
+            page_size, 
+            show_deleted, 
+            required_fields, 
+            required_classifiers 
+        } = props;
 
-        let params = {
-            "Page": page,
-            "PageSize": page_size,
-            "ShowDeleted": show_deleted,
-            "Type": type,
-            "WSIDs": _.isArray(wsids) ? wsids : [ wsids ],
-            "Entries": entries,
-            "EmbeddedAsArrays": true
+        const params = {};
+        let location = null;
+        let resultData = null;
+        
+        console.log('collection method call:', token, type, wsids, entries, page, page_size, show_deleted);
+
+        if (type && typeof type === 'string') {
+            params['Type'] = type;
+        } else {
+            throw new Error('api.collection() call error: wrong "Type" prop: expected a string, received ' + type);
         }
 
-        return this.do("airs-bp", `${_.isArray(wsids) ? wsids[0] : wsids}/collection`, params, "post").then((response) => {
-            console.log('collection result', response);
+        if (wsids && _.isArray(wsids) && wsids.length > 0) {
+            params['WSIDs'] = wsids;
+            location = parseInt(wsids[0]);
+        } else {
+            throw new Error('api.collection() call error: wrong "WSIDs" prop: expected an array of integers, received ', wsids);
+        }
 
+        if (page && page >= 0) {
+            params['Page'] = page;
+        } else {
+            params['Page'] = 0;
+        }
+
+        if (page_size && page_size > 0) {
+            params['PageSize'] = page_size;
+        } else {
+            params['PageSize'] = null;
+        }
+
+        if (required_fields && _.isArray(required_fields) && required_fields.length > 0) {
+            params['Fields'] = required_fields;
+        }
+
+        if (required_classifiers && _.isArray(required_classifiers) && required_classifiers.length > 0) {
+            params['RequiredClassifiers'] = required_classifiers;
+        }
+
+        if (entries && _.isArray(entries) && entries.length > 0) {
+            params['Entries'] = entries;
+        } else {
+            params['Entries'] = null;
+        }
+
+        if (show_deleted === true) {
+            params['ShowDeleted'] = 1;
+        } else {
+            params['ShowDeleted'] = 0;
+        }
+
+        return this.do("airs-bp", `${location}/collection`, params, "post").then((response) => {
             if (response && response["sections"] && _.isArray(response["sections"])) {
                 console.log("Response: ", response);
                 const builder = new SProtBuilder();
                 resultData = builder.build(response["sections"]);
             }
 
-            console.log('resultData', resultData);
-
             return resultData;
         }).catch((e) => {
             console.error(e);
         });
-
-
-
-        /*
-        let response = {
-            "sections": [],
-            "status": 200,
-        }
-        let resultData = {};
-
-        if (type === "department") {
-            console.log('DepartmentData', DepartmentData);
-            response = DepartmentData;
-        } else if (type === "void_reasons") {
-            response["status"] = 501;
-            response["errorDescription"] = "Void reasons scheme not implemented yet.";
-        }
-
-        //todo
-        console.log('collection method call:', type, wsids, entries, page, page_size, show_deleted);
-
-        if (response && response["sections"] && _.isArray(response["sections"])) {
-            console.log("Response: ", response);
-            const builder = new SProtBuilder();
-            resultData = builder.build(response["sections"]);
-
-            console.log("Collections build result: ", resultData);
-        }
-
-        */
     }
 
     async sync(entries) {

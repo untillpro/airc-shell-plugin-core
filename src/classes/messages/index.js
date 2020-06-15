@@ -58,9 +58,22 @@ export class MessageSelectEntity extends StateMachineMessage {
     }
 }
 
+export class MessageSelectLocations extends StateMachineMessage {
+    getName() {
+        return 'MessageSelectLocations';
+    }
+}
+
+
 export class MessageNeedEdit extends StateMachineMessage {
     getName() {
         return 'MessageNeedEdit';
+    }
+}
+
+export class MessageNeedModalEdit extends StateMachineMessage {
+    getName() {
+        return 'MessageNeedModalEdit';
     }
 }
 

@@ -45,7 +45,7 @@ export default class StatemachineStep {
     }
     
     getName() {
-        throw new Error(`${this.constructor.name}: you should redeclare GetName() method`);
+        this.error(`${this.constructor.name}: you should redeclare GetName() method`);
     }
 
     detouch() {
