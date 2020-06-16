@@ -135,6 +135,7 @@ class EmbededSelectorField extends Component {
     }
 
     render() {
+        const { disabled } = this.props;
         const props = this.getComponentProps();
 
         const inputValue = this.getInputValue();
@@ -143,6 +144,7 @@ class EmbededSelectorField extends Component {
             
             <Fragment>
                 <TextInput 
+                    disabled={disabled}
                     className="selector-input"
                     {...props}
                     //allowClear={false}

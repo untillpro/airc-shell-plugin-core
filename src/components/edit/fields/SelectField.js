@@ -172,7 +172,7 @@ class SelectField extends Component {
 
             if (text && String(text).indexOf("---") === 0) {
                 if (group !== null) {
-                    result.push(<OptGroup label={group}>{groupOptions}</OptGroup>)
+                    result.push(<OptGroup key={group} label={group}>{groupOptions}</OptGroup>)
 
                     groupOptions = [];
                     group = text.slice(3);
@@ -204,7 +204,7 @@ class SelectField extends Component {
             count++;
 
             if (count === _.size(options) && group !== null && groupOptions.length > 0) {
-                result.push(<OptGroup label={group}>{groupOptions}</OptGroup>)
+                result.push(<OptGroup key={group} label={group}>{groupOptions}</OptGroup>)
             }
         });
 
