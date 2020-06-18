@@ -159,6 +159,10 @@ class EmbeddedManagerField extends Component {
     }
 
     handleHeaderAction(action) {
+        const { disabled } = this.props;
+
+        if (disabled) return;
+
         switch (action) {
             case 'add': this.actionAdd(); break;
             case 'edit': this.actionEdit(); break;
@@ -305,6 +309,7 @@ class EmbeddedManagerField extends Component {
     }
 
     renderHeaderActions() {
+        const { disabled } = this.props;
         const { component, selectedRows: rows } = this.state;
 
         if (!component || !component.actions || !component.actions.length) return null;
@@ -314,19 +319,19 @@ class EmbeddedManagerField extends Component {
         component.actions.forEach((action) => {
             switch (action) {
                 case 'add':
-                    result.add = (<Button icon='plus' key='header-action-add' onClick={() => this.handleHeaderAction(action)} />);
+                    result.add = (<Button icon='plus' key='header-action-add' disabled={disabled} onClick={() => this.handleHeaderAction(action)} />);
                     break;
                 case 'remove':
-                    result.remove = (<Button icon='delete' key='header-action-remove' disabled={!rows.length} onClick={() => this.handleHeaderAction(action)} />);
+                    result.remove = (<Button icon='delete' key='header-action-remove' disabled={!rows.length || disabled} onClick={() => this.handleHeaderAction(action)} />);
                     break;
 
                 case 'copy':
-                    result.refresh = (<Button icon='copy' key='header-action-copy' disabled={!rows.length} onClick={() => this.handleHeaderAction(action)} />);
+                    result.refresh = (<Button icon='copy' key='header-action-copy' disabled={!rows.length || disabled} onClick={() => this.handleHeaderAction(action)} />);
                     break;
 
                 case 'edit':
                     if (!rows || rows.length <= 0) break;
-                    result.edit = (<Button type='primary' key='header-action-edit' text='Edit' disabled={rows.length > 1} onClick={() => this.handleHeaderAction(action)} />);
+                    result.edit = (<Button type='primary' key='header-action-edit' text='Edit' disabled={rows.length > 1 || disabled} onClick={() => this.handleHeaderAction(action)} />);
                     break;
 
                 case 'massedit': break; //TODO
@@ -442,14 +447,16 @@ class EmbeddedManagerField extends Component {
         const data = this.getData();
 
         const tableConfig = {
+            disabled,
             data,
             columns,
-            disabled,
             PaginationComponent: EMListPaginator,
             ...properties,
             minRows: properties.minRows || 5,
-
+            className: disabled ? "disabled-table" : null,
             getTrProps: (state, row) => {
+                if (disabled) return {};
+
                 return {
                     onClick: (e) => this.handleRowClick(e, row),
                     onDoubleClick: (e) => this.handleRowDoubleClick(e, row),
@@ -457,7 +464,6 @@ class EmbeddedManagerField extends Component {
                 };
             }
         };
-
 
         return (
             <div className="embedded-manager-field">
@@ -473,7 +479,10 @@ class EmbeddedManagerField extends Component {
                 </div>
 
                 <div className="embedded-manager-field">
-                    <Table {...tableConfig} />
+                    <Table 
+                        disabled={disabled}
+                        {...tableConfig} 
+                    />
                 </div>
 
                 {this.renderEditModal()}
