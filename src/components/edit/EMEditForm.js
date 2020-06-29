@@ -65,7 +65,14 @@ class EMEditForm extends Component {
     }
 
     setDefaultValues(sections) {
-        const changedData = { state: 1 };
+        const { contributions, entity } = this.props;
+        let changedData = { state: 1 };
+
+        const defaultValues = contributions.getPointContributionValue('forms', entity, 'default');
+
+        if (defaultValues && typeof defaultValues === 'object') {
+            changedData = { ...changedData, ...defaultValues };
+        }
 
         if (sections && _.isArray(sections)) {
             _.forEach(sections, (section) => {

@@ -85,7 +85,7 @@ class TextField extends Component {
                 input={field}
                 type={password ? 'password' : type || 'text'}
                 error={hasErrors}
-                value={val || ''}
+                value={val !== undefined ? val : ''}
                 onChange={!disabled ? (event) => this.handleChange(event) : null}
                 {...props}
             />

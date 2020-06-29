@@ -22,7 +22,7 @@ class FieldValidator {
         if (path) {
             const value = _.get(data, path);
 
-            const req = typeof required === 'function' ? required(data) : !! required;
+            const req = typeof required === 'function' ? required(field, data) : !! required;
 
             if (req) this.validateRequired(value, errors);
 

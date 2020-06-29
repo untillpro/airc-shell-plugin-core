@@ -267,7 +267,7 @@ export const proccessEntry = async (entityId, type, wsid, data, context) => {
 
 export const getOperation = (data, entityId, type, parentId, parentType, docId, docType, context) => {
     const { contributions } = context;
-    const resultData = {};
+    let resultData = {};
     let operations = [];
 
     const id = entityId || -(generateId());
@@ -300,22 +300,28 @@ export const getOperation = (data, entityId, type, parentId, parentType, docId, 
                 }
             }
         });
+    }
 
-        if (_.size(resultData) > 0) {
-            if (parentType && parentId) {
-                resultData[`id_${parentType}`] = parentId;
-            }
+    const hiddenValues = contributions.getPointContributionValue('forms', type, 'hidden');
 
-            operations.push({
-                ID: id,
-                Type: type,
-                ParentID: parentId,
-                ParentType: parentType,
-                DocID: docId,
-                DocType: docType,
-                Data: resultData
-            });
+    if (hiddenValues && typeof _.isObject(hiddenValues) && !_.isArray(hiddenValues)) {
+        resultData = { ...resultData, ...hiddenValues };
+    }
+
+    if (_.size(resultData) > 0) {
+        if (parentType && parentId) {
+            resultData[`id_${parentType}`] = parentId;
         }
+
+        operations.push({
+            ID: id,
+            Type: type,
+            ParentID: parentId,
+            ParentType: parentType,
+            DocID: docId,
+            DocType: docType,
+            Data: resultData
+        });
     }
 
     return operations;
