@@ -35,17 +35,21 @@ class ContibutionManager {
         }
 
         if (this.prefetched[type][pointName][name]) {
-            if (!_.isArray(this.prefetched[type][pointName][name])) {
-                this.prefetched[type][pointName][name] = [ this.prefetched[type][pointName][name] ];
-            }
-
-            if (_.isArray(contribution)) {
-                this.prefetched[type][pointName][name] = [ ...this.prefetched[type][pointName][name], ...contribution]
-            } else {
-                this.prefetched[type][pointName][name].push(contribution);
+            if (_.isFunction(contribution) && _.isFunction(this.prefetched[type][pointName][name])) {
+                this.prefetched[type][pointName][name] = contribution
+            } else if (_.isArray(this.prefetched[type][pointName][name]) && !_.isFunction(contribution)) {
+                if (_.isArray(contribution)) {
+                    this.prefetched[type][pointName][name] = [ ...this.prefetched[type][pointName][name], ...contribution];
+                } else {
+                    this.prefetched[type][pointName][name].push(contribution);
+                }
             }
         } else {
-            this.prefetched[type][pointName][name] = contribution;
+            if (_.isFunction(contribution) || _.isArray(contribution)) {
+                this.prefetched[type][pointName][name] = contribution;
+            } else {
+                this.prefetched[type][pointName][name] = [ contribution ];
+            }
         }
     }
 
@@ -84,6 +88,14 @@ class ContibutionManager {
     getPointContributionValue(type, pointName, contribution) {
         if (this.points && this.points[type] && this.points[type][pointName]) {
             return this.points[type][pointName].getContributuionValue(contribution);
+        }
+
+        return undefined;
+    }
+
+    getPointContributionValues(type, pointName, contribution) {
+        if (this.points && this.points[type] && this.points[type][pointName]) {
+            return this.points[type][pointName].getContributuionValue(contribution, true);
         }
 
         return undefined;

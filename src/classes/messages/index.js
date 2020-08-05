@@ -88,6 +88,11 @@ export class MessageNeedReduce extends StateMachineMessage {
     }
 }
 
+export class MessageGenerateReport extends StateMachineMessage {
+    getName() {
+        return 'MessageGenerateReport';
+    }
+}
 //***********
 
 export class MessageSetPage extends StateMachineMessage {

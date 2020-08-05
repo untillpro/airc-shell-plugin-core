@@ -81,8 +81,6 @@ This properties block will override `table` paggination properties if they will 
 
 ```javascript
     {
-        "formEditKey": String, //TODO //required for items edit 
-        "formMassEditKey": String, //TODO //required for items massedit 
         "allowSelect": Boolean, //TODO
         "allowMultyselect": Boolean, //TODO
         "showColumnsToggler": Boolean,

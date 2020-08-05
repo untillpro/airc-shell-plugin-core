@@ -2,8 +2,6 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-import log from './Log';
-
 export default class StateMachine {
     constructor() {
         this.stack = [];
@@ -55,10 +53,6 @@ export default class StateMachine {
     }
 
     async sendMessage(msg, context) {
-        log('%cStateMachine.sendMessage:', "color: red; font-size: 120%; text-decoration: underline;");
-        log('Message:', msg);
-        log('Context', context);
-
         try {
             return this.sendMessageInternal(msg, context);
         } catch (e) {

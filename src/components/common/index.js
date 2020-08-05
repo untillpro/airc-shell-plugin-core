@@ -1,13 +1,24 @@
 /*
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
-
-import ViewEntityGrid from './ViewEntityGrid';
-import ViewsGrid from './ViewsGrid';
 import HeaderBackButton from './HeaderBackButton';
+import {
+    BooleanCell,
+    NumberCell,
+    PriceCell,
+    StringCell,
+    LocationCell,
+    DateTimeCell,
+    ListPaginator
+} from './table';
 
 export {
-    ViewEntityGrid,
-    ViewsGrid,
-    HeaderBackButton
-};
+    ListPaginator,
+    HeaderBackButton,
+    BooleanCell,
+    NumberCell,
+    PriceCell,
+    StringCell,
+    LocationCell,
+    DateTimeCell
+}

@@ -3,7 +3,6 @@
  */
 
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Keypress from 'react-keypress';
 
@@ -12,7 +11,7 @@ import ViewRenderer from './ViewRenderer';
 import EntityRenderer from './EntityRenderer';
 import EntityEditor from './EntityEditor';
 
-import ContributionsContext from '../../context/ContributionsContext';
+import ReportView from '../report/ReportView';
 
 import log from '../../classes/Log';
 import { initBO, toggleLocationSelector } from '../../actions/';
@@ -41,7 +40,7 @@ class MainController extends Component {
         }));
     }
 
-    renderStateComponent(context) {
+    renderStateComponent() {
         const { step } = this.props;
 
         log(`%cCurrent step is: ${step}`, 'color: #e83f6f ; font-size: 140%; font-weight: bold;');
@@ -50,18 +49,21 @@ class MainController extends Component {
             switch (step) {
                 case 'EntityEditStep':
                     // when creating or editing entity item
-                    return <EntityEditor contributions={context} />;
+                    return <EntityEditor />;
                 case 'EntityMassEditStep':
                     // when mass editing entity items
-                    return <EntityEditor contributions={context} massedit />;
+                    return <EntityEditor massedit />;
                 case 'RenderEntityStep': 
                     // when select an entity manager
-                    return <EntityRenderer contributions={context} />;
+                    return <EntityRenderer />;
                 case 'RenderViewStep': 
                     // when select a view
-                    return <ViewRenderer contributions={context} />;
+                    return <ViewRenderer />;
+                case 'ReportViewStep': 
+                    // when generate a report
+                    return <ReportView />;
                 default: 
-                    return <RootRenderer contributions={context} />;
+                    return <RootRenderer />;
             }
         }
         
@@ -81,9 +83,7 @@ class MainController extends Component {
 
         return (
             <div className='page-content'>
-                <ContributionsContext.Consumer>
-                    {(context) => this.renderStateComponent(context)}
-                </ContributionsContext.Consumer>
+                {this.renderStateComponent()}
 
                 <div className="plugin-version">
                     {process.env.REACT_APP_NAME}: {process.env.REACT_APP_VERSION}
@@ -92,12 +92,6 @@ class MainController extends Component {
         );
     }
 }
-
-MainController.propTypes = {
-    step: PropTypes.string
-    // view: PropTypes.string, 
-    // entity: PropTypes.string
-};
 
 const mapStateToProps = (state) => {
     const { step } = state.plugin;

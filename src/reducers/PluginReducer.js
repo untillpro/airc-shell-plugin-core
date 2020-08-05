@@ -3,6 +3,7 @@
  */
 
 import * as Types from '../actions/Types';
+import { mergeExisting } from '../classes/Utils';
 
 const INITIAL_STATE = {
     show_selector: false,
@@ -13,7 +14,7 @@ const INITIAL_STATE = {
     entity: null,
     step: null,
     entityData: null,
-
+    fetchingData: false,
     list: {
         data: [],
         manual: false,
@@ -22,6 +23,7 @@ const INITIAL_STATE = {
         pages: -1,
         pageSize: 20
     },
+    
     columnsVisibility: {"ID": false, "id": false, "Id": false}
 };
 
@@ -41,10 +43,7 @@ export default (state = INITIAL_STATE, action) => {
             }
 
         case Types.SEND_STATE_MACHINE_DATA: 
-            return {
-                ...state,
-                ...action.payload
-            };
+            return mergeExisting(state, action.payload);
 
         case Types.SET_VIEW: 
             return {

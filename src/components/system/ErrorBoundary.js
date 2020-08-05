@@ -4,7 +4,6 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import ApiContext from '../../context/ApiContext';
 
 import {
     Button,
@@ -21,7 +20,8 @@ class ErrorBoundary extends Component {
 
         this.state = {
             hasError: false,
-            error: null
+            error: null,
+            errorStep: null
         };
     }
 
@@ -44,20 +44,25 @@ class ErrorBoundary extends Component {
         });
     }
 
-    UNSAFE_componentWillReceiveProps(newProps) {
+    componentDidUpdate() {
         const { step } = this.props;
         const { errorStep } = this.state;
 
         if (step !== errorStep) {
-            this.dropError();
+            //this.dropError();
         }
     }
 
     componentDidCatch(error, info) {
+        const { api } = this.props;
+        
         this.setError(error, info);
 
-        this.apiGate.sendError(error.toString());
         this.props.sendCancelMessage();
+
+        if (api) {
+            api.sendError(error.toString());
+        }
     }
 
     renderError() {
@@ -82,9 +87,7 @@ class ErrorBoundary extends Component {
         );
     }
 
-    renderWithContext(api) {
-        this.apiGate = api;
-        
+    render() {
         const { hasError } = this.state;
 
         if (hasError) {
@@ -94,20 +97,13 @@ class ErrorBoundary extends Component {
         return this.props.children;
     }
 
-
-    render() {
-        return (
-            <ApiContext.Consumer>
-                {(api) => this.renderWithContext(api)}
-            </ApiContext.Consumer>
-        );
-    }
 }
 
 const mapStateToProps = (state) => {
+    const { api } = state.context;
     const { step } = state.plugin;
     
-    return { step };
+    return { step, api };
 };
 
 export default connect(mapStateToProps, {

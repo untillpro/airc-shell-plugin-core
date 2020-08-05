@@ -4,14 +4,13 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { Message, Grid, Card } from '../../base/components';
 
 import {
     HeaderBackButton
-} from '../../components/';
+} from '../common/';
 
 import {
     sendSelectEntityMessage,
@@ -120,16 +119,11 @@ class ViewEntityGrid extends Component {
     }
 }
 
-ViewEntityGrid.propTypes = {
-    sendSelectEntityMessage: PropTypes.func,
-    view: PropTypes.string,
-    contributions: PropTypes.object
-};
-
 const mapStateToProps = (state) => {
+    const { contributions } = state.context;
     const { view } = state.plugin;
 
-    return { view };
+    return { view, contributions };
 };
 
 export default connect(mapStateToProps, { 

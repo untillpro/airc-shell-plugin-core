@@ -139,7 +139,7 @@ class RenderEntityStep extends StateMachineStep {
 
         if (entries.length === 0) return;
 
-        return processData(entity, { state }, entries, api, contributions).then((res) => {
+        return processData(context, entity, { state }, entries).then((res) => {
             if (res && _.isArray(res) && res.length > 0) {
                 _.each(res, (d) => {
                     if (d && d.result === "ok" && d.ID && d.ID > 0) {
@@ -256,6 +256,7 @@ class RenderEntityStep extends StateMachineStep {
         this.resolvedData = data;
     }
 
+    //TODO remove state from context; init entity and locations in InitMessage
     async MessageNeedNavigation(msg, context) {
         /*
             TODO for manual mode - в том плане, что если навигацией достигается конец resolvedData, то для мануального режима надо попробовать взять 
@@ -295,9 +296,10 @@ class RenderEntityStep extends StateMachineStep {
         };
     }
 
+    //TODO remove state from context; init entity and locations in InitMessage
     async fetchListData(context) {
         const { entity, page, pageSize, showDeleted, manual } = this;
-        const { api, contributions, state } = context;
+        const { state } = context;
         const { locations } = state;
 
         if (!locations || (!_.isNumber(locations) && !_.isArray(locations))) {
@@ -320,7 +322,7 @@ class RenderEntityStep extends StateMachineStep {
         }
 
         try {
-            return fetchData(entity, api, contributions, doProps)
+            return fetchData(context, entity, doProps)
                 .then((response) => {
                     const { data, resolvedData, Data } = response;
 

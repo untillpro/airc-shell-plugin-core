@@ -4,10 +4,8 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
-import ApiContext from '../../../context/ApiContext';
-import ContributionsContext from '../../../context/ContributionsContext';
-
-import { Label, FieldError, Tip } from '../../../base/components'
+import { connect } from 'react-redux';
+import { Label, FieldError, Tip } from '../../base/components'
 
 import {
     TextField,
@@ -24,8 +22,7 @@ import {
     EmbeddedManagerField,
     EmbededSelectorField,
     EmbeddedManagerPredefinedField
-} from './';
-
+} from './fields';
 
 class EMEditFormField extends Component {
     constructor() {
@@ -68,41 +65,10 @@ class EMEditFormField extends Component {
     }
 
     handleChange(value) {
-        const { parent, embedded_type } = this.props;
-        const { accessor, onChange } = this.props.field;
+        const { field, onChange } = this.props;
 
-        let data = {};
-        let path = accessor;
-
-        if (embedded_type) {
-            value = {
-                [accessor]: value
-            }
-
-            path = `${embedded_type}`;
-        }
-
-        if (parent) {
-            const { state } = parent;
-            let { changedData } = state;
-
-            if (changedData !== null) data = { ...changedData };
-
-            let v = _.get(data, path);
-
-            if (typeof v === 'object') {
-                v = _.merge({ ...v }, value);
-            } else {
-                v = value;
-            }
-
-            _.set(data, path, v);
-
-            if (onChange && typeof onChange === 'function') {
-                data = { ...data, ...onChange(value, data)};
-            }
-
-            parent.setState({ changedData: data });
+        if (onChange && typeof onChange === 'function') {
+            onChange(field, value)
         }
 
         this.setState({ value });
@@ -127,8 +93,9 @@ class EMEditFormField extends Component {
         return val;
     }
 
-    renderField(contributions, api) {
+    render() {
         const { 
+            context,
             errors, 
             showError, 
             field, 
@@ -185,8 +152,7 @@ class EMEditFormField extends Component {
                             locations={locations}
                             autoFocus 
                             entity={entity}
-                            api={api}
-                            contributions={contributions}
+                            context={context}
                             field={field}
                             disabled={typeof disabled === 'function' ? disabled(field, data) : Boolean(disabled)}
                             showError={showError}
@@ -206,22 +172,14 @@ class EMEditFormField extends Component {
         
         throw new Error(`Field "${label || name || 'unknown'}" has wrong "accessor" param declared: ${accessor}`, field);
     }
+}
 
-    render() {
-        const { accessor } = this.props.field;
+const mapStateToProps = (state) => {
+    const context = state.context;
 
-        if (!accessor || typeof accessor !== 'string') return null;
-
-        return (
-            <ContributionsContext.Consumer>
-                {(contributions) => (
-                    <ApiContext.Consumer>
-                        {(api) => this.renderField(contributions, api)}
-                    </ApiContext.Consumer>
-                )}
-            </ContributionsContext.Consumer>
-        );
+    return {
+        context
     }
 }
 
-export default EMEditFormField;
+export default connect(mapStateToProps, null)(EMEditFormField);

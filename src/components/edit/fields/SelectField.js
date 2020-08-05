@@ -67,8 +67,9 @@ class SelectField extends Component {
     }
 
     fetchData() {
-        const { field, api, entity, locations } = this.props;
+        const { context, field, entity, locations } = this.props;
         const { fetched, loading } = this.state;
+        const { api } = context;
 
         if (!field) return;
 

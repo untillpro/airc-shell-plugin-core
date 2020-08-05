@@ -4,7 +4,6 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { Grid, Card, Message, LocationSelector } from '../../base/components';
@@ -143,19 +142,16 @@ class ViewsGrid extends Component {
 }
 
 const mapStateToProps = (state) => {
+    const { contributions } = state.context;
     const { locations: selectedLocations } = state.plugin;
     const { showLocationSelector: showSelector, locations } = state.options;
 
     return { 
+        contributions,
         showSelector, 
         locations,
         selectedLocations
     };
-};
-
-ViewsGrid.propTypes = {
-    sendSelectViewMessage: PropTypes.func,
-    contributions: PropTypes.object
 };
 
 export default connect(mapStateToProps, { sendSelectViewMessage, setLocation })(ViewsGrid);

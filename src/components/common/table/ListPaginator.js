@@ -6,17 +6,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 
-import EMListPaginatorPages from './EMListPaginatorPages';
-import EMListPaginatorSize from './EMListPaginatorSize';
-import EMListPaginatorInfo from './EMListPaginatorInfo';
+import ListPaginatorPages from './ListPaginatorPages';
+import ListPaginatorSize from './ListPaginatorSize';
+import ListPaginatorInfo from './ListPaginatorInfo';
 
-class EMListPaginator extends Component {
+class ListPaginator extends Component {
     renderPages() {
         const { page, pages, onPageChange } = this.props;
 
         return (
             <div className='-left'>
-                <EMListPaginatorPages 
+                <ListPaginatorPages 
                     page={page} 
                     pages={pages} 
                     range={2} 
@@ -31,7 +31,7 @@ class EMListPaginator extends Component {
 
         return (
             <div className='-center'>
-                <EMListPaginatorSize 
+                <ListPaginatorSize 
                     options={pageSizeOptions}
                     size={pageSize}
                     onChange={onPageSizeChange}
@@ -45,7 +45,7 @@ class EMListPaginator extends Component {
         
         return (
             <div className='-right'>
-                <EMListPaginatorInfo 
+                <ListPaginatorInfo 
                     page={page}
                     pageSize={pageSize}
                     total={manual ? total : data.length}
@@ -65,7 +65,7 @@ class EMListPaginator extends Component {
     }
 }
 
-EMListPaginator.propTypes = {
+ListPaginator.propTypes = {
     page: PropTypes.number,
     pages: PropTypes.number,
     data: PropTypes.array,
@@ -85,4 +85,4 @@ const mapStateToProps = (state) => {
     }; 
 }; 
 
-export default connect(mapStateToProps, null)(EMListPaginator);
+export default connect(mapStateToProps, null)(ListPaginator);

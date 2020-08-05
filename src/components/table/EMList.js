@@ -8,10 +8,9 @@ import { connect } from 'react-redux';
 import { Table, Search } from '../../base/components';
 import log from "../../classes/Log";
 
-import HeaderBackButton from '../common/HeaderBackButton';
+import { HeaderBackButton, ListPaginator } from '../common/';
 
 import EMListHeader from './EMListHeader';
-import EMListPaginator from './EMListPaginator';
 import EMListRowAction from './EMListRowAction';
 
 import { 
@@ -437,7 +436,7 @@ class EMList extends Component {
 
             manual,
             multiSort: false,
-            PaginationComponent: EMListPaginator,
+            PaginationComponent: ListPaginator,
 
             page,
             pageSize,
@@ -506,10 +505,12 @@ class EMList extends Component {
 }
 
 const mapStateToProps = (state) => {
+    const { contributions } = state.context;
     const { list, columnsVisibility } = state.plugin;
     const { data, showDeleted, pages, page, manual, pageSize, order, total } = list;
 
     return { 
+        contributions, 
         total,
         order: order || [],
         data: data || [],

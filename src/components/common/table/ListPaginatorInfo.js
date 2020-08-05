@@ -5,7 +5,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class EMListPaginatorInfo extends Component {
+class ListPaginatorInfo extends Component {
     render() {
         const { page: p, pageSize: s, total: t } = this.props;
 
@@ -20,10 +20,10 @@ class EMListPaginatorInfo extends Component {
     }
 }
 
-EMListPaginatorInfo.propTypes = {
+ListPaginatorInfo.propTypes = {
     page: PropTypes.number,
     pageSize: PropTypes.number,
     total: PropTypes.number
 };
 
-export default EMListPaginatorInfo;
+export default ListPaginatorInfo;

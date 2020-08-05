@@ -197,10 +197,64 @@ class MockAlphaApiGate {
     }
 
     async log(wsids, props) {
-        //todo
-        console.log('log method call:', token, props);
+        console.log('log call with props: ', wsids, props);
+        const { from, to, type, from_offset, to_offset, show } = props;
 
-        return {};
+        const params = {};
+        let location = null;
+
+        if (wsids && _.isArray(wsids)) {
+            location = parseInt(wsids[0], 10);
+            params["WSIDs"] = wsids;
+        } else {
+            throw new Error('api.log() call error: workspace IDs not specified or wrong given: ' + wsids);
+        }
+
+        if (_.isNumber(from) && from >= 0) {
+            params['FromDateTime'] = parseInt(from);
+        }
+
+        if (_.isNumber(to) && to > 0) {
+            params['ToDateTime'] = parseInt(to);
+        }
+
+        if (type !== null && type !== undefined && typeof type === 'string') {
+            params['Type'] = type;
+        }
+
+        if (from_offset) {
+            params['FromOffset'] = parseInt(from_offset);
+        } else {
+            params['FromOffset'] = 0;
+        }
+
+        if (to_offset && to_offset > 0) {
+            params['ToOffset'] = parseInt(to_offset);
+        }
+
+        params['Show'] = !!show;
+
+        const path = `${location}/log`;
+
+        return this.do(`airs-bp`, path, params, 'post').then((res) => {
+            let result = {};
+
+            if (res) {
+                try {
+                    let resBuilder = new SProtBuilder();
+
+                    if (res.sections && _.isArray(res.sections)) {
+                        result = resBuilder.build(res.sections);
+                    }
+                } catch (e) {
+                    console.error(e);
+                    throw new Error(e);
+                }
+                
+            }
+
+            return result;
+        });
     }
 
     // ----- private methods -----

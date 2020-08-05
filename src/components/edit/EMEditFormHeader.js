@@ -64,13 +64,11 @@ class EMEditFormHeader extends Component {
     }
 
     handleActiveChange(value) {
-        const { parent } = this.props;
-        const { changedData } = parent.state; //parent state
-        let newData = { ...changedData };
-
-        newData.state = Number(value);
-
-        parent.setState({ changedData: newData });
+        const { onStateChanged } = this.props;
+        
+        if (onStateChanged && typeof onStateChanged === 'function') {
+            onStateChanged(Number(value))
+        }
     }
 
     performWithCheckChanges(toPerform) {
@@ -250,9 +248,7 @@ class EMEditFormHeader extends Component {
     }
 
     render() {
-        const { showActiveToggler, showNavigation, showLocationSelector, actions, contributions } = this.props;
-
-        console.log('Form header contributions: ', contributions);
+        const { showActiveToggler, showNavigation, showLocationSelector, actions } = this.props;
 
         return (
             <div className="content-header grid col-3 row-2 gap-8">
@@ -284,8 +280,14 @@ class EMEditFormHeader extends Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    const { contributions } = state.context;
 
-export default connect(null, {
+    return { contributions };
+}
+
+
+export default connect(mapStateToProps, {
     sendCancelMessage,
     sendNeedRemoveMessage,
     sendNeedReduceMessage,
