@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 
-import { Radio } from 'base/components'
+import { Radio } from '../../../base/components'
 
 class RadioGroupField extends Component {
     handleChange(event) {

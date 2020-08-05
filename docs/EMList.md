@@ -4,7 +4,7 @@ EMList - is a React component that displays EntityManager data in table view. EM
 
 ### EMList component properties
 
-EMList accepts only one required property - `entity`. Based on it component will compose required properties from `entityListParams` contributuon point. All properties are described `register()` method of each EntityManagerList child class. This properties can be complemented or overiden by outer contributors.
+EMList accepts only one required property - `entity`. Based on it component will compose required properties from `entityListParams` contributuon point. All properties are described `register()` method of each IContributor child class. This properties can be complemented or overiden by outer contributors.
 
 ### Contribution point overview
 
@@ -81,8 +81,6 @@ This properties block will override `table` paggination properties if they will 
 
 ```javascript
     {
-        "formEditKey": String, //TODO //required for items edit 
-        "formMassEditKey": String, //TODO //required for items massedit 
         "allowSelect": Boolean, //TODO
         "allowMultyselect": Boolean, //TODO
         "showColumnsToggler": Boolean,

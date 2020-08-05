@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 
-import { NumberInput } from 'base/components'
+import { NumberInput } from '../../../base/components'
 
 class NumberField extends Component {
     handleChange(value = null) {
@@ -53,11 +53,13 @@ class NumberField extends Component {
 
         const props = this.getComponentProps();
 
+        console.log(`Number field ${field.accessor} value: ${value}`);
+
         return (
             <NumberInput 
                 {...props}
                 disabled={disabled}
-                value={value}
+                value={Number(value)}
                 placeholder={placeholder}
                 onChange={(event) => this.handleChange(event)}  
             />

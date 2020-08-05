@@ -6,12 +6,12 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Toggler } from 'base/components'; 
-
-import { setColumnsVisibility } from 'actions';
-
-import { Button, Popover } from 'base/components';
 import { Empty, Icon } from 'antd';
+
+import { setColumnsVisibility } from '../../actions/';
+
+import { Button, Popover, Toggler } from '../../base/components/';
+
 
 class ColumnsToggler extends Component {
     constructor(props) {
@@ -112,7 +112,7 @@ ColumnsToggler.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-    const { columnsVisibility } = state.bo;
+    const { columnsVisibility } = state.plugin;
     
     return { 
         visibility: columnsVisibility || {}

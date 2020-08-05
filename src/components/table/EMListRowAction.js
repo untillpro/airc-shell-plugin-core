@@ -5,7 +5,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { IconButton } from 'base/components';
+import { IconButton } from '../../base/components';
+
+import {
+    ICON_ADD,
+    ICON_EDIT,
+    ICON_UNIFY,
+    ICON_DUPLICATE,
+    ICON_DEACTIVATE
+} from '../../const/Icons';
 
 import {
     sendNeedEditFormMessage,
@@ -13,7 +21,7 @@ import {
     sendNeedUnifyFormMessage,
     sendNeedRemoveMessage,
     sendNeedReduceMessage,
-} from 'actions';
+} from '../../actions/';
 
 class EMListRowAction extends Component {
     handleAction(event) {
@@ -54,15 +62,15 @@ class EMListRowAction extends Component {
         const { type, data: rowData  } = this.props;
 
         switch (type) {
-            case 'edit': return require('base/images/icons/minicon/edit.svg');
-            case 'copy': return require('base/images/icons/minicon/duplicate.svg');
-            case 'unify': return require('base/images/icons/minicon/unify.svg');
+            case 'edit': return ICON_EDIT;
+            case 'copy': return ICON_DUPLICATE;
+            case 'unify': return ICON_UNIFY;
             case 'remove': 
                 if (rowData.state === 1) {
-                    return require('base/images/icons/minicon/deactivate.svg');
+                    return ICON_DEACTIVATE;
                 } 
 
-                return require('base/images/icons/minicon/add.svg');
+                return ICON_ADD;
 
             default: return null;
         }

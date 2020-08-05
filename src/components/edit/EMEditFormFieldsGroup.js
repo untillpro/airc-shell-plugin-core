@@ -4,62 +4,61 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Tabs } from 'antd';
 
 import EMEditFormField from './EMEditFormField';
 
 class EMEditFormFieldsGroup extends Component {
-    
-    shouldComponentUpdate(nextProps) {
-        let oldValues = this.props.changedData;
-        let newValues = nextProps.changedData;
+    constructor(props) {
+        super(props);
 
-        if (this.isFieldsModified(oldValues, newValues)) return true;
-        if (this.isFieldshasErrors()) return true;
-
-        return false;
+        this.handleFieldChanged = this.handleFieldChanged.bind(this);
     }
 
-    isFieldsModified(oldValues, newValues) {
-        const { fields } = this.props;
+    handleFieldChanged(field, value) {
+        const { changedData, embedded: embedded_type, onDataChanged } = this.props;
+        const { accessor, onChange } = field;
 
-        if (!fields || fields.length <= 0) return false;
+        let data = {};
+        let path = accessor;
 
-        for (let i = 0; i < fields.length; i++) {
-            let field = fields[i];
-            let oldValue = _.get(oldValues, field.accessor);
-            let newValue = _.get(newValues, field.accessor);
-
-            if (oldValue !== newValue) {
-                return true;
-            }
+        if (embedded_type) {
+            value = { [accessor]: value }
+            path = `${embedded_type}`;
         }
 
-        return false;
-    }
+        if (changedData !== null) data = { ...changedData };
 
-    isFieldshasErrors() {
-        const { fields, parent } = this.props;
-        const { fieldsErrors } = parent.state;
+        let v = _.get(data, path);
 
-        if (!fields || fields.length <= 0) return false;
-
-        for (let i = 0; i < fields.length; i++) {
-            if (fieldsErrors[fields[i].accessor]) {
-                return true;
-            }
+        if (typeof v === 'object') {
+            v = _.merge({ ...v }, value);
+        } else {
+            v = value;
         }
 
-        return false;
+        _.set(data, path, v);
+
+        if (onChange && typeof onChange === 'function') {
+            data = { ...data, ...onChange(value, data) };
+        }
+
+        if (onDataChanged && typeof onDataChanged === 'function') {
+            onDataChanged(data)
+        }
     }
 
     render() {
-        const { parent, embedded, fields, group } = this.props;
-        const { data, contributions, isNew, isCopy, locations } = parent.props;
-        const { fieldsErrors, changedData } = parent.state;
-
-        let mergedData = _.merge({}, data, changedData);
-
+        const {
+            fields,
+            group,
+            data,
+            contributions,
+            locations,
+            fieldsErrors
+        } = this.props;
+ 
         const sortedFields = _.sortBy(fields, (o) => o.order);
 
         const groupHeader = contributions.getPointContributionValue('formsgroups', group, 'name');
@@ -68,17 +67,14 @@ class EMEditFormFieldsGroup extends Component {
 
         const content = sortedFields.map((field, index) => {
             if (field && field.accessor) {
-                const fieldComponent = <EMEditFormField 
+                const fieldComponent = <EMEditFormField
                     errors={fieldsErrors ? fieldsErrors[field.accessor] : null}
                     key={`${field.accessor}_form_field_${index}`}
-                    data={mergedData}
+                    data={data}
                     field={field}
-                    parent={parent}
-                    isNew={isNew}
-                    isCopy={isCopy}
                     locations={locations}
                     showError
-                    embedded_type={embedded}
+                    onChange={this.handleFieldChanged}
                 />;
 
                 if (isTabs) {
@@ -93,13 +89,13 @@ class EMEditFormFieldsGroup extends Component {
                     fieldComponent
                 );
             }
-                
+
             throw new Error('Error occured while building section content: wrong field decloration', field);
         });
 
 
         return (
-            <div 
+            <div
                 key={`group_${group}`}
                 className={`page-section-content-fields-group ${group}`}
             >
@@ -109,19 +105,27 @@ class EMEditFormFieldsGroup extends Component {
                     </div>
                 ) : null}
 
-                { isTabs ? (
-                    <Tabs 
+                {isTabs ? (
+                    <Tabs
                         defaultActiveKey={tabsProps.default ? String(tabsProps.default) : "0"}
                         animated={tabsProps.default || false}
                     >
                         {content}
                     </Tabs>
                 ) : (
-                    content
-                )}
+                        content
+                    )}
             </div>
         );
     }
 }
 
-export default EMEditFormFieldsGroup;
+const mapStateToProps = (state) => {
+    const { contributions } = state.context;
+
+    return {
+        contributions
+    };
+}
+
+export default connect(mapStateToProps, null)(EMEditFormFieldsGroup);

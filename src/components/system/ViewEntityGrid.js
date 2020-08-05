@@ -4,25 +4,24 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { Message, Grid, Card } from 'base/components';
+import { Message, Grid, Card } from '../../base/components';
 
 import {
     HeaderBackButton
-} from 'components';
+} from '../common/';
 
 import {
     sendSelectEntityMessage,
-    sendCancelMessage
-} from 'actions';
-
-import * as EntityManagers from 'contributors/entityManagers';
+    sendCancelMessage,
+} from '../../actions/';
 
 class ViewEntityGrid extends Component {
-    onViewClick(entity) {
-        this.props.sendSelectEntityMessage(entity);
+    selectEntity(entity) {
+        if (entity && typeof entity === 'string') {
+            this.props.sendSelectEntityMessage(entity);
+        }
     }
 
     renderHeader() {
@@ -45,27 +44,23 @@ class ViewEntityGrid extends Component {
         );
     }
 
-    renderViewsGrid(entities) {
+    renderEntitiesGrid(entities) {
         const { contributions } = this.props;
 
         const declarations = [];
 
         _.each(entities, (entityName) => {
 
-            const entityManagerPoint = contributions.getPoint('managers', entityName);
+            const entityManagerPoint = contributions.getPoint('entities', entityName);
 
             if (entityManagerPoint) {
-                const emClass = entityManagerPoint.getContributuionValue('class');
-
-                if ( EntityManagers[emClass] ) {
-                    const emc = new EntityManagers[emClass]();
-                    const declarationInfo = emc.declare();
-
-                    if (declarationInfo) {
-                        declarationInfo.code = emc.getName();
-                        declarations.push(declarationInfo);
-                    }
-                }
+                declarations.push({
+                    "name": entityManagerPoint.getContributuionValue("name"),
+                    "code": entityName,
+                    "description": entityManagerPoint.getContributuionValue("description"),
+                    "ico": entityManagerPoint.getContributuionValue("ico"),
+                    "order": entityManagerPoint.getContributuionValue("order")
+                });
             }
         });
 
@@ -91,7 +86,7 @@ class ViewEntityGrid extends Component {
                                         text={declarationInfo.description}
                                         ico={declarationInfo.ico}
                                         key={declarationInfo.name}
-                                        onClick={() => this.onViewClick(declarationInfo.code)} 
+                                        onClick={() => this.selectEntity(declarationInfo.code)} 
                                     />
                                 );
                             })
@@ -108,10 +103,10 @@ class ViewEntityGrid extends Component {
         const { view, contributions } = this.props;
         const viewPoint = contributions.getPointContributions('views', view);
         
-        const EMViews = viewPoint.managers;
+        const entities = viewPoint.managers;
 
-        if (EMViews  && EMViews.length > 0) {
-            return this.renderViewsGrid(EMViews);
+        if (entities  && entities.length > 0) {
+            return this.renderEntitiesGrid(entities);
         }
 
         return (
@@ -124,16 +119,11 @@ class ViewEntityGrid extends Component {
     }
 }
 
-ViewEntityGrid.propTypes = {
-    sendSelectEntityMessage: PropTypes.func,
-    view: PropTypes.string,
-    contributions: PropTypes.object
-};
-
 const mapStateToProps = (state) => {
-    const { view } = state.bo;
+    const { contributions } = state.context;
+    const { view } = state.plugin;
 
-    return { view };
+    return { view, contributions };
 };
 
 export default connect(mapStateToProps, { 

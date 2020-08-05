@@ -4,7 +4,7 @@
 
 import _ from 'lodash';
 import StateMachineStep from '../StateMachineStep';
-import log from 'Log';
+import Logger from '../../base/classes/Logger';
 import { MessageInit, MessageNotify } from '../messages';
 
 import {
@@ -20,9 +20,10 @@ class EntityEditStep extends StateMachineStep {
     constructor(...args) {
         super(args);
 
-        this.context = null;
         this.data = null;
         this.entries = null;
+        this.entity = null;
+        this.locations = null;
     }
 
     getName() {
@@ -51,7 +52,7 @@ class EntityEditStep extends StateMachineStep {
                 );
             }
 
-            log('EntityEditStep.MessageInit() fetched data:', data);
+            Logger.log(data, 'EntityEditStep.MessageInit() fetched data:', "EntityEditStep.MessageInit");
 
             return {
                 changedData: {
@@ -94,8 +95,9 @@ class EntityEditStep extends StateMachineStep {
         };
     }
 
+    //TODO remove state from context; init entity and locations in InitMessage
     async MessageProceed(msg, context) {
-        const { api, contributions, state } = context;
+        const { state } = context;
         let { entries } = this;
         let { entity, locations } = state;
 
@@ -123,7 +125,7 @@ class EntityEditStep extends StateMachineStep {
             }
         }
 
-        return processData(entity, data, entries, api, contributions).then((res) => {
+        return processData(context, entity, data, entries).then((res) => {
             return {
                 pop: true,
                 message: new MessageNotify({ refresh: true }),
@@ -141,6 +143,7 @@ class EntityEditStep extends StateMachineStep {
         return null;
     }
 
+    //TODO remove state from context; init entity and locations in InitMessage
     async fetchEntityData(items, context) {
         const { api, contributions, state } = context;
         const { entity, locations } = state;
@@ -164,7 +167,7 @@ class EntityEditStep extends StateMachineStep {
             wsid 
         };
 
-        return fetchData(entity, api, contributions, doProps)
+        return fetchData(context, entity, doProps)
             .then(({ data, Data, resolvedData }) => {
                 if (resolvedData && resolvedData.length > 0) {
                     return this.checkForEmbededTypes(resolvedData[0], context);
@@ -173,6 +176,7 @@ class EntityEditStep extends StateMachineStep {
             });
     }
 
+    //TODO remove state from context; init entity and locations in InitMessage
     checkForEmbededTypes(data, context) {
         const { contributions, state } = context;
         const { entity } = state;

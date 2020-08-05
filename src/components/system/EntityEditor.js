@@ -8,13 +8,13 @@ import { connect } from 'react-redux';
 import { 
     EMEditForm,
     EMMassEditForm
-} from 'components';
+} from '../../components';
 
 import {
     sendNeedProccessMessage,
     sendNeedValidateMessage,
     sendNeedFormNavigation
-} from 'actions';
+} from '../../actions/';
 
 class EntityEditor extends Component {
     componentDidMount() {
@@ -34,14 +34,13 @@ class EntityEditor extends Component {
     }
 
     render() {
-        const { contributions, massedit, data, locations, entity, isCopy, isNew } = this.props;
+        const { massedit, data, locations, entity, isCopy, isNew } = this.props;
 
         return (
             <div className='content-container'>
                 {massedit ? (
                     <EMMassEditForm 
                         showHeader 
-                        contributions={contributions}
                         data={data}
                         entity={entity}
 
@@ -51,7 +50,6 @@ class EntityEditor extends Component {
                 ) : (
                     <EMEditForm 
                         showHeader 
-                        contributions={contributions}
                         data={data}
                         entity={entity}
                         isCopy={isCopy}
@@ -69,7 +67,7 @@ class EntityEditor extends Component {
 }
 
 const mapStateToProps = (state) => {
-    const { entity, entityData, isCopy, isNew, locations } = state.bo;
+    const { entity, entityData, isCopy, isNew, locations } = state.plugin;
 
     return { 
         isCopy,

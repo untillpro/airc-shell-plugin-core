@@ -5,11 +5,11 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 
-import { Button, Table, Modal } from 'base/components';
+import EMEditForm from '../EMEditForm';
+import { Button, Table, Modal } from '../../../base/components';
+import { ListPaginator } from '../../common/';
+import { reduce } from '../../../classes/Utils';
 
-import { EMListPaginator, EMEditForm } from 'components';
-
-import { reduce } from 'classes/Utils';
 /**
  * All API communications are realized in-component not in state machine cause of BO Reducer State intersections. 
  * 
@@ -158,6 +158,10 @@ class EmbeddedManagerField extends Component {
     }
 
     handleHeaderAction(action) {
+        const { disabled } = this.props;
+
+        if (disabled) return;
+
         switch (action) {
             case 'add': this.actionAdd(); break;
             case 'edit': this.actionEdit(); break;
@@ -184,7 +188,8 @@ class EmbeddedManagerField extends Component {
     } 
 
     getColumns() {
-        const { contributions } = this.props;
+        const { context } = this.props;
+        const { contributions } = context;
         const { entity } = this;
         const { /* actions, */ data } = this.state;
 
@@ -239,7 +244,8 @@ class EmbeddedManagerField extends Component {
 
     prepareProps() {
         const { entity } = this;
-        const { contributions } = this.props;
+        const { context } = this.props;
+        const { contributions } = context;
 
         const entityListContributions = contributions.getPointContributions('list', entity);
 
@@ -304,6 +310,7 @@ class EmbeddedManagerField extends Component {
     }
 
     renderHeaderActions() {
+        const { disabled } = this.props;
         const { component, selectedRows: rows } = this.state;
 
         if (!component || !component.actions || !component.actions.length) return null;
@@ -313,19 +320,19 @@ class EmbeddedManagerField extends Component {
         component.actions.forEach((action) => {
             switch (action) {
                 case 'add':
-                    result.add = (<Button icon='plus' key='header-action-add' onClick={() => this.handleHeaderAction(action)} />);
+                    result.add = (<Button icon='plus' key='header-action-add' disabled={disabled} onClick={() => this.handleHeaderAction(action)} />);
                     break;
                 case 'remove':
-                    result.remove = (<Button icon='delete' key='header-action-remove' disabled={!rows.length} onClick={() => this.handleHeaderAction(action)} />);
+                    result.remove = (<Button icon='delete' key='header-action-remove' disabled={!rows.length || disabled} onClick={() => this.handleHeaderAction(action)} />);
                     break;
 
                 case 'copy':
-                    result.refresh = (<Button icon='copy' key='header-action-copy' disabled={!rows.length} onClick={() => this.handleHeaderAction(action)} />);
+                    result.refresh = (<Button icon='copy' key='header-action-copy' disabled={!rows.length || disabled} onClick={() => this.handleHeaderAction(action)} />);
                     break;
 
                 case 'edit':
                     if (!rows || rows.length <= 0) break;
-                    result.edit = (<Button type='primary' key='header-action-edit' text='Edit' disabled={rows.length > 1} onClick={() => this.handleHeaderAction(action)} />);
+                    result.edit = (<Button type='primary' key='header-action-edit' text='Edit' disabled={rows.length > 1 || disabled} onClick={() => this.handleHeaderAction(action)} />);
                     break;
 
                 case 'massedit': break; //TODO
@@ -380,7 +387,7 @@ class EmbeddedManagerField extends Component {
 
     renderEditModal() {
         const { entity } = this;
-        const { contributions, locations } = this.props;
+        const { locations } = this.props;
         const { edit, copy, entityData, selectedRows } = this.state;
 
         if (edit) {
@@ -398,7 +405,6 @@ class EmbeddedManagerField extends Component {
                         entity={entity}
                         isCopy={copy}
                         isNew={!(selectedRows.length > 0)}
-                        contributions={contributions}
                         data={entityData}
                         onProceed={(newData) => this.onEditFormProceed(!copy ? rowIndex : null, newData)}
                         locations={locations}
@@ -441,14 +447,16 @@ class EmbeddedManagerField extends Component {
         const data = this.getData();
 
         const tableConfig = {
+            disabled,
             data,
             columns,
-            disabled,
-            PaginationComponent: EMListPaginator,
+            PaginationComponent: ListPaginator,
             ...properties,
             minRows: properties.minRows || 5,
-
+            className: disabled ? "disabled-table" : null,
             getTrProps: (state, row) => {
+                if (disabled) return {};
+
                 return {
                     onClick: (e) => this.handleRowClick(e, row),
                     onDoubleClick: (e) => this.handleRowDoubleClick(e, row),
@@ -456,7 +464,6 @@ class EmbeddedManagerField extends Component {
                 };
             }
         };
-
 
         return (
             <div className="embedded-manager-field">
@@ -472,7 +479,10 @@ class EmbeddedManagerField extends Component {
                 </div>
 
                 <div className="embedded-manager-field">
-                    <Table {...tableConfig} />
+                    <Table 
+                        disabled={disabled}
+                        {...tableConfig} 
+                    />
                 </div>
 
                 {this.renderEditModal()}

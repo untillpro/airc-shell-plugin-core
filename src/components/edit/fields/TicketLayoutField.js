@@ -5,18 +5,17 @@
 import _ from 'lodash';
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Message, Select, Button } from 'base/components';
-
-import EMEditFormFieldsBuilder from './EMEditFormFieldsBuilder';
-import TicketLayoutPreview from './TicketLayoutPreview';
-
 import { Empty } from 'antd';
+
+import { Message, Select, Button } from '../../../base/components';
+import EMEditFormFieldsBuilder from '../EMEditFormFieldsBuilder';
+import TicketLayoutPreview from './TicketLayoutPreview';
 
 import {
     sendError
-} from 'actions/MessagesActions';
+} from '../../../actions/MessagesActions';
 
-import * as Errors from 'const/Errors';
+import * as Errors from '../../../const/Errors';
 
 const Buffer = require('buffer').Buffer;
 
@@ -37,6 +36,8 @@ class TicketLayoutField extends Component {
             layoutTemplate: [],
             layoutHelpers: []
         };
+
+        this.onDataChanged = this.onDataChanged.bind(this);
     }
 
     componentDidMount() {
@@ -60,7 +61,8 @@ class TicketLayoutField extends Component {
     }
 
     init() {
-        const { contributions, value } = this.props;
+        const { context, value } = this.props;
+        const { contributions } = context;
 
         let selectedLayout = null;
         let layoutTemplate = null;
@@ -160,7 +162,8 @@ class TicketLayoutField extends Component {
     }
 
     compareTemplates(code, template) {
-        const { contributions } = this.props;
+        const { context } = this.props;
+        const { contributions } = context;
 
         const tpl = contributions.getPointContributionValue('layouts', code, 'template');
 
@@ -169,6 +172,10 @@ class TicketLayoutField extends Component {
         }
 
         return false;
+    }
+
+    onDataChanged(newChangedData) {
+        this.setState({ changedData: newChangedData })
     }
 
     handleChange() {
@@ -191,14 +198,18 @@ class TicketLayoutField extends Component {
     }
 
     getTemplate(code) {
-        const { contributions } = this.props;
+        const { context } = this.props;
+        const { contributions } = context;
+
         const template = contributions.getPointContributionValue('layouts', code, 'template');
 
         return template;
     }
 
     getSettings(code) {
-        const { contributions } = this.props;
+        const { context } = this.props;
+        const { contributions } = context;
+
         let settings = [];
 
         const LAYOUT = contributions.getPointContributions('layouts', code);
@@ -208,7 +219,9 @@ class TicketLayoutField extends Component {
     }
 
     getHelpers(code) {
-        const { contributions } = this.props;
+        const { context } = this.props;
+        const { contributions } = context;
+
         const helpers = {};
  
         const HELPERS = contributions.getPointContributions('helpers', code);
@@ -296,11 +309,10 @@ class TicketLayoutField extends Component {
     }
 
     renderLayoutDetails() {
-        const { contributions } = this.props;
         const { 
             layoutSettings, 
             layoutTemplate, 
-            layoutHelpers, 
+            layoutHelpers,  
             selectedLayout, 
             changedData } = this.state;
 
@@ -320,9 +332,12 @@ class TicketLayoutField extends Component {
                     <div className="ticket-layout-selector-field-settings">
                         <EMEditFormFieldsBuilder
                             fields={layoutSettings}
-                            parent={this}
-                            contributions={contributions}
                             opened={true}
+
+                            onDataChanged={this.onDataChanged}
+
+                            data={changedData}
+                            changedData={changedData}
                         />
                     </div>
 

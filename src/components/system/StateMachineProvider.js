@@ -2,19 +2,16 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import StateMachine from 'classes/StateMachine';
+import StateMachine from '../../classes/StateMachine';
 //import * as Messages from 'classes/StateMachine/messages';
-import { RootStep } from 'classes/steps/';
-
-import ApiContext from 'context/ApiContext';
+import { RootStep } from '../../classes/steps/';
 
 import {
     sendStateMachineResult
-} from 'actions';
+} from '../../actions/';
 
 class StateMachineProvider extends Component {
     constructor() {
@@ -34,41 +31,37 @@ class StateMachineProvider extends Component {
         return false;
     }
 
-    renderWithContext(api) {
-        const { message, state, manager, isGlobal, shouldPop } = this.props;
-        
+    render() {
+        const { context, message, state, isGlobal, shouldPop } = this.props;
+        const { api } = context;
         /**
          * if message was specified then send it to state machine
-         * 
-         * state.bo - context for state machine
          */
-        if (message) {
-            const context = {
-                api,
-                state: state.bo,
-                contributions: manager
-            };
 
+        //TODO - remove state from messages
+        
+        if (message) {
             let promise = null;
 
             if (isGlobal) {
-                promise =  this.stateMachine.sendGlobalMessage(message, context, shouldPop);
+                promise = this.stateMachine.sendGlobalMessage(message, { ...context, state }, shouldPop);
             } else {
-                promise = this.stateMachine.sendMessage(message, context);
+                promise = this.stateMachine.sendMessage(message, { ...context, state });
             }
-            
-            promise.then((data) => {
+
+            promise
+                .then((data) => {
                     this.props.sendStateMachineResult(
                         this.stateMachine.getCurrenStepName(),
                         data
                     );
 
                     // if response has errors will send error to shell
-                    if (data.error) { 
+                    if (data.error) {
                         api.sendError(data.error);
                     }
                 })
-                .catch((e) => { 
+                .catch((e) => {
                     // if request crashed will send error to shell
                     api.sendError(e);
                 });
@@ -76,29 +69,20 @@ class StateMachineProvider extends Component {
 
         return this.props.children;
     }
-
-    render() {
-        return (
-            <ApiContext.Consumer>
-                {(api) => this.renderWithContext(api)}
-            </ApiContext.Consumer>
-        );
-    }
 }
 
-StateMachineProvider.propTypes = {
-    children: PropTypes.node,
-    message: PropTypes.object,
-    state: PropTypes.object,
-    sendStateMachineResult: PropTypes.func
-};
-
 const mapStateToProps = (state) => {
-    const { message, isGlobal, shouldPop } = state.machine; 
+    const { message, isGlobal, shouldPop } = state.machine;
 
-    return { state, message, isGlobal, shouldPop };
+    return { 
+        context: state.context,
+        state: state.plugin,
+        message, 
+        isGlobal, 
+        shouldPop 
+    };
 };
 
-export default connect(mapStateToProps, { 
+export default connect(mapStateToProps, {
     sendStateMachineResult
 })(StateMachineProvider);

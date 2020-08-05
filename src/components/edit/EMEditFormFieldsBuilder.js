@@ -6,7 +6,6 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 
 import EMEditFormFieldsGroup from './EMEditFormFieldsGroup';
-import * as Utils from 'classes/Utils';
 
 class EMEditFormFieldsBuilder extends Component {
     constructor() {
@@ -53,29 +52,25 @@ class EMEditFormFieldsBuilder extends Component {
         return true;
     }
 
+    // TODO use of context
     buildFieldsGroups() {
         if (!this.state.groups) return null;
         
-        const { parent, embedded } = this.props;
-        const { data, contributions, isNew, isCopy, locations } = parent.props;
-        const { fieldsErrors, changedData } = parent.state;
-
-        let mergedData = Utils.mergeDeep({}, data, changedData);
+        const { embedded, data, changedData, locations, fieldsErrors, onDataChanged  } = this.props;
+        
         let counter = 0;
 
         return _.map(this.state.groups, (fields, group) => {
             return <EMEditFormFieldsGroup 
                 index={counter++}
                 key={group}
-                contributions={contributions}
-                isNew={isNew}
-                isCopy={isCopy}
                 locations={locations}
-                data={mergedData}
+                data={data} // here lies alredy merged data from EMEditForm
                 changedData={changedData}
                 fieldsErrors={fieldsErrors}
                 embedded={embedded}
-                parent={parent}
+                onDataChanged={onDataChanged}
+
                 group={group}
                 fields={fields}
             />;

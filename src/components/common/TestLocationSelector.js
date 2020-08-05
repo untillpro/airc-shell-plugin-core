@@ -6,11 +6,10 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Form, Input, Button } from 'antd';
-import { Grid } from 'base/components'    
+import { Grid } from '../../base/components'    
+import { setLocation } from '../../actions/';
 
-import { setLocation } from 'actions';
-
-class LocationSelector extends Component {
+class TestLocationSelector extends Component {
     constructor() {
         super();
 
@@ -141,7 +140,7 @@ const styles = {
 };
 
 const mapStateToProps = (state) => {
-    const { locations, show_selector } = state.bo;
+    const { locations, show_selector } = state.plugin;
 
     if (!show_selector) return {};
 
@@ -151,4 +150,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-export default connect(mapStateToProps, {setLocation})(LocationSelector);
+export default connect(mapStateToProps, {setLocation})(TestLocationSelector);

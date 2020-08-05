@@ -5,7 +5,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class EMListPaginatorSize extends Component {
+class ListPaginatorSize extends Component {
     handleChange(event) {
         const { onChange } = this.props;
 
@@ -50,10 +50,10 @@ class EMListPaginatorSize extends Component {
     }
 }
 
-EMListPaginatorSize.propTypes = {
+ListPaginatorSize.propTypes = {
     options: PropTypes.array,
     size: PropTypes.number,
     onChange: PropTypes.func
 };
 
-export default EMListPaginatorSize;
+export default ListPaginatorSize;

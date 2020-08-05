@@ -11,12 +11,10 @@ import DefaultHelpers from '../classes/DefaultHelpers';
 
 import {
     sendError
-} from 'actions/MessagesActions';
+} from '../../../actions/MessagesActions';
 
-import 'assets/css/ticket.css';
-
-import data from 'const/TicketMockData';
-import * as Errors from 'const/Errors';
+import data from '../../../const/TicketMockData';
+import * as Errors from '../../../const/Errors';
 
 class TicketLayoutPreview extends Component {
     constructor() {

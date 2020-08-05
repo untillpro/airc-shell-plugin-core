@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 
-import { Checkbox } from 'base/components'
+import { Checkbox } from '../../../base/components'
 
 class CheckboxField extends Component {
     handleChange(event) {

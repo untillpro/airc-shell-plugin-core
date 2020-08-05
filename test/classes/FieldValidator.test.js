@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import FieldValidator from '../../src/classes/FieldValidator';
 import * as Errors from "../../src/lang/Errors";
 

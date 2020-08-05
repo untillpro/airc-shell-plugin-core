@@ -2,27 +2,34 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
-
-import ApiContext from 'context/ApiContext';
-
-import {
-    sendData,
-    sendSelectViewMessage
-} from 'actions';
-
 import isProd from 'is-prod';
 
-import UShellAPIGate from 'base/classes/UShellAPIGate'; //enable on production 
-//import MockUShellAPIGate from 'mock/MockApiGate';
-import MockAlphaApiGate from 'mock/MockAlphaApiGate';
+import {
+    setContext,
+    sendData,
+    sendSelectViewMessage
+} from '../../actions/';
+
+import UShellAPIGate from '../../base/classes/UShellAPIGate';
+import MockAlphaApiGate from '../../mock/MockAlphaApiGate';
 
 class ApiProvider extends Component {
-    constructor() {
-        super();
-        
-        this.apiGate = null;
+    componentDidMount() {
+        const API = {
+            selectView: (view) => this._selectView(view)
+        };
+
+        let apiGate = null;
+
+        if (isProd.isProduction()) {
+            apiGate = new UShellAPIGate(API);
+        } else {
+            apiGate = new MockAlphaApiGate();
+        }
+
+        this.props.setContext("api", apiGate)
     }
 
     componentDidUpdate(oldProps) {
@@ -54,26 +61,11 @@ class ApiProvider extends Component {
     }
 
     _selectView(view) {
-        console.log("BO ApiProvider._selectView()", view);
         this.props.sendSelectViewMessage(view); 
     }
 
     render() {
-        const API = {
-            selectView: (view) => this._selectView(view)
-        };
-
-        if (isProd.isProduction()) {
-            this.apiGate = new UShellAPIGate(API);
-        } else {
-            this.apiGate = new MockAlphaApiGate();
-        }
-
-        return (
-            <ApiContext.Provider value={this.apiGate}>
-                {this.props.children}
-            </ApiContext.Provider>
-        );
+        return this.props.children;
     }
 }
 
@@ -84,6 +76,7 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, { 
+    setContext,
     sendData, 
     sendSelectViewMessage
 })(ApiProvider);

@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 
-import { TextInput } from 'base/components'
+import { TextInput } from '../../../base/components'
 
 //TODO regexp and max length
 
@@ -85,7 +85,7 @@ class TextField extends Component {
                 input={field}
                 type={password ? 'password' : type || 'text'}
                 error={hasErrors}
-                value={val || ''}
+                value={val !== undefined ? val : ''}
                 onChange={!disabled ? (event) => this.handleChange(event) : null}
                 {...props}
             />

@@ -6,7 +6,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class EMListPaginatorPages extends Component {
+class ListPaginatorPages extends Component {
     componentDidMount() {
         document.addEventListener('keydown', this.hadleKeyPress.bind(this), false);
     }
@@ -155,11 +155,11 @@ class EMListPaginatorPages extends Component {
     }
 }
 
-EMListPaginatorPages.propTypes = {
+ListPaginatorPages.propTypes = {
     pages: PropTypes.number,
     page: PropTypes.number,
     selectPage: PropTypes.func,
     range: PropTypes.number
 };
 
-export default EMListPaginatorPages;
+export default ListPaginatorPages;

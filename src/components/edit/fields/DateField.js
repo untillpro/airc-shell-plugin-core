@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 import moment from 'moment';
-import { DatePicker } from 'base/components'
+import { DatePicker } from '../../../base/components'
 
 class DateField extends Component {
 

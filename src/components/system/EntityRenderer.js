@@ -3,52 +3,32 @@
  */
 
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
-import ContributionsContext from 'context/ContributionsContext';
+import EMList from '../table/EMList';
 
 import {
     sendCancelMessage
-} from 'actions';
-
-import * as EntityManagers from 'contributors/entityManagers';
+} from '../../actions/';
 
 class EntityRenderer extends Component {
-    renderWithContext(context) {
+    render() {
+        // TODO different type of entity_edit_step
         const { entity } = this.props;
        
-        if (entity) {
-            const entityManagerPoint = context.getPoint('managers', entity);
-
-            if (entityManagerPoint) {
-                const entityManagerClass = entityManagerPoint.getContributuionValue('class');
-
-                if (entityManagerClass && EntityManagers[entityManagerClass]) {
-                    return new EntityManagers[entityManagerClass]().render();
-                }
+        try {
+            if (entity) {
+                return <EMList entity={entity} />;
             }
+        } catch (e) {
+            this.props.sendCancelMessage();
         }
 
-        this.props.sendCancelMessage();
-    }
-
-    render() {
-        return (
-            <ContributionsContext.Consumer>
-                { context => this.renderWithContext(context) }
-            </ContributionsContext.Consumer>
-        );
+        return null;
     }
 }
 
-EntityRenderer.propTypes = {
-    entity: PropTypes.string,
-    sendCancelMessage: PropTypes.func
-};
-
 const mapStateToProps = (state) => {
-    const { entity } = state.bo;
+    const { entity } = state.plugin;
 
     return { entity };
 };

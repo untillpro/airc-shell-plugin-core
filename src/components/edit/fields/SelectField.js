@@ -4,12 +4,12 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { Select } from 'base/components';
 import { isNull, isUndefined } from 'util';
 
+import { Select } from '../../../base/components';
 import {
     buildData
-} from 'classes/EntityUtils';
+} from '../../../classes/EntityUtils';
 
 const { Option, OptGroup } = Select;
 
@@ -67,8 +67,9 @@ class SelectField extends Component {
     }
 
     fetchData() {
-        const { field, api, entity, locations } = this.props;
+        const { context, field, entity, locations } = this.props;
         const { fetched, loading } = this.state;
+        const { api } = context;
 
         if (!field) return;
 
@@ -168,11 +169,11 @@ class SelectField extends Component {
             const opt_val = value_accessor ? _.get(value, value_accessor) : value;
             const opt_text = String(text_accessor ? _.get(value, text_accessor) : text);
             
-            console.log('select field option: ', text, ":", text_accessor, ':' ,value);
+            console.log('select field option: ', opt_text, ":", text_accessor, ':' ,opt_val);
 
             if (text && String(text).indexOf("---") === 0) {
                 if (group !== null) {
-                    result.push(<OptGroup label={group}>{groupOptions}</OptGroup>)
+                    result.push(<OptGroup key={group} label={group}>{groupOptions}</OptGroup>)
 
                     groupOptions = [];
                     group = text.slice(3);
@@ -204,7 +205,7 @@ class SelectField extends Component {
             count++;
 
             if (count === _.size(options) && group !== null && groupOptions.length > 0) {
-                result.push(<OptGroup label={group}>{groupOptions}</OptGroup>)
+                result.push(<OptGroup key={group} label={group}>{groupOptions}</OptGroup>)
             }
         });
 
