@@ -4,6 +4,7 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
+    "airc-shell-core": "file:src/base",
     "antd": "^3.26.15",
     "axios": "^0.18.1",
     "classnames": "^2.2.6",
