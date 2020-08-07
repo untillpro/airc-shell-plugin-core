@@ -240,6 +240,7 @@ class ReportDetails extends Component {
             <div className="page-section-content-fields-group">
                 <div className="page-section-field span-6">
                     <DateTimeFilter
+                        showCustom
                         periods={periods}
 
                         error={isError}
