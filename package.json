@@ -31,7 +31,8 @@
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
     "stubble4js": "^1.0.2",
-    "tagser4js": "^1.0.3"
+    "tagser4js": "^1.0.3",
+    "reselect": "^4.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
