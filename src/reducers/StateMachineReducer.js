@@ -93,7 +93,6 @@ export default (state = INITIAL_STATE, action) => {
             break;
 
         case Types.SEND_DO_GENERATE_REPORT_MESSAGE:
-            console.log(`${Types.SEND_DO_GENERATE_REPORT_MESSAGE} handled: `, action.payload);
             message = new Messages.MessageGenerateReport(action.payload);
             break;
 

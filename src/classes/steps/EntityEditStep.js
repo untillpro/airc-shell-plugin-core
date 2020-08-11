@@ -134,7 +134,7 @@ class EntityEditStep extends StateMachineStep {
                 }
             };
         }).catch((e) => {
-            console.log(e.toString());
+            console.error(e.toString());
             this.error(e.toString());
         });
     }

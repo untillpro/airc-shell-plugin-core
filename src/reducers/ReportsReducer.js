@@ -31,10 +31,7 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case SEND_STATE_MACHINE_DATA:
-            console.log("ReportReducer.SEND_STATE_MACHINE_DATA", action.payload);
             let t = mergeExisting(state, action.payload);
-
-            console.log("State after merge: ", t);
             return t;
 
         case SELECT_REPORT_TYPE_MESSAGE:

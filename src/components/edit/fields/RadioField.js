@@ -43,8 +43,6 @@ class RadioField extends Component {
             value: val
         } = field;
 
-        console.log("Radio: ", field, value);
-        
         return (
             <Radio 
                 disabled={disabled}

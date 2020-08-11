@@ -143,12 +143,10 @@ class ReportDetails extends Component {
     }
 
     handleReportFilterChange(newChangedData) {
-        console.log('handleReportFilterChange - ', newChangedData);
         this.setState({ reportFilter: newChangedData });
     }
 
     handleReportPropsChange(newChangedData) {
-        console.log('handleReportPropsChange - ', newChangedData);
         this.setState({ reportProps: newChangedData });
     }
 

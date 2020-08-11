@@ -135,8 +135,6 @@ class EMEditForm extends Component {
 
         const resultData = { ...changedData }
 
-        console.log('resultData before: ', resultData);
-
         if (resultData && _.isObject(resultData) && _.size(resultData) > 0) {
             _.forEach(resultData, (value, key) => {
                 if (key.indexOf("__") === 0) {
@@ -144,8 +142,6 @@ class EMEditForm extends Component {
                 }
             });
         }
-
-        console.log('resultData after: ', resultData);
 
         if (data) {
             const cc = contributions.getPointContributions("forms", entity);

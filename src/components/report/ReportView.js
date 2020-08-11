@@ -53,10 +53,6 @@ class ReportView extends Component {
         this.props.sendDoGenerateReport();
     }
 
-    componentDidUpdate() {
-        console.log('ReportView updated: ', this.props);
-    }
-
     prepareProps() {
         const { contributions, report } = this.props;
         const reportPoint = contributions.getPoint(TYPE_REPORTS, report);
@@ -97,8 +93,6 @@ class ReportView extends Component {
                 }
             });
         }
-
-        console.log('Result columns: ', columns);
 
         return columns;
     }
@@ -142,7 +136,6 @@ class ReportView extends Component {
     };
 
     handleCancelClick() {
-        console.log('cancel clicked');
         this.props.sendCancelMessage()
     }
 

@@ -10,8 +10,6 @@ import {
 } from './Types';
 
 export const selectReportType = (code) => {
-    console.log(`Selected report is ${code}`);
-
     return {
         type: SELECT_REPORT_TYPE_MESSAGE,
         payload: code

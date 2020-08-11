@@ -70,7 +70,6 @@ class ReportViewStep extends StateMachineStep {
         const { contributions } = context;
         const { report, filterBy, props, from, to } = msg;
 
-        console.log("ReportViewStep.MessageGenerateReport handled: ", msg);
         let reportData = null;
 
         if (report && typeof report === 'string') {
@@ -140,12 +139,8 @@ class ReportViewStep extends StateMachineStep {
             to_offset: 1000000 // mock
         };
 
-        console.log('ReportViewStep.fetchData props', props);
-
         return api.log(locations, props)
             .then((res) => { 
-                console.log('ReportViewStep.fetchData res', res);
-
                 // mock result due to absent of ../report/ function        // TODO remove in isProduction
                 const mockResult = this._mock(locations, res);
                 // dont forget to remove this after real ../report/ func become available

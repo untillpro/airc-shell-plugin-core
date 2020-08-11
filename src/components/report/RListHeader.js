@@ -41,8 +41,6 @@ class RListHeader extends PureComponent {
             to = values[1] || null;
         }
 
-        console.log(" ---- handleDateFilterChange ---- ", values, from, to);
-
         this.props.sendDoGenerateReport(null, from, to);
     }
 

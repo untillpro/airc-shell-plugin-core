@@ -361,7 +361,7 @@ class EmbeddedManagerField extends Component {
 
         let resultData = [];
 
-        console.log('Embeded edit form proceed new data:', newData);
+        log('Embeded edit form proceed new data:', newData);
 
         if (newData && _.size(newData) > 0) {
             if (i >= 0) {
@@ -371,7 +371,7 @@ class EmbeddedManagerField extends Component {
             }
         }
 
-        console.log('Embeded edit form proceed result data:', resultData);
+        log('Embeded edit form proceed result data:', resultData);
 
         this.handleChange(resultData);
         this.setState(newState);
