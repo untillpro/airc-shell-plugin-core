@@ -84,7 +84,7 @@ class ReportView extends Component {
 
         const entityListContributions = contributions.getPointContributions(TYPE_REPORTS, report);
 
-        if (entityListContributions.columns) {
+        if (entityListContributions && entityListContributions.columns) {
             _.each(entityListContributions.columns, (col) => {
                 const column = this.prepareColumn(col);
 

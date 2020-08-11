@@ -225,7 +225,7 @@ class EMList extends Component {
         
         const entityListContributions = contributions.getPointContributions('list', entity);
 
-        if (entityListContributions.columns) {
+        if (entityListContributions && entityListContributions.columns) {
             _.each(entityListContributions.columns, (column) => {
                 if (column.dynamic) {
                     //columns = [...columns, ...this.getDynamicColumns(column, data)];  // TODO
