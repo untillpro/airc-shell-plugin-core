@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import {
     SELECT_REPORT_TYPE_MESSAGE,
     SEND_DO_GENERATE_REPORT_MESSAGE,

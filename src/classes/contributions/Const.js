@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 // # EVENT TYPES
 
 export const EVENT_ORDER = 'orders';
