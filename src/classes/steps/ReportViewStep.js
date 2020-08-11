@@ -64,16 +64,38 @@ class ReportViewStep extends StateMachineStep {
 
     async MessageGenerateReport(msg, context) {
         const { contributions } = context;
-        const { fromDateTime, toDateTime, props } = this;
+        const { report, filterBy, props, from, to } = msg;
 
+        console.log("ReportViewStep.MessageGenerateReport handled: ", msg);
         let reportData = null;
+
+        if (report && typeof report === 'string') {
+            this.reportType = report;
+        }
+
+        if (filterBy && _.isPlainObject(filterBy)) {
+            this.filterBy = filterBy;
+        }
+
+        if (props && _.isPlainObject(props)) {
+            this.props = props;
+        }
+        if (from && _.isNumber(from)) {
+            this.fromDateTime = from;
+        }
+
+        if (to && _.isNumber(to)) {
+            this.toDateTime = to;
+        }
+
+        const { fromDateTime, toDateTime } = this;
 
         const Data = await this.fetchData(context);
         
         if (Data && _.size(Data) > 0) {
             let generator = contributions.getPointContributionValue(TYPE_REPORTS, this.reportType, C_REPORT_GENERATOR);
 
-            reportData = generator(Data, { ...props, fromDateTime, toDateTime});
+            reportData = generator(Data, { ...this.props, fromDateTime, toDateTime});
         }
 
         if (!reportData || !_.isArray(reportData)) {

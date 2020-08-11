@@ -43,3 +43,85 @@ export const isValidReport = (context, reportCode) => {
 
     return true;
 }
+
+export const getDatetimePeriods = (contributions, mostUsedPeriods) => {
+    let periods = [];
+    let allPeriods = {};
+
+    if (contributions) {
+        const groups = contributions.getPoints("periods_groups");
+
+        _.forEach(groups, (groupCode) => {
+            let groupPoint = contributions.getPoint("periods_groups", groupCode)
+
+            if (!groupPoint) return;
+
+            let g = {
+                name: groupPoint.getContributuionValue("name"),
+                code: groupCode,
+                order: groupPoint.getContributuionValue("order"),
+                periods: []
+            }
+
+            let p = groupPoint.getContributuionValue("periods", true);
+
+            if (p && _.isArray(p) && p.length > 0) {
+                _.forEach(p, (periodCode) => {
+                    let periodPoint = contributions.getPoint("periods", periodCode)
+
+                    if (!periodPoint) return;
+
+                    let period = {
+                        code: periodCode,
+                        name: periodPoint.getContributuionValue("name"),
+                        from: periodPoint.getContributuionValue("from"),
+                        to: periodPoint.getContributuionValue("to")
+                    };
+
+                    allPeriods[periodCode] = period;
+                    g.periods.push(period);
+                });
+            }
+
+            periods.push(g);
+        });
+
+    }
+
+    let mostUsedGroup = generateMostUsedPeriods(allPeriods, mostUsedPeriods);
+
+    if (mostUsedGroup) {
+        periods.push(mostUsedGroup);
+    }
+
+    periods = _.sortBy(periods, (o) => o.order);
+
+    return periods;
+}
+
+const generateMostUsedPeriods = (allPeriods, mostUsedPeriods) => {
+    let periods = [];
+    let group = null;
+
+    if (allPeriods && _.size(allPeriods) > 0 && mostUsedPeriods && _.size(mostUsedPeriods) > 0) {
+        let pairs = _.toPairs(mostUsedPeriods)
+        let p = _.sortBy(pairs, (o) => o[1]).reverse();
+
+        p.forEach(([code, count]) => {
+            if (allPeriods[code]) {
+                periods.push(allPeriods[code]);
+            }
+        });
+    }
+
+    if (periods.length > 0) {
+        group = {
+            code: "most_used",
+            name: "Most used",
+            order: 0,
+            periods
+        }
+    }
+
+    return group;
+}

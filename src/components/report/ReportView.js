@@ -41,8 +41,6 @@ class ReportView extends Component {
     }
 
     componentDidMount() {
-        const { report } = this.props;
-
         const properties = this.prepareProps(); 
         const columns = this.prepareColumns();
 

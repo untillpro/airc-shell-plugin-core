@@ -64,6 +64,12 @@ export default (state = INITIAL_STATE, action) => {
                 columnsVisibility: action.payload
             };
 
+        case Types.SEND_DO_GENERATE_REPORT_MESSAGE:  
+            return {
+                ...state,
+                fetchingData: true
+            };
+
         default: 
             return state;
     }

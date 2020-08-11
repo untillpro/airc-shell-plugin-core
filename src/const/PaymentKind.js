@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export default {
     0: "Cash",
     1: "Card",

@@ -37,12 +37,12 @@ export default (state = INITIAL_STATE, action) => {
             console.log("State after merge: ", t);
             return t;
 
-        case SELECT_REPORT_TYPE_MESSAGE: 
+        case SELECT_REPORT_TYPE_MESSAGE:
             if (action.payload && typeof action.payload === 'string') {
-                let newState = { ...state, reportType: action.payload  };
+                let newState = { ...state, reportType: action.payload };
 
-                if (state.cashedFilterBy && 
-                    state.cashedFilterBy[action.payload] && 
+                if (state.cashedFilterBy &&
+                    state.cashedFilterBy[action.payload] &&
                     typeof state.cashedFilterBy[action.payload] === 'object'
                 ) {
                     newState.filterBy = state.cashedFilterBy[action.payload]
@@ -77,13 +77,13 @@ export default (state = INITIAL_STATE, action) => {
         /*
             action.payload expected as plain object with keys "from" for "fromDateTime" value and "to" for "toDateTime";
         */
-        case SET_REPORTS_DATETIME_FILTER: 
+        case SET_REPORTS_DATETIME_FILTER:
             if (_.isPlainObject(action.payload)) {
                 const { from, to } = action.payload;
 
-                let newState = {...state};
+                let newState = { ...state };
 
-                if (from !== undefined ) {
+                if (from !== undefined) {
                     if (_.isInteger(from) && from > 0) {
                         newState.fromDateTime = from;
                     } else {
@@ -91,7 +91,7 @@ export default (state = INITIAL_STATE, action) => {
                     }
                 }
 
-                if (to !== undefined ) {
+                if (to !== undefined) {
                     if (_.isInteger(to) && to > 0) {
                         newState.toDateTime = to;
                     } else {
@@ -101,24 +101,36 @@ export default (state = INITIAL_STATE, action) => {
 
                 return newState;
             }
-            
-            return state;
-        
-        case SEND_DO_GENERATE_REPORT_MESSAGE: 
 
-            console.log('SEND_DO_GENERATE_REPORT_MESSAGE', action.payload );
+            return state;
+
+        case SEND_DO_GENERATE_REPORT_MESSAGE:
+
+            console.log('SEND_DO_GENERATE_REPORT_MESSAGE', action.payload);
 
             if (action.payload && typeof action.payload === 'object') {
-                const { report, filterBy } = action.payload;
+                let newState = { ...state };
+
+                const { report, filterBy, from, to } = action.payload;
                 const cash = state.cashedFilterBy ? { ...state.cashedFilterBy } : {};
 
                 if (report && filterBy && typeof filterBy === 'object') {
                     cash[report] = filterBy;
                 }
 
-                return { ...state, cashedFilterBy: cash}
+                if (from !== undefined && (from === null || typeof from === 'number')) {
+                    newState.fromDateTime = from;
+                }
+
+                if (to !== undefined && (to === null || typeof to === 'number')) {
+                    newState.toDateTime = to;
+                }
+
+                newState.cashedFilterBy = cash
+
+                return newState
             }
-            
+
             return state;
 
         default: return state;

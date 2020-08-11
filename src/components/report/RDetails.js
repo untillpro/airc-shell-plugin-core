@@ -12,6 +12,7 @@ import DateTimeFilter from '../../base/components/common/DateTimeFilter';
 import EMEditFormFieldsBuilder from '../edit/EMEditFormFieldsBuilder';
 
 import { Button } from '../../base/components';
+import { getDatetimePeriods } from '../../classes/helpers/ReportsHelpers';
 
 import FieldValidator from '../../classes/FieldValidator';
 
@@ -38,8 +39,12 @@ class ReportDetails extends Component {
     }
 
     componentDidMount() {
-        this.initFields();
-        this.initPeriods();
+        const { contributions, mostUsedPeriods } = this.props;
+
+        let fields = this.initFields();
+        let periods = getDatetimePeriods(contributions, mostUsedPeriods);
+
+        this.setState({ ...fields, periods });
     }
 
     initFields() {
@@ -72,97 +77,10 @@ class ReportDetails extends Component {
             }
         }
 
-        this.setState({
+        return {
             reportFields,
             propsFields
-        });
-
-        //TODO
-    }
-
-    initPeriods() {
-        const { report, contributions: m } = this.props;
-        let periods = [];
-        let allPeriods = {};
-
-        if (m) {
-            const groups = m.getPoints("periods_groups");
-
-            _.forEach(groups, (groupCode) => {
-                let groupPoint = m.getPoint("periods_groups", groupCode)
-
-                if (!groupPoint) return;
-
-                let g = {
-                    name: groupPoint.getContributuionValue("name"),
-                    code: groupCode,
-                    order: groupPoint.getContributuionValue("order"),
-                    periods: []
-                }
-
-                let p = groupPoint.getContributuionValue("periods", true);
-
-                if (p && _.isArray(p) && p.length > 0) {
-                    _.forEach(p, (periodCode) => {
-                        let periodPoint = m.getPoint("periods", periodCode)
-
-                        if (!periodPoint) return;
-
-                        let period = {
-                            code: periodCode,
-                            name: periodPoint.getContributuionValue("name"),
-                            from: periodPoint.getContributuionValue("from"),
-                            to: periodPoint.getContributuionValue("to")
-                        };
-
-                        allPeriods[periodCode] = period;
-                        g.periods.push(period);
-                    });
-                }
-
-                periods.push(g);
-            });
-
-        }
-
-        let mostUsedGroup = this.generateMostUsedPeriods(allPeriods);
-
-        if (mostUsedGroup) {
-            periods.push(mostUsedGroup);
-        }
-
-        periods = _.sortBy(periods, (o) => o.order);
-
-        this.setState({ periods })
-    }
-
-    generateMostUsedPeriods(allPeriods) {
-        const { mostUsedPeriods } = this.props;
-
-        let periods = [];
-        let group = null;
-
-        if (_.size(mostUsedPeriods) > 0) {
-            let pairs = _.toPairs(mostUsedPeriods)
-            let p = _.sortBy(pairs, (o) => o[1]).reverse();
-
-            p.forEach(([code, count]) => {
-                if (allPeriods[code]) {
-                    periods.push(allPeriods[code]);
-                }
-            });
-        }
-
-        if (periods.length > 0) {
-            group = {
-                code: "most_used",
-                name: "Most used",
-                order: 0,
-                periods
-            }
-        }
-
-        return group;
+        };
     }
 
     doValidate() {
@@ -314,8 +232,6 @@ class ReportDetails extends Component {
     }
 
     render() {
-        const { report } = this.props;
-
         return (
             <div className="page-section-content ">
                 {this.renderDateTimeFilter()}
