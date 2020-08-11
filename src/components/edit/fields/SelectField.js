@@ -67,8 +67,9 @@ class SelectField extends Component {
     }
 
     fetchData() {
-        const { field, api, entity, locations } = this.props;
+        const { context, field, entity, locations } = this.props;
         const { fetched, loading } = this.state;
+        const { api } = context;
 
         if (!field) return;
 
@@ -162,14 +163,10 @@ class SelectField extends Component {
         let groupOptions = [];
         let count = 0;
         
-        console.log('field: ', field.accessor);
-
         _.forEach(options, (value, text) => {
             const opt_val = value_accessor ? _.get(value, value_accessor) : value;
             const opt_text = String(text_accessor ? _.get(value, text_accessor) : text);
             
-            console.log('select field option: ', opt_text, ":", text_accessor, ':' ,opt_val);
-
             if (text && String(text).indexOf("---") === 0) {
                 if (group !== null) {
                     result.push(<OptGroup key={group} label={group}>{groupOptions}</OptGroup>)

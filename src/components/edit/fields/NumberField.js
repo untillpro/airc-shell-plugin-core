@@ -53,8 +53,6 @@ class NumberField extends Component {
 
         const props = this.getComponentProps();
 
-        console.log(`Number field ${field.accessor} value: ${value}`);
-
         return (
             <NumberInput 
                 {...props}

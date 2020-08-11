@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 
 import EMEditFormHeader from './EMEditFormHeader';
 
-import EMEditFormFieldsBuilder from './fields/EMEditFormFieldsBuilder';
+import EMEditFormFieldsBuilder from './EMEditFormFieldsBuilder';
 
 import {
     Button,
@@ -21,6 +21,7 @@ import FieldValidator from '../../classes/FieldValidator';
 import { sendCancelMessage } from '../../actions/';
 
 import { mergeDeep } from '../../classes/Utils';
+
 import log from '../../classes/Log';
 
 class EMEditForm extends Component {
@@ -37,7 +38,9 @@ class EMEditForm extends Component {
         };
 
         this.doProceed = this.doProceed.bind(this);
-        this.doValidate = this.doProceed.bind(this);
+        this.doValidate = this.doValidate.bind(this);
+        this.onDataChanged = this.onDataChanged.bind(this);
+        this.handleStateChanged = this.handleStateChanged.bind(this);
     }
 
     componentDidMount() {
@@ -132,8 +135,6 @@ class EMEditForm extends Component {
 
         const resultData = { ...changedData }
 
-        console.log('resultData before: ', resultData);
-
         if (resultData && _.isObject(resultData) && _.size(resultData) > 0) {
             _.forEach(resultData, (value, key) => {
                 if (key.indexOf("__") === 0) {
@@ -141,8 +142,6 @@ class EMEditForm extends Component {
                 }
             });
         }
-
-        console.log('resultData after: ', resultData);
 
         if (data) {
             const cc = contributions.getPointContributions("forms", entity);
@@ -259,6 +258,26 @@ class EMEditForm extends Component {
         this.setState({ section: i });
     }
 
+    onDataChanged(newChangedData) {
+        this.setState({ changedData: newChangedData });
+    }
+
+    handleStateChanged(state) {
+        const { changedData } = this.state;
+
+        let s = 0;
+
+        if (state === 1) {
+            s = 1;
+        }
+
+        this.setState({
+            changedData: {
+                ...changedData, 
+                state: s,
+            }
+        });
+    }
 
     buildSections() {
         const { sections, section, component, sectionsErrors } = this.state;
@@ -287,10 +306,10 @@ class EMEditForm extends Component {
     }
 
     buildSectionContent() {
-        const { sections, section, sectionsErrors, changedData } = this.state;
-        const { contributions, entity } = this.props;
+        const { sections, section, sectionsErrors, changedData, fieldsErrors } = this.state;
+        const { data, entity, contributions, isNew, isCopy, locations } = this.props;
 
-        console.log('EMEdifForm - changedData - ', changedData);
+        let mergedData = mergeDeep({}, data, changedData);
 
         if (sections && sections.length > 0) {
             return sections.map((sec, i) => {
@@ -301,9 +320,16 @@ class EMEditForm extends Component {
                         fields={sec.fields}
                         contributions={contributions}
                         opened={section === i}
-                        parent={this}
                         footer={this.renderButtons()}
                         embedded={sec.embedded}
+                        onDataChanged={this.onDataChanged}
+
+                        locations={locations}
+                        data={mergedData}
+                        isNew={isNew}
+                        isCopy={isCopy}
+                        changedData={changedData}
+                        fieldsErrors={fieldsErrors}
                     />
                 );
 
@@ -350,7 +376,7 @@ class EMEditForm extends Component {
 
     render() {
         const { changedData, component } = this.state;
-        const { data, showHeader, isCopy, isNew, contributions, entity } = this.props;
+        const { data, showHeader, isCopy, isNew, entity } = this.props;
         const { showActiveToggler, showNavigation, showLocationSelector, actions } = component;
 
         //log('EMEditForm this.props', this.props);
@@ -360,8 +386,7 @@ class EMEditForm extends Component {
                 {showHeader === true ? (
                     <EMEditFormHeader
                         entity={entity}
-                        contributions={contributions}
-                        parent={this}
+                        onStateChanged={this.handleStateChanged}
                         showActiveToggler={!!showActiveToggler}
                         showNavigation={!!showNavigation}
                         showLocationSelector={!!showLocationSelector}
@@ -369,7 +394,7 @@ class EMEditForm extends Component {
                         data={data}
                         isNew={isNew}
                         isCopy={isCopy}
-                        changedData={{ ...changedData }}
+                        changedData={changedData}
                     />
                 ) : null}
 
@@ -381,4 +406,10 @@ class EMEditForm extends Component {
     }
 }
 
-export default connect(null, { sendCancelMessage })(EMEditForm);
+const mapStateToProps = (state) => {
+    const { contributions } = state.context;
+
+    return { contributions };
+}
+
+export default connect(mapStateToProps, { sendCancelMessage })(EMEditForm);

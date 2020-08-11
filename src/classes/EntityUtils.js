@@ -6,7 +6,9 @@ import _ from 'lodash';
 import { generateId } from './Utils';
 import ForeignKeys from '../const/ForeignKeys';
 
-export const fetchData = async (entity, api, contributions, props) => {
+
+export const fetchData = async (context, entity, props) => {
+    const { api, contributions } = context;
     const getUrl = contributions.getPointContributionValue('url', entity, 'getUrl');
 
     let urlProps = { ...props };
@@ -190,7 +192,10 @@ export const resolveData = (data) => {
 
 // DATA PROCESSING
 
-export const processData = async (entity, data, entries, api, contributions) => {
+
+export const processData = async (context, entity, data, entries) => {
+    const { api, contributions } = context;
+
     if (!api || !contributions || !entity) {
         throw new Error('Cant fetch entity item data.');
     }
@@ -212,7 +217,7 @@ export const processData = async (entity, data, entries, api, contributions) => 
         promises = entries.map((entry) => {
             const { id, wsid } = entry;
 
-            return proccessEntry(id, entity, wsid, data, { api, contributions });
+            return proccessEntry(context, id, entity, wsid, data);
         });
     } else {
         throw new Error('Cant create new entry: no selected locations found');
@@ -225,7 +230,7 @@ export const processData = async (entity, data, entries, api, contributions) => 
     }
 }
 
-export const proccessEntry = async (entityId, type, wsid, data, context) => {
+export const proccessEntry = async (context, entityId, type, wsid, data) => {
     const { api, contributions } = context;
 
     const id = entityId || -(generateId());

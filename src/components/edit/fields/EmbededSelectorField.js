@@ -104,7 +104,7 @@ class EmbededSelectorField extends Component {
     }
 
     renderSelector() {
-        const { contributions, api, field, locations } = this.props;
+        const { context, field, locations } = this.props;
         const { open } = this.state;
 
         if (open) {
@@ -119,8 +119,7 @@ class EmbededSelectorField extends Component {
                     <EmbeddedManagerSelectField 
                         locations={locations}
                         field={field}
-                        contributions={contributions}
-                        api={api}
+                        context={context}
                         ref={ref => this.manager = ref}
 
                         onRowSelect={(item) => {

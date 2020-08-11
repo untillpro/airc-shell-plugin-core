@@ -44,10 +44,9 @@ class EmbeddedManagerPredefinedField extends EmbeddedManagerField {
     }
 
     buildDefaultData(data) {
-        //if (!data || !data.length <= 0) return null;
-
         const result = [];
-        const { contributions, field } = this.props;
+        const { context, field } = this.props;
+        const { contributions } = context;
         const { entity, depended_entity } = field;
         
         const defaultObject = {};
@@ -86,7 +85,9 @@ class EmbeddedManagerPredefinedField extends EmbeddedManagerField {
     }
 
     async fetchData(entity) {
-        const { api, contributions, locations } = this.props;
+        const { context, locations } = this.props;
+        const { api, contributions } = context;
+        
         let loc = null;
         if (!entity) return {};
 

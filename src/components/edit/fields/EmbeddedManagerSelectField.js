@@ -59,7 +59,7 @@ class EmbeddedManagerSelectField extends EmbeddedManagerField {
     }
 
     onEditFormProceed(index = null, newData) {
-        const { locations, api, contributions } = this.props;
+        const { context, locations } = this.props;
         const { entity } = this;
         const { data } = this.state;
 
@@ -76,7 +76,8 @@ class EmbeddedManagerSelectField extends EmbeddedManagerField {
                 return { id, wsid };
             });
 
-            processData(entity, newData, entries, api, contributions)
+            //TODO use of context
+            processData(context, entity, newData, entries)
                 .then(() => {
                     return this.fetchListData()
                 })
@@ -120,7 +121,7 @@ class EmbeddedManagerSelectField extends EmbeddedManagerField {
     }
 
     async fetchListData() {
-        const { api, contributions, locations } = this.props;
+        const { context, locations } = this.props;
         const { entity } = this;
 
         if (!entity) return;
@@ -129,7 +130,8 @@ class EmbeddedManagerSelectField extends EmbeddedManagerField {
             wsid: locations
         };
 
-        return fetchData(entity, api, contributions, props).then(({ resolvedData }) => {
+        // TODO use of cotnext
+        return fetchData(context, entity, props).then(({ resolvedData }) => {
             return resolvedData;
         });
     }

@@ -8,10 +8,14 @@ import PluginReducer from './PluginReducer';
 import StateMachineReducer from './StateMachineReducer';
 import MessagesReducer from './MessagesReducer';
 import AppOptions from './AppOptions';
+import ReportsReducer from './ReportsReducer';
+import ContextReducer from './ContextReducer';
 
 export default combineReducers({
+    context: ContextReducer,
     plugin: PluginReducer,
     machine: StateMachineReducer,
     messages: MessagesReducer,
-    options: AppOptions
+    options: AppOptions,
+    reports: ReportsReducer
 });

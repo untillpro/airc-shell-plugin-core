@@ -34,14 +34,13 @@ class EntityEditor extends Component {
     }
 
     render() {
-        const { contributions, massedit, data, locations, entity, isCopy, isNew } = this.props;
+        const { massedit, data, locations, entity, isCopy, isNew } = this.props;
 
         return (
             <div className='content-container'>
                 {massedit ? (
                     <EMMassEditForm 
                         showHeader 
-                        contributions={contributions}
                         data={data}
                         entity={entity}
 
@@ -51,7 +50,6 @@ class EntityEditor extends Component {
                 ) : (
                     <EMEditForm 
                         showHeader 
-                        contributions={contributions}
                         data={data}
                         entity={entity}
                         isCopy={isCopy}

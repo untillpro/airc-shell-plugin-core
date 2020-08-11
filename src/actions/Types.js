@@ -49,3 +49,14 @@ export const SEND_ERROR_MESSAGE = 'send_error_api_message';
 export const SEND_INFO_MESSAGE = 'send_info_api_message';
 export const SEND_SUCCESS_MESSAGE = 'send_success_api_message';
 export const SEND_WARNING_MESSAGE = 'send_warning_api_message';
+
+/* REPORTS ACTIONS */
+
+export const SELECT_REPORT_TYPE_MESSAGE = "select_report_type_message";
+export const SEND_DO_GENERATE_REPORT_MESSAGE = "do_generate_report_message";
+export const SELECT_DATETIME_FILTER_PERIOD = "select_datetime_filter_period";
+export const SET_REPORTS_DATETIME_FILTER = "set_reports_datetime_filter"; 
+
+/* CONTEXT ACTIONS */
+
+export const ADD_TO_CONTEXT = "add_to_context";

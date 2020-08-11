@@ -4,16 +4,11 @@
 
 import React, { Component } from 'react';
 
-import ContributionsContext from '../../context/ContributionsContext';
-import ViewsGrid from '../common/ViewsGrid';
+import ViewsGrid from './ViewsGrid';
 
 class RootRenderer extends Component {
     render() {
-        return (
-            <ContributionsContext.Consumer>
-                { context => <ViewsGrid contributions={context} /> }
-            </ContributionsContext.Consumer>
-        );
+        return <ViewsGrid />;
     }
 }
 

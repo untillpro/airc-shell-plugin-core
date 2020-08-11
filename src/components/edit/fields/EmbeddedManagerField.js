@@ -5,10 +5,9 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 
-import { Button, Table, Modal } from '../../../base/components';
 import EMEditForm from '../EMEditForm';
-import EMListPaginator from '../../table/EMListPaginator';
-
+import { Button, Table, Modal } from '../../../base/components';
+import { ListPaginator } from '../../common/';
 import { reduce } from '../../../classes/Utils';
 
 /**
@@ -189,7 +188,8 @@ class EmbeddedManagerField extends Component {
     } 
 
     getColumns() {
-        const { contributions } = this.props;
+        const { context } = this.props;
+        const { contributions } = context;
         const { entity } = this;
         const { /* actions, */ data } = this.state;
 
@@ -244,7 +244,8 @@ class EmbeddedManagerField extends Component {
 
     prepareProps() {
         const { entity } = this;
-        const { contributions } = this.props;
+        const { context } = this.props;
+        const { contributions } = context;
 
         const entityListContributions = contributions.getPointContributions('list', entity);
 
@@ -360,8 +361,6 @@ class EmbeddedManagerField extends Component {
 
         let resultData = [];
 
-        console.log('Embeded edit form proceed new data:', newData);
-
         if (newData && _.size(newData) > 0) {
             if (i >= 0) {
                 resultData[i] = { id: data[i].id, ...newData };
@@ -369,8 +368,6 @@ class EmbeddedManagerField extends Component {
                 resultData[data.length] = { ...newData };
             }
         }
-
-        console.log('Embeded edit form proceed result data:', resultData);
 
         this.handleChange(resultData);
         this.setState(newState);
@@ -386,7 +383,7 @@ class EmbeddedManagerField extends Component {
 
     renderEditModal() {
         const { entity } = this;
-        const { contributions, locations } = this.props;
+        const { locations } = this.props;
         const { edit, copy, entityData, selectedRows } = this.state;
 
         if (edit) {
@@ -404,7 +401,6 @@ class EmbeddedManagerField extends Component {
                         entity={entity}
                         isCopy={copy}
                         isNew={!(selectedRows.length > 0)}
-                        contributions={contributions}
                         data={entityData}
                         onProceed={(newData) => this.onEditFormProceed(!copy ? rowIndex : null, newData)}
                         locations={locations}
@@ -450,7 +446,7 @@ class EmbeddedManagerField extends Component {
             disabled,
             data,
             columns,
-            PaginationComponent: EMListPaginator,
+            PaginationComponent: ListPaginator,
             ...properties,
             minRows: properties.minRows || 5,
             className: disabled ? "disabled-table" : null,

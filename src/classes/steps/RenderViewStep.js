@@ -5,6 +5,7 @@
 import StateMachineStep from '../StateMachineStep';
 
 import RenderEntityStep from './RenderEntityStep'; 
+import ReportViewStep from './ReportViewStep'; 
 import { MessageInit, MessageNotify } from '../messages';
 
 class RenderViewStep extends StateMachineStep {
@@ -37,6 +38,13 @@ class RenderViewStep extends StateMachineStep {
                 }
             };
         }
+    }
+
+    MessageGenerateReport(msg, context) {
+        return {
+            newStep: new ReportViewStep(),
+            message: new MessageInit(msg),
+        };
     }
 
     MessageCancel() {

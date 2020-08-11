@@ -15,7 +15,7 @@ export default (state = INITIAL_STATE, action) => {
     let message = null;
     let isGlobal = false;
     let shouldPop = false;
-
+    
     switch (action.type) {
         case Types.SEND_INIT_MESSAGE: 
             message = new Messages.MessageInit(action.payload);
@@ -90,6 +90,10 @@ export default (state = INITIAL_STATE, action) => {
         case Types.SEND_FORM_NEED_NAVIGATION:
             message = new Messages.MessageNeedNavigation({id: action.payload});
             isGlobal = true;
+            break;
+
+        case Types.SEND_DO_GENERATE_REPORT_MESSAGE:
+            message = new Messages.MessageGenerateReport(action.payload);
             break;
 
         default: break;

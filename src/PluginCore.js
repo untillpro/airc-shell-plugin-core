@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
-import _ from 'lodash';
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -11,8 +10,6 @@ import ApiProvider from './components/system/ApiProvider';
 import AppLoared from './components/system/AppLoared';
 
 import configureStore from './configureStore';
-
-import ContributionsContext from './context/ContributionsContext';
 
 import { StateMachineProvider, ErrorBoundary } from './components/';
 import ContributionFactory from './classes/contributions/Factory';
@@ -28,30 +25,30 @@ import './assets/css/ticket.css';
 
 
 class PluginCore extends Component {
+    shouldComponentUpdate() {
+        return false;
+    }
+
     render() {
         const { contributions, persistConfig } = this.props;
 
-        if (!contributions || _.size(contributions) <= 0) {
-            throw new Error("No contributions were provided to Plugin Core");
-        }
+        let manager = ContributionFactory(contributions);
 
-        const cfg = configureStore(persistConfig);
-        const manager = ContributionFactory(contributions);
-        
+        const cfg = configureStore(persistConfig, { "context": { "contributions": manager } });
+
         return (
-            <Provider store={cfg.store}>
-                <PersistGate 
-                    loading={null} 
+            <Provider store={cfg.store} >
+                <PersistGate
+                    loading={null}
                     persistor={cfg.persistor}
-                >   
+                >
                     <ApiProvider>
-                        <StateMachineProvider manager={manager}>
-                            <ContributionsContext.Provider value={manager}>
-                                <ErrorBoundary>
-                                    <MainController />
-                                </ErrorBoundary>
-                            </ContributionsContext.Provider>
+                        <StateMachineProvider>
+                            <ErrorBoundary>
+                                <MainController />
+                            </ErrorBoundary>
                         </StateMachineProvider>
+
                         <AppLoared />
                     </ApiProvider>
                 </PersistGate>
