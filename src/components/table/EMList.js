@@ -437,12 +437,16 @@ class EMList extends Component {
 
             manual,
             multiSort: false,
+            
             PaginationComponent: EMListPaginator,
 
             page,
             pageSize,
 
             sorted: order,
+
+            showPaginationTop: true,
+            showPaginationBottom: true,
             
             onPageChange: (pageIndex) => this.handlePageChange(pageIndex), // Called when the page index is changed by the user
             onPageSizeChange: (pageSize, pageIndex) => this.handlePageSizeChange(pageSize, pageIndex),

@@ -6,6 +6,26 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 class EMListPaginatorSize extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            size: null
+        };
+
+        this.name = `paggination_${parseInt(Math.random() * 100)}`;
+    }
+
+    componentDidMount() {
+        this.setState({size: this.props.size});
+    }
+
+    componentDidUpdate(oldProps) {
+        if (oldProps.size !== this.props.size) {
+            this.setState({size: this.props.size});
+        }
+    }
+
     handleChange(event) {
         const { onChange } = this.props;
 
@@ -17,11 +37,12 @@ class EMListPaginatorSize extends Component {
     }
 
     render() {  
-        const { options, size } = this.props;
+        const { size } = this.state;
+        const { options } = this.props;
 
         if (options && options.length > 1) {
             return (
-                <div className='-pageSize'>
+                <div className='-pageSize' key={`${this.name}_${size}`}>
                     View
 
                     <select 
