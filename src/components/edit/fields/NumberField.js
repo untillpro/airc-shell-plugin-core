@@ -44,8 +44,20 @@ class NumberField extends Component {
         return props;
     }
 
+    getValue() {
+        const { value } = this.props;
+
+        let val = Number(value);
+
+        if (isNaN(val)) {
+            val = 0;
+        }
+
+        return val;
+    }
+
     render() {
-        const { value, field, disabled } = this.props;
+        const { field, disabled } = this.props;
 
         if (!field) return null;
 
@@ -57,7 +69,7 @@ class NumberField extends Component {
             <NumberInput 
                 {...props}
                 disabled={disabled}
-                value={Number(value)}
+                value={this.getValue()}
                 placeholder={placeholder}
                 onChange={(event) => this.handleChange(event)}  
             />
