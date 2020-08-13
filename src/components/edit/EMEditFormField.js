@@ -34,6 +34,7 @@ class EMEditFormField extends Component {
     }
 
     shouldComponentUpdate(nextProps) {
+        return true;
         const { data, field, errors, embedded_type } = nextProps;
         const { accessor } = field;
 
@@ -78,14 +79,18 @@ class EMEditFormField extends Component {
         const { data, field, embedded_type } = this.props;
         const { accessor } = field;
 
+        console.log(`Get value for field ${accessor}`);
+
         let val = '';
         let path = accessor;
 
         if (data && path && typeof path === 'string') {
-
             if (embedded_type) {
                 path = `${embedded_type}.${path}`;
             }
+
+            console.log(data);
+            console.log(path);
 
             val =  _.get(data, path);
         }
@@ -112,6 +117,8 @@ class EMEditFormField extends Component {
 
         const { type, accessor, label, name, disabled, span, tip, predefined } = field;
         
+        console.log(`Field ${accessor} render()`, data);
+
         if (accessor && typeof accessor === 'string') {
             switch (type) {
                 case 'number': FieldComponent = NumberField; break;
@@ -137,6 +144,10 @@ class EMEditFormField extends Component {
 
             delete field.common; // "common" property causes conflicts in nested components
             
+            let fieldValue = this.getValue();
+
+            console.log('Field value - ', fieldValue);
+
             return (
                 <div className={`page-section-field ${span && span > 0 ? `span-${span}` : ''} ${!label ? 'no-label' : ''}`}>
                     {label ? (
@@ -158,7 +169,7 @@ class EMEditFormField extends Component {
                             showError={showError}
                             errors={errors}
                             onChange={(value) => this.handleChange(value)}
-                            value={this.getValue()}
+                            value={fieldValue}
                             data={data}
                         />
 

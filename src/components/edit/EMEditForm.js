@@ -259,6 +259,7 @@ class EMEditForm extends Component {
     }
 
     onDataChanged(newChangedData) {
+        console.log("EMEditForm.onDataChanged() ", newChangedData);
         this.setState({ changedData: newChangedData });
     }
 

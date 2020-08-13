@@ -47,9 +47,9 @@ class EMEditFormFieldsBuilder extends Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        if (this.props.opened === true && nextProps.opened !== false) return true;
+        if (this.props.opened === true || nextProps.opened === true) return true;
 
-        return true;
+        return false;
     }
 
     // TODO use of context
@@ -57,7 +57,7 @@ class EMEditFormFieldsBuilder extends Component {
         if (!this.state.groups) return null;
         
         const { embedded, data, changedData, locations, fieldsErrors, onDataChanged  } = this.props;
-        
+
         let counter = 0;
 
         return _.map(this.state.groups, (fields, group) => {
@@ -78,6 +78,8 @@ class EMEditFormFieldsBuilder extends Component {
     }
 
     render() {
+        console.log("EMEditFormFieldsBuilder.render()", this.props.data);
+
         const { hasErrors, opened, footer } = this.props;
         const { groups } = this.state;
     

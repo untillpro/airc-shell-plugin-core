@@ -56,7 +56,8 @@ class EMEditFormFieldsGroup extends Component {
             data,
             contributions,
             locations,
-            fieldsErrors
+            fieldsErrors,
+            embedded
         } = this.props;
  
         const sortedFields = _.sortBy(fields, (o) => o.order);
@@ -68,6 +69,7 @@ class EMEditFormFieldsGroup extends Component {
         const content = sortedFields.map((field, index) => {
             if (field && field.accessor) {
                 const fieldComponent = <EMEditFormField
+                    embedded_type={embedded}
                     errors={fieldsErrors ? fieldsErrors[field.accessor] : null}
                     key={`${field.accessor}_form_field_${index}`}
                     data={data}
