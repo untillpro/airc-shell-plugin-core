@@ -14,7 +14,7 @@ class TextField extends Component {
         const { onChange } = this.props;
 
         if (onChange && typeof onChange === 'function' ) {
-            const value = event.target.value;
+            const value = event.target.value ? String(event.target.value) : '';
             
             onChange(value);
         }
@@ -81,13 +81,13 @@ class TextField extends Component {
 
         return (
             <TextInput 
+                {...props}
                 disabled={disabled}
                 input={field}
                 type={password ? 'password' : type || 'text'}
                 error={hasErrors}
                 value={val !== undefined ? val : ''}
                 onChange={!disabled ? (event) => this.handleChange(event) : null}
-                {...props}
             />
         );
     }

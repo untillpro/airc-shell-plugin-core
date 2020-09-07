@@ -20,9 +20,13 @@ class FieldValidator {
         }
 
         if (path) {
-            const value = _.get(data, path);
+            let value = _.get(data, path);
 
             const req = typeof required === 'function' ? required(field, data) : !! required;
+
+            if (!type || type === 'text') {
+                value = String(value).trim();
+            }
 
             if (req) this.validateRequired(value, errors);
 

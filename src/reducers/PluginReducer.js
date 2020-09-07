@@ -23,7 +23,8 @@ const INITIAL_STATE = {
         pages: -1,
         pageSize: 20
     },
-    
+    isNew: false,
+    isCopy: false,
     columnsVisibility: {"ID": false, "id": false, "Id": false}
 };
 
