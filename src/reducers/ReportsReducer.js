@@ -14,7 +14,7 @@ import {
 import { mergeExisting } from '../classes/Utils';
 
 const whfrominit = moment("2000-01-01 05:00");
-const whtoinit = moment("2000-01-01 17:00");
+const whtoinit = moment("2000-01-01 05:00");
 
 const INITIAL_STATE = {
     reportType: null,

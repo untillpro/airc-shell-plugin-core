@@ -2,6 +2,7 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 import React, { Component } from 'react';
+import moment from 'moment';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
@@ -23,10 +24,16 @@ import './assets/css/main.css';
 import './assets/css/confirm-alert.css';
 import './assets/css/ticket.css';
 
+//import 'moment/locale/uk';
 
 class PluginCore extends Component {
     shouldComponentUpdate() {
         return false;
+    }
+
+    _init() {
+        moment.locale('en');
+        console.log('current moment locale is: ', moment.locale());
     }
 
     render() {
@@ -35,6 +42,8 @@ class PluginCore extends Component {
         let manager = ContributionFactory(contributions);
 
         const cfg = configureStore(persistConfig, { "context": { "contributions": manager } });
+
+        this._init();
 
         return (
             <Provider store={cfg.store} >

@@ -9,8 +9,11 @@ const defaultFormat = "LLLL";
 
 const DateTimeCell = (props) => {
     const { value, format } = props;
+    let formatedValue = '';
 
-    let formatedValue = moment(value).format(format || defaultFormat);
+    if (value) {
+        formatedValue = moment(value).format(format || defaultFormat);
+    }
 
     return <span className="table-cell datetime-value">{formatedValue}</span>; 
 }
