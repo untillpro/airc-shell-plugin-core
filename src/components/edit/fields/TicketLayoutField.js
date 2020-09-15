@@ -90,8 +90,7 @@ class TicketLayoutField extends Component {
 
         if (value) {
             const buffer = new Buffer(value, 'base64');
-
-            console.log('init ticket field: ', buffer);
+            
             if (this.checkBlobPrefix(buffer)) {
                 const data  = this.parseBlobData(buffer);
             

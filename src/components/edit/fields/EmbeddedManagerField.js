@@ -10,6 +10,8 @@ import { Button, Table, Modal } from '../../../base/components';
 import { ListPaginator } from '../../common/';
 import { reduce } from '../../../classes/Utils';
 
+import log from '../../../classes/Log';
+
 /**
  * All API communications are realized in-component not in state machine cause of BO Reducer State intersections. 
  * 
@@ -125,7 +127,7 @@ class EmbeddedManagerField extends Component {
         }
 
         if (index >= 0) {
-            console.log('request removing item ', index);
+            log('request removing item ', index);
             this.onEditFormProceed(index, {state: 0});
         }
     }

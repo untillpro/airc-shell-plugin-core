@@ -102,9 +102,6 @@ export default (state = INITIAL_STATE, action) => {
             return state;
 
         case SEND_DO_GENERATE_REPORT_MESSAGE:
-
-            console.log('SEND_DO_GENERATE_REPORT_MESSAGE', action.payload);
-
             if (action.payload && typeof action.payload === 'object') {
                 let newState = { ...state };
 

@@ -78,8 +78,6 @@ class EMEditFormFieldsBuilder extends Component {
     }
 
     render() {
-        console.log("EMEditFormFieldsBuilder.render()", this.props.data);
-
         const { hasErrors, opened, footer } = this.props;
         const { groups } = this.state;
     

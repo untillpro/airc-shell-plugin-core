@@ -9,6 +9,8 @@ import { Tabs } from 'antd';
 
 import EMEditFormField from './EMEditFormField';
 
+import Logger from '../../base/classes/Logger';
+
 class EMEditFormFieldsGroup extends Component {
     constructor(props) {
         super(props);
@@ -23,6 +25,8 @@ class EMEditFormFieldsGroup extends Component {
         let data = {};
         let path = accessor;
 
+        Logger.log("EMEditFormFieldsGroup.handleFieldChanged() ", field, value);
+
         if (embedded_type) {
             value = { [accessor]: value }
             path = `${embedded_type}`;
@@ -32,8 +36,10 @@ class EMEditFormFieldsGroup extends Component {
 
         let v = _.get(data, path);
 
-        if (typeof v === 'object') {
+        if (_.isPlainObject(v)) {
             v = _.merge({ ...v }, value);
+        } else if (_.isArray(v)) {
+            v = _.merge(v, value);
         } else {
             v = value;
         }

@@ -46,11 +46,13 @@ export const mergeDeep = (target, ...sources) => {
     if (!sources.length) return target;
     const source = sources.shift();
 
-    if (isObject(target) && isObject(source)) {
+    if (_.isPlainObject(target) && _.isPlainObject(source)) {
         for (const key in source) {
-            if (isObject(source[key])) {
+            if (_.isPlainObject(source[key])) {
                 if (!target[key]) Object.assign(target, { [key]: {} });
                 mergeDeep(target[key], source[key]);
+            } else if (_.isArray(source[key]) && _.isArray(target[key])) {
+                Object.assign(target, { [key]: _.merge(target[key], source[key])});
             } else {
                 Object.assign(target, { [key]: source[key] });
             }
@@ -143,7 +145,7 @@ export const formatNumber = (amount, decimalCount = 2, decimal = ".", thousands 
     
         return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
       } catch (e) {
-        console.log(e)
+        console.error(e)
       }
 }
 

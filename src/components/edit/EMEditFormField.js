@@ -16,6 +16,7 @@ import {
     SelectField,
     ColorPickerField,
     DateField,
+    TimeField,
     TipField,
     TicketLayoutField,
     ImageSelectorField,
@@ -34,7 +35,6 @@ class EMEditFormField extends Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        return true;
         const { data, field, errors, embedded_type } = nextProps;
         const { accessor } = field;
 
@@ -79,8 +79,6 @@ class EMEditFormField extends Component {
         const { data, field, embedded_type } = this.props;
         const { accessor } = field;
 
-        console.log(`Get value for field ${accessor}`);
-
         let val = '';
         let path = accessor;
 
@@ -88,9 +86,6 @@ class EMEditFormField extends Component {
             if (embedded_type) {
                 path = `${embedded_type}.${path}`;
             }
-
-            console.log(data);
-            console.log(path);
 
             val =  _.get(data, path);
         }
@@ -116,8 +111,6 @@ class EMEditFormField extends Component {
         const hasErrors = errors && errors.length > 0;
 
         const { type, accessor, label, name, disabled, span, tip, predefined } = field;
-        
-        console.log(`Field ${accessor} render()`, data);
 
         if (accessor && typeof accessor === 'string') {
             switch (type) {
@@ -128,6 +121,7 @@ class EMEditFormField extends Component {
                 case 'color': FieldComponent = ColorPickerField; break;
                 case 'checkbox': FieldComponent = CheckboxField; break;
                 case 'date': FieldComponent = DateField; break;
+                case 'time': FieldComponent = TimeField; break;
                 case 'tip': FieldComponent = TipField; break;
                 case 'ticket': FieldComponent = TicketLayoutField; break;
                 case 'image': FieldComponent = ImageSelectorField; break;
@@ -145,8 +139,6 @@ class EMEditFormField extends Component {
             delete field.common; // "common" property causes conflicts in nested components
             
             let fieldValue = this.getValue();
-
-            console.log('Field value - ', fieldValue);
 
             return (
                 <div className={`page-section-field ${span && span > 0 ? `span-${span}` : ''} ${!label ? 'no-label' : ''}`}>

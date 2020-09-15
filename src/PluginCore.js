@@ -32,8 +32,8 @@ class PluginCore extends Component {
     }
 
     _init() {
+        // TODO l10n
         moment.locale('en');
-        console.log('current moment locale is: ', moment.locale());
     }
 
     render() {

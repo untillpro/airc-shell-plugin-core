@@ -259,7 +259,7 @@ class EMEditForm extends Component {
     }
 
     onDataChanged(newChangedData) {
-        console.log("EMEditForm.onDataChanged() ", newChangedData);
+        log("EMEditForm.onDataChanged() ", newChangedData);
         this.setState({ changedData: newChangedData });
     }
 
@@ -311,6 +311,11 @@ class EMEditForm extends Component {
         const { data, entity, contributions, isNew, isCopy, locations } = this.props;
 
         let mergedData = mergeDeep({}, data, changedData);
+
+        
+        log("EMEditForm data", data);
+        log("EMEditForm changedData", changedData);
+        log("EMEditForm mergedData", mergedData);
 
         if (sections && sections.length > 0) {
             return sections.map((sec, i) => {
