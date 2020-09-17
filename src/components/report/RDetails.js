@@ -42,13 +42,28 @@ class ReportDetails extends Component {
         this.doValidate = this.doValidate.bind(this);
     }
 
-    componentDidMount() {
-        const { contributions, mostUsedPeriods } = this.props;
+    _init() {
+        const { contributions, mostUsedPeriods, filterBy, reportProps } = this.props;
 
         let fields = this.initFields();
         let periods = getDatetimePeriods(contributions, mostUsedPeriods);
 
-        this.setState({ ...fields, periods });
+        this.setState({ 
+            ...fields, 
+            periods,
+            reportFilter: filterBy || {},
+            reportProps: reportProps || {}
+         });
+    }
+
+    componentDidMount() {
+        this._init();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.report !== prevProps.report) {
+            this._init();
+        }
     }
 
     initFields() {
@@ -128,6 +143,7 @@ class ReportDetails extends Component {
         const { report, fromDateTime, toDateTime } = this.props;
 
         if (this.doValidate()) {
+            console.log("doGenerate(): ", report, fromDateTime, toDateTime, reportFilter, reportProps);
             this.props.sendDoGenerateReport(report, fromDateTime, toDateTime, reportFilter, reportProps)
         }
     }
@@ -254,6 +270,7 @@ const mapStateToProps = (state) => {
         workingHoursFrom,
         workingHoursTo,
         filterBy,
+        props: reportProps,
         mostUsedPeriods } = state.reports;
 
     return {
@@ -263,6 +280,7 @@ const mapStateToProps = (state) => {
         workingHoursFrom,
         workingHoursTo,
         filterBy,
+        reportProps,
         mostUsedPeriods
     };
 }

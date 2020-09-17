@@ -16,11 +16,11 @@ export const selectReportType = (code) => {
     };
 };
 
-export const sendDoGenerateReport = (reportType, from, to, filterBy, props) => {
+export const sendDoGenerateReport = (report, from, to, filterBy, props) => {
     return {
         type: SEND_DO_GENERATE_REPORT_MESSAGE,
         payload: {
-            report: reportType,
+            report,
             from, 
             to, 
             filterBy,

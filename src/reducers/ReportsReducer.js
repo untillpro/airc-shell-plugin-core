@@ -23,8 +23,10 @@ const INITIAL_STATE = {
     workingHoursFrom: whfrominit, // 5 * 3600 seconds
     workingHoursTo: whtoinit, // 17 * 3600 seconds
     filterBy: {},
+    props: {},
     mostUsedPeriods: {},
     cashedFilterBy: {},
+    cashedProps: {},
     reportData: []
 };
 
@@ -45,6 +47,15 @@ export default (state = INITIAL_STATE, action) => {
                     newState.filterBy = state.cashedFilterBy[action.payload]
                 } else {
                     newState.filterBy = {}
+                }
+
+                if (state.cashedProps &&
+                    state.cashedProps[action.payload] &&
+                    typeof state.cashedProps[action.payload] === 'object'
+                ) {
+                    newState.props = state.cashedProps[action.payload]
+                } else {
+                    newState.props = {}
                 }
 
                 return newState;
@@ -105,11 +116,16 @@ export default (state = INITIAL_STATE, action) => {
             if (action.payload && typeof action.payload === 'object') {
                 let newState = { ...state };
 
-                const { report, filterBy, from, to } = action.payload;
-                const cash = state.cashedFilterBy ? { ...state.cashedFilterBy } : {};
+                const { report, filterBy, props, from, to } = action.payload;
+                const cashFilterBy = state.cashedFilterBy ? { ...state.cashedFilterBy } : {};
+                const cashProps = state.cashedProps ? { ...state.cashedProps } : {};
 
                 if (report && filterBy && typeof filterBy === 'object') {
-                    cash[report] = filterBy;
+                    cashFilterBy[report] = filterBy;
+                }
+
+                if (report && props && typeof props === 'object') {
+                    cashProps[report] = props;
                 }
 
                 if (from !== undefined && (from === null || typeof from === 'number')) {
@@ -120,7 +136,8 @@ export default (state = INITIAL_STATE, action) => {
                     newState.toDateTime = to;
                 }
 
-                newState.cashedFilterBy = cash
+                newState.cashedFilterBy = cashFilterBy;
+                newState.cashedProps = cashProps;
 
                 return newState
             }
