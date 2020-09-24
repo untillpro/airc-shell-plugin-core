@@ -15,7 +15,7 @@ class DateField extends Component {
     handleChange(date, dateString) {
         log("DateField changed: ", date, dateString, date.valueOf());
 
-        const { onChange, field } = this.props;
+        const { onChange } = this.props;
 
         if (onChange && typeof onChange === 'function' ) {
             onChange(date ? date.valueOf() : null);

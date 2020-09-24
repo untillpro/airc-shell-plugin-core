@@ -143,6 +143,12 @@ class ListPaginatorPages extends Component {
 
 
     render() {
+        const { pages } = this.props;
+
+        if ( pages <= 1) {
+            return null;
+        }
+
         return (
             <div className='-pagesSelector'>
                 {this.renderBegin()}

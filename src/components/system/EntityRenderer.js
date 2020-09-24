@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import EMList from '../table/EMList';
+import EMList from './EntityList';
 
 import {
     sendCancelMessage

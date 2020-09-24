@@ -3,6 +3,7 @@
  */
 import HeaderBackButton from './HeaderBackButton';
 import {
+    ListTable,
     BooleanCell,
     NumberCell,
     PriceCell,
@@ -13,6 +14,7 @@ import {
 } from './table';
 
 export {
+    ListTable,
     ListPaginator,
     HeaderBackButton,
     BooleanCell,

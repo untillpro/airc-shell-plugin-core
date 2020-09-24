@@ -17,6 +17,7 @@ import log from '../../../classes/Log';
  * 
  * To avoid this intersections it will be neccesary to create adittional state field specail to this component that in my opinion will be overkill.
  * */
+const DEFAULT_MINIMUM_ROWS = 5;
 
 class EmbeddedManagerField extends Component {
     constructor() {
@@ -150,10 +151,10 @@ class EmbeddedManagerField extends Component {
         }
     }
 
-    UNSAFE_componentWillReceiveProps(newProps) {
-        const { value } = newProps;
+    componentDidUpdate(oldProps) {
+        const { value } = this.props;
 
-        if (value !== this.state.value) {
+        if (value !== oldProps.value) {
             const normolizedValue = _.map(value, o => o);
             this.setState({ data: normolizedValue });
         }
@@ -435,32 +436,20 @@ class EmbeddedManagerField extends Component {
         const { entity } = this;
         const { field, disabled } = this.props;
         const { properties } = this.state;
+        const { minRows } = properties;
 
         if (!field || !entity) return null;
 
         const { header } = field;
 
-        const columns = this.getColumns();
-
-        const data = this.getData();
+        const columns = React.memo(() => this.getColumns());
+        const data = React.memo(() => this.getData());
 
         const tableConfig = {
             disabled,
-            data,
-            columns,
-            PaginationComponent: ListPaginator,
             ...properties,
-            minRows: properties.minRows || 5,
-            className: disabled ? "disabled-table" : null,
-            getTrProps: (state, row) => {
-                if (disabled) return {};
-
-                return {
-                    onClick: (e) => this.handleRowClick(e, row),
-                    onDoubleClick: (e) => this.handleRowDoubleClick(e, row),
-                    className: this.getRowClass(row)
-                };
-            }
+            minRows: minRows || DEFAULT_MINIMUM_ROWS,
+            className: disabled ? "disabled-table" : null
         };
 
         return (
@@ -478,7 +467,19 @@ class EmbeddedManagerField extends Component {
 
                 <div className="embedded-manager-field">
                     <Table 
-                        disabled={disabled}
+                        data={data}
+                        columns={columns}
+                        PaginationComponent={ListPaginator} 
+                        getTrProps={(state, row) => {
+                            if (disabled) return {};
+            
+                            return {
+                                onClick: (e) => this.handleRowClick(e, row),
+                                onDoubleClick: (e) => this.handleRowDoubleClick(e, row),
+                                className: this.getRowClass(row)
+                            };
+                        }}
+
                         {...tableConfig} 
                     />
                 </div>
