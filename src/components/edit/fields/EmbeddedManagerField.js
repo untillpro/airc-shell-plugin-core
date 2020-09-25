@@ -4,12 +4,13 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import EMEditForm from '../EMEditForm';
-import { Button, Table, Modal } from '../../../base/components';
-import { ListPaginator } from '../../common/';
+import { Modal } from '../../../base/components';
 import { reduce } from '../../../classes/Utils';
-
+import { ListTable } from '../../common';
+import isEqual from 'react-fast-compare'
 import log from '../../../classes/Log';
 
 /**
@@ -28,19 +29,23 @@ class EmbeddedManagerField extends Component {
             entityData: {},
             edit: false,
             copy: false,
-            entity: null,
             selectedRows: [],
             component: {},
             changedData: {},
-
-            actions: [] // reserved
+            showDeleted: false,
+            rowActions: [], // reserved
+            headerActions: []
         };
 
-        this.entity = null; // String. Name of embedded entity
+        this.entity = null;
+
+        this.handleRowDoubleClick = this.handleRowDoubleClick.bind(this);
+        this.handleSelectedRowsChange = this.handleSelectedRowsChange.bind(this);
+        this.handleShowDeletedChange = this.handleShowDeletedChange.bind(this);
     }
 
     componentDidMount() {
-        const { value, field } = this.props;
+        const { field } = this.props;
 
         if (!field) throw new Error('EmbeddedManagerField exception: "field" prop not specified', field);
 
@@ -52,19 +57,48 @@ class EmbeddedManagerField extends Component {
 
         this.entity = entity;
 
-        this.prepareProps();
+        
+        this.initData()
+    }
+
+    initData() {
+        const { value } = this.props;
+
+        const headerActions = this.prepareHeaderActions();
 
         this.setState({
-            data: _.map(value, (o) => o) || {}
+            data: this.buildData(value),
+            headerActions
         });
-        
+    }
+
+    buildData(sourceData) {
+        const { showDeleted } = this.state;
+        const res = [];
+
+        if (sourceData && typeof sourceData === 'object') {
+            _.forEach(sourceData, (row) => {
+                if (row && (showDeleted || row.state === 1)) {
+                    res.push(row);
+                }
+            });
+        }
+
+        return res;
+    } 
+
+    componentDidUpdate(oldProps) {
+        const { value } = this.props;
+
+        if (!isEqual(value, oldProps.value)) {
+            this.setState({ data: this.buildData(value) });
+        }
     }
 
     //actions
 
     actionEdit(rowIndex = null) {
-        const { selectedRows } = this.state;
-        const data = this.getData();
+        const { data, selectedRows } = this.state;
 
         let index = parseInt(rowIndex);
 
@@ -73,7 +107,7 @@ class EmbeddedManagerField extends Component {
         }
 
         if (index >= 0) {
-            const entityData = data[index];
+            const entityData = { ...data[index] };
 
             if (entityData) {
                 this.setState({
@@ -85,9 +119,7 @@ class EmbeddedManagerField extends Component {
     }
 
     actionCopy(rowIndex = null) {
-        const { selectedRows } = this.state;
-        const data = this.getData();
-
+        const { selectedRows, data } = this.state;
         let index = parseInt(rowIndex);
 
         if (!index && selectedRows && selectedRows.length > 0) {
@@ -151,15 +183,6 @@ class EmbeddedManagerField extends Component {
         }
     }
 
-    componentDidUpdate(oldProps) {
-        const { value } = this.props;
-
-        if (value !== oldProps.value) {
-            const normolizedValue = _.map(value, o => o);
-            this.setState({ data: normolizedValue });
-        }
-    }
-
     handleHeaderAction(action) {
         const { disabled } = this.props;
 
@@ -174,181 +197,90 @@ class EmbeddedManagerField extends Component {
         }
     }
 
-    handleRowClick(e, row) {
-        const { component } = this.state;
-
-        if (!component.allowSelection) return;
-
-        let index = row.index;
-
-        this.setState({
-            selectedRows: [index]
-        });
-    }
-
     handleRowDoubleClick(e ,row) {
         this.actionEdit(row.index);
     } 
 
-    getColumns() {
-        const { context } = this.props;
-        const { contributions } = context;
-        const { entity } = this;
-        const { /* actions, */ data } = this.state;
-
-        let columns = [];
-
-        const entityListContributions = contributions.getPointContributions('list', entity);
-
-        if (entityListContributions && entityListContributions.columns) {
-            _.each(entityListContributions.columns, (column) => {
-                if (column.dynamic) {
-                    columns = [...columns, ...this.getDynamicColumns(column, data)];
-                } else {
-                    columns.push(column);
-                }
-            });
-        } else {
-            throw new Error(`list.columns contributions not specified for entity ${entity}`);
-        }
-
-        return columns;
+    handleSelectedRowsChange(rows) {
+        this.setState({selectedRows: rows})
     }
 
-    getDynamicColumns(props, data) {
-        const columns = {};
+    handleShowDeletedChange(val) {
+        this.setState({showDeleted: val});
+    }
 
-        if (data && data.length > 0) {
-            if (props.accessor && props.generator) {
-                data.forEach((item) => {
-                    let value = null;
+    prepareHeaderActions() {
+        const { context } = this.props;
+        const { contributions } = context;
 
-                    if (typeof props.accessor === 'string') {
-                        value = item[props.accessor];
-                    } else if (typeof props.accessor === 'function') {
-                        value = props.accessor(item);
-                    }
+        if (!contributions) return [];
 
-                    if (value) {
-                        _.each(value, (val) => {
-                            const column = props.generator(val);
+        const res = [];
+        const component = contributions.getPointContributionValue('list', this.entity, 'component');
 
-                            if (column && column.id && !columns[column.id]) {
-                                columns[column.id] = column;
-                            }
-                        });
+        if (_.isPlainObject(component)) {
+            const actions = component.actions;
+
+            if (_.isArray(actions)) {
+                _.forEach(actions, (type) => {
+                    const r = this.prepareHeaderAction(type);
+
+                    if (r) {
+                        res.push(r);
                     }
                 });
             }
+
         }
 
-        return Object.values(columns);
+        return res;
     }
 
-    prepareProps() {
-        const { entity } = this;
-        const { context } = this.props;
-        const { contributions } = context;
-
-        const entityListContributions = contributions.getPointContributions('list', entity);
-
-        let component = {};
-        let properties = {};
-
-        let actions = [];
-
-        if (entityListContributions) {
-            _.each(entityListContributions, (contribution, type) => {
-
-                switch (type) {
-                    case 'actions':
-                        actions = contribution;
-                        break;
-
-                    case 'table':
-                        properties  = { ...properties, ...contribution[0] };
-                        break;
-
-                    case 'component':
-                        component = { ...component, ...contribution[0] };
-                        break;
-
-                    default:
-                        break;
-                }
-            });
-        }
-
-        // removing prohibited props
-
-        delete properties.data;
-        delete properties.pages;
-        delete properties.loading;
-        delete properties.columns;
-
-        this.setState({
-            actions,
-            component,
-            properties
-        });
-    }
-
-    getRowClass(row) {
-        const { component, selectedRows } = this.state;
-        const resultClasses = [];
-
-        if (component.allowSelection !== false) {
-            resultClasses.push('-selectable');
-        }
-
-        if (row) {
-            const index = row.index;
-
-            if (selectedRows.indexOf(index) >= 0) {
-                resultClasses.push('-selected');
-            }
-        }
-
-        return resultClasses.join(' ');
-    }
-
-    renderHeaderActions() {
+    prepareHeaderAction(actionType) {
         const { disabled } = this.props;
-        const { component, selectedRows: rows } = this.state;
 
-        if (!component || !component.actions || !component.actions.length) return null;
+        if (!actionType || typeof actionType != "string") return null;
 
-        const result = {};
+        switch (actionType) {
+            case 'add':
+                return {
+                    buttonType: "icon",
+                    icon: 'plus',
+                    key: 'header-action-add',
+                    disabled: disabled,
+                    onClick: (rows) => this.handleHeaderAction(actionType, rows)
+                };
 
-        component.actions.forEach((action) => {
-            switch (action) {
-                case 'add':
-                    result.add = (<Button icon='plus' key='header-action-add' disabled={disabled} onClick={() => this.handleHeaderAction(action)} />);
-                    break;
-                case 'remove':
-                    result.remove = (<Button icon='delete' key='header-action-remove' disabled={!rows.length || disabled} onClick={() => this.handleHeaderAction(action)} />);
-                    break;
+            case 'remove':
+                return {
+                    buttonType: "icon",
+                    icon: 'delete',
+                    key: 'header-action-remove',
+                    disabled: disabled ? disabled : (rows) => !rows.length,
+                    onClick: (rows) => this.handleHeaderAction(actionType, rows)
+                };
 
-                case 'copy':
-                    result.refresh = (<Button icon='copy' key='header-action-copy' disabled={!rows.length || disabled} onClick={() => this.handleHeaderAction(action)} />);
-                    break;
+            case 'copy':
+                return {
+                    buttonType: "icon",
+                    icon: 'copy',
+                    key: 'header-action-copy',
+                    disabled: disabled,
+                    onClick: (rows) => this.handleHeaderAction(actionType, rows)
+                };
 
-                case 'edit':
-                    if (!rows || rows.length <= 0) break;
-                    result.edit = (<Button type='primary' key='header-action-edit' text='Edit' disabled={rows.length > 1 || disabled} onClick={() => this.handleHeaderAction(action)} />);
-                    break;
+            case 'edit':
+                return {
+                    buttonType: "simple",
+                    type: 'primary',
+                    key: 'header-action-edit',
+                    text: 'Edit item',
+                    disabled: disabled ? disabled : (rows) => rows.length !== 1,
+                    onClick: (rows) => this.handleHeaderAction(actionType, rows)
+                };
 
-                case 'massedit': break; //TODO
-
-                default: break;
-            }
-        });
-
-        return (
-            <div className="header-actions">
-                {Object.values(result)}
-            </div>
-        );
+            default: return null;
+        }
     }
 
     onEditFormProceed(index = null, newData) {
@@ -373,6 +305,7 @@ class EmbeddedManagerField extends Component {
         }
 
         this.handleChange(resultData);
+        
         this.setState(newState);
     }
 
@@ -385,7 +318,6 @@ class EmbeddedManagerField extends Component {
     }
 
     renderEditModal() {
-        const { entity } = this;
         const { locations } = this.props;
         const { edit, copy, entityData, selectedRows } = this.state;
 
@@ -401,7 +333,7 @@ class EmbeddedManagerField extends Component {
                 >
                     <EMEditForm
                         index={rowIndex}
-                        entity={entity}
+                        entity={this.entity}
                         isCopy={copy}
                         isNew={!(selectedRows.length > 0)}
                         data={entityData}
@@ -415,80 +347,47 @@ class EmbeddedManagerField extends Component {
         return null;
     }
 
-    getData() {
-        const { data } = this.state;
-
-        const res = [];
-
-
-        if (data) {
-            _.each(data, (item) => {
-                if (item) {
-                    res.push(item);
-                }
-            })
-        }
-
-        return res;
-    }
-
     render() {
-        const { entity } = this;
-        const { field, disabled } = this.props;
-        const { properties } = this.state;
-        const { minRows } = properties;
+        const { disabled } = this.props;
+        const { properties, rowActions, headerActions, data, showDeleted } = this.state;
 
-        if (!field || !entity) return null;
-
-        const { header } = field;
-
-        const columns = React.memo(() => this.getColumns());
-        const data = React.memo(() => this.getData());
+        if (!this.entity) return null;
 
         const tableConfig = {
             disabled,
+            minRows: DEFAULT_MINIMUM_ROWS,
             ...properties,
-            minRows: minRows || DEFAULT_MINIMUM_ROWS,
             className: disabled ? "disabled-table" : null
         };
 
+
+
         return (
             <div className="embedded-manager-field">
-                <div className="embedded-manager-field-header">
-                    <div className="grid colum-2 row-1">
-                        <div className="cell align-center">
-                            {header ? (<h2>{String(header)}</h2>) : ''}
-                        </div>
-                        <div className="cell align-right">
-                            {this.renderHeaderActions()}
-                        </div>
-                    </div>
-                </div>
+                <ListTable
+                    entity={this.entity}
+                    data={data}
+                    manual={false}
+                    showDeleted={showDeleted}
 
-                <div className="embedded-manager-field">
-                    <Table 
-                        data={data}
-                        columns={columns}
-                        PaginationComponent={ListPaginator} 
-                        getTrProps={(state, row) => {
-                            if (disabled) return {};
-            
-                            return {
-                                onClick: (e) => this.handleRowClick(e, row),
-                                onDoubleClick: (e) => this.handleRowDoubleClick(e, row),
-                                className: this.getRowClass(row)
-                            };
-                        }}
+                    {...tableConfig} 
 
-                        {...tableConfig} 
-                    />
-                </div>
+                    onDoubleClick={this.handleRowDoubleClick}
+                    onSelectedChange={this.handleSelectedRowsChange} 
+                    onShowDeletedChanged={this.handleShowDeletedChange}
+                    rowActions={rowActions}
+                    headerActions={headerActions}
+                />
 
                 {this.renderEditModal()}
             </div>
-
         );
     }
+}
+
+EmbeddedManagerField.propTypes = {
+    rowActions: PropTypes.arrayOf(PropTypes.object),
+    headerActions: PropTypes.arrayOf(PropTypes.object),
 }
 
 export default EmbeddedManagerField;

@@ -172,7 +172,7 @@ export const resolveData = (data) => {
 
     _.each(data, (o) => {
         const arr = Object.values(o);
-        const item = arr[0];
+        const item = { ...arr[0] };
 
         if (item && typeof item === 'object') {
             item.linked = _.map(o, (row, loc) => {
@@ -184,9 +184,14 @@ export const resolveData = (data) => {
 
             resultData.push(item);
         }
+
+        if (arr.length > 1) {
+            item.variants = arr;
+        }
         return item;
     });
 
+    //console.log("RESULT DATA!!! : ", resultData);
     return resultData;
 };
 

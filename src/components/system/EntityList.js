@@ -36,7 +36,9 @@ class EMList extends Component {
 
         this.state = {
             loading: false,
-            selected: []
+            selected: [],
+            search: "",
+            searchBy: [ "name", "hq_id" ]
         };
 
         this.handlePageChange = this.handlePageChange.bind(this);
@@ -47,6 +49,7 @@ class EMList extends Component {
         this.handleTableSortedChanged = this.handleTableSortedChanged.bind(this);
         this.handleTableFilteredChange = this.handleTableFilteredChange.bind(this);
         this.handleShowDeletedChanged = this.handleShowDeletedChanged.bind(this);
+        this.handleSearchChange = this.handleSearchChange.bind(this);
     }
 
     componentDidMount() {
@@ -60,7 +63,6 @@ class EMList extends Component {
     }
 
     prepareRowActions() {
-        //TODO
         const { contributions, entity } = this.props;
 
         if (!contributions) return [];
@@ -192,26 +194,27 @@ class EMList extends Component {
         }
     }
 
-    handleAction(data, type) {
+    handleAction(row, type) {
+        console.log("handle row action", row, type);
 
         switch (type) {
             case 'edit':
-                this.props.sendNeedEditFormMessage([data.id]);
+                this.props.sendNeedEditFormMessage([row.id]);
                 break;
 
             case 'copy':
-                this.props.sendNeedCopyFormMessage([data.id]);
+                this.props.sendNeedCopyFormMessage([row.id]);
                 break;
 
             case 'unify':
-                this.props.sendNeedUnifyFormMessage([data.id]);
+                this.props.sendNeedUnifyFormMessage([row.id]);
                 break;
 
             case 'remove':
-                if (data.state === 1) {
-                    this.props.sendNeedRemoveMessage(data.id);
+                if (row.state === 1) {
+                    this.props.sendNeedRemoveMessage(row.id);
                 } else {
-                    this.props.sendNeedReduceMessage(data.id);
+                    this.props.sendNeedReduceMessage(row.id);
                 }
 
                 break;
@@ -237,14 +240,13 @@ class EMList extends Component {
         if (id && id > 0) this.props.sendNeedEditFormMessage([id]);
     }
 
-    handleSelectedRowsChange(selectedRows) {
+    handleSelectedRowsChange(rows, flatRows) {
         const selected = [];
 
-        if (_.size(selectedRows) > 0) {
-            _.forEach(selectedRows, (row) => selected.push(row.id));
+        if (rows.length > 0) {
+            _.forEach(flatRows, (row) => selected.push(row.id));
         }
-
-        console.log('total selected rows: ', selected);
+        
         this.setState({selected});
     }
 
@@ -276,9 +278,12 @@ class EMList extends Component {
     }
 
     handleTableFilteredChange(newFilter) {
-        //TODO
-        console.error('EMList: Not implemented yet');
+        //TODO FOR MANUAL MODE
         return null;
+    }
+
+    handleSearchChange(value) {
+        this.setState({ search: value || ""});
     }
 
     renderHeader() {
@@ -297,7 +302,7 @@ class EMList extends Component {
 
     render() {
         const { entity, data, pages, page, pageSize, manual, order, total } = this.props;
-        const { rowActions, headerActions } = this.state;
+        const { rowActions, headerActions, search, searchBy } = this.state;
 
         return (
             <div className='content-container'>
@@ -311,7 +316,9 @@ class EMList extends Component {
                         </div>
 
                         <div className="cell align-right">
-                            <Search />
+                            <Search 
+                                onChange={this.handleSearchChange}
+                            />
                         </div>
                     </div>
                 </div>
@@ -335,6 +342,7 @@ class EMList extends Component {
                     onShowDeletedChanged={this.handleShowDeletedChanged}
                     rowActions={rowActions}
                     headerActions={headerActions}
+                    search={search}
                 />
             </div>
         );

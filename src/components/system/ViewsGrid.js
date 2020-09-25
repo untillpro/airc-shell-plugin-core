@@ -10,7 +10,7 @@ import { Grid, Card, Message, LocationSelector } from '../../base/components';
 import { sendSelectViewMessage, setLocation } from '../../actions';
 
 import Logger from '../../base/classes/Logger';
-
+import TestLocationSelector from '../common/TestLocationSelector';
 import * as Errors from '../../const/Errors';
 
 class ViewsGrid extends Component {
@@ -88,6 +88,8 @@ class ViewsGrid extends Component {
             _.sortBy(declarations, (o) => o.order);
 
             return (
+                <>
+                <TestLocationSelector />
                 <div className={`content-container ${showSelector ? 'flex-content row' : ''}`}>
                     { showSelector ? <LocationSelector 
                         locations={locations} 
@@ -117,6 +119,7 @@ class ViewsGrid extends Component {
                         }
                     </Grid>
                 </div>
+                </>
             );
         }
 

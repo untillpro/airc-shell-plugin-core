@@ -20,19 +20,10 @@ import {
  * */
 
 class EmbeddedManagerPredefinedField extends EmbeddedManagerField {
-    componentDidMount() {
-        const { value, field } = this.props;
-        if (!field) throw new Error('EmbeddedManagerPredefinedField exception: "field" prop not specified', field);
+    initData() {
+        const { value } = this.props;
 
-        const { entity } = field;
-
-        if (!entity || typeof entity !== 'string') {
-            throw new Error('EmbeddedManagerPredefinedField exception: contribution prop "entity" is not defined or wrong given. String expected.', entity);
-        }
-
-        this.entity = entity;
-
-        this.prepareProps();
+        this.setState({ headerActions: this.prepareHeaderActions() });
 
         this.fetchDependencyData()
             .then((res) => {
@@ -43,12 +34,32 @@ class EmbeddedManagerPredefinedField extends EmbeddedManagerField {
             });
     }
 
+    prepareHeaderAction(actionType) {
+        const { disabled } = this.props;
+
+        if (!actionType || typeof actionType != "string") return null;
+
+        switch (actionType) {
+            case 'edit':
+                return {
+                    buttonType: "simple",
+                    type: 'primary',
+                    key: 'header-action-edit',
+                    text: 'Edit item',
+                    disabled: disabled ? disabled : (rows) => rows.length !== 1,
+                    onClick: (rows) => this.handleHeaderAction(actionType, rows)
+                };
+
+            default: return null;
+        }
+    }
+
     buildDefaultData(data) {
         const result = [];
         const { context, field } = this.props;
         const { contributions } = context;
         const { entity, depended_entity } = field;
-        
+
         const defaultObject = {};
 
         const fields = getEntityFields(entity, contributions);
@@ -60,7 +71,7 @@ class EmbeddedManagerPredefinedField extends EmbeddedManagerField {
 
             _.each(data, (val) => {
                 result.push(
-                    { 
+                    {
                         ...defaultObject,
                         [`id_${depended_entity}`]: val
                     }
@@ -79,7 +90,7 @@ class EmbeddedManagerPredefinedField extends EmbeddedManagerField {
             throw new Error(`"${entity}" declaration error: you should specify "depended_entity" prop in "${accessor}" field declaration.`);
         }
 
-        return this.fetchData(depended_entity).then((Data) => {            
+        return this.fetchData(depended_entity).then((Data) => {
             return buildData(Data, locations);
         });
     }
@@ -87,7 +98,7 @@ class EmbeddedManagerPredefinedField extends EmbeddedManagerField {
     async fetchData(entity) {
         const { context, locations } = this.props;
         const { api, contributions } = context;
-        
+
         let loc = null;
         if (!entity) return {};
 
@@ -105,7 +116,7 @@ class EmbeddedManagerPredefinedField extends EmbeddedManagerField {
             throw new Error(`EmbeddedManagerPredefinedField.fetchData() exception: location not specified or wrong given`);
         }
 
-        return  api.collection(url.resource, [ loc ]);
+        return api.collection(url.resource, [loc]);
     }
 
 
@@ -114,7 +125,7 @@ class EmbeddedManagerPredefinedField extends EmbeddedManagerField {
         const listData = this.getData();
 
         const rowData = listData[index];
-        
+
         const newState = {
             edit: false,
             copy: false,
@@ -131,7 +142,7 @@ class EmbeddedManagerPredefinedField extends EmbeddedManagerField {
             if (resultRowData.id && resultRowData.id > 0) {
                 _.each(data, (row) => {
                     if (row.id === resultRowData.id) {
-                        resultData.push({...row, ...resultRowData});
+                        resultData.push({ ...row, ...resultRowData });
                     } else {
                         resultData.push(row);
                     }
@@ -155,7 +166,7 @@ class EmbeddedManagerPredefinedField extends EmbeddedManagerField {
 
         if (!data || data.length <= 0) return dep_data;
 
-        const resData = [ ...data ];
+        const resData = [...data];
 
         _.each(dep_data, (obj) => {
             const k = `id_${depended_entity}.id`;

@@ -6,6 +6,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Label, FieldError, Tip } from '../../base/components'
+import isEqual from 'react-fast-compare';
 
 import {
     TextField,
@@ -53,12 +54,12 @@ class EMEditFormField extends Component {
             const v1 = _.get(data, path);
             const v2 = _.get(this.props.data, path);
 
-            if (v1 !== v2) {
+            if (!isEqual(v1,v2)) {
                 return true;
             }
         }
 
-        if (errors !== this.props.errors) {
+        if (!isEqual(errors, this.props.errors)) {
             return true;
         }
 

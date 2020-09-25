@@ -5,12 +5,12 @@
 import React, { PureComponent } from 'react';
 
 import {
-    NumberFilter,
-    RangeFilter,
-    SelectFilter,
+    //NumberFilter,
+    //RangeFilter,
+    //SelectFilter,
     StringFilter,
-    GroupFilter,
-    DateTimeFilter,
+    //GroupFilter,
+    //DateTimeFilter,
 } from './filter_types';
 
 /**
@@ -35,6 +35,8 @@ class ColumnFilter extends PureComponent {
     }
 
     renderFitler() {
+        //TODO - implement all filter types
+        
         const { onChange, column } = this.props;
         const { type, filterType } = column;
 
@@ -46,7 +48,6 @@ class ColumnFilter extends PureComponent {
             //case "price": return <RangeFilter column={column} onChange={onChange} />;
             //case "range": return <RangeFilter column={column} onChange={onChange} />;
             //case "group": return <GroupFilter column={column} onChange={onChange} />;
-
             //case "date": 
             //case "time": 
 

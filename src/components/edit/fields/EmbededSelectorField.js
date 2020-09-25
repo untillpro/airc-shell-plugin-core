@@ -2,13 +2,13 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-import React, { Component, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 
 import { Modal, TextInput, Icon } from '../../../base/components';
 import EmbeddedManagerSelectField from './EmbeddedManagerSelectField'
 
 
-class EmbededSelectorField extends Component {
+class EmbededSelectorField extends PureComponent {
     constructor() {
         super();
 
@@ -140,8 +140,7 @@ class EmbededSelectorField extends Component {
         const inputValue = this.getInputValue();
 
         return (
-            
-            <Fragment>
+            <>
                 <TextInput 
                     disabled={disabled}
                     className="selector-input"
@@ -156,7 +155,7 @@ class EmbededSelectorField extends Component {
                 />
 
                 {this.renderSelector()}
-            </Fragment>
+            </>
         )
     }
 }

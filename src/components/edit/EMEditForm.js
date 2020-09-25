@@ -311,7 +311,6 @@ class EMEditForm extends Component {
         const { data, entity, contributions, isNew, isCopy, locations } = this.props;
 
         let mergedData = mergeDeep({}, data, changedData);
-
         
         log("EMEditForm data", data);
         log("EMEditForm changedData", changedData);

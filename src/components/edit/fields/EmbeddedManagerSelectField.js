@@ -12,24 +12,10 @@ import {
 } from '../../../classes/EntityUtils';
 
 class EmbeddedManagerSelectField extends EmbeddedManagerField {
-    componentDidMount() {
-        const { field } = this.props;
-
-        if (!field) { 
-            throw new Error('EmbeddedManagerSelectField exception: "field" prop not specified', field); 
-        }
-
-        const { entity } = field;
-
-        if (!entity || typeof entity !== 'string') {
-            throw new Error('EmbeddedManagerSelectField exception: contribution prop "entity" is not defined or wrong given. String expected.', entity);
-        }
-
-        this.entity = entity;
-
-        this.prepareProps();
-
-        this.fetchListData().then((data) => this.setState({ data }));
+    initData() {
+        this.setState({headerActions: this.prepareHeaderActions()});
+        
+        this.fetchListData().then((data) => this.setState({ data: this.buildData(data) }));
     }
 
     handleRowDoubleClick(e ,row) {
@@ -83,7 +69,7 @@ class EmbeddedManagerSelectField extends EmbeddedManagerField {
                 })
                 .then((data) => {
                     this.setState({
-                        data,
+                        data: this.buildData(data),
                         edit: false,
                         copy: false,
                         entityData: null
@@ -130,12 +116,10 @@ class EmbeddedManagerSelectField extends EmbeddedManagerField {
             wsid: locations
         };
 
-        // TODO use of cotnext
         return fetchData(context, entity, props).then(({ resolvedData }) => {
             return resolvedData;
         });
     }
-
 }
 
 export default EmbeddedManagerSelectField;

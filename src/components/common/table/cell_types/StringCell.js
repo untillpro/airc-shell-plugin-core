@@ -2,17 +2,67 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-import React from 'react';
+import React, { PureComponent } from 'react';
+import { Input } from 'antd';
+import ListColumnsToggler from '../ListColumnsToggler';
 
-const StringCell = (props) => {
-    const { value } = props;
-    let val = '';
+class StringCell extends PureComponent {
 
-    if (value) {
-        val = value.toString();
+    constructor(props) {
+        super(props);
+        
+        this.handleChange = this.handleChange.bind(this);
     }
 
-    return <span className="table-cell string-value">{val}</span>;
-} 
+    handleChange(event) {
+        const { value } = this.props;
+        
+        const val = event.target.val;
 
-export default React.memo(StringCell);
+        if (val !== value) {
+            console.log("StringCell.handleChange: ", value, event.target.value);
+            console.log("StringCell.oldValue = ", value);
+            console.log("StringCell.newValue = ", val);
+        }
+        
+    }
+
+    isEditable() {
+        return this.props.editable === true
+    }
+
+    renderEditable() {
+        const { value } = this.props;
+        let val = '';
+    
+        if (value) {
+            val = value.toString();
+        }
+
+        return <Input 
+            defaultValue={val} 
+            onPressEnter={this.handleChange}
+        />
+    }
+
+    renderReadOnly() {
+        const { value,  } = this.props;
+        let val = '';
+    
+        if (value) {
+            val = value.toString();
+        }
+    
+        return <span className="table-cell string-value">{val}</span>;
+    }
+
+    render() {
+        if (this.isEditable()) {
+            return this.renderEditable();
+        }
+
+        return this.renderReadOnly();
+    }
+}
+
+export default StringCell;

@@ -17,6 +17,7 @@ import PriceCell from './cell_types/PriceCell';
 import StringCell from './cell_types/StringCell';
 import DateTimeCell from './cell_types/DateTimeCell';
 
+import { filterString, renderTotalCell } from './helpers';
 
 import log from "../../../classes/Log";
 
@@ -28,6 +29,7 @@ class ListTable extends PureComponent {
 
         this.state = {
             loading: false,
+            expanded: [],
             columns: [],
             allColumns: [],
             selectedRows: [],
@@ -37,6 +39,10 @@ class ListTable extends PureComponent {
             columnsVisibility: DefaultVisibleColumns,
             properties: {},
             component: {
+                'showPagination': true,
+                'showPaginationBottom': true,
+                'showPaginationTop': true,
+                'showPageSizeOptions': true,
                 'showActionsColumn': true,
                 'allowMultyselect': false,
                 'allowSelection': true,
@@ -44,7 +50,9 @@ class ListTable extends PureComponent {
                 'showDeletedToggler': true,
                 'showPositionColum': true,
                 'showHeaderButtons': true,
-                'showHeaderFilter': true
+                'showColumnFilter': false,
+                'allowSearch': true,
+                'searchBy': 'name'
             }
         };
 
@@ -54,6 +62,7 @@ class ListTable extends PureComponent {
         this.handleRowDoubleClick = this.handleRowDoubleClick.bind(this);
         this.handleTableSortedChanged = this.handleTableSortedChanged.bind(this);
         this.handleTableFilteredChange = this.handleTableFilteredChange.bind(this);
+        this.handleExpandedChange = this.handleExpandedChange.bind(this);
 
         this.handleVisibleChange = this.handleVisibleChange.bind(this);
         this.handleShowDeletedChange = this.handleShowDeletedChange.bind(this);
@@ -66,7 +75,7 @@ class ListTable extends PureComponent {
     componentDidMount() {
         const component = this.prepareComponent();
         const properties = this.prepareProps();
-        const columns = this.getColumns();
+        const columns = this.getColumns(component);
 
         this.setState({
             properties,
@@ -109,8 +118,12 @@ class ListTable extends PureComponent {
         const { selectedRows, selectedFlatRows, component } = this.state;
         const { allowMultyselect, allowSelection } = component;
 
-        const { index, original } = row;
+        const { nestingPath, original } = row;
         let selectedRowsNew, selectedFlatRowsNew;
+
+        const rowIndex = nestingPath.join('.');
+
+        console.log("Row clicked! : ", row);
 
         event.preventDefault();
         event.stopPropagation();
@@ -119,16 +132,16 @@ class ListTable extends PureComponent {
             if (allowMultyselect) {
                 selectedFlatRowsNew = { ...selectedFlatRows };
 
-                if (selectedRows.indexOf(index) >= 0) {
-                    selectedRowsNew = _.without(selectedRows, index);
-                    selectedFlatRowsNew = delete (selectedFlatRowsNew[index]);
+                if (selectedRows.indexOf(rowIndex) >= 0) {
+                    selectedRowsNew = _.without(selectedRows, rowIndex);
+                    selectedFlatRowsNew = delete (selectedFlatRowsNew[rowIndex]);
                 } else {
-                    selectedRowsNew = [...selectedRows, index];
-                    selectedFlatRowsNew[index] = original;
+                    selectedRowsNew = [...selectedRows, rowIndex];
+                    selectedFlatRowsNew[rowIndex] = original;
                 }
             } else {
-                selectedRowsNew = [index];
-                selectedFlatRowsNew = { [index]: original };
+                selectedRowsNew = [rowIndex];
+                selectedFlatRowsNew = { [rowIndex]: original };
             }
         }
 
@@ -137,7 +150,7 @@ class ListTable extends PureComponent {
         }
 
         if (_.isFunction(onSelectedChange)) {
-            onSelectedChange(selectedFlatRowsNew);
+            onSelectedChange(selectedRowsNew, selectedFlatRowsNew);
         }
 
         this.setState({
@@ -200,8 +213,12 @@ class ListTable extends PureComponent {
         const { onFilterChage } = this.props;
 
         if (onFilterChage && typeof onFilterChage === "function") {
-            //onFilterChage(filtered, column)
+            onFilterChage(filtered, column)
         }
+    }
+
+    handleExpandedChange(newExpanded) {
+        this.setState({expanded: newExpanded});
     }
 
     doFilter(filter, row, column) {
@@ -210,14 +227,12 @@ class ListTable extends PureComponent {
 
         const rowValue = accessor(row);
 
-        console.log("doFilter in action: ", value, rowValue);
-
         const checkType = type || filterType;
 
-        switch(checkType) {
-            default: return _.(rowValue, value);
+        switch (checkType) {
+            default: return filterString(rowValue, value);
         }
-        
+
     }
 
     getDynamicColumns(props, data) {
@@ -252,8 +267,23 @@ class ListTable extends PureComponent {
         return Object.values(columns);
     }
 
-    prepareColumn(columnProps) {
-        const { accessor, header, Header, type, width, id, filterable } = columnProps;
+    prepareColumn(columnProps, component) {
+        const {
+            accessor,
+            header,
+            Header,
+            type,
+            width,
+            id,
+            totalType,
+            Footer,
+            filterable,
+            toggleable,
+            filterType,
+            editable
+        } = columnProps;
+
+        const { showTotal } = component;
 
         if (
             !accessor ||
@@ -263,25 +293,52 @@ class ListTable extends PureComponent {
             return null;
         }
 
-        console.log("column props: ", columnProps);
-
         const column = {
             "id": typeof accessor === "string" ? accessor : id,
             "Header": header || Header,
             "accessor": accessor,
-            "filterable": !!filterable,
             "filterMethod": this.doFilter,
-            "Filter": (info) => <ListColumnFilter {...info} />
         };
+
+        if (filterable !== false && filterType && typeof filterType === "string") {
+            column.Filter = (info) => <ListColumnFilter {...info} />;
+        }
+
+        if (totalType && typeof totalType === "string") {
+            column.totalType = totalType;
+        }
+
+        if (Footer) {
+            column.Footer = Footer;
+        } else if (showTotal === true) {
+            column.Footer = (info) => {
+                console.log("Footer generatino: ", info);
+                const { column, data } = info;
+
+                return renderTotalCell(column, data)
+            }
+        }
+
+        if (_.isBoolean(toggleable)) {
+            column.toggleable = toggleable;
+        }
+
+        if (_.isBoolean(filterable)) {
+            column.filterable = filterable;
+        }
+
+        if (_.isBoolean(editable)) {
+            column.editable = editable;
+        }
 
         switch (type) {
             case 'location': column.Cell = (d) => <LocationCell value={d.value} />; break;
-            case 'number': column.Cell = (d) => <NumberCell value={d.value} />; break;
-            case 'boolean': column.Cell = (d) => <BooleanCell value={d.value} />; break;
-            case 'price': column.Cell = (d) => <PriceCell value={d.value} />; break;
-            case 'time': column.Cell = (d) => <DateTimeCell value={d.value} format="HH:mm" />; break;
-            case 'date': column.Cell = (d) => <DateTimeCell value={d.value} format="DD/MM/YYYY" />; break;
-            default: column.Cell = (d) => <StringCell value={d.value} />;
+            case 'number': column.Cell = (d) => <NumberCell cell={d} value={d.value} editable={editable} />; break;
+            case 'boolean': column.Cell = (d) => <BooleanCell cell={d} value={d.value} editable={editable} />; break;
+            case 'price': column.Cell = (d) => <PriceCell cell={d} value={d.value} editable={editable} />; break;
+            case 'time': column.Cell = (d) => <DateTimeCell cell={d} value={d.value} editable={editable} format="HH:mm" />; break;
+            case 'date': column.Cell = (d) => <DateTimeCell cell={d} value={d.value} editable={editable} format="DD/MM/YYYY" />; break;
+            default: column.Cell = (d) => <StringCell cell={d} value={d.value} editable={editable} />;
         }
 
         if (width) {
@@ -291,13 +348,13 @@ class ListTable extends PureComponent {
         return column;
     };
 
-    getColumns() {
+    getColumns(component) {
         const { contributions, entity } = this.props;
-        const { component } = this.state;
         const { showPositionColum, showActionsColumn } = component;
 
         let columns = [];
 
+        // position column
         if (showPositionColum) {
             columns.push({
                 'Header': () => this.renderRowsSelector(),
@@ -310,12 +367,41 @@ class ListTable extends PureComponent {
             });
         }
 
+        // custom expander
+        if (true) {
+            columns.push({
+                expander: true,
+                Header: null,
+                width: 20,
+                Expander: ({ isExpanded, subRows, ...rest }) => {
+                    if (!subRows || subRows.length === 0) {
+                        return null;
+                    }
+
+                    return (
+                        <div style={{ zIndex: 100, position: 'relative' }}>
+                            {isExpanded
+                                ? <span>-</span>
+                                : <span>+</span>}
+                        </div>
+                    );
+                },
+                style: {
+                    cursor: "pointer",
+                    fontSize: 25,
+                    padding: "0",
+                    textAlign: "center",
+                    userSelect: "none"
+                }
+            });
+        }
+
         const entityListContributions = contributions.getPointContributions('list', entity);
 
         if (entityListContributions && entityListContributions.columns) {
             _.each(entityListContributions.columns, (column) => {
                 if (_.isPlainObject(column)) {
-                    const c = this.prepareColumn(column);
+                    const c = this.prepareColumn(column, component);
 
                     if (c) {
                         columns.push(c)
@@ -324,6 +410,7 @@ class ListTable extends PureComponent {
             });
         }
 
+        //action column
         if (showActionsColumn) {
             columns.push({
                 'id': "actions",
@@ -343,9 +430,6 @@ class ListTable extends PureComponent {
         const { columns, columnsVisibility } = this.state;
         const res = [];
 
-
-        console.log("getVisibleColumns: ", columns, columnsVisibility);
-
         if (columns && _.size(columns) > 0) {
             if (_.isPlainObject(columnsVisibility) && _.size(columnsVisibility) > 0) {
                 columns.forEach((column) => {
@@ -362,8 +446,6 @@ class ListTable extends PureComponent {
             }
         }
 
-        console.log("getVisibleColumns res: ", res);
-
         return res;
     }
 
@@ -372,6 +454,7 @@ class ListTable extends PureComponent {
 
         const { selectedRows, component } = this.state;
         const { allowSelection } = component;
+        
 
         let resultClasses = "";
 
@@ -380,9 +463,10 @@ class ListTable extends PureComponent {
         }
 
         if (row) {
-            const { index } = row;
+            const { nestingPath } = row;
+            const rowIndex = nestingPath.join('.');
 
-            if (selectedRows.indexOf(index) >= 0) {
+            if (selectedRows.indexOf(rowIndex) >= 0) {
                 resultClasses += ' -selected';
             }
         }
@@ -475,30 +559,34 @@ class ListTable extends PureComponent {
     }
 
     getTrPropsCallback(state, row) {
+        const { subRows } = row;
+
+        if (subRows && subRows.length > 0) {
+            return {}
+        };
+
         return {
             onClick: (e) => this.handleRowClick(e, row),
             onDoubleClick: (e) => this.handleRowDoubleClick(e, row),
-            className: this.getRowClass(row)
+            className: this.getRowClass(row),
         };
     }
 
-    prepareData(data) {
-        const { search, searchBy } = this.props;
+    searchFilter(value) {
+        const { component: { searchBy, allowSearch } } = this.state;
 
-        // continue here
-        
-        if (search && typeof search === "string" && _.isArray(searchBy) && searchBy.length > 0) {
-            return this.doSearch(data, search, searchBy);
+        if (allowSearch && value && searchBy && typeof searchBy === 'string') {
+            return [{ id: searchBy, value }];
         }
 
-        return data;
+        return [];
     }
 
     render() {
         log('%c Render Table List', 'color: green; font-size: 120%');
 
-        const { data, pages, page, pageSize, manual, order, total, headerActions } = this.props;
-        const { selectedRows, selectedFlatRows, properties, component, loading, showDeleted } = this.state;
+        const { data, pages, page, pageSize, manual, order, filter, total, headerActions, search } = this.props;
+        const { selectedRows, selectedFlatRows, properties, component, loading, showDeleted, expanded } = this.state;
 
 
         const tableConfig = {
@@ -509,6 +597,9 @@ class ListTable extends PureComponent {
             page,
             pageSize,
             sorted: order,
+            filtered: filter,
+            expanded: expanded,
+            subRowsKey: "variants"
         };
 
         if (manual) {
@@ -516,12 +607,14 @@ class ListTable extends PureComponent {
             tableConfig.total = total;
         }
 
+        const cols = this.getVisibleColumns();
+
         return (
             <div className='untill-base-table'>
                 <Table
                     resizable={false}
-                    data={this.prepareData(data)}
-                    columns={this.getVisibleColumns()}
+                    data={data}
+                    columns={cols}
 
                     PaginationComponent={ListPaginator}
 
@@ -534,11 +627,11 @@ class ListTable extends PureComponent {
                     onPageSizeChange={this.handlePageSizeChange}
                     onSortedChange={this.handleTableSortedChanged}
                     onFilteredChange={this.handleTableFilteredChange}
+                    onExpandedChange={this.handleExpandedChange}
 
                     getTrProps={this.getTrPropsCallback}
-
-                    filterable={!!component.showHeaderFilter}
-                    //defaultFiltered={[{"id": "name", "value": "Co"}, {"id": "hq_id", "value": "Co"}]}
+                    defaultFiltered={this.searchFilter(search)}
+                    filterable={component.showColumnFilter}
                 >
                     {(state, makeTable) => {
                         const { allDecoratedColumns } = state;

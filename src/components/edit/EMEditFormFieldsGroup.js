@@ -15,12 +15,45 @@ class EMEditFormFieldsGroup extends Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            sortedFields: [],
+            groupHeader: null,
+            isTabs: false,
+            tabsProps: {}
+        };
+
         this.handleFieldChanged = this.handleFieldChanged.bind(this);
     }
 
+    componentDidMount() {
+        const {
+            fields,
+            group,
+            contributions,
+        } = this.props;
+
+        const sortedFields = _.sortBy(fields, (o) => o.order);
+
+        const groupHeader = contributions.getPointContributionValue('formsgroups', group, 'name');
+        const isTabs = contributions.getPointContributionValue('formsgroups', group, 'tabs');
+        const tabsProps = contributions.getPointContributionValue('formsgroups', group, 'tabsProps') || {};
+
+        this.setState({
+            sortedFields,
+            groupHeader,
+            isTabs,
+            tabsProps
+        });
+    }
+
     handleFieldChanged(field, value) {
-        const { changedData, embedded: embedded_type, onDataChanged } = this.props;
+        const { changedData, embedded: embedded_type, onDataChanged, data: Data } = this.props;
         const { accessor, onChange } = field;
+
+        console.log('++++++++++ handleFieldChanged: ');
+        console.log("value: ", value);
+        console.log("changedData: ", changedData);
+        console.log("data: ", Data);
 
         let data = {};
         let path = accessor;
@@ -57,20 +90,19 @@ class EMEditFormFieldsGroup extends Component {
 
     render() {
         const {
-            fields,
             group,
             data,
-            contributions,
             locations,
             fieldsErrors,
             embedded
         } = this.props;
- 
-        const sortedFields = _.sortBy(fields, (o) => o.order);
 
-        const groupHeader = contributions.getPointContributionValue('formsgroups', group, 'name');
-        const isTabs = contributions.getPointContributionValue('formsgroups', group, 'tabs');
-        const tabsProps = contributions.getPointContributionValue('formsgroups', group, 'tabsProps') || {};
+        const {
+            sortedFields,
+            groupHeader,
+            isTabs,
+            tabsProps
+        } = this.state;
 
         const content = sortedFields.map((field, index) => {
             if (field && field.accessor) {
