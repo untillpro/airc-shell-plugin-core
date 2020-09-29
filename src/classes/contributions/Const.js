@@ -47,6 +47,8 @@ export const C_REPORT_EVENT_TYPE = "event_type";
 
 // ### LIST
 
+export const C_LIST_COLUMNS = "columns";
+
 // ### URL
 
 // ### FORMS

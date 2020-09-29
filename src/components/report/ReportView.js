@@ -10,15 +10,10 @@ import RListHeader from './RListHeader';
 
 import { 
     HeaderBackButton, 
-    ListPaginator,
-    BooleanCell,
-    LocationCell,
-    NumberCell,
-    PriceCell,
-    StringCell,
-    DateTimeCell
+    ListTable
 } from '../common/';
-import { Table, Search } from '../../base/components';
+
+import { Search } from '../../base/components';
 
 import { 
     sendCancelMessage, 
@@ -36,8 +31,8 @@ class ReportView extends Component {
         super(props);
         
         this.state = {
-            columns: [],
-            properties: {}
+            searchStr: "",
+            props: {}
         };
 
 
@@ -45,95 +40,8 @@ class ReportView extends Component {
     }
 
     componentDidMount() {
-        const properties = this.prepareProps(); 
-        const columns = this.prepareColumns();
-
-        this.setState({ columns, properties });
-
         this.props.sendDoGenerateReport();
     }
-
-    prepareProps() {
-        const { contributions, report } = this.props;
-        const reportPoint = contributions.getPoint(TYPE_REPORTS, report);
-
-        let tableProps = {};
-
-        if (reportPoint) {
-            let props = reportPoint.getContributuionValue(C_REPORT_TABLE_PROPS);
-
-            if (props && _.isPlainObject(props)) {
-                tableProps = props;
-            }
-        }
-
-        // removing prohibited props
-
-        delete tableProps.data;
-        delete tableProps.pages;
-        delete tableProps.loading;
-        delete tableProps.columns;
-
-        return tableProps;
-    }
-
-    prepareColumns() {
-        const { contributions, report } = this.props;
-
-        let columns = [];
-
-        const entityListContributions = contributions.getPointContributions(TYPE_REPORTS, report);
-
-        if (entityListContributions && entityListContributions.columns) {
-            _.each(entityListContributions.columns, (col) => {
-                const column = this.prepareColumn(col);
-
-                if (column) {
-                    columns.push(column);
-                }
-            });
-        }
-
-        return columns;
-    }
-
-    prepareColumn(columnProps) {
-        const { accessor, header, type, width } = columnProps;
-    
-        if (
-            !accessor || 
-            !header ||
-            (typeof accessor !== 'string' && typeof accessor !== 'function') || 
-            typeof header !== 'string') {
-                return null;
-        }
-    
-        const column = {
-            "id": accessor,
-            "Header": header
-        };
-    
-        if (typeof accessor === 'function') {
-            column.accessor = accessor;
-        } else {
-            switch (type) {
-                case 'location': column.accessor = (d) => <LocationCell value={_.get(d, accessor)} />; break;
-                case 'number': column.accessor = (d) => <NumberCell value={_.get(d, accessor)} />; break;
-                case 'boolean': column.accessor = (d) => <BooleanCell value={_.get(d, accessor)} />; break;
-                case 'price': column.accessor = (d) => <PriceCell value={_.get(d, accessor)} />; break;
-                case 'time': column.accessor = (d) => <DateTimeCell value={_.get(d, accessor)} format="HH:mm" />; break;
-                case 'date': column.accessor = (d) => <DateTimeCell value={_.get(d, accessor)} format="DD/MM/YYYY" />; break;
-                default: column.accessor = (d) => <StringCell value={_.get(d, accessor)} />;
-            }
-
-        }
-
-        if (width) {
-            column.width = width;
-        }
-
-        return column;
-    };
 
     handleCancelClick() {
         this.props.sendCancelMessage()
@@ -152,20 +60,10 @@ class ReportView extends Component {
     }
 
     render() { 
-        const { data, loading } = this.props;
-        const { columns, properties, searchStr } = this.state;
-        
-        const tableConfig = {
-            data: data || [],
-            loading,
-            columns,
-            resizable: false,
-            minRows: 5,
+        const { data, loading, report, reportProps } = this.props;
+        const { searchStr } = this.state;
+        const { show_total } = reportProps;
 
-            ...properties,
-
-            PaginationComponent: ListPaginator,
-        };
 
         return (
             <div className='content-container'>
@@ -186,20 +84,16 @@ class ReportView extends Component {
 
                 <RListHeader />
 
-                <div className='untill-base-table'>
-                    <div className='untill-base-table-body'>
-                        <Table
-                            {...tableConfig}
-                            //onTableDataUpdate={(resolvedData) => this.handleTableDataUpdate(resolvedData)}
-                            //ref={ ref => this.table = ref}
-                        >
-                            {(state, makeTable, instance) => {
-                                this.tableState = state;
-                                return makeTable();
-                            }}
-                        </Table>
-                    </div>
-                </div>
+                <ListTable
+                    entity={report}
+                    loading={loading}
+                    data={data || []}
+                    manual={false}
+                    rowActions={[]}
+                    headerActions={[]}
+                    search={searchStr}
+                    showTotal={show_total === 1}
+                />
             </div>
         );
     }
@@ -207,14 +101,15 @@ class ReportView extends Component {
 
 const mapStateToProps = (state) => {
     const { fetchingData: loading } = state.plugin;
-    const { reportType: report, reportData: data } = state.reports;
+    const { reportType: report, reportData: data, props: reportProps } = state.reports;
     const { contributions } = state.context;
 
     return { 
         loading,
         report, 
         data,
-        contributions 
+        contributions,
+        reportProps
     };
 }
 

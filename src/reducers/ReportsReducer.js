@@ -122,10 +122,12 @@ export default (state = INITIAL_STATE, action) => {
 
                 if (report && filterBy && typeof filterBy === 'object') {
                     cashFilterBy[report] = filterBy;
+                    newState.filterBy = filterBy;
                 }
 
                 if (report && props && typeof props === 'object') {
                     cashProps[report] = props;
+                    newState.props = props;
                 }
 
                 if (from !== undefined && (from === null || typeof from === 'number')) {
@@ -138,6 +140,7 @@ export default (state = INITIAL_STATE, action) => {
 
                 newState.cashedFilterBy = cashFilterBy;
                 newState.cashedProps = cashProps;
+                
 
                 return newState
             }

@@ -294,7 +294,7 @@ class ListTable extends PureComponent {
             editable
         } = columnProps;
 
-        const { showTotal } = component;
+        const showTotal = component.showTotal || this.props.showTotal;
 
         if (
             !accessor ||
@@ -328,7 +328,7 @@ class ListTable extends PureComponent {
                 console.log("Footer generatino: ", info);
                 const { column, data } = info;
 
-                return renderTotalCell(column, data)
+                return column.Cell({ value: renderTotalCell(column, data)})
             }
         }
 
@@ -603,8 +603,8 @@ class ListTable extends PureComponent {
     render() {
         log('%c Render Table List', 'color: green; font-size: 120%');
 
-        const { data, pages, page, pageSize, manual, order, filter, total, headerActions, search } = this.props;
-        const { selectedRows, selectedFlatRows, properties, component, loading, showDeleted, expanded } = this.state;
+        const { data, pages, page, pageSize, manual, order, filter, total, headerActions, search, loading } = this.props;
+        const { selectedRows, selectedFlatRows, properties, component, showDeleted, expanded } = this.state;
 
 
         const tableConfig = {

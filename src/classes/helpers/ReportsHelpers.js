@@ -6,8 +6,9 @@ import _ from 'lodash';
 
 import {
     TYPE_REPORTS,
+    TYPE_LIST,
     C_REPORT_GENERATOR,
-    C_REPORT_COLUMNS,
+    C_LIST_COLUMNS,
     C_REPORT_EVENT_TYPE
  } from '../contributions/Const';
 
@@ -33,8 +34,10 @@ export const isValidReport = (context, reportCode) => {
     }
 
     // check for list columns defined
-    let columns = reportPoint.getContributuionValue(C_REPORT_COLUMNS, true);
+    let columns = contributions.getPointContributionValues(TYPE_LIST, reportCode, C_LIST_COLUMNS);
     
+    console.log("contribution columns: ", columns);
+
     if (!columns || !_.isArray(columns) || columns.length === 0) {
         throw new Error(`no list columns specified for report "${reportCode}". Expected array of objects.`);
     }
