@@ -189,7 +189,6 @@ export const resolveData = (data) => {
         resultData.push(item);
     });
 
-    console.log("RESULT DATA!!! : ", resultData);
     return resultData;
 };
 

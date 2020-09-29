@@ -108,8 +108,6 @@ class ListTable extends PureComponent {
     handleShowDeletedChange(value) {
         const { onShowDeletedChanged } = this.props;
 
-        console.log("TableList.handleShowDeletedChange", value);
-
         let val = !!value;
 
         this.setState({ showDeleted: !!val });
@@ -129,8 +127,6 @@ class ListTable extends PureComponent {
         let selectedRowsNew, selectedFlatRowsNew;
 
         const rowIndex = nestingPath.join('.');
-
-        console.log("Row clicked! : ", row);
 
         event.preventDefault();
         event.stopPropagation();
@@ -325,7 +321,6 @@ class ListTable extends PureComponent {
             column.Footer = Footer;
         } else if (showTotal === true) {
             column.Footer = (info) => {
-                console.log("Footer generatino: ", info);
                 const { column, data } = info;
 
                 return column.Cell({ value: renderTotalCell(column, data)})

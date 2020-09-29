@@ -78,7 +78,6 @@ class EMList extends Component {
                 })
             });
         }
-        console.log("prepareRowActions result: ", res);
 
         return res;
     }
@@ -195,7 +194,6 @@ class EMList extends Component {
     }
 
     handleAction(row, type) {
-        console.log("handle row action", row, type);
         const { _entry: e, state } = row;
         
         if (!e) {

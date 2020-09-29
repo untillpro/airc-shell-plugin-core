@@ -55,8 +55,6 @@ class ListPaginator extends Component {
     }
 
     render() {
-        console.log("ListPaginator props: ", this.props);
-        
         return (
             <div className='-pagination'>
                 {this.renderPages()}

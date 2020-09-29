@@ -43,8 +43,6 @@ class ColumnFilter extends PureComponent {
 
         let checkType = filterType || type;
 
-        console.log('filter type: ', checkType);
-
         switch (checkType) {
             //case "number": return <NumberFilter column={column} onChange={onChange} />;
             //case "select": return <SelectFilter column={column} onChange={onChange} />;
@@ -60,8 +58,6 @@ class ColumnFilter extends PureComponent {
 
     render() {
         const { column: { filterable }} = this.props;
-
-        console.log("ListColumnFilter props: ", this.props);
 
         if (filterable === false) return null;
 

@@ -50,10 +50,11 @@ class EMEditFormFieldsGroup extends Component {
         const { changedData, embedded: embedded_type, onDataChanged, data: Data } = this.props;
         const { accessor, onChange } = field;
 
-        console.log('++++++++++ handleFieldChanged: ');
-        console.log("value: ", value);
-        console.log("changedData: ", changedData);
-        console.log("data: ", Data);
+        Logger.log({
+            value,
+            changedData,
+            Data
+        }, '++++++++++ handleFieldChanged:')
 
         let data = {};
         let path = accessor;
@@ -67,16 +68,20 @@ class EMEditFormFieldsGroup extends Component {
 
         if (changedData !== null) data = { ...changedData };
 
-        let v = _.get(data, path);
+        let v = 0;
 
-        if (_.isPlainObject(v)) {
-            v = _.merge({ ...v }, value);
-        } else if (_.isArray(v)) {
-            v = _.merge(v, value);
-        } else {
-            v = value;
-        }
+        if (value !== 0) {
+            v = _.get(data, path);
 
+            if (_.isPlainObject(v)) {
+                v = _.merge({ ...v }, value);
+            } else if (_.isArray(v)) {
+                v = _.merge(v, value);
+            } else {
+                v = value;
+            }
+        } 
+        
         _.set(data, path, v);
 
         if (onChange && typeof onChange === 'function') {

@@ -143,7 +143,6 @@ class ReportDetails extends Component {
         const { report, fromDateTime, toDateTime } = this.props;
 
         if (this.doValidate()) {
-            console.log("doGenerate(): ", report, fromDateTime, toDateTime, reportFilter, reportProps);
             this.props.sendDoGenerateReport(report, fromDateTime, toDateTime, reportFilter, reportProps)
         }
     }
