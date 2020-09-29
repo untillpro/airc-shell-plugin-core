@@ -6,17 +6,18 @@ import _ from 'lodash';
 import StateMachineStep from '../StateMachineStep';
 import { MessageInit, MessageNotify } from '../messages';
 import EntityEditStep from './EntityEditStep';
-import EntityMassEditStep from './EntityMassEditStep';
+//import EntityMassEditStep from './EntityMassEditStep';
 
 import {
     fetchData,
-    processData
+    processData,
+    checkEntries,
+    //checkEntry
 } from '../EntityUtils';
 
 const INITIAL_STATE = {
     data: [],
     resolvedData: [],
-    linkedItemsData: {},
     manual: false,
     showDeleted: false,
     total: 0,
@@ -71,26 +72,29 @@ class RenderEntityStep extends StateMachineStep {
     }
 
     async MessageNeedEdit(msg) {
-        const { id, copy } = msg;
-        const { linkedItemsData } = this;
+        const { entries: sourceEntries, copy } = msg;
 
-        let entries = [];
-
-        _.each(id, (itemId) => {
-            if (linkedItemsData[itemId]) entries = [...entries, ...linkedItemsData[itemId]];
-        });
+        let entries = null;
+        
+        if (_.isArray(sourceEntries)) {
+            entries = checkEntries(sourceEntries);
+        }
 
         return {
-            message: new MessageInit({ entries: Object.values(entries), copy: !!copy }),
+            message: new MessageInit({ entries, copy: !!copy }),
             newStep: new EntityEditStep()
         };
     }
 
     async MessageNeedMassEdit() {
+        throw Error("RenderEntityStep.MessageNeedMassEdit() not implemented yet;")
+
+        /*
         return {
             message: new MessageInit(),
             newStep: new EntityMassEditStep()
         };
+        */
     }
 
     async MessageCancel() {
@@ -106,36 +110,14 @@ class RenderEntityStep extends StateMachineStep {
 
     async MessageSetItemState(msg, context) {
         const { api, contributions } = context;
-        const { id, state } = msg;
-        const { linkedItemsData, entity } = this;
+        const { entry, state } = msg;
+        const { entity } = this;
 
-        let idArray = [];
-
-        if (!linkedItemsData || _.size(linkedItemsData) <= 0) return;
-
-        if (!id) this.error('Error occured while MessageDeleteItem(): item "id" not specified', msg);
+        if (!entry) this.error('Error occured while MessageDeleteItem(): entry not specified', msg);
         if (!api || !contributions) this.error('Can\'t fetch entity item data.', api, contributions);
         if (!entity) this.error('Entity are not specified.', entity);
 
-        if (_.isArray(id)) idArray = id;
-        else idArray.push(id);
-
-        const entries = [];
-
-        _.each(idArray, (itemId) => {
-            if (!linkedItemsData[itemId]) return null;
-
-            const arr = linkedItemsData[itemId];
-
-            if (arr.length > 0) {
-                _.each(arr, (item) => {
-                    const { id, wsid } = item;
-                    if (id > 0 && wsid > 0) {
-                        entries.push({ id, wsid });
-                    }
-                });
-            }
-        });
+        const entries = checkEntries([entry]);
 
         if (entries.length === 0) return;
 
@@ -250,12 +232,6 @@ class RenderEntityStep extends StateMachineStep {
         }
     }
 
-    async MessageSaveResolvedData(msg) {
-        const { data } = msg;
-
-        this.resolvedData = data;
-    }
-
     //TODO remove state from context; init entity and locations in InitMessage
     async MessageNeedNavigation(msg, context) {
         /*
@@ -326,21 +302,20 @@ class RenderEntityStep extends StateMachineStep {
                 .then((response) => {
                     const { data, resolvedData, Data } = response;
 
-                    if (resolvedData) {
-                        this.resolvedData = resolvedData;
-                        this.linkedItemsData = resolvedData ? _.chain(resolvedData).keyBy("id").mapValues('linked').value() : {};
+                    this.resolvedData = resolvedData || {};
+                    this.data = data || {};
+
+                    if (Data && typeof Data === "object") {
+                        let t = _.get(Data, ["meta", "total"]);
+
+                        if (t && t > 0 && pageSize > 0) {
+                            this.total = parseInt(t);
+                            this.pages = Math.ceil(t / pageSize);
+                        } else {
+                            this.pages = 0;
+                        }
                     }
 
-                    if (data) this.data = data;
-
-                    let t = _.get(Data, ["meta", "total"]);
-
-                    if (t && t > 0 && pageSize > 0) {
-                        this.total = parseInt(t);
-                        this.pages = Math.ceil(t / pageSize);
-                    } else {
-                        this.pages = 0;
-                    }
                     return {
                         changedData: {
                             list: this.list()

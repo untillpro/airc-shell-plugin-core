@@ -171,27 +171,25 @@ export const resolveData = (data) => {
     let resultData = [];
 
     _.each(data, (o) => {
+        _.forEach(o, (row, loc) => {
+            row.location = loc;
+            row._entry = {
+                id: Number(row.id),
+                wsid: Number(loc)
+            };
+        });
+
         const arr = Object.values(o);
         const item = { ...arr[0] };
-
-        if (item && typeof item === 'object') {
-            item.linked = _.map(o, (row, loc) => {
-                return {
-                    id: Number(row.id),
-                    wsid: Number(loc)
-                };
-            });
-
-            resultData.push(item);
-        }
 
         if (arr.length > 1) {
             item.variants = arr;
         }
-        return item;
+
+        resultData.push(item);
     });
 
-    //console.log("RESULT DATA!!! : ", resultData);
+    console.log("RESULT DATA!!! : ", resultData);
     return resultData;
 };
 
@@ -303,7 +301,7 @@ export const getOperation = (data, entityId, type, parentId, parentType, docId, 
                     }
                 });
             } else {
-                if (value_accessor && typeof data[accessor] === 'object') {
+                if (value_accessor && data[accessor] && typeof data[accessor] === 'object') {
                     resultData[accessor] = data[accessor][value_accessor];
                 } else {
                     resultData[accessor] = data[accessor];
@@ -335,4 +333,28 @@ export const getOperation = (data, entityId, type, parentId, parentType, docId, 
     }
 
     return operations;
+}
+
+export const checkEntries = (entries) => {
+    const resultEntries = [];
+
+    if (!entries || entries.length <= 0) return false;
+
+    for (let i = 0; i < entries.length; i++) {
+        if (!entries[i]) continue;
+        
+        const { id, wsid } = entries[i];
+
+        if((id > 0 && wsid > 0)) {
+            resultEntries.push({ id, wsid });
+        }
+    }
+
+    return resultEntries;
+}
+
+export const checkEntry = (entry) => {
+    const { id, wsid } = entry;
+
+    return (id > 0 && wsid > 0)
 }

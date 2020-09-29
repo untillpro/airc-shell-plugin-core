@@ -125,12 +125,6 @@ export class MessageSetFilter extends StateMachineMessage {
     }
 }
 
-export class MessageSaveResolvedData extends StateMachineMessage {
-    getName() {
-        return 'MessageSaveResolvedData';
-    }
-}
-
 export class MessageNeedNavigation extends StateMachineMessage {
     getName() {
         return 'MessageNeedNavigation';

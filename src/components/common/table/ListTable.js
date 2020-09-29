@@ -17,7 +17,11 @@ import PriceCell from './cell_types/PriceCell';
 import StringCell from './cell_types/StringCell';
 import DateTimeCell from './cell_types/DateTimeCell';
 
-import { filterString, renderTotalCell } from './helpers';
+import { 
+    filterString, 
+    filterGroup,
+    renderTotalCell 
+} from './helpers';
 
 import log from "../../../classes/Log";
 
@@ -37,12 +41,13 @@ class ListTable extends PureComponent {
             showPositionColum: true,
             showDeleted: false,
             columnsVisibility: DefaultVisibleColumns,
-            properties: {},
-            component: {
+            properties: {
                 'showPagination': true,
                 'showPaginationBottom': true,
                 'showPaginationTop': true,
                 'showPageSizeOptions': true,
+            },
+            component: {
                 'showActionsColumn': true,
                 'allowMultyselect': false,
                 'allowSelection': true,
@@ -102,6 +107,8 @@ class ListTable extends PureComponent {
 
     handleShowDeletedChange(value) {
         const { onShowDeletedChanged } = this.props;
+
+        console.log("TableList.handleShowDeletedChange", value);
 
         let val = !!value;
 
@@ -229,10 +236,14 @@ class ListTable extends PureComponent {
 
         const checkType = type || filterType;
 
+        let res = true;
+
         switch (checkType) {
-            default: return filterString(rowValue, value);
+            case "location": res = filterGroup(rowValue, value); break;
+            default: res = filterString(rowValue, value); break;
         }
 
+        return res;
     }
 
     getDynamicColumns(props, data) {
@@ -298,10 +309,12 @@ class ListTable extends PureComponent {
             "Header": header || Header,
             "accessor": accessor,
             "filterMethod": this.doFilter,
+            "type": type || null,
+            "Filter": (info) => <ListColumnFilter {...info} />
         };
 
         if (filterable !== false && filterType && typeof filterType === "string") {
-            column.Filter = (info) => <ListColumnFilter {...info} />;
+            column.filterType = filterType;
         }
 
         if (totalType && typeof totalType === "string") {
@@ -488,6 +501,7 @@ class ListTable extends PureComponent {
     }
 
     prepareProps() {
+        const { properties } = this.state;
         const { contributions, entity } = this.props;
 
         let tableProps = contributions.getPointContributionValue('list', entity, 'table');
@@ -496,7 +510,9 @@ class ListTable extends PureComponent {
             return {}
         }
 
-        return blacklist(tableProps, "data", "pages", "loading", "columns");
+        const props = { ...properties, ...tableProps };
+
+        return blacklist(props, "data", "pages", "loading", "columns");
     }
 
     renderRowsSelector() {
@@ -559,6 +575,8 @@ class ListTable extends PureComponent {
     }
 
     getTrPropsCallback(state, row) {
+        if (!row) return {};
+
         const { subRows } = row;
 
         if (subRows && subRows.length > 0) {
@@ -619,9 +637,10 @@ class ListTable extends PureComponent {
                     PaginationComponent={ListPaginator}
 
                     {...tableConfig}
-
-                    showPaginationTop={true}
-                    showPaginationBottom={true}
+                    
+                    showPagination={component.showPagination}
+                    showPaginationTop={component.showPaginationTop}
+                    showPaginationBottom={component.showPaginationBottom}
 
                     onPageChange={this.handlePageChange}
                     onPageSizeChange={this.handlePageSizeChange}
@@ -683,9 +702,11 @@ ListTable.propTypes = {
 };
 
 const mapStateToProps = (state) => {
+    const { locations } = state.options;
     const { contributions } = state.context;
 
     return {
+        locations,
         contributions
     };
 };

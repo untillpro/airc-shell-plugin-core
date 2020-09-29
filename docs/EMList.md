@@ -64,19 +64,6 @@ For full list of column properties view [Columns properties](#columns-properties
 
 For full list of table properties you can check [Table properties](#table-properties) section or read full [ReactTable documentation](https://www.npmjs.com/package/react-table).
 
-- pagination - `Object`:
-```javascript
-    {
-        "showPagination": Boolean, //true
-        "showPaginationTop": Boolean, //false
-        "showPaginationBottom": Boolean, //true
-        "showPageSizeOptions": Boolean, //true
-        "pageSizeOptions": Array, //[5, 10, 20, 25, 50, 100]
-        "defaultPageSize": Number //20
-    }
-```
-This properties block will override `table` paggination properties if they will be set
-
 - component - `Object` - Table component properties
 
 ```javascript
@@ -87,6 +74,12 @@ This properties block will override `table` paggination properties if they will 
         "showDeletedToggler": Boolean,
         "deletedTogglerLabel": String,
         "showPositionColum": Boolean,
+        "showPagination": Boolean, //true
+        "showPaginationTop": Boolean, //false
+        "showPaginationBottom": Boolean, //true
+        "showPageSizeOptions": Boolean, //true
+        "pageSizeOptions": Array, //[5, 10, 20, 25, 50, 100]
+        "defaultPageSize": Number //20
         "actions": [
           'add',
           'remove',

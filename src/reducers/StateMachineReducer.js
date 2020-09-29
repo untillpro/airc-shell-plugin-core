@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
-
+import _ from 'lodash';
 import * as Messages from '../classes/messages';
 import * as Types from '../actions/Types';
 
@@ -40,11 +40,19 @@ export default (state = INITIAL_STATE, action) => {
             break;
 
         case Types.SEND_NEED_EDIT_FORM_MESSAGE:
-            message = new Messages.MessageNeedEdit({ id: action.payload });
+            if (_.isArray(action.payload) && action.payload.length > 0) {
+                message = new Messages.MessageNeedEdit({ entries: action.payload });
+            } else {
+                message = new Messages.MessageNeedEdit({ entries: null });
+            }
+
             break;
 
         case Types.SEND_NEED_MASSEDIT_FORM_MESSAGE:
-            message = new Messages.MessageNeedMassEdit({ id: action.payload });
+            if (_.isArray(action.payload) && action.payload.length > 0) {
+                message = new Messages.MessageNeedMassEdit({ entries: action.payload });
+            }
+            
             break;
 
         case Types.SEND_NEED_PROCCESS_DATA_MESSAGE: 
@@ -52,15 +60,24 @@ export default (state = INITIAL_STATE, action) => {
             break;
 
         case Types.SEND_NEED_DUPLICATE_ITEM_MESSAGE: 
-            message = new Messages.MessageNeedEdit({ id: action.payload, copy: true });
+            if (_.isArray(action.payload) && action.payload.length > 0) {
+                message = new Messages.MessageNeedEdit({ entries: action.payload, copy: true });
+            }
+
             break;
 
         case Types.SEND_NEED_REMOVE_ITEM_MESSAGE:
-            message = new Messages.MessageSetItemState({ id: action.payload, state: 0 });
+            if (_.isPlainObject(action.payload)) {
+                message = new Messages.MessageSetItemState({ entry: action.payload, state: 0 });
+            }
+            
             break;
 
         case Types.SEND_NEED_REDUCE_ITEM_MESSAGE:
-            message = new Messages.MessageSetItemState({ id: action.payload, state: 1});
+            if (_.isPlainObject(action.payload)) {
+                message = new Messages.MessageSetItemState({ entry: action.payload, state: 1});
+            }
+
             break;
 
         case Types.ENTITY_LIST_SET_SHOW_DELTED: 
@@ -81,10 +98,6 @@ export default (state = INITIAL_STATE, action) => {
 
         case Types.ENTITY_LIST_SET_ORDER: 
             message = new Messages.MessageSetOrder({ order: action.payload });
-            break;
-
-        case Types.ENTITY_LIST_SAVE_RESOLVED_DATA:
-            message = new Messages.MessageSaveResolvedData({ data: action.payload });
             break;
 
         case Types.SEND_FORM_NEED_NAVIGATION:

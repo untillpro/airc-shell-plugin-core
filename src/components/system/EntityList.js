@@ -196,25 +196,30 @@ class EMList extends Component {
 
     handleAction(row, type) {
         console.log("handle row action", row, type);
+        const { _entry: e, state } = row;
+        
+        if (!e) {
+            console.error("no _entry record provided for row ", row)
+        }
 
         switch (type) {
             case 'edit':
-                this.props.sendNeedEditFormMessage([row.id]);
+                this.props.sendNeedEditFormMessage([e]);
                 break;
 
             case 'copy':
-                this.props.sendNeedCopyFormMessage([row.id]);
+                this.props.sendNeedCopyFormMessage([e]);
                 break;
 
             case 'unify':
-                this.props.sendNeedUnifyFormMessage([row.id]);
+                this.props.sendNeedUnifyFormMessage([e]);
                 break;
 
             case 'remove':
-                if (row.state === 1) {
-                    this.props.sendNeedRemoveMessage(row.id);
+                if (state === 1) {
+                    this.props.sendNeedRemoveMessage(e);
                 } else {
-                    this.props.sendNeedReduceMessage(row.id);
+                    this.props.sendNeedReduceMessage(e);
                 }
 
                 break;
@@ -232,22 +237,22 @@ class EMList extends Component {
     handleRowDoubleClick(event, row) {
         event.stopPropagation();
 
-        let id = null;
+        let entry = null;
         const { original } = row;
 
-        if (original && original.id) id = original.id;
+        if (original && original._entry) entry = original._entry;
 
-        if (id && id > 0) this.props.sendNeedEditFormMessage([id]);
+        if (_.isPlainObject(entry)) this.props.sendNeedEditFormMessage([ entry ]);
     }
 
     handleSelectedRowsChange(rows, flatRows) {
         const selected = [];
 
         if (rows.length > 0) {
-            _.forEach(flatRows, (row) => selected.push(row.id));
+            _.forEach(flatRows, (row) => row._entry ? selected.push(row._entry) : null);
         }
         
-        this.setState({selected});
+        this.setState({ selected });
     }
 
     handlePageChange(page) {

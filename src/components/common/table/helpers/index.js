@@ -1,5 +1,6 @@
 import { 
-    filterString 
+    filterString,
+    filterGroup
 } from './FilterHelpers';
 
 import {
@@ -14,6 +15,7 @@ import {
 
 export {
     filterString,
+    filterGroup,
     renderTotalCell,
     NUMBER_TOTAL,
     NUMBER_MIN,

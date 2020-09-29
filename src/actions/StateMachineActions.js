@@ -65,46 +65,46 @@ export const sendNeedRefreshListDataMessage = () => {
     };
 }
 
-export const sendNeedEditFormMessage = (ids = null) => {
+export const sendNeedEditFormMessage = ( entries = [] ) => {
     return {
         type: SEND_NEED_EDIT_FORM_MESSAGE,
-        payload: ids
+        payload: entries
     };
 };
 
-export const sendNeedMassEditFormMessage = (ids = null) => {
+export const sendNeedMassEditFormMessage = ( entries = [] ) => {
     return {
         type: SEND_NEED_MASSEDIT_FORM_MESSAGE,
-        payload: ids
+        payload: entries
     };
 };
 
-export const sendNeedCopyFormMessage = (id = null) => {
+export const sendNeedCopyFormMessage = (entries = []) => {
     return {
         type: SEND_NEED_DUPLICATE_ITEM_MESSAGE,
-        payload: id
+        payload: entries
     };
 };
 
-export const sendNeedUnifyFormMessage = (id = null) => {
+export const sendNeedUnifyFormMessage = (entries = []) => {
     return {
         type: SEND_NEED_UNIFY_ITEM_MESSAGE,
-        payload: id
+        payload: entries
     };
 };
 
 // removing entites items by id; // TODO Locations
-export const sendNeedRemoveMessage = (id) => {
+export const sendNeedRemoveMessage = (entry) => {
     return {
         type: SEND_NEED_REMOVE_ITEM_MESSAGE,
-        payload: id
+        payload: entry
     };
 };
 
-export const sendNeedReduceMessage = (id) => {
+export const sendNeedReduceMessage = (entry) => {
     return {
         type: SEND_NEED_REDUCE_ITEM_MESSAGE,
-        payload: id
+        payload: entry
     };
 };
 

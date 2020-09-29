@@ -13,7 +13,8 @@ import {
 
 import {
     fetchData,
-    processData
+    processData,
+    checkEntries
 } from '../EntityUtils';
 
 class EntityEditStep extends StateMachineStep {
@@ -34,12 +35,14 @@ class EntityEditStep extends StateMachineStep {
         const { entries, copy } = msg;
         let data = null;
 
-        this.entries = this.checkEntries(entries);
+        this.entries = checkEntries(entries);
 
         if (this.entries) {
             data = await this.fetchEntityData(this.entries, context);
 
             if (copy && data) {
+                // if operation is copy
+                
                 this.entries = null;
 
                 data = reduce(
@@ -197,22 +200,6 @@ class EntityEditStep extends StateMachineStep {
         }
 
         return Data;
-    }
-
-    checkEntries(entries) {
-        const resultEntries = [];
-
-        if (!entries || entries.length <= 0) return false;
-
-        for (let i = 0; i < entries.length; i++) {
-            const { id, wsid } = entries[i];
-
-            if (!(id > 0 && wsid > 0)) return null;
-
-            resultEntries.push({ id, wsid });
-        }
-
-        return resultEntries;
     }
 
     buildRequestEntires(entries) {

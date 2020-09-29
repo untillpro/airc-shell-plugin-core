@@ -15,6 +15,10 @@ class EmbededSelectorField extends PureComponent {
         this.state = {
             open: false
         };
+
+        this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.openSelector = this.openSelector.bind(this);
+        this.handleSelectorChange = this.handleSelectorChange.bind(this);
     }
 
     handleChange(value) {
@@ -24,6 +28,12 @@ class EmbededSelectorField extends PureComponent {
             let val = value;
 
             onChange(val);
+        }
+    }
+
+    handleSelectorChange(event) {
+        if (!event.target.value) {
+            this.handleChange(null);
         }
     }
 
@@ -150,8 +160,10 @@ class EmbededSelectorField extends PureComponent {
                         <Icon type="ellipsis" onClick={() => this.openSelector()} />
                     }
                     value={inputValue}
-                    onKeyDown={(event) => this.handleKeyPress(event)}
-                    onDoubleClick={() => this.openSelector()}
+                    onKeyDown={this.handleKeyPress}
+                    onDoubleClick={this.openSelector}
+                    //onChange={this.handleSelectorChange}
+                    onChange={this.handleSelectorChange}
                 />
 
                 {this.renderSelector()}

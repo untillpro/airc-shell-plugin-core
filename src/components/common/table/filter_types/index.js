@@ -4,6 +4,7 @@ import NumberFilter from './NumberFilter';
 import RangeFilter from './RangeFilter';
 import SelectFilter from './SelectFilter';
 import StringFilter from './StringFilter';
+import LocationFilter from './LocationFilter';
 
 export {
     DateTimeFilter,
@@ -12,4 +13,5 @@ export {
     RangeFilter,
     SelectFilter,
     StringFilter,
+    LocationFilter
 }

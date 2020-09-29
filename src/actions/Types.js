@@ -41,7 +41,6 @@ export const ENTITY_LIST_SET_FILTER = 'message_list_set_filter';
 export const ENTITY_LIST_SET_ORDER = 'message_list_set_order';
 export const ENTITY_LIST_SET_PAGE = 'message_list_set_page';
 export const ENTITY_LIST_SET_PAGE_SIZE = 'message_list_set_page_size';
-export const ENTITY_LIST_SAVE_RESOLVED_DATA = 'message_save_resolved_data';
 
 export const SEND_FORM_NEED_NAVIGATION = 'message_edit_form_need_navigation';
 

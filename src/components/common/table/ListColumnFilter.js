@@ -11,6 +11,7 @@ import {
     StringFilter,
     //GroupFilter,
     //DateTimeFilter,
+    LocationFilter
 } from './filter_types';
 
 /**
@@ -42,6 +43,8 @@ class ColumnFilter extends PureComponent {
 
         let checkType = filterType || type;
 
+        console.log('filter type: ', checkType);
+
         switch (checkType) {
             //case "number": return <NumberFilter column={column} onChange={onChange} />;
             //case "select": return <SelectFilter column={column} onChange={onChange} />;
@@ -50,7 +53,7 @@ class ColumnFilter extends PureComponent {
             //case "group": return <GroupFilter column={column} onChange={onChange} />;
             //case "date": 
             //case "time": 
-
+            case "location": return <LocationFilter column={column} onChange={onChange} />;
             default: return <StringFilter column={column} onChange={onChange} />;
         }
     }
@@ -60,9 +63,7 @@ class ColumnFilter extends PureComponent {
 
         console.log("ListColumnFilter props: ", this.props);
 
-        if (filterable !== true) return null;
-
-        
+        if (filterable === false) return null;
 
         return (
             <div>

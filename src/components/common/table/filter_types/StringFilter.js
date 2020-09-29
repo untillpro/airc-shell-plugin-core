@@ -6,6 +6,7 @@ const StringFilter = (props) => {
 
     return (
         <Input 
+            placeholder={"Test"}
             onChange={(e) => onChange(e.target.value)} 
             allowClear={true}
         />
