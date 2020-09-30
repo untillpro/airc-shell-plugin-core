@@ -4,6 +4,7 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
+    "@ant-design/icons": "^4.2.2",
     "airc-shell-core": "file:src/base",
     "antd": "^4.6.6",
     "axios": "^0.18.1",
