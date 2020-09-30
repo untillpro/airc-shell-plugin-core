@@ -7,7 +7,7 @@ import _ from 'lodash';
 import EmbeddedManagerField from './EmbeddedManagerField';
 
 import {
-    fetchData,
+    getCollection,
     processData
 } from '../../../classes/EntityUtils';
 
@@ -116,7 +116,7 @@ class EmbeddedManagerSelectField extends EmbeddedManagerField {
             wsid: locations
         };
 
-        return fetchData(context, entity, props).then(({ resolvedData }) => {
+        return getCollection(context, entity, props).then(({ resolvedData }) => {
             return resolvedData;
         });
     }
