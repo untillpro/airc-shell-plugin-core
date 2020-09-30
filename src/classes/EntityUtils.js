@@ -7,35 +7,27 @@ import { generateId } from './Utils';
 import ForeignKeys from '../const/ForeignKeys';
 
 
-export const fetchData = async (context, entity, props) => {
+export const getCollection = async (context, resource, props) => {
     const { api, contributions } = context;
-    const getUrl = contributions.getPointContributionValue('url', entity, 'getUrl');
+    //const getUrl = contributions.getPointContributionValue('url', entity, 'getUrl');
 
     let urlProps = { ...props };
-    let resource;
 
     const result = {};
 
-    if (getUrl && getUrl.resource && typeof getUrl.resource === 'string') {
-        resource = getUrl.resource
-
-        if (getUrl.props && typeof getUrl.props === 'object') {
-            urlProps = { ...urlProps, ...getUrl.props };
-        }
-    } else {
-        throw new Error(`MessageFetchListData: "getUrl" contribution for entity "${entity}" no specified or wrong given`, getUrl);
-    }
-
     if (resource && api) {
         const { wsid, page, page_size, entries, show_deleted } = urlProps;
+        
+        const required_fields = contributions.getPointContributionValues('collection', resource, 'required_fields');
+        const required_classifiers = contributions.getPointContributionValues('collection', resource, 'required_classifiers');
 
         let wsids = _.isArray(wsid) ? wsid : [ wsid ];
 
-        return api.collection(resource, wsids, entries, page, page_size, show_deleted)
+        return api.collection(resource, wsids, { entries, page, page_size, show_deleted, required_fields, required_classifiers })
             .then((Data) => {
                 if (Data) {
                     result.Data = Data;
-                    result.data = applyClassifiers(Data, entity);
+                    result.data = applyClassifiers(Data, resource);
 
                     if (result.data) result.resolvedData = resolveData(result.data);
                 }
@@ -47,7 +39,7 @@ export const fetchData = async (context, entity, props) => {
                 throw new Error(e);
             });
     } else {
-        throw new Error(`${entity} error: 'api' not specified!`);
+        throw new Error(`${resource} error: 'api' not specified!`);
     }
 };
 

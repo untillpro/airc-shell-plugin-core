@@ -13,6 +13,7 @@ const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjI1NTM2LCJEZXZp
 
 class MockAlphaApiGate {
     constructor() {
+        this.name = "MockAlphaApiGate";
         this.host = 'https://air-alpha.untill.ru/api';
     }
 
@@ -128,7 +129,8 @@ class MockAlphaApiGate {
         return this.do("airs-bp", `${location}/conf`, params, "post");
     }
 
-    async collection(type, wsids, entries, page, page_size, show_deleted) {
+    async collection(type, wsids, props) {
+        const { entries, page, page_size, show_deleted, required_fields, required_classifiers } = props;
         //${this.host}/${queueId}/${resource}
         let resultData = {};
 
@@ -139,11 +141,13 @@ class MockAlphaApiGate {
             "Type": type,
             "WSIDs": _.isArray(wsids) ? wsids : [ wsids ],
             "Entries": entries,
+            "Fields": required_fields || [],
+            "RequiredClassifiers": required_classifiers || [],
             "EmbeddedAsArrays": true
         }
 
         return this.do("airs-bp", `${_.isArray(wsids) ? wsids[0] : wsids}/collection`, params, "post").then((response) => {
-            console.log('collection result', response);
+            console.log('+++ api.collection result', response);
 
             if (response && response["sections"] && _.isArray(response["sections"])) {
                 console.log("Response: ", response);
@@ -151,14 +155,13 @@ class MockAlphaApiGate {
                 resultData = builder.build(response["sections"]);
             }
 
-            console.log('resultData', resultData);
+            console.log('+++ resultData', resultData);
 
             return resultData;
         }).catch((e) => {
             console.error(e);
+            throw e;
         });
-
-
 
         /*
         let response = {
