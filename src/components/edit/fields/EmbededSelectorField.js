@@ -4,7 +4,11 @@
 
 import React, { PureComponent } from 'react';
 
-import { Modal, TextInput, Icon } from '../../../base/components';
+import {
+    EllipsisOutlined
+  } from '@ant-design/icons';
+
+import { Modal, TextInput } from '../../../base/components';
 import EmbeddedManagerSelectField from './EmbeddedManagerSelectField'
 
 
@@ -160,7 +164,7 @@ class EmbededSelectorField extends PureComponent {
                     {...props}
                     //allowClear={false}
                     addonAfter={
-                        <Icon type="ellipsis" onClick={() => this.openSelector()} />
+                        <EllipsisOutlined onClick={this.openSelector.bind(this)}/>
                     }
                     value={inputValue}
                     onKeyDown={this.handleKeyPress}

@@ -8,7 +8,15 @@ import { connect } from 'react-redux';
 import { confirmAlert } from 'react-confirm-alert';
 
 import {
-    Button, ConfirmModal, Toggler, Icon
+    DoubleLeftOutlined,
+    DoubleRightOutlined,
+    PlusOutlined,
+    CopyOutlined,
+    BlockOutlined
+} from '@ant-design/icons';
+
+import {
+    Button, ConfirmModal, Toggler
 } from '../../base/components/';
 
 import { HeaderBackButton } from '../common';
@@ -65,7 +73,7 @@ class EMEditFormHeader extends Component {
 
     handleActiveChange(value) {
         const { onStateChanged } = this.props;
-        
+
         if (onStateChanged && typeof onStateChanged === 'function') {
             onStateChanged(Number(value))
         }
@@ -159,15 +167,15 @@ class EMEditFormHeader extends Component {
                 <div className="header-navigation">
                     {prev ? (
                         <Button onClick={() => this.handleNavClick(prev)}>
-                            <Icon type="double-left" />
-                        Previous
+                            <DoubleLeftOutlined />
+                            Previous
                         </Button>
                     ) : null}
 
                     {next ? (
                         <Button onClick={() => this.handleNavClick(next)}>
                             Next
-                            <Icon type="double-right" />
+                            <DoubleRightOutlined />
                         </Button>
                     ) : null}
                 </div>
@@ -220,7 +228,7 @@ class EMEditFormHeader extends Component {
             case 'add':
                 return (
                     <Button
-                        icon='plus'
+                        icon={<PlusOutlined />}
                         key='header-action-add'
                         onClick={() => this.handleAction(action)}
                     />
@@ -228,7 +236,7 @@ class EMEditFormHeader extends Component {
             case 'copy':
                 return (
                     <Button
-                        icon='copy'
+                        icon={<CopyOutlined />}
                         key='header-action-copy'
                         onClick={() => this.handleAction(action)}
                     />
@@ -237,7 +245,7 @@ class EMEditFormHeader extends Component {
             case 'unify':
                 return (
                     <Button
-                        icon='block'
+                        icon={<BlockOutlined />}
                         key='header-action-unify'
                         onClick={() => this.handleAction(action)}
                     />

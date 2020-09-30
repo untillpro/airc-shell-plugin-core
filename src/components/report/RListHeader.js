@@ -5,8 +5,12 @@
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-
 import { Button, DateTimeFilterModal } from '../../base/components/';
+
+import {
+    ReloadOutlined
+} from '@ant-design/icons';
+
 import { getDatetimePeriods } from '../../classes/helpers/ReportsHelpers';
 import { sendDoGenerateReport } from '../../actions';
 
@@ -50,7 +54,7 @@ class RListHeader extends PureComponent {
 
         return (
             <div className='untill-base-table-header-togglers'>
-                <DateTimeFilterModal 
+                <DateTimeFilterModal
                     showCustom
                     periods={periods}
 
@@ -71,7 +75,7 @@ class RListHeader extends PureComponent {
         return (
             <div className='untill-base-table-header-actions'>
                 <Button
-                    icon='reload'
+                    icon={<ReloadOutlined />}
                     key='header-action-add'
                     onClick={this.handleRefreshPressed}
                 />
@@ -91,7 +95,7 @@ class RListHeader extends PureComponent {
 
 const mapStateToProps = (state) => {
     const { contributions } = state.context;
-    const { 
+    const {
         fromDateTime,
         toDateTime,
         workingHoursFrom,
@@ -100,12 +104,12 @@ const mapStateToProps = (state) => {
     } = state.reports;
 
 
-    return { 
-        contributions, 
-        
-        fromDateTime, 
-        toDateTime, 
-        workingHoursFrom, 
+    return {
+        contributions,
+
+        fromDateTime,
+        toDateTime,
+        workingHoursFrom,
         workingHoursTo,
 
         mostUsedPeriods

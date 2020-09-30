@@ -6,6 +6,12 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Toggler, Button } from '../../../base/components/';
 
+import {
+    PlusOutlined,
+    DeleteOutlined,
+    ReloadOutlined
+} from '@ant-design/icons';
+
 import ListColumnsToggler from './ListColumnsToggler';
 
 
@@ -33,6 +39,19 @@ class ListTableHeader extends PureComponent {
         }
     }
 
+    _getIcon(icon) {
+        if (icon && typeof icon === "string") {
+            switch (icon) {
+                case "plus": return <PlusOutlined />;
+                case "delete": return <DeleteOutlined />;
+                case "reload": return <ReloadOutlined />;
+                default: return null;
+            }
+        }
+
+        return null;
+    }
+
     renderHeaderButtons() {
         const { component: { showHeaderButtons } } = this.props;
         const { rows, buttons } = this.props;
@@ -49,7 +68,7 @@ class ListTableHeader extends PureComponent {
                     result.push(
                         <Button
                             title={title}
-                            icon={icon || 'none'}
+                            icon={this._getIcon(icon || 'none')}
                             key={key}
                             disabled={typeof disabled === "function" ? disabled(rows) : disabled}
                             onClick={() => onClick(rows)}
