@@ -93,7 +93,7 @@ class ReportViewStep extends StateMachineStep {
 
         const { fromDateTime, toDateTime } = this;
 
-        const Data = await this.fetchData(context);
+        const Data = await this.fetcReporthData(context);
         
         if (Data && _.size(Data) > 0) {
             let generator = contributions.getPointContributionValue(TYPE_REPORTS, this.reportType, C_REPORT_GENERATOR);
@@ -117,7 +117,7 @@ class ReportViewStep extends StateMachineStep {
         // TODO 
     }
 
-    async fetchData(context) {
+    async fetchReportData(context) {
         const { contributions, api, state } = context;
         const { locations } = state;
         const { 

@@ -9,7 +9,7 @@ import EntityEditStep from './EntityEditStep';
 //import EntityMassEditStep from './EntityMassEditStep';
 
 import {
-    fetchData,
+    getCollection,
     processData,
     checkEntries,
     //checkEntry
@@ -297,8 +297,9 @@ class RenderEntityStep extends StateMachineStep {
             };
         }
 
+
         try {
-            return fetchData(context, entity, doProps)
+            return getCollection(context, entity, doProps)
                 .then((response) => {
                     const { data, resolvedData, Data } = response;
 

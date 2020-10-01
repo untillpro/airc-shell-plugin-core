@@ -12,7 +12,7 @@ import {
 } from '../Utils';
 
 import {
-    fetchData,
+    getCollection,
     processData,
     checkEntries
 } from '../EntityUtils';
@@ -170,7 +170,7 @@ class EntityEditStep extends StateMachineStep {
             wsid 
         };
 
-        return fetchData(context, entity, doProps)
+        return getCollection(context, entity, doProps)
             .then(({ data, Data, resolvedData }) => {
                 if (resolvedData && resolvedData.length > 0) {
                     return this.checkForEmbededTypes(resolvedData[0], context);

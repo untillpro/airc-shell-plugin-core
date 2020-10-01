@@ -4,7 +4,11 @@
 
 import React, { PureComponent } from 'react';
 
-import { Modal, TextInput, Icon } from '../../../base/components';
+import {
+    EllipsisOutlined
+  } from '@ant-design/icons';
+
+import { Modal, TextInput } from '../../../base/components';
 import EmbeddedManagerSelectField from './EmbeddedManagerSelectField'
 
 
@@ -21,6 +25,8 @@ class EmbededSelectorField extends PureComponent {
         this.handleSelectorChange = this.handleSelectorChange.bind(this);
     }
 
+    componentDidUpdate() {}
+
     handleChange(value) {
         const { onChange } = this.props;
 
@@ -33,7 +39,7 @@ class EmbededSelectorField extends PureComponent {
 
     handleSelectorChange(event) {
         if (!event.target.value) {
-            this.handleChange(null);
+            this.handleChange(0);
         }
     }
 
@@ -49,7 +55,7 @@ class EmbededSelectorField extends PureComponent {
         event.preventDefault();
         
         if (event.keyCode === 8) {
-            this.handleChange(null);
+            this.handleChange(0);
         }
         return false;
     }
@@ -85,6 +91,7 @@ class EmbededSelectorField extends PureComponent {
     getInputValue() {
         const { value, field } = this.props;
 
+        if (!value) return '';
         if (!field) return value;
 
         const {
@@ -95,7 +102,7 @@ class EmbededSelectorField extends PureComponent {
             return value[text_accessor] || '';
         }
 
-        return value;
+        return value ? value : '';
     }
 
     openSelector() {
@@ -157,7 +164,7 @@ class EmbededSelectorField extends PureComponent {
                     {...props}
                     //allowClear={false}
                     addonAfter={
-                        <Icon type="ellipsis" onClick={() => this.openSelector()} />
+                        <EllipsisOutlined onClick={this.openSelector.bind(this)}/>
                     }
                     value={inputValue}
                     onKeyDown={this.handleKeyPress}

@@ -16,8 +16,6 @@ const LocationFilter = (props) => {
 
     if (!_.isPlainObject(locations) || _.size(locations) === 0) return null;
 
-    console.log("locations: ", locations);
-
     return (
         <Select
             mode="multiple"

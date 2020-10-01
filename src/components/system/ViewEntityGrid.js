@@ -5,7 +5,6 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import { Message, Grid, Card } from '../../base/components';
 
 import {
@@ -18,9 +17,22 @@ import {
 } from '../../actions/';
 
 class ViewEntityGrid extends Component {
+    constructor() {
+        super();
+        
+        this.state = {
+            selectedEntity: null
+        };
+    }
+
     selectEntity(entity) {
+        const { selectedEntity } = this.state;
+
+        if (selectedEntity !== null) return;
+
         if (entity && typeof entity === 'string') {
             this.props.sendSelectEntityMessage(entity);
+            this.setState({ selectedEntity: entity });
         }
     }
 
@@ -45,6 +57,7 @@ class ViewEntityGrid extends Component {
     }
 
     renderEntitiesGrid(entities) {
+        const { selectedEntity } = this.state;
         const { contributions } = this.props;
 
         const declarations = [];
@@ -79,6 +92,7 @@ class ViewEntityGrid extends Component {
                             declarations.map((declarationInfo) => {
                                 return (
                                     <Card 
+                                        loading={declarationInfo.code === selectedEntity}
                                         type='small'
                                         align='center'
                                         valign='center'
@@ -86,7 +100,7 @@ class ViewEntityGrid extends Component {
                                         text={declarationInfo.description}
                                         ico={declarationInfo.ico}
                                         key={declarationInfo.name}
-                                        onClick={() => this.selectEntity(declarationInfo.code)} 
+                                        onClick={this.selectEntity.bind(this, declarationInfo.code)} 
                                     />
                                 );
                             })

@@ -35,8 +35,6 @@ export const isValidReport = (context, reportCode) => {
 
     // check for list columns defined
     let columns = contributions.getPointContributionValues(TYPE_LIST, reportCode, C_LIST_COLUMNS);
-    
-    console.log("contribution columns: ", columns);
 
     if (!columns || !_.isArray(columns) || columns.length === 0) {
         throw new Error(`no list columns specified for report "${reportCode}". Expected array of objects.`);

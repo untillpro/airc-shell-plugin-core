@@ -80,8 +80,10 @@ class MockApiGate {
 
         return {};
     }
-
-    async collection(type, wsids, entries, page, page_size, show_deleted) {
+    
+    async collection(type, wsids, props) {
+        const { entries, page, page_size, show_deleted } = props;
+        
         let response = {
             "sections": [],
             "status": 200,

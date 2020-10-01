@@ -5,8 +5,12 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Empty, Icon } from 'antd';
-
+import { Empty } from 'antd';
+import {
+    EyeOutlined,
+    EyeInvisibleOutlined,
+  } from '@ant-design/icons';
+  
 import { Button, Popover, Toggler } from '../../../base/components/';
 
 
@@ -95,10 +99,8 @@ class ListColumnsToggler extends Component {
                     <Button 
                         type="link"
                         style={hasHiddenColumns ? {} : {color: "#000"}}
+                        icon={hasHiddenColumns ? <EyeOutlined /> : <EyeInvisibleOutlined />}
                     >
-                        
-                        <Icon type={hasHiddenColumns ? "eye" : "eye-invisible"} />
-
                         {label}
                     </Button>
                 </Popover>
