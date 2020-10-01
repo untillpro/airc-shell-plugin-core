@@ -93,7 +93,7 @@ class ReportViewStep extends StateMachineStep {
 
         const { fromDateTime, toDateTime } = this;
 
-        const Data = await this.fetcReporthData(context);
+        const Data = await this.fetchReportData(context);
         
         if (Data && _.size(Data) > 0) {
             let generator = contributions.getPointContributionValue(TYPE_REPORTS, this.reportType, C_REPORT_GENERATOR);
