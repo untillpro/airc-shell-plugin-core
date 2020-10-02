@@ -3,14 +3,13 @@
  */
 
 import React, { PureComponent } from 'react';
-
+import { Modal } from 'antd';
 import {
     EllipsisOutlined
-  } from '@ant-design/icons';
+} from '@ant-design/icons';
 
-import { Modal, TextInput } from '../../../base/components';
+import { TextInput } from '../../../base/components';
 import EmbeddedManagerSelectField from './EmbeddedManagerSelectField'
-
 
 class EmbededSelectorField extends PureComponent {
     constructor() {
@@ -24,13 +23,11 @@ class EmbededSelectorField extends PureComponent {
         this.openSelector = this.openSelector.bind(this);
         this.handleSelectorChange = this.handleSelectorChange.bind(this);
     }
-
-    componentDidUpdate() {}
-
+    
     handleChange(value) {
         const { onChange } = this.props;
 
-        if (onChange && typeof onChange === 'function' ) {
+        if (onChange && typeof onChange === 'function') {
             let val = value;
 
             onChange(val);
@@ -53,7 +50,7 @@ class EmbededSelectorField extends PureComponent {
 
     handleKeyPress(event) {
         event.preventDefault();
-        
+
         if (event.keyCode === 8) {
             this.handleChange(0);
         }
@@ -75,7 +72,7 @@ class EmbededSelectorField extends PureComponent {
             suffix,
             maxLength
         } = field;
-        
+
         props.allowClear = !(allowClear === false);
 
         if (maxLength && maxLength >= 1) props.maxLength = parseInt(maxLength);
@@ -84,7 +81,7 @@ class EmbededSelectorField extends PureComponent {
         if (prefix) props.prefix = prefix;
         if (suffix) props.suffix = suffix;
         if (size) props.size = ['small', 'default', 'large'].indexOf(size) >= 0 ? size : 'default';
-        
+
         return props;
     }
 
@@ -133,7 +130,7 @@ class EmbededSelectorField extends PureComponent {
                     width={"80%"}
                     className="edit-form-modal"
                 >
-                    <EmbeddedManagerSelectField 
+                    <EmbeddedManagerSelectField
                         locations={locations}
                         field={field}
                         context={context}
@@ -158,13 +155,24 @@ class EmbededSelectorField extends PureComponent {
 
         return (
             <>
-                <TextInput 
+                <TextInput
                     disabled={disabled}
                     className="selector-input"
                     {...props}
                     //allowClear={false}
                     addonAfter={
-                        <EllipsisOutlined onClick={this.openSelector.bind(this)}/>
+                        <div 
+                            onClick={this.openSelector.bind(this)}
+                            style={{
+                                height: "100%",
+                                cursor: "pointer",
+                                left: "0px",
+                                top: "0px",
+                                minWidth: "20px"
+                            }}
+                        >
+                            <EllipsisOutlined />
+                        </div>
                     }
                     value={inputValue}
                     onKeyDown={this.handleKeyPress}

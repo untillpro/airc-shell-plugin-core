@@ -305,7 +305,7 @@ class EMList extends Component {
 
     render() {
         const { entity, data, pages, page, pageSize, manual, order, total } = this.props;
-        const { rowActions, headerActions, search, searchBy } = this.state;
+        const { rowActions, headerActions, search /*,  searchBy */ } = this.state;
 
         return (
             <div className='content-container'>

@@ -2,7 +2,6 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
@@ -22,8 +21,7 @@ import {
 
 import { 
     TYPE_REPORTS,
-    C_REPORT_NAME,
-    C_REPORT_TABLE_PROPS
+    C_REPORT_NAME
 } from '../../classes/contributions/Const';
 
 class ReportView extends Component {

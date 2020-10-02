@@ -129,7 +129,7 @@ class MockAlphaApiGate {
         return this.do("airs-bp", `${location}/conf`, params, "post");
     }
 
-    async collection(type, wsids, props) {
+    async collection(type, wsids, props = {}) {
         const { entries, page, page_size, show_deleted, required_fields, required_classifiers } = props;
         //${this.host}/${queueId}/${resource}
         let resultData = {};

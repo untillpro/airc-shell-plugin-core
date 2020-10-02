@@ -4,7 +4,6 @@
 
 import React, { PureComponent } from 'react';
 import { Input } from 'antd';
-import ListColumnsToggler from '../ListColumnsToggler';
 
 class StringCell extends PureComponent {
 
