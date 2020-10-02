@@ -166,11 +166,10 @@ class EntityEditStep extends StateMachineStep {
         let entries = this.buildRequestEntires(items);
 
         const doProps = { 
-            entries, 
-            wsid 
+            entries,  
         };
 
-        return getCollection(context, entity, doProps)
+        return getCollection(context, entity, wsid, doProps)
             .then(({ data, Data, resolvedData }) => {
                 if (resolvedData && resolvedData.length > 0) {
                     return this.checkForEmbededTypes(resolvedData[0], context);

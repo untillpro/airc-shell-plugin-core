@@ -5,25 +5,18 @@
 import _ from 'lodash';
 import { generateId } from './Utils';
 import ForeignKeys from '../const/ForeignKeys';
+import blacklist from 'blacklist';
 
 
-export const getCollection = async (context, resource, props) => {
-    const { api, contributions } = context;
-    //const getUrl = contributions.getPointContributionValue('url', entity, 'getUrl');
-
-    let urlProps = { ...props };
+export const getCollection = async (context, resource, wsid, props) => {
+    const { api } = context;
 
     const result = {};
 
     if (resource && api) {
-        const { wsid, page, page_size, entries, show_deleted } = urlProps;
-        
-        const required_fields = contributions.getPointContributionValues('collection', resource, 'required_fields');
-        const required_classifiers = contributions.getPointContributionValues('collection', resource, 'required_classifiers');
-
         let wsids = _.isArray(wsid) ? wsid : [ wsid ];
 
-        return api.collection(resource, wsids, { entries, page, page_size, show_deleted, required_fields, required_classifiers })
+        return api.collection(resource, wsids, blacklist(props, "wsid"))
             .then((Data) => {
                 if (Data) {
                     result.Data = Data;

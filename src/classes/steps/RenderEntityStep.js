@@ -275,15 +275,18 @@ class RenderEntityStep extends StateMachineStep {
     //TODO remove state from context; init entity and locations in InitMessage
     async fetchListData(context) {
         const { entity, page, pageSize, showDeleted, manual } = this;
-        const { state } = context;
+        const { state, contributions } = context;
         const { locations } = state;
 
         if (!locations || (!_.isNumber(locations) && !_.isArray(locations))) {
             this.error('MessageFetchListData error: locations are not specified or wrong given.')
         }
 
+        const wsid = _.isArray(locations) ? locations : [locations];
+
         let doProps = {
-            wsid: _.isArray(locations) ? locations : [locations]
+            required_fields: contributions.getPointContributionValues('collection', entity, 'required_fields'),
+            required_classifiers: contributions.getPointContributionValues('collection', entity, 'required_classifiers')
         };
 
         if (manual) {
@@ -299,7 +302,7 @@ class RenderEntityStep extends StateMachineStep {
 
 
         try {
-            return getCollection(context, entity, doProps)
+            return getCollection(context, entity, wsid, doProps)
                 .then((response) => {
                     const { data, resolvedData, Data } = response;
 
