@@ -346,9 +346,15 @@ class EmbeddedManagerField extends Component {
         return null;
     }
 
+    getData() {
+        const { data } = this.state;
+
+        return data;
+    }
+
     render() {
         const { disabled } = this.props;
-        const { properties, rowActions, headerActions, data, showDeleted } = this.state;
+        const { properties, rowActions, headerActions, showDeleted } = this.state;
 
         if (!this.entity) return null;
 
@@ -365,7 +371,7 @@ class EmbeddedManagerField extends Component {
             <div className="embedded-manager-field">
                 <ListTable
                     entity={this.entity}
-                    data={data}
+                    data={this.getData()}
                     manual={false}
                     showDeleted={showDeleted}
 
