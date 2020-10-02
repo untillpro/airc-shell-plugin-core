@@ -3,12 +3,11 @@
  */
 
 import React, { PureComponent } from 'react';
-import { Modal } from 'antd';
 import {
     EllipsisOutlined
 } from '@ant-design/icons';
 
-import { TextInput } from '../../../base/components';
+import { TextInput, Modal } from '../../../base/components';
 import EmbeddedManagerSelectField from './EmbeddedManagerSelectField'
 
 class EmbededSelectorField extends PureComponent {

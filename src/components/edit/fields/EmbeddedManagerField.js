@@ -230,7 +230,6 @@ class EmbeddedManagerField extends Component {
                     }
                 });
             }
-
         }
 
         return res;
@@ -265,7 +264,7 @@ class EmbeddedManagerField extends Component {
                     buttonType: "icon",
                     icon: 'copy',
                     key: 'header-action-copy',
-                    disabled: disabled,
+                    disabled: disabled ? disabled : (rows) => !rows.length,
                     onClick: (rows) => this.handleHeaderAction(actionType, rows)
                 };
 

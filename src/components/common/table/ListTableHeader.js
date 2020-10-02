@@ -9,7 +9,8 @@ import { Toggler, Button } from '../../../base/components/';
 import {
     PlusOutlined,
     DeleteOutlined,
-    ReloadOutlined
+    ReloadOutlined,
+    CopyOutlined
 } from '@ant-design/icons';
 
 import ListColumnsToggler from './ListColumnsToggler';
@@ -45,6 +46,7 @@ class ListTableHeader extends PureComponent {
                 case "plus": return <PlusOutlined />;
                 case "delete": return <DeleteOutlined />;
                 case "reload": return <ReloadOutlined />;
+                case "copy": return <CopyOutlined />;
                 default: return null;
             }
         }
