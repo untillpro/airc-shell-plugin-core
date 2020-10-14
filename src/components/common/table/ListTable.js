@@ -253,9 +253,6 @@ class ListTable extends PureComponent {
         const { allowMultyselect, allowSelection } = component;
 
         const { nestingPath, original } = row;
-        let selectedRowsNew, selectedFlatRowsNew;
-
-        const rowIndex = nestingPath.join('.');
 
         event.preventDefault();
         event.stopPropagation();
@@ -263,6 +260,10 @@ class ListTable extends PureComponent {
         console.log("selectedRows: ", selectedRows);
 
         if (allowSelection) {
+            let selectedRowsNew;
+            let selectedFlatRowsNew;
+            const rowIndex = nestingPath.join('.');
+
             if (allowMultyselect) {
                 selectedFlatRowsNew = { ...selectedFlatRows };
 
@@ -282,20 +283,20 @@ class ListTable extends PureComponent {
                     selectedFlatRowsNew = { [rowIndex]: original };
                 }
             }
+
+            if (_.isFunction(onSelectedChange)) {
+                onSelectedChange(selectedRowsNew, selectedFlatRowsNew);
+            }
+    
+            this.setState({
+                selectedRows: selectedRowsNew,
+                selectedFlatRows: selectedFlatRowsNew
+            });
         }
 
         if (_.isFunction(onRowClick)) {
             onRowClick(event, row);
         }
-
-        if (_.isFunction(onSelectedChange)) {
-            onSelectedChange(selectedRowsNew, selectedFlatRowsNew);
-        }
-
-        this.setState({
-            selectedRows: selectedRowsNew,
-            selectedFlatRows: selectedFlatRowsNew
-        });
     }
 
     handleRowDoubleClick(event, row) {
