@@ -3,7 +3,7 @@
  */
 
 import _ from 'lodash';
-import * as Errors from '../lang/Errors';
+import * as Errors from '../../lang/Errors';
 
 class FieldValidator {
     validate(field, data, embedded_type) {
@@ -11,7 +11,7 @@ class FieldValidator {
 
         if (!field) return false;
 
-        const { accessor,  min, max, maxLength, minLength, regexp, required, type } = field
+        const { accessor, min, max, maxLength, minLength, regexp, required, type } = field
 
         let path = accessor;
 
@@ -22,7 +22,7 @@ class FieldValidator {
         if (path) {
             let value = _.get(data, path);
 
-            const req = typeof required === 'function' ? required(field, data) : !! required;
+            const req = typeof required === 'function' ? required(field, data) : !!required;
 
             if (!type || type === 'text') {
                 value = String(value).trim();
@@ -39,7 +39,7 @@ class FieldValidator {
                 if (Number(maxLength) >= 1) this.validateMaxLengthValue(maxLength, value, errors);
                 if (regexp) this.validateRegexp(value, regexp, errors);
             }
-            
+
         }
 
         return errors;
@@ -74,7 +74,7 @@ class FieldValidator {
         if (curValue.length < minVal) {
             errors.push(Errors.MIN_LENGTH_ERROR.replace("#VALUE#", minVal));
         }
-    }   
+    }
 
     validateMaxLengthValue(maxLength, value, errors) {
         const maxVal = Number(maxLength);
@@ -95,7 +95,7 @@ class FieldValidator {
     validateEmail(value, errors) {
         const curVal = String(value);
         var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  
+
         if (!re.test(curVal)) {
             errors.push(Errors.CURRENT_VALUE_NOT_EMAIL_ERROR);
         }
@@ -120,4 +120,10 @@ class FieldValidator {
     }
 }
 
-export default new FieldValidator();
+export const makeValidator = () => {
+    const validator = new FieldValidator();
+
+    return function () {
+        return validator;
+    }();
+};

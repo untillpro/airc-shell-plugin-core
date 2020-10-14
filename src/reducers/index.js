@@ -10,6 +10,7 @@ import MessagesReducer from './MessagesReducer';
 import AppOptions from './AppOptions';
 import ReportsReducer from './ReportsReducer';
 import ContextReducer from './ContextReducer';
+import LocationsReducer from './LocationsReducer';
 
 export default combineReducers({
     context: ContextReducer,
@@ -17,5 +18,6 @@ export default combineReducers({
     machine: StateMachineReducer,
     messages: MessagesReducer,
     options: AppOptions,
-    reports: ReportsReducer
+    reports: ReportsReducer,
+    locations: LocationsReducer
 });

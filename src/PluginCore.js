@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import { StackEvents } from 'stack-events';
 
 import MainController from './components/system/MainController';
 import ApiProvider from './components/system/ApiProvider';
@@ -51,15 +52,16 @@ class PluginCore extends Component {
                     loading={null}
                     persistor={cfg.persistor}
                 >
-                    <ApiProvider>
-                        <StateMachineProvider>
-                            <ErrorBoundary>
-                                <MainController />
-                            </ErrorBoundary>
-                        </StateMachineProvider>
-
-                        <AppLoared />
-                    </ApiProvider>
+                    <StackEvents events={[ "keydown" ]}>
+                        <ApiProvider>
+                            <StateMachineProvider>
+                                <ErrorBoundary>
+                                    <MainController />
+                                </ErrorBoundary>
+                            </StateMachineProvider>
+                            <AppLoared />
+                        </ApiProvider>
+                    </StackEvents>
                 </PersistGate>
             </Provider>
         );

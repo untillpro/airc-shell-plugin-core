@@ -5,22 +5,35 @@
 import _ from 'lodash';
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
+import { confirmAlert } from 'react-confirm-alert';
+import { withStackEvents } from 'stack-events';
+
+import {
+    KEY_RETURN,
+    KEY_ESCAPE
+} from 'keycode-js';
 
 import EMEditFormHeader from './EMEditFormHeader';
-
 import EMEditFormFieldsBuilder from './EMEditFormFieldsBuilder';
 
 import {
     Button,
     Sections,
-    SectionItem
+    SectionItem,
+    ConfirmModal
 } from '../../base/components';
 
-import FieldValidator from '../../classes/FieldValidator';
+import { 
+    makeValidator, 
+    mergeDeep 
+} from '../../classes/helpers';
 
-import { sendCancelMessage } from '../../actions/';
-
-import { mergeDeep } from '../../classes/Utils';
+import { 
+    sendNeedEditFormMessage,
+    sendNeedCopyFormMessage,
+    sendCancelMessage, 
+    sendError 
+} from '../../actions/';
 
 import log from '../../classes/Log';
 
@@ -39,12 +52,19 @@ class EMEditForm extends Component {
 
         this.doProceed = this.doProceed.bind(this);
         this.doValidate = this.doValidate.bind(this);
-        this.onDataChanged = this.onDataChanged.bind(this);
+
+        this.handleDataChanged = this.handleDataChanged.bind(this);
         this.handleStateChanged = this.handleStateChanged.bind(this);
+        this.hadleKeyPress = this.hadleKeyPress.bind(this);
+        this.handleNavClick = this.handleNavClick.bind(this);
+        this.handleBackClick = this.handleBackClick.bind(this);
+        this.handleAddAction = this.handleAddAction.bind(this);
+        this.handleCopyAction = this.handleCopyAction.bind(this);
+        this.handleUnifyAction = this.handleUnifyAction.bind(this);
     }
 
     componentDidMount() {
-        const { isNew, isCopy, data, entity } = this.props;
+        const { isNew, entity } = this.props;
         let result = this.prepareProps();
 
         const sections = this.getSections(entity)
@@ -52,19 +72,73 @@ class EMEditForm extends Component {
         if (sections && sections.length > 0) {
             result.sections = sections;
         } else {
-            console.error(`No available sections declared for '${entity}' entity.`);
+            this.props.sendError(`No available sections declared for '${entity}' entity.`);
             this.props.sendCancelMessage();
 
             return null;
         }
 
-        if (isCopy) {
-            result.changedData = { ...data };
-        } else if (isNew) {
+        if (isNew) {
             result.changedData = this.setDefaultValues(sections);
         }
 
         this.setState(result);
+
+        this.props.pushEvents({
+            'keydown': this.hadleKeyPress
+        });
+    }
+
+    componentWillUnmount() {
+        this.props.popEvents();
+    }
+
+    hadleKeyPress(event) {
+        console.log("keyPressedEvent: ", event);
+        
+        const { keyCode } = event;
+
+        switch (keyCode) {
+            case KEY_RETURN: this.doProceed(); return;
+            case KEY_ESCAPE: this.handleBackClick(); return;
+            default: return;
+        }
+    }
+
+    handleNavClick(id) {
+        if (id) {
+            this.performWithCheckChanges(() => {
+                this.props.sendNeedEditFormMessage(id);
+            });
+        };
+    }
+
+    handleBackClick() {
+        this.performWithCheckChanges(() => this.props.sendCancelMessage());
+    }
+
+    handleAddAction() {
+        this.performWithCheckChanges(() => {
+            this.props.sendNeedEditFormMessage(null);
+        });
+    }
+
+    handleCopyAction() {
+        const { _entry } = this.props.data;
+
+        if (!_entry || !_.isObject(_entry)) return;
+
+        this.performWithCheckChanges(() => {
+            this.props.sendNeedCopyFormMessage([ _entry ]);
+        });
+    }
+
+    handleUnifyAction() {
+        //TODO
+        this.props.sendError('not implemented yet!');
+        return;
+
+        //this.props.sendNeedUnifyFormMessage();
     }
 
     setDefaultValues(sections) {
@@ -95,6 +169,38 @@ class EMEditForm extends Component {
         return changedData;
     }
 
+    
+    performWithCheckChanges(toPerform) {
+        const { changedData } = this.props;
+
+        if (_.size(changedData) > 0) {
+            this.confirmFormClose(toPerform);
+        } else {
+            if (toPerform && typeof toPerform === 'function') toPerform();
+        }
+    }
+
+    
+    confirmFormClose(onConfirm) {
+        confirmAlert({
+            customUI: ({ onClose }) => <ConfirmModal
+                onClose={onClose}
+                header="Confirm form close"
+                text="Leaving this page will cause all unsaved changes to be lost"
+                confirmText="Discard changes and leave"
+                onConfirm={() => {
+                    if (onConfirm && typeof onConfirm === 'function') {
+                        onConfirm();
+                    }
+
+                    onClose();
+                }}
+                rejectText="Return to editing"
+                onReject={onClose}
+            />
+        });
+    }
+
     doValidate() {
         const { onValidate } = this.props;
         const { changedData } = this.state;
@@ -111,8 +217,14 @@ class EMEditForm extends Component {
     }
 
     doProceed() {
+        const { changedData } = this.state;
         const { onProceed } = this.props;
 
+        if (_.size(changedData) === 0) {
+            this.props.sendCancelMessage();
+            
+            return;
+        }
 
         if (onProceed && typeof onProceed === 'function') {
             if (this.validateFields()) {
@@ -130,10 +242,16 @@ class EMEditForm extends Component {
     }
 
     getProceedData() {
-        const { contributions, entity, data } = this.props;
+        const { contributions, entity, data, isCopy } = this.props;
         const { changedData } = this.state;
 
-        const resultData = { ...changedData }
+        let resultData = {};
+
+        if (isCopy) {
+            resultData = { ...data, ...changedData };
+        } else {
+            resultData = { ...changedData }
+        }
 
         if (resultData && _.isObject(resultData) && _.size(resultData) > 0) {
             _.forEach(resultData, (value, key) => {
@@ -168,13 +286,16 @@ class EMEditForm extends Component {
 
         const fieldsErrors = {};
         const sectionsErrors = {};
+        const validator = makeValidator();
 
         let validated = true;
 
         sections.forEach((section, index) => {
             if (section && section.fields && section.fields.length > 0) {
                 section.fields.forEach((field) => {
-                    const errors = FieldValidator.validate(field, resultData, section.embedded);
+                    const errors = validator.validate(field, resultData, section.embedded);
+
+                    console.log(errors);
 
                     if (errors && errors.length > 0) {
                         fieldsErrors[field.accessor] = errors;
@@ -258,11 +379,6 @@ class EMEditForm extends Component {
         this.setState({ section: i });
     }
 
-    onDataChanged(newChangedData) {
-        log("EMEditForm.onDataChanged() ", newChangedData);
-        this.setState({ changedData: newChangedData });
-    }
-
     handleStateChanged(state) {
         const { changedData } = this.state;
 
@@ -278,6 +394,12 @@ class EMEditForm extends Component {
                 state: s,
             }
         });
+    }
+
+
+    handleDataChanged(newChangedData) {
+        log("EMEditForm.handleDataChanged() ", newChangedData);
+        this.setState({ changedData: newChangedData });
     }
 
     buildSections() {
@@ -308,7 +430,7 @@ class EMEditForm extends Component {
 
     buildSectionContent() {
         const { sections, section, sectionsErrors, changedData, fieldsErrors } = this.state;
-        const { data, entity, contributions, isNew, isCopy, locations } = this.props;
+        const { data, classifiers, entity, contributions, isNew, isCopy, locations } = this.props;
 
         let mergedData = mergeDeep({}, data, changedData);
         
@@ -327,10 +449,11 @@ class EMEditForm extends Component {
                         opened={section === i}
                         footer={this.renderButtons()}
                         embedded={sec.embedded}
-                        onDataChanged={this.onDataChanged}
+                        onDataChanged={this.handleDataChanged}
 
                         locations={locations}
                         data={mergedData}
+                        classifiers={classifiers}
                         isNew={isNew}
                         isCopy={isCopy}
                         changedData={changedData}
@@ -400,6 +523,12 @@ class EMEditForm extends Component {
                         isNew={isNew}
                         isCopy={isCopy}
                         changedData={changedData}
+                        onBackClick={this.handleBackClick}
+                        onPrevClick={this.handleNavClick}
+                        onNextClick={this.handleNavClick}
+                        onAdd={this.handleAddAction}
+                        onCopy={this.handleCopyAction}
+                        onUnify={this.handleAddAction}
                     />
                 ) : null}
 
@@ -417,4 +546,10 @@ const mapStateToProps = (state) => {
     return { contributions };
 }
 
-export default connect(mapStateToProps, { sendCancelMessage })(EMEditForm);
+const mapDispatchToProps = {
+    sendNeedEditFormMessage,
+    sendNeedCopyFormMessage,
+    sendCancelMessage, 
+    sendError
+}
+export default connect(mapStateToProps, mapDispatchToProps)(withStackEvents(EMEditForm));

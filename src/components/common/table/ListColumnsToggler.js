@@ -9,8 +9,8 @@ import { Empty } from 'antd';
 import {
     EyeOutlined,
     EyeInvisibleOutlined,
-  } from '@ant-design/icons';
-  
+} from '@ant-design/icons';
+
 import { Button, Popover, Toggler } from '../../../base/components/';
 
 
@@ -42,18 +42,20 @@ class ListColumnsToggler extends Component {
         const { columns } = this.props;
 
         if (columns) {
+
             return (
                 <ul>
                     {
                         _.map(columns, (column) => {
                             const { Header, id, show, toggleable } = column;
+                            
                             if (toggleable === false) return null;
 
                             const value = show;
 
                             return (
                                 <li key={`${id}_key`}>
-                                    <Toggler 
+                                    <Toggler
                                         id={`${id}_column`}
                                         label={Header}
                                         checked={value}
@@ -96,9 +98,9 @@ class ListColumnsToggler extends Component {
         return (
             <div className='bo-table-columns-toggler' >
                 <Popover placement="bottom" content={content} trigger="click">
-                    <Button 
+                    <Button
                         type="link"
-                        style={hasHiddenColumns ? {} : {color: "#000"}}
+                        style={hasHiddenColumns ? {} : { color: "#000" }}
                         icon={hasHiddenColumns ? <EyeOutlined /> : <EyeInvisibleOutlined />}
                     >
                         {label}

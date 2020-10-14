@@ -103,6 +103,7 @@ class EMEditFormField extends Component {
             data,
             locations,
             entity,
+            classifiers,
         } = this.props;
 
         let FieldComponent;
@@ -164,6 +165,7 @@ class EMEditFormField extends Component {
                             onChange={(value) => this.handleChange(value)}
                             value={fieldValue}
                             data={data}
+                            classifiers={classifiers}
                         />
 
                         { !label && tip ? <Tip text={tip} /> : null}

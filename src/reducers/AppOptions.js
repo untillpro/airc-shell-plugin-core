@@ -2,16 +2,16 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
+import { 
+     TOGGLE_LOCATIONS_SELECTOR 
+} from '../actions/Types';
+
 const INITIAL_STATE = {
     lang: 'en', //todo
-    maxUploadImageSize :102400,
+    maxUploadImageSize: 102400,
     showLocationSelector: true,
-    locations: {
-        1: "UI Development",
-        2: "Server Development",
-        3: "QA",
-        4: "Demo",
-    },
+    allowMultyLocations: false,
+    show_selector: false,
     defaultCurrency: {
         "code": "Euro",
         "digcode": 0,
@@ -28,5 +28,12 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-    return state;
+    switch (action.type) {
+        case TOGGLE_LOCATIONS_SELECTOR:
+            return {
+                ...state,
+                show_selector: !state.show_selector
+            };
+        default: return state;
+    }
 };

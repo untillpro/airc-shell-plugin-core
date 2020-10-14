@@ -26,13 +26,14 @@ export default (state = INITIAL_STATE, action) => {
             break;
 
         case Types.SEND_SELECT_VIEW_MESSAGE:
+            console.log("SEND_SELECT_VIEW_MESSAGE: ", action.payload);
             isGlobal = true;
             shouldPop = true;
-            message = new Messages.MessageSelectView({ view: action.payload });
+            message = new Messages.MessageSelectView(action.payload);
             break;
             
         case Types.SEND_SELECT_ENTITY_MESSAGE:
-            message = new Messages.MessageSelectEntity({ entity: action.payload });
+            message = new Messages.MessageSelectEntity(action.payload);
             break;
 
         case Types.SEND_NEED_LIST_DATA_REFRESH: 
@@ -40,11 +41,7 @@ export default (state = INITIAL_STATE, action) => {
             break;
 
         case Types.SEND_NEED_EDIT_FORM_MESSAGE:
-            if (_.isArray(action.payload) && action.payload.length > 0) {
-                message = new Messages.MessageNeedEdit({ entries: action.payload });
-            } else {
-                message = new Messages.MessageNeedEdit({ entries: null });
-            }
+            message = new Messages.MessageNeedEdit(action.payload);
 
             break;
 
@@ -60,9 +57,9 @@ export default (state = INITIAL_STATE, action) => {
             break;
 
         case Types.SEND_NEED_DUPLICATE_ITEM_MESSAGE: 
-            if (_.isArray(action.payload) && action.payload.length > 0) {
-                message = new Messages.MessageNeedEdit({ entries: action.payload, copy: true });
-            }
+            console.log("SEND_NEED_DUPLICATE_ITEM_MESSAGE: ", action.payload);
+
+            message = new Messages.MessageNeedEdit(action.payload);
 
             break;
 

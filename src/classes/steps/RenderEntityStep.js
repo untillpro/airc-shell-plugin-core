@@ -12,11 +12,16 @@ import {
     getCollection,
     processData,
     checkEntries,
+    isValidLocations,
+    isValidEntity
     //checkEntry
-} from '../EntityUtils';
+} from '../helpers';
 
 const INITIAL_STATE = {
+    entity: null,
+    locations: [],
     data: [],
+    classifiers: null,
     resolvedData: [],
     manual: false,
     showDeleted: false,
@@ -48,15 +53,22 @@ class RenderEntityStep extends StateMachineStep {
 
     async MessageInit(msg, context) {
         const { contributions } = context;
-        if (msg.entity && typeof msg.entity === 'string') {
-            this.entity = msg.entity;
-
-            this.manual = !!contributions.getPointContributionValue('list', this.entity, 'manual');
-
-            return this.fetchListData(context);
+        const { entity, locations } = msg;
+        
+        if (!isValidEntity(context, entity)) {
+            throw new Error(this.getName() + '.MessageInit() exception: entity not specified or wrong given: ' + entity.toString());
         }
 
-        throw new Error('RenderEntityStep.MessageInit() exception: entity not defined');
+        if (!isValidLocations(locations)) {
+            throw new Error(this.getName() + '.MessageInit() exception: locations not specified or wrong given: ' + locations.toString());
+        }
+
+        this.entity = entity;
+        this.locations = locations;
+
+        this.manual = !!contributions.getPointContributionValue('list', entity, 'manual'); // подумать чтобы передавать этот параметр извне
+
+        return this.fetchListData(context);
     }
 
     async MessageNotify(msg, context) {
@@ -72,16 +84,8 @@ class RenderEntityStep extends StateMachineStep {
     }
 
     async MessageNeedEdit(msg) {
-        const { entries: sourceEntries, copy } = msg;
-
-        let entries = null;
-        
-        if (_.isArray(sourceEntries)) {
-            entries = checkEntries(sourceEntries);
-        }
-
         return {
-            message: new MessageInit({ entries, copy: !!copy }),
+            message: new MessageInit(msg),
             newStep: new EntityEditStep()
         };
     }
@@ -231,15 +235,12 @@ class RenderEntityStep extends StateMachineStep {
             }
         }
     }
-
-    //TODO remove state from context; init entity and locations in InitMessage
     async MessageNeedNavigation(msg, context) {
         /*
             TODO for manual mode - в том плане, что если навигацией достигается конец resolvedData, то для мануального режима надо попробовать взять 
             следующую страницу, и если это удается, то переписать переменные в степе, включая data и resolvedData
         */
 
-        const { entityData } = context.state;
         const { id } = msg;
 
         let prev = null;
@@ -263,26 +264,15 @@ class RenderEntityStep extends StateMachineStep {
 
         return {
             changedData: {
-                entityData: {
-                    ...entityData,
-                    prev,
-                    next
-                }
+                prevEntity: prev,
+                nextEntity: next
             }
         };
     }
 
-    //TODO remove state from context; init entity and locations in InitMessage
     async fetchListData(context) {
-        const { entity, page, pageSize, showDeleted, manual } = this;
-        const { state, contributions } = context;
-        const { locations } = state;
-
-        if (!locations || (!_.isNumber(locations) && !_.isArray(locations))) {
-            this.error('MessageFetchListData error: locations are not specified or wrong given.')
-        }
-
-        const wsid = _.isArray(locations) ? locations : [locations];
+        const { entity, locations: wsid, page, pageSize, showDeleted, manual } = this;
+        const { contributions } = context;
 
         let doProps = {
             required_fields: contributions.getPointContributionValues('collection', entity, 'required_fields'),
@@ -304,13 +294,17 @@ class RenderEntityStep extends StateMachineStep {
         try {
             return getCollection(context, entity, wsid, doProps)
                 .then((response) => {
+                    console.log("getCollection response: ", response);
                     const { data, resolvedData, Data } = response;
 
                     this.resolvedData = resolvedData || {};
                     this.data = data || {};
+                    this.classifiers = null;
 
                     if (Data && typeof Data === "object") {
-                        let t = _.get(Data, ["meta", "total"]);
+                        this.classifiers = _.get(Data, "classifiers");
+
+                        let t = _.get(Data, "meta.total");
 
                         if (t && t > 0 && pageSize > 0) {
                             this.total = parseInt(t);
@@ -368,6 +362,7 @@ class RenderEntityStep extends StateMachineStep {
             total,
             manual,
             resolvedData,
+            classifiers,
             showDeleted,
             order
         } = this;
@@ -379,6 +374,7 @@ class RenderEntityStep extends StateMachineStep {
             total,
             manual,
             data: this.buildData(resolvedData),
+            classifiers,
             showDeleted,
             order
         };

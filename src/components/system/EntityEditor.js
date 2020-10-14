@@ -34,7 +34,7 @@ class EntityEditor extends Component {
     }
 
     render() {
-        const { massedit, data, locations, entity, isCopy, isNew } = this.props;
+        const { massedit, data, classifiers, locations, entity, isCopy, isNew } = this.props;
 
         return (
             <div className='content-container'>
@@ -51,6 +51,7 @@ class EntityEditor extends Component {
                     <EMEditForm 
                         showHeader 
                         data={data}
+                        classifiers={classifiers}
                         entity={entity}
                         isCopy={isCopy}
                         isNew={isNew}
@@ -67,16 +68,17 @@ class EntityEditor extends Component {
 }
 
 const mapStateToProps = (state) => {
-    const { entity, entityData, isCopy, isNew, locations } = state.plugin;
+    const { locations } = state.locations;
+    const { entity, entityData, isCopy, isNew } = state.plugin;
 
     return { 
         isCopy,
         isNew,
         locations,
-        entity, 
-        entityData,
+        entity,
         id: entityData ? entityData.id : null,
-        data: entityData ? entityData.data : []
+        data: entityData ? entityData.data : [],
+        classifiers: entityData.classifiers ? entityData.classifiers : {}
     };
 };
 

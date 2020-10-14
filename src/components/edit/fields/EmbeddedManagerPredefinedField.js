@@ -11,7 +11,7 @@ import EmbeddedManagerField from './EmbeddedManagerField';
 import {
     buildData,
     getEntityFields
-} from '../../../classes/EntityUtils';
+} from '../../../classes/helpers';
 
 /**
  * All API communications are realized in-component not in state machine cause of BO Reducer State intersections. 

@@ -11,9 +11,8 @@ import log from '../../../classes/Log';
 const DEFAULT_DATE_FORMAT = "DD/MM/YYYY";
 
 class DateField extends Component {
-
     handleChange(date, dateString) {
-        log("DateField changed: ", date, dateString, date.valueOf());
+        log("DateField changed: ", date, dateString, date ? date.valueOf() : null);
 
         const { onChange } = this.props;
 
@@ -40,7 +39,7 @@ class DateField extends Component {
 
     getValue() {
         const { value } = this.props;
-        if (!value) return moment();
+        if (!value) return null;
 
         log('Date-time field value: ', value);
 

@@ -5,66 +5,98 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withStackEvents } from 'stack-events';
+import cn from 'classnames';
 
-import { Grid, Card, Message, LocationSelector } from '../../base/components';
-import { sendSelectViewMessage, setLocation } from '../../actions';
+import {
+    KEY_RETURN,
+    KEY_LEFT,
+    KEY_UP,
+    KEY_RIGHT,
+    KEY_DOWN,
+} from 'keycode-js';
+
+import { Grid, Card, Message } from '../../base/components';
+import { sendSelectViewMessage } from '../../actions';
+import { GridLocationSelector } from '../common'
 
 import Logger from '../../base/classes/Logger';
-import TestLocationSelector from '../common/TestLocationSelector';
 import * as Errors from '../../const/Errors';
 
 class ViewsGrid extends Component {
     constructor(props) {
         super(props);
 
-        this.setLocation = this.setLocation.bind(this);
-    }
-    _checkDeclaration(declaration) {
-        if (!declaration ||
-            !_.isObject(declaration) ||
-            !_.has(declaration, "name") ||
-            !_.has(declaration, "code")) {
-            return false;
+        this.state = {
+            views: [],
+            selected: null
         }
 
-        return true;
+        this.handleKeyPress = this.handleKeyPress.bind(this);
     }
 
-    onViewClick(view) {
-        this.props.sendSelectViewMessage(view);
+    componentDidMount() {
+        this.setState({ views: this.prepareViews() });
+
+        this.props.pushEvents({
+            'keydown': this.handleKeyPress
+        });
     }
 
-    setLocation(location) {
-        if (location) {
-            if (_.isArray(location)) {
-                this.props.setLocation(location)
-            } else if (_.isNumber(location)) {
-                this.props.setLocation([location])
-            } else {
-                throw new Error(`Location should be an array of integers or a single integer`);
+    componentWillUnmount() {
+        this.props.popEvents();
+    }
+
+    moveCursor(offset) {
+        const { views, selected } = this.state;
+
+        if (views && _.size(views) > 0) {
+            let index = 0;
+
+            if (_.isNumber(selected) && selected >= 0) {
+                index += selected + offset;
+
+                if (index < 0) index = 0;
+                if (index >= views.length) index = views.length - 1;
             }
-        } else {
-            throw new Error(`Wrong location number is given: ${location}`);
+
+            this.setState({ selected: index });
         }
     }
 
-    getCurrentLocation() {
-        const { selectedLocations } = this.props;
+    selectView(index) {
+        const { views } = this.state;
 
-        if (selectedLocations && _.isArray(selectedLocations) && selectedLocations.length > 0) {
-            return selectedLocations[0];
-        } else if (_.isNumber(selectedLocations) && selectedLocations > 0) {
-            return selectedLocations;
-        } 
+        if (views && _.size(views) > 0 && index >= 0) {
+            const o = views[index];
 
-        return null;
+            if (o && o.code && _.isString(o.code)) {
+                this.props.sendSelectViewMessage(o.code);
+            }
+        }
     }
 
-    renderViewsGrid(views) {
-        const { contributions, showSelector, locations } = this.props;
-        const declarations = [];
+    handleKeyPress(event) {
+        const { selected } = this.state;
+        const { keyCode } = event;
 
-        _.each(views, (view) => {
+        switch (keyCode) {
+            case KEY_RETURN: this.selectView(selected); break;
+            case KEY_UP: this.moveCursor(-4); break;
+            case KEY_DOWN: this.moveCursor(4); break;
+            case KEY_RIGHT: this.moveCursor(1); break;
+            case KEY_LEFT: this.moveCursor(-1); break;
+            default: break;
+        }
+    }
+
+    prepareViews() {
+        const { contributions } = this.props;
+        const declarations = contributions.getPoints('views');
+
+        let views = [];
+
+        _.each(declarations, (view) => {
             const viewDeclaration = contributions.getPoint('views', view);
 
             const declare = {};
@@ -75,51 +107,64 @@ class ViewsGrid extends Component {
             declare.ico = viewDeclaration.getContributuionValue('ico');
             declare.order = viewDeclaration.getContributuionValue('order');
 
-            if (this._checkDeclaration(declare)) {
-                declarations.push(declare);
+            if (this.checkDeclaration(declare)) {
+                views.push(declare);
             } else {
                 Logger.log(viewDeclaration, `View "${view}" declaration malformed`, "ViewsGrid");
             }
         });
 
-        if (declarations && declarations.length > 0) {
-            const currentLocation = this.getCurrentLocation();
-            
-            _.sortBy(declarations, (o) => o.order);
+        views = _.sortBy(views, (o) => o.order);
 
+        return views;
+    }
+
+    checkDeclaration(declaration) {
+        if (!declaration ||
+            !_.isObject(declaration) ||
+            !_.has(declaration, "name") ||
+            !_.has(declaration, "code")) {
+            return false;
+        }
+
+        return true;
+    }
+
+    handleViewClick(index) {
+        this.selectView(index)
+    }
+
+    renderViewsGrid() {
+        const { showLocationSelector } = this.props;
+        const { views, selected } = this.state;
+
+        if (_.isArray(views) && _.size(views) > 0) {
             return (
-                <>
-                <TestLocationSelector />
-                <div className={`content-container ${showSelector ? 'flex-content row' : ''}`}>
-                    { showSelector ? <LocationSelector 
-                        locations={locations} 
-                        value={currentLocation} 
-                        title="Location: "
-                        onChange={(location) => this.setLocation(location)}
-                    /> : null }
-                    
+                <div className={cn("content-container", { "flex-content row": !!showLocationSelector })}>
+                    <GridLocationSelector debug />
+
                     <Grid
                         cols={3}
                         gap={32}
                     >
                         {
-                            declarations.map((declarationInfo) => {
+                            views.map((declarationInfo, index) => {
                                 return (
                                     <Card
                                         align='center'
                                         valign='center'
+                                        selected={index === selected}
                                         title={declarationInfo.name}
                                         text={declarationInfo.description}
                                         ico={declarationInfo.ico}
                                         key={declarationInfo.name}
-                                        onClick={() => this.onViewClick(declarationInfo.code)}
+                                        onClick={() => this.handleViewClick(index)}
                                     />
                                 );
                             })
                         }
                     </Grid>
                 </div>
-                </>
             );
         }
 
@@ -127,8 +172,7 @@ class ViewsGrid extends Component {
     }
 
     render() {
-        const { contributions } = this.props;
-        const views = contributions.getPoints('views');
+        const { views } = this.state;
 
         if (_.size(views) > 0) {
             return this.renderViewsGrid(views);
@@ -145,16 +189,10 @@ class ViewsGrid extends Component {
 }
 
 const mapStateToProps = (state) => {
+    const { showLocationSelector } = state.options;
     const { contributions } = state.context;
-    const { locations: selectedLocations } = state.plugin;
-    const { showLocationSelector: showSelector, locations } = state.options;
 
-    return { 
-        contributions,
-        showSelector, 
-        locations,
-        selectedLocations
-    };
+    return { contributions, showLocationSelector };
 };
 
-export default connect(mapStateToProps, { sendSelectViewMessage, setLocation })(ViewsGrid);
+export default connect(mapStateToProps, { sendSelectViewMessage })(withStackEvents(ViewsGrid));

@@ -9,7 +9,7 @@ import EmbeddedManagerField from './EmbeddedManagerField';
 import {
     getCollection,
     processData
-} from '../../../classes/EntityUtils';
+} from '../../../classes/helpers';
 
 class EmbeddedManagerSelectField extends EmbeddedManagerField {
     initData() {

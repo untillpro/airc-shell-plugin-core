@@ -8,20 +8,25 @@ import Logger from '../../base/classes/Logger';
 import { MessageInit, MessageNotify } from '../messages';
 
 import {
-    reduce
-} from '../Utils';
+    prepareCopyData,
+    isValidLocations,
+    isValidEntity
+} from '../helpers';
 
 import {
     getCollection,
     processData,
     checkEntries
-} from '../EntityUtils';
+} from '../helpers';
 
 class EntityEditStep extends StateMachineStep {
     constructor(...args) {
         super(args);
 
         this.data = null;
+        this.classifiers = null;
+        this.next = null;
+        this.prev = null;
         this.entries = null;
         this.entity = null;
         this.locations = null;
@@ -31,54 +36,47 @@ class EntityEditStep extends StateMachineStep {
         return 'EntityEditStep';
     }
 
+    _data() {
+        return {
+            data: this.data, 
+            classifiers: this.classifiers,
+            next: this.next,
+            prev: this.prev
+        };
+    }
+
     async MessageInit(msg, context) {
-        const { entries, copy } = msg;
-        let data = null;
+        const { entries, copy, entity, locations } = msg;
+
+        if (!isValidEntity(context, entity)) {
+            throw new Error(this.getName() + '.MessageInit() exception: entity not specified or wrong given: ' + entity.toString());
+        }
+
+        if (!isValidLocations(locations)) {
+            throw new Error(this.getName() + '.MessageInit() exception: locations not specified or wrong given: ' + locations.toString());
+        }
+
+        this.entity = entity;
+        this.locations = locations;
 
         this.entries = checkEntries(entries);
+        let isNotNew = this.entries && this.entries.length > 0;
 
-        if (this.entries) {
-            data = await this.fetchEntityData(this.entries, context);
+        if (isNotNew) {
+            await this.fetchEntityData(this.entries, context);
+            Logger.log(this.data, 'EntityEditStep.MessageInit() fetched data:', "EntityEditStep.MessageInit");
 
-            if (copy && data) {
-                // if operation is copy
-                
+            if (copy === true && this.data) { // if operation is copy
                 this.entries = null;
-
-                data = reduce(
-                    data,
-                    (r, v, k) => {
-                        if (k === "id") return;
-                        else r[k] = v;
-                    },
-                    (v, k) => typeof v === 'object' && String(k).indexOf('id_') !== 0
-                );
+                this.data = prepareCopyData(this.data);
             }
-
-            Logger.log(data, 'EntityEditStep.MessageInit() fetched data:', "EntityEditStep.MessageInit");
-
-            return {
-                changedData: {
-                    isCopy: !!copy,
-                    isNew: false,
-                    entityData: {
-                        data,
-                        prev: null,
-                        next: null
-                    }
-                }
-            };
         }
 
         return {
             changedData: {
-                isCopy: false,
-                isNew: true,
-                entityData: {
-                    data: null,
-                    prev: null,
-                    next: null
-                }
+                isCopy: copy === true,
+                isNew: !isNotNew,
+                entityData: this._data()
             }
         };
     }
@@ -98,12 +96,8 @@ class EntityEditStep extends StateMachineStep {
         };
     }
 
-    //TODO remove state from context; init entity and locations in InitMessage
     async MessageProceed(msg, context) {
-        const { state } = context;
-        let { entries } = this;
-        let { entity, locations } = state;
-
+        let { entries, entity, locations } = this;
         const { data } = msg;
 
         if (msg.entity && typeof msg.entity === 'string') {
@@ -146,42 +140,44 @@ class EntityEditStep extends StateMachineStep {
         return null;
     }
 
-    //TODO remove state from context; init entity and locations in InitMessage
     async fetchEntityData(items, context) {
-        const { api, contributions, state } = context;
-        const { entity, locations } = state;
+        const { api, contributions } = context;
+        const { entity, locations } = this;
 
         let wsid = null;
-        
-        if (!api || !contributions || !state || !entity) {
-            this.error('Cant fetch entity item data.', api, contributions, state, entity);
+
+        if (!api || !contributions || !entity) {
+            this.error('Cant fetch entity item data.', api, contributions, entity);
         }
 
-        if (locations && _.isArray(locations) && locations.length > 0) {
+        if (isValidLocations(locations)) {
             wsid = locations[0];
         } else {
-            this.error('No location selected.', api, contributions, state, entity);
+            this.error('No location selected.', api, contributions, entity);
         }
 
         let entries = this.buildRequestEntires(items);
 
         const doProps = { 
-            entries,  
+            entries,
+            required_classifiers: contributions.getPointContributionValues('collection', entity, 'required_classifiers')
         };
 
         return getCollection(context, entity, wsid, doProps)
-            .then(({ data, Data, resolvedData }) => {
+            .then(({ Data, resolvedData }) => {
                 if (resolvedData && resolvedData.length > 0) {
-                    return this.checkForEmbededTypes(resolvedData[0], context);
-
+                    this.classifiers = _.get(Data, "classifiers");
+                    this.data = this.checkForEmbededTypes(resolvedData[0], context);
+                } else {
+                    this.classifiers = null;
+                    this.data = [];
                 }
             });
     }
 
-    //TODO remove state from context; init entity and locations in InitMessage
     checkForEmbededTypes(data, context) {
-        const { contributions, state } = context;
-        const { entity } = state;
+        const { contributions } = context;
+        const { entity } = this;
 
         if (!contributions || !entity) return data;
 

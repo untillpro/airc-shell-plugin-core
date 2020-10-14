@@ -1,21 +1,123 @@
 /*
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
+import _ from 'lodash';
+import React, { PureComponent } from 'react';
+import { DatePicker } from 'antd';
 
-import React from 'react';
 import moment from 'moment';
 
 const defaultFormat = "LLLL";
 
-const DateTimeCell = (props) => {
-    const { value, format } = props;
-    let formatedValue = '';
+class DateTimeCell extends PureComponent {
+    constructor() {
+        super();
 
-    if (value) {
-        formatedValue = moment(value).format(format || defaultFormat);
+        this.state = {
+            value: null,
+            saving: false
+        };
+
+        this.handleChange = this.handleChange.bind(this);
     }
 
-    return <span className="table-cell datetime-value">{formatedValue}</span>; 
+    componentDidMount() {
+        const { value } = this.props;
+
+        this.setState({
+            value,
+            key: this.key()
+        });
+    }
+
+    componentDidUpdate(oldProps) {
+        if (this.props.value !== oldProps.value) {
+            this.setState({ value: this.props.value})
+        }
+    }
+
+    handleChange(value) {
+        console.log("Date cell handleChange: ", value);
+
+        const { onSave, onError, cell, prop } = this.props;
+        const { _entry } = cell.original;
+        const { saving } = this.state;
+
+        if (saving) return;
+
+        if (_.isFunction(onSave) && _.isObject(_entry)) {
+            if (value !== this.state.value) {
+                this.setState({ saving: true });
+
+                onSave(value, prop, _entry)
+                    .then(() => {
+                        this.setState({ value: value, saving: false });
+                    })
+                    .catch((e) => {
+                        if (_.isFunction(onError)) {
+                            onError(e)
+                        }
+                    });
+            }
+        }
+    }
+
+    isEditable() {
+        return this.props.editable === true
+    }
+
+
+    key() {
+        const { nestingPath } = this.props.cell;
+
+        return `datetime.value.${nestingPath.join(".")}`;
+    }
+
+    format() {
+        const { format } = this.props;
+
+        return _.isString(format) ? format : defaultFormat;
+    }
+
+    type() {
+        switch(this.props.type) {
+            case "time": return "time";
+            default: return "date";
+        }
+    }
+
+    renderEditable() {
+        const { value, key } = this.state;
+
+        return (
+            <div key={key} className="table-cell datetime-value">
+                <DatePicker 
+                    type={this.type()}
+                    format={this.format()}
+                    //value={this.getValue()}
+                    //defaultValue={moment(new Date().valueOf(), this.getFormat())}
+                    defaultValue={value > 0 ? moment(value) : null}
+                    onChange={this.handleChange} 
+                />
+            </div>
+        );
+    }
+
+    renderReadOnly() {
+        const { value, key } = this.state;
+        let formatedValue = '';
+
+        if (value) {
+            formatedValue = moment(value).format(this.format());
+        }
+
+        return <div key={key} className="table-cell string-value">{formatedValue}</div>;;
+    }
+
+
+    render() {
+        return this.isEditable() ? this.renderEditable() : this.renderReadOnly()
+    }
 }
 
-export default React.memo(DateTimeCell)
+export default DateTimeCell;

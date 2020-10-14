@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import StateMachineStep from '../StateMachineStep';
 
-import { isValidReport } from '../helpers/ReportsHelpers';
+import { isValidReport, isValidLocations } from '../helpers';
 import { 
     TYPE_REPORTS, 
     C_REPORT_GENERATOR,
@@ -18,6 +18,7 @@ class ReportViewStep extends StateMachineStep {
     constructor(...args) {
         super(args);
 
+        this.locations = [];
         this.reportType = null;
         this.fromDateTime = null;
         this.toDateTime = null;
@@ -30,12 +31,17 @@ class ReportViewStep extends StateMachineStep {
     }
 
     async MessageInit(msg, context) {
-        const { report, filterBy, props, from, to } = msg;
+        const { report, locations, filterBy, props, from, to } = msg;
+
+
 
         if (!isValidReport(context, report)) {
             return null;
         }
 
+        if (!isValidLocations(locations)) {
+
+        }
         this.reportType = report;
 
         if (filterBy && _.isPlainObject(filterBy)) {
@@ -118,8 +124,9 @@ class ReportViewStep extends StateMachineStep {
     }
 
     async fetchReportData(context) {
-        const { contributions, api, state } = context;
-        const { locations } = state;
+        const { locations } = this;
+        const { contributions, api } = context;
+
         const { 
             reportType: type, 
             fromDateTime: from, 

@@ -24,5 +24,5 @@ export const selectSystemCurrency = createSelector(
 });
 
 export const selectLocations = (state) => {
-    return state.options.locations;
+    return state.locations.locationsOptions;
 }

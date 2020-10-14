@@ -10,7 +10,7 @@ import {
     sendError
 } from '../../../actions/MessagesActions';
 
-import { getFileSize } from '../../../classes/Utils';
+import { getFileSize } from '../../../classes/helpers';
 
 class NumberField extends Component {
     handleChange(value = null) {

@@ -3,12 +3,9 @@
  */
 
 import * as Types from '../actions/Types';
-import { mergeExisting } from '../classes/Utils';
+import { mergeExisting } from '../classes/helpers';
 
 const INITIAL_STATE = {
-    show_selector: false,
-    locations: [ 1 ],
-    selectedLocations: {},
     data: {},
     view: null,
     entity: null,
@@ -17,6 +14,7 @@ const INITIAL_STATE = {
     fetchingData: false,
     list: {
         data: [],
+        classifiers: null,
         manual: false,
         showDeleted: false,
         page: 0,
@@ -30,19 +28,6 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case Types.TOGGLE_LOCATIONS_SELECTOR: 
-            return {
-                ...state,
-                show_selector: !state.show_selector
-            };
-        case Types.SET_LOCAIOTNS: 
-            if (action.payload.length <= 0) return state;
-
-            return {
-                ...state,
-                locations: action.payload
-            }
-
         case Types.SEND_STATE_MACHINE_DATA: 
             return mergeExisting(state, action.payload);
 

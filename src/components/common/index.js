@@ -2,6 +2,7 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 import HeaderBackButton from './HeaderBackButton';
+import GridLocationSelector from './GridLocationSelector';
 import {
     ListTable,
     BooleanCell,
@@ -10,13 +11,14 @@ import {
     StringCell,
     LocationCell,
     DateTimeCell,
-    ListPaginator
+    ListPaginator,
 } from './table';
 
 export {
     ListTable,
     ListPaginator,
     HeaderBackButton,
+    GridLocationSelector,
     BooleanCell,
     NumberCell,
     PriceCell,

@@ -3,6 +3,14 @@ import React, { PureComponent } from "react";
 import { connect } from 'react-redux';
 import PropTypes from "prop-types";
 import blacklist from "blacklist";
+import { Checkbox } from 'antd';
+
+import { 
+    KEY_RETURN,
+    KEY_UP,
+    KEY_DOWN
+} from 'keycode-js';
+
 import { Table } from '../../../base/components';
 
 import ListTableRowAction from './ListTableRowAction';
@@ -17,19 +25,68 @@ import PriceCell from './cell_types/PriceCell';
 import StringCell from './cell_types/StringCell';
 import DateTimeCell from './cell_types/DateTimeCell';
 
-import { 
-    filterString, 
+import {
+    filterString,
     filterGroup,
-    renderTotalCell 
+    renderTotalCell
 } from './helpers';
 
 import log from "../../../classes/Log";
 
 const DefaultVisibleColumns = { "ID": false, "id": false, "Id": false };
 
+const getDynamicValue = (cell, key, props) => {
+    let val = null;
+    const { accessor, value_accessor, classifier_link, defaultValue } = props;
+
+    if (!_.isNil(defaultValue)) {
+        val = defaultValue;
+    }
+    // TODO: ПОменять названия переменных. Сейчас как-то топорно. Заполнить README
+
+    if (cell[accessor]) {
+        _.forEach(cell[accessor], (row) => {
+            if (_.get(row, classifier_link) === key) {
+                val = row[value_accessor];
+            }
+        });
+    }
+
+    return val;
+};
+
+const getCellRenderer = (d, opts) => {
+    const { type, prop, editable, onValueSave, onError } = opts;
+
+    switch (type) {
+        case 'location':
+            return <LocationCell value={d.value} />;
+
+        case 'number':
+            return <NumberCell cell={d} value={d.value} editable={editable} prop={prop} onSave={onValueSave} onError={onError} />;
+
+        case 'boolean':
+            return <BooleanCell cell={d} value={d.value} editable={editable} prop={prop} onSave={onValueSave} onError={onError} />;
+
+        case 'price':
+            return <PriceCell cell={d} value={d.value} editable={editable} prop={prop} onSave={onValueSave} onError={onError} />;
+
+        case 'time':
+            return <DateTimeCell cell={d} value={d.value} editable={editable} prop={prop} format="HH:mm" onSave={onValueSave} onError={onError} />;
+
+        case 'date':
+            return <DateTimeCell type="time" cell={d} value={d.value} editable={editable} prop={prop} format="DD/MM/YYYY" onSave={onValueSave} onError={onError} />;
+
+        default:
+            return <StringCell cell={d} value={d.value} editable={editable} prop={prop} onSave={onValueSave} onError={onError} />;
+    }
+}
+
 class ListTable extends PureComponent {
     constructor(props) {
         super(props);
+
+        this.pageRows = null;
 
         this.state = {
             loading: false,
@@ -61,6 +118,7 @@ class ListTable extends PureComponent {
             }
         };
 
+        this.handleKeyPress = this.handleKeyPress.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
         this.handlePageSizeChange = this.handlePageSizeChange.bind(this);
         this.handleRowClick = this.handleRowClick.bind(this);
@@ -75,6 +133,8 @@ class ListTable extends PureComponent {
         this.getTrPropsCallback = this.getTrPropsCallback.bind(this);
 
         this.doFilter = this.doFilter.bind(this);
+
+        this.changeSelected = this.changeSelected.bind(this);
     }
 
     componentDidMount() {
@@ -87,6 +147,75 @@ class ListTable extends PureComponent {
             columns,
             component
         });
+
+        document.addEventListener("keydown", this.handleKeyPress);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this.handleKeyPress)
+    }
+
+    changeSelected(offset) {
+        const { selectedRows } = this.state;
+        const { onSelectedChange } = this.props;
+
+        const selectedRowsNew = [];
+        const selectedFlatRowsNew = {};
+
+        let lastIndex = 0; 
+        let nextIndex = 0;
+
+        let rowsLength = _.size(this.pageRows);
+        if (rowsLength > 0) {
+            if (_.size(selectedRows) > 0) {
+                const lastRowId = _.last(selectedRows);
+                const arr = lastRowId.split('.');
+                lastIndex = Number(arr[0]);
+
+                nextIndex = lastIndex + offset;
+
+                if (nextIndex < 0) {
+                    nextIndex = 0;
+                }
+
+                if (nextIndex >= rowsLength) {
+                    nextIndex = rowsLength - 1;
+                }
+            }
+
+            const row = this.pageRows[nextIndex];
+            const rowId = nextIndex.toString();
+
+            selectedRowsNew.push(rowId);
+            selectedFlatRowsNew[rowId] = row._original;
+        }
+
+        this.setState({
+            selectedRows: selectedRowsNew,
+            selectedFlatRows: selectedFlatRowsNew
+        });
+
+        if (_.isFunction(onSelectedChange)) {
+            onSelectedChange(selectedRowsNew, selectedFlatRowsNew);
+        }
+    }
+
+    handleKeyPress(event) {
+        const { selectedRows, selectedFlatRows } = this.state;
+        const { onEnterPress } = this.props;
+        const { keyCode } = event;
+
+        if (keyCode === KEY_RETURN && _.isFunction(onEnterPress)) {
+            onEnterPress(selectedRows, selectedFlatRows);
+        }
+
+        if (keyCode === KEY_UP) {
+            this.changeSelected(-1)
+        }
+
+        if (keyCode === KEY_DOWN) {
+            this.changeSelected(1)
+        }
     }
 
     handleVisibleChange(value, columnId) {
@@ -131,6 +260,8 @@ class ListTable extends PureComponent {
         event.preventDefault();
         event.stopPropagation();
 
+        console.log("selectedRows: ", selectedRows);
+
         if (allowSelection) {
             if (allowMultyselect) {
                 selectedFlatRowsNew = { ...selectedFlatRows };
@@ -143,8 +274,13 @@ class ListTable extends PureComponent {
                     selectedFlatRowsNew[rowIndex] = original;
                 }
             } else {
-                selectedRowsNew = [rowIndex];
-                selectedFlatRowsNew = { [rowIndex]: original };
+                if (selectedRows.indexOf(rowIndex) >= 0) {
+                    selectedRowsNew = [];
+                    selectedFlatRowsNew = {};
+                } else {
+                    selectedRowsNew = [rowIndex];
+                    selectedFlatRowsNew = { [rowIndex]: original };
+                }
             }
         }
 
@@ -221,7 +357,7 @@ class ListTable extends PureComponent {
     }
 
     handleExpandedChange(newExpanded) {
-        this.setState({expanded: newExpanded});
+        this.setState({ expanded: newExpanded });
     }
 
     doFilter(filter, row, column) {
@@ -242,39 +378,71 @@ class ListTable extends PureComponent {
         return res;
     }
 
-    getDynamicColumns(props, data) {
-        //TODO!!! - тут вообще хз. 
-
-        const columns = {};
-
-        if (data && data.length > 0) {
-            if (props.accessor && props.generator) {
-                data.forEach((item) => {
-                    let value = null;
-
-                    if (typeof props.accessor === 'string') {
-                        value = item[props.accessor];
-                    } else if (typeof props.accessor === 'function') {
-                        value = props.accessor(item);
-                    }
-
-                    if (value) {
-                        _.each(value, (val) => {
-                            const column = props.generator(val);
-
-                            if (column && column.id && !columns[column.id]) {
-                                columns[column.id] = column;
-                            }
-                        });
-                    }
-                });
-            }
+    prepareDynamicColumns(columnProps) {
+        const { classifiers, onValueSave, onError } = this.props;
+        
+        if (!classifiers || !_.isPlainObject(classifiers) || _.size(classifiers) === 0) {
+            return [];
         }
 
-        return Object.values(columns);
+        const { 
+            classificator, 
+            text_accessor, 
+            value_accessor, 
+            classifier_link, 
+            accessor,
+            type, 
+            editable,
+            defaultValue
+        } = columnProps;
+
+        if (!classificator || !_.isString(classificator)) {
+            throw new Error("Dynamic fields should provide \"classificator\" property");
+        }
+
+        if (!text_accessor || !_.isString(text_accessor)) {
+            throw new Error("Dynamic fields should provide \"text_accessor\" property");
+        }
+
+        if (!value_accessor || !_.isString(value_accessor)) {
+            throw new Error("Dynamic fields should provide \"value_accessor\" property");
+        }
+
+        if (!classifier_link || !_.isString(classifier_link)) {
+            throw new Error("Dynamic fields should provide \"classifier_link\" property");
+        }
+
+        const columns = {};
+        const props = { accessor, value_accessor, classifier_link, defaultValue };
+
+        _.forEach(classifiers, (lc) => { // lc - location classifier
+
+            if (lc && lc[classificator]) {
+                _.forEach(lc[classificator], (c) => {
+                    const key = c[text_accessor];
+
+                    if (!columns[key]) {
+                        columns[key] = {
+                            "id": key,
+                            "Header": key,
+                            "accessor": (d) => getDynamicValue(d, key, props ),
+                            "type": type || null,
+                            "linked": [],
+                            "Cell": (d) => getCellRenderer(d, { prop: value_accessor, type, editable, onValueSave, onError})
+                        };
+                    }
+
+                    columns[key]["linked"].push(c.id);
+                });
+            }
+        });
+
+        return _.map(columns, (o) => o);
     }
 
     prepareColumn(columnProps, component) {
+        const { onValueSave, onError } = this.props;
+
         const {
             accessor,
             header,
@@ -287,7 +455,8 @@ class ListTable extends PureComponent {
             filterable,
             toggleable,
             filterType,
-            editable
+            editable,
+            propName
         } = columnProps;
 
         const showTotal = component.showTotal || this.props.showTotal;
@@ -323,7 +492,7 @@ class ListTable extends PureComponent {
             column.Footer = (info) => {
                 const { column, data } = info;
 
-                return column.Cell({ value: renderTotalCell(column, data)})
+                return column.Cell({ value: renderTotalCell(column, data) })
             }
         }
 
@@ -339,19 +508,13 @@ class ListTable extends PureComponent {
             column.editable = editable;
         }
 
-        switch (type) {
-            case 'location': column.Cell = (d) => <LocationCell value={d.value} />; break;
-            case 'number': column.Cell = (d) => <NumberCell cell={d} value={d.value} editable={editable} />; break;
-            case 'boolean': column.Cell = (d) => <BooleanCell cell={d} value={d.value} editable={editable} />; break;
-            case 'price': column.Cell = (d) => <PriceCell cell={d} value={d.value} editable={editable} />; break;
-            case 'time': column.Cell = (d) => <DateTimeCell cell={d} value={d.value} editable={editable} format="HH:mm" />; break;
-            case 'date': column.Cell = (d) => <DateTimeCell cell={d} value={d.value} editable={editable} format="DD/MM/YYYY" />; break;
-            default: column.Cell = (d) => <StringCell cell={d} value={d.value} editable={editable} />;
-        }
+        column.Cell = (d) => getCellRenderer(d, { type, prop: propName || id || accessor, editable , onValueSave, onError} );
 
         if (width) {
             column.width = width;
         }
+
+        console.log(column);
 
         return column;
     };
@@ -381,13 +544,14 @@ class ListTable extends PureComponent {
                 expander: true,
                 Header: null,
                 width: 20,
+                toggleable: false,
                 Expander: ({ isExpanded, subRows, ...rest }) => {
                     if (!subRows || subRows.length === 0) {
                         return null;
                     }
 
                     return (
-                        <div style={{ zIndex: 100, position: 'relative' }}>
+                        <div style={{ zIndex: 100, position: 'relative' }} className="centered">
                             {isExpanded
                                 ? <span>-</span>
                                 : <span>+</span>}
@@ -409,11 +573,21 @@ class ListTable extends PureComponent {
         if (entityListContributions && entityListContributions.columns) {
             _.each(entityListContributions.columns, (column) => {
                 if (_.isPlainObject(column)) {
-                    const c = this.prepareColumn(column, component);
 
-                    if (c) {
-                        columns.push(c)
+                    if (column.dynamic === true) {
+                        const c = this.prepareDynamicColumns(column, component);
+
+                        if (c && c.length > 0) {
+                            columns = _.concat(columns, c);
+                        }
+                    } else {
+                        const c = this.prepareColumn(column, component);
+
+                        if (c) {
+                            columns.push(c)
+                        }
                     }
+                    
                 }
             });
         }
@@ -423,7 +597,7 @@ class ListTable extends PureComponent {
             columns.push({
                 'id': "actions",
                 'Header': 'Actions',
-                'width': 100,
+                'width': 150,
                 'Cell': this.renderActions.bind(this),
                 'sortable': false,
                 'filterable': false,
@@ -458,16 +632,16 @@ class ListTable extends PureComponent {
     }
 
     getRowClass(row) {
-        //TODO - изменить на использование индекса
-
         const { selectedRows, component } = this.state;
         const { allowSelection } = component;
-        
+
 
         let resultClasses = "";
 
         if (allowSelection !== false) {
             resultClasses += ' -selectable';
+        } else {
+            return '';
         }
 
         if (row) {
@@ -516,11 +690,12 @@ class ListTable extends PureComponent {
 
         if (allowSelection) {
             return (
-                <input
-                    type='checkbox'
-                    onChange={(event) => this.handleRowsSelectorChange(event)}
-                    checked={selectedRows.length > 0}
-                />
+                <div className="centered">
+                    <Checkbox
+                        onChange={(event) => this.handleRowsSelectorChange(event)}
+                        checked={selectedRows.length > 0}
+                    />
+                </div>
             );
         }
 
@@ -528,25 +703,26 @@ class ListTable extends PureComponent {
     }
 
     renderPosition(row) {
-        // TODO: переделать под индекс
         const { selectedRows } = this.state;
         const { index } = row;
 
-        if (index >= 0) {
-            if (selectedRows.indexOf(index) >= 0) {
-                return (
-                    <input
-                        className={'small'}
-                        key={`row_${index}`}
-                        type='checkbox'
+        const { nestingPath } = row;
+        const rowIndex = nestingPath.join('.');
+
+        if (selectedRows.indexOf(rowIndex) >= 0) {
+            return (
+                <div className="centered">
+                    <Checkbox
+                        key={`row_${rowIndex}`}
                         onChange={(e) => this.handleRowClick(e, row)}
                         checked
                     />
-                );
-            }
+                </div>
+            );
         }
 
-        return index + 1;
+
+        return <div className="centered">{index + 1}</div>;
     }
 
     renderActions(row) {
@@ -560,7 +736,7 @@ class ListTable extends PureComponent {
                         type={action.type}
                         entity={entity}
                         action={action.action}
-                        data={row.original}
+                        data={row}
                     />
                 );
             }
@@ -579,6 +755,7 @@ class ListTable extends PureComponent {
         };
 
         return {
+
             onClick: (e) => this.handleRowClick(e, row),
             onDoubleClick: (e) => this.handleRowDoubleClick(e, row),
             className: this.getRowClass(row),
@@ -625,6 +802,7 @@ class ListTable extends PureComponent {
         return (
             <div className='untill-base-table'>
                 <Table
+                    keyField="id"
                     resizable={false}
                     data={data}
                     columns={cols}
@@ -632,7 +810,7 @@ class ListTable extends PureComponent {
                     PaginationComponent={ListPaginator}
 
                     {...tableConfig}
-                    
+
                     showPagination={component.showPagination}
                     showPaginationTop={component.showPaginationTop}
                     showPaginationBottom={component.showPaginationBottom}
@@ -648,7 +826,9 @@ class ListTable extends PureComponent {
                     filterable={component.showColumnFilter}
                 >
                     {(state, makeTable) => {
-                        const { allDecoratedColumns } = state;
+                        const { allDecoratedColumns, pageRows } = state;
+
+                        this.pageRows = pageRows;
 
                         return (
                             <>
@@ -679,6 +859,7 @@ ListTable.propTypes = {
     contributions: PropTypes.object.isRequired,
     entity: PropTypes.string.isRequired,
     data: PropTypes.array.isRequired,
+    classifiers: PropTypes.object,
     pages: PropTypes.number,
     page: PropTypes.number,
     pageSize: PropTypes.number,
@@ -687,22 +868,24 @@ ListTable.propTypes = {
     total: PropTypes.number,
     onPageChange: PropTypes.func,
     onPageSizeChange: PropTypes.func,
+    onEnterPress: PropTypes.func,
     onDoubleClick: PropTypes.func,
     onRowClick: PropTypes.func,
     onSelectedChange: PropTypes.func,
     onSortedChange: PropTypes.func,
     onFilterChage: PropTypes.func,
+    onValueSave: PropTypes.func,
+    onError: PropTypes.func,
     rowActions: PropTypes.arrayOf(PropTypes.object),
     headerActions: PropTypes.arrayOf(PropTypes.object),
 };
 
 const mapStateToProps = (state) => {
-    const { locations } = state.options;
-    const { contributions } = state.context;
+    const { contributions, api } = state.context;
 
     return {
-        locations,
-        contributions
+        contributions,
+        api
     };
 };
 

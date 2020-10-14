@@ -45,18 +45,18 @@ class ApiProvider extends Component {
     }
 
     sendMessage(message, type) {
-        const { apiGate } = this;
+        const { api } = this.props;
 
         if (!message) return null;
 
         const { text = '', description = '' } = message;
 
         switch (type) {
-            case 'success': apiGate.sendSuccess(text, description); break;
-            case 'warning': apiGate.sendWarning(text, description); break;
-            case 'error': apiGate.sendError(text, description); break;
+            case 'success': api.sendSuccess(text, description); break;
+            case 'warning': api.sendWarning(text, description); break;
+            case 'error': api.sendError(text, description); break;
 
-            default: apiGate.sendInfo(text, description);
+            default: api.sendInfo(text, description);
         }
     }
 
@@ -70,9 +70,10 @@ class ApiProvider extends Component {
 }
 
 const mapStateToProps = (state) => {
+    const { api } = state.context;
     const { info, error, warning, success } = state.messages;
 
-    return { info, error, warning, success };
+    return { api, info, error, warning, success };
 };
 
 export default connect(mapStateToProps, { 

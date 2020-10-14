@@ -70,3 +70,46 @@ body {
   background-color: #000;
   opacity: 0.2;
 }
+
+/* grid location selector */
+
+.grid-location-selector {
+  padding: 15px;
+  box-sizing: border-box;
+
+  width: 260px;
+  margin-right: 24px;
+
+  background-color: #fff;
+  box-shadow: var(--box-shadow-z-2);
+  border-radius: var(--border-radius-small);
+  box-sizing: border-box;
+  padding: 16px;
+}
+
+.grid-location-selector-header {
+  font-size: 110%;
+  padding-bottom: 10px;
+}
+
+.grid-location-selector-header:after {
+  display: block;
+  content: " ";
+  width: 60%;
+  height: 1px;
+  background-color: #ededed;
+  margin: 12px 0px;
+}
+
+.grid-location-selector-header .debug {
+  display: block;
+  float: right;
+
+  font-size: 12px;
+  color: #aeaeae;
+}
+
+.grid-location-selector-radio {
+  display: block;
+  margin-bottom: 4px;
+}

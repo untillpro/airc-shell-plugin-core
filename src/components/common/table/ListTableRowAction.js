@@ -31,18 +31,19 @@ class ListTableRowAction extends PureComponent {
     }
 
     getIcon() {
-        const { type, data } = this.props;
+        const { type, data  } = this.props;
+        const { state } = data.original;
 
         switch (type) {
             case 'edit': return ICON_EDIT;
             case 'copy': return ICON_DUPLICATE;
             case 'unify': return ICON_UNIFY;
             case 'remove':
-                if (data.state === 1) {
-                    return ICON_DEACTIVATE;
+                if (state !== 1) {
+                    return ICON_ADD;
                 }
 
-                return ICON_ADD;
+                return ICON_DEACTIVATE;
 
             default: return null;
         }

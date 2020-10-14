@@ -5,6 +5,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { KEY_LEFT, KEY_RIGHT } from 'keycode-js';
 
 class ListPaginatorPages extends Component {
     componentDidMount() {
@@ -20,11 +21,11 @@ class ListPaginatorPages extends Component {
 
         if (selectPage && typeof selectPage === 'function') {
             switch (event.keyCode) {
-                case 37: 
+                case KEY_LEFT: 
                     if (page > 0) selectPage(page - 1); 
                     break;
  
-                case 39: 
+                case KEY_RIGHT: 
                     if (pages > 1 && page < pages - 1) selectPage(page + 1);
                     break;
                     

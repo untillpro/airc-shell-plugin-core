@@ -18,7 +18,7 @@ import EMEditFormFieldsBuilder from '../edit/EMEditFormFieldsBuilder';
 import { Button } from '../../base/components';
 import { getDatetimePeriods } from '../../classes/helpers/ReportsHelpers';
 
-import FieldValidator from '../../classes/FieldValidator';
+import { makeValidator } from '../../classes/helpers';
 
 class ReportDetails extends Component {
     constructor(props) {
@@ -104,14 +104,14 @@ class ReportDetails extends Component {
 
     doValidate() {
         const { reportFields, propsFields, reportFilter, reportProps } = this.state;
-
+        const validator = makeValidator();
         const fieldsErrors = {};
 
         let validated = true;
 
         if (reportFields && reportFields.length > 0) {
             reportFields.forEach((field) => {
-                const errors = FieldValidator.validate(field, reportFilter, null);
+                const errors = validator.validate(field, reportFilter, null);
 
                 if (errors && errors.length > 0) {
                     fieldsErrors[field.accessor] = errors;
@@ -123,7 +123,7 @@ class ReportDetails extends Component {
 
         if (propsFields && propsFields.length > 0) {
             propsFields.forEach((field) => {
-                const errors = FieldValidator.validate(field, reportProps, null);
+                const errors = validator.validate(field, reportProps, null);
 
                 if (errors && errors.length > 0) {
                     fieldsErrors[field.accessor] = errors;

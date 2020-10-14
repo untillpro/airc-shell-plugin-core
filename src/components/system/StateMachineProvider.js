@@ -44,9 +44,9 @@ class StateMachineProvider extends Component {
             let promise = null;
 
             if (isGlobal) {
-                promise = this.stateMachine.sendGlobalMessage(message, { ...context, state }, shouldPop);
+                promise = this.stateMachine.sendGlobalMessage(message, context, shouldPop);
             } else {
-                promise = this.stateMachine.sendMessage(message, { ...context, state });
+                promise = this.stateMachine.sendMessage(message, context);
             }
 
             promise

@@ -2,7 +2,7 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Toggler, Button } from '../../../base/components/';
 
@@ -16,7 +16,7 @@ import {
 import ListColumnsToggler from './ListColumnsToggler';
 
 
-class ListTableHeader extends PureComponent {
+class ListTableHeader extends Component {
     constructor(props) {
         super(props);
 

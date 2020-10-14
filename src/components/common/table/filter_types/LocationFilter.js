@@ -11,7 +11,6 @@ const LocationFilter = (props) => {
 
     const locations = useSelector(selectLocations)
 
-    
     const handleChange = (value) => onChange ? onChange(value) : null;
 
     if (!_.isPlainObject(locations) || _.size(locations) === 0) return null;

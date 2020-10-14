@@ -38,16 +38,30 @@ export const sendCancelMessage = (data = {}) => {
 };
 
 export const sendSelectViewMessage = (view) => {
-    return {
-        type: SEND_SELECT_VIEW_MESSAGE,
-        payload: view
+    return (dispatch, getState) => {
+        const { locations } = getState();
+
+        dispatch({
+            type: SEND_SELECT_VIEW_MESSAGE,
+            payload: {
+                view,
+                locations: locations.locations
+            }
+        })
     };
 };
 
 export const sendSelectEntityMessage = (entity) => {
-    return {
-        type: SEND_SELECT_ENTITY_MESSAGE,
-        payload: entity
+    return (dispatch, getState) => {
+        const { locations } = getState();
+
+        dispatch({
+            type: SEND_SELECT_ENTITY_MESSAGE,
+            payload: {
+                entity,
+                locations: locations.locations
+            }
+        })
     };
 };
 
@@ -66,30 +80,63 @@ export const sendNeedRefreshListDataMessage = () => {
 }
 
 export const sendNeedEditFormMessage = ( entries = [] ) => {
-    return {
-        type: SEND_NEED_EDIT_FORM_MESSAGE,
-        payload: entries
-    };
+    return (dispatch, getState) => {
+        const { locations, plugin} = getState();
+
+        dispatch({
+            type: SEND_NEED_EDIT_FORM_MESSAGE,
+            payload: {
+                entries,
+                entity: plugin.entity,
+                locations: locations.locations
+            }
+        })
+    }; 
 };
 
 export const sendNeedMassEditFormMessage = ( entries = [] ) => {
-    return {
-        type: SEND_NEED_MASSEDIT_FORM_MESSAGE,
-        payload: entries
+    return (dispatch, getState) => {
+        const { locations, plugin} = getState();
+
+        dispatch({
+            type: SEND_NEED_MASSEDIT_FORM_MESSAGE,
+            payload: {
+                entries,
+                entity: plugin.entity,
+                locations: locations.locations
+            }
+        })
     };
 };
 
 export const sendNeedCopyFormMessage = (entries = []) => {
-    return {
-        type: SEND_NEED_DUPLICATE_ITEM_MESSAGE,
-        payload: entries
-    };
+    return (dispatch, getState) => {
+        const { locations, plugin} = getState();
+
+        dispatch({
+            type: SEND_NEED_DUPLICATE_ITEM_MESSAGE,
+            payload: {
+                entries,
+                entity: plugin.entity,
+                locations: locations.locations,
+                copy: true
+            }
+        })
+    }; 
 };
 
 export const sendNeedUnifyFormMessage = (entries = []) => {
-    return {
-        type: SEND_NEED_UNIFY_ITEM_MESSAGE,
-        payload: entries
+    return (dispatch, getState) => {
+        const { locations, plugin} = getState();
+
+        dispatch({
+            type: SEND_NEED_UNIFY_ITEM_MESSAGE,
+            payload: {
+                entries,
+                entity: plugin.entity,
+                locations: locations.locations
+            }
+        })
     };
 };
 

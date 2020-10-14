@@ -97,9 +97,10 @@ class EMEditFormFieldsGroup extends Component {
         const {
             group,
             data,
+            classifiers,
             locations,
             fieldsErrors,
-            embedded
+            embedded,
         } = this.props;
 
         const {
@@ -110,12 +111,15 @@ class EMEditFormFieldsGroup extends Component {
         } = this.state;
 
         const content = sortedFields.map((field, index) => {
+            if (field && field.hidden === true) return null;
+            
             if (field && field.accessor) {
                 const fieldComponent = <EMEditFormField
                     embedded_type={embedded}
                     errors={fieldsErrors ? fieldsErrors[field.accessor] : null}
                     key={`${field.accessor}_form_field_${index}`}
                     data={data}
+                    classifiers={classifiers}
                     field={field}
                     locations={locations}
                     showError

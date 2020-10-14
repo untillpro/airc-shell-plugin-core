@@ -56,7 +56,7 @@ class EMEditFormFieldsBuilder extends Component {
     buildFieldsGroups() {
         if (!this.state.groups) return null;
         
-        const { embedded, data, changedData, locations, fieldsErrors, onDataChanged  } = this.props;
+        const { embedded, data, classifiers, changedData, locations, fieldsErrors, onDataChanged  } = this.props;
 
         let counter = 0;
 
@@ -65,7 +65,8 @@ class EMEditFormFieldsBuilder extends Component {
                 index={counter++}
                 key={group}
                 locations={locations}
-                data={data} // here lies alredy merged data from EMEditForm
+                data={data}
+                classifiers={classifiers} // here lies alredy merged data from EMEditForm
                 changedData={changedData}
                 fieldsErrors={fieldsErrors}
                 embedded={embedded}

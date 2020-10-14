@@ -13,8 +13,8 @@ class RenderViewStep extends StateMachineStep {
         return 'RenderViewStep';
     }
 
-    MessageInit(msg, context) {
-        const { entity } = context;
+    MessageInit(msg) {
+        const { entity } = msg;
 
         if (entity && typeof entity === 'string') {
             return {
@@ -32,7 +32,7 @@ class RenderViewStep extends StateMachineStep {
         if (entity && typeof entity === 'string') {
             return {
                 newStep: new RenderEntityStep(),
-                message: new MessageInit({entity}),
+                message: new MessageInit(msg),
                 changedData: {
                     entity
                 }

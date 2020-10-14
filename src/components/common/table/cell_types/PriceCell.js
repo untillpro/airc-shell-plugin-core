@@ -6,7 +6,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 import { selectSystemCurrency } from '../../../../selectors';
-import { formatPriceValue } from '../../../../classes/Utils';
+import { formatPriceValue } from '../../../../classes/helpers';
 
 const PriceCell = (props) => {
     const { value } = props;

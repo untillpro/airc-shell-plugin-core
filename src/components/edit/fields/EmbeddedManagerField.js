@@ -8,10 +8,10 @@ import PropTypes from 'prop-types';
 
 import EMEditForm from '../EMEditForm';
 import { Modal } from '../../../base/components';
-import { reduce } from '../../../classes/Utils';
+import { reduce } from '../../../classes/helpers';
 import { ListTable } from '../../common';
 import isEqual from 'react-fast-compare'
-import log from '../../../classes/Log';
+//import log from '../../../classes/Log';
 
 /**
  * All API communications are realized in-component not in state machine cause of BO Reducer State intersections. 
@@ -25,6 +25,7 @@ class EmbeddedManagerField extends Component {
         super();
 
         this.state = {
+            current: null,
             data: [],
             entityData: {},
             edit: false,
@@ -42,6 +43,8 @@ class EmbeddedManagerField extends Component {
         this.handleRowDoubleClick = this.handleRowDoubleClick.bind(this);
         this.handleSelectedRowsChange = this.handleSelectedRowsChange.bind(this);
         this.handleShowDeletedChange = this.handleShowDeletedChange.bind(this);
+        this.handleValueSave = this.handleValueSave.bind(this);
+        this.handleEnterPress = this.handleEnterPress.bind(this);
     }
 
     componentDidMount() {
@@ -57,18 +60,30 @@ class EmbeddedManagerField extends Component {
 
         this.entity = entity;
 
-        
         this.initData()
     }
 
-    initData() {
+    componentDidUpdate(oldProps, oldState) {
+        const { value } = this.props;
+
+        if (
+            !isEqual(value, oldProps.value) ||
+            !isEqual(this.state.showDeleted, oldState.showDeleted)
+        ) {
+            this.setState({ data: this.buildData(value) });
+        }
+    }
+
+    async initData() {
         const { value } = this.props;
 
         const headerActions = this.prepareHeaderActions();
+        const rowActions = this.prepareRowActions();
 
         this.setState({
             data: this.buildData(value),
-            headerActions
+            headerActions,
+            rowActions
         });
     }
 
@@ -85,25 +100,17 @@ class EmbeddedManagerField extends Component {
         }
 
         return res;
-    } 
-
-    componentDidUpdate(oldProps) {
-        const { value } = this.props;
-
-        if (!isEqual(value, oldProps.value)) {
-            this.setState({ data: this.buildData(value) });
-        }
     }
 
     //actions
 
     actionEdit(rowIndex = null) {
-        const { data, selectedRows } = this.state;
+        const { selectedRows, data } = this.state;
 
         let index = parseInt(rowIndex);
 
-        if (!index && selectedRows && selectedRows.length > 0) {
-            index = selectedRows[0];
+        if (!_.isNumber(index) && selectedRows && selectedRows.length > 0) {
+            index = parseInt(selectedRows[0]);
         }
 
         if (index >= 0) {
@@ -112,7 +119,8 @@ class EmbeddedManagerField extends Component {
             if (entityData) {
                 this.setState({
                     edit: true,
-                    entityData
+                    entityData,
+                    current: index
                 });
             }
         }
@@ -123,15 +131,15 @@ class EmbeddedManagerField extends Component {
         let index = parseInt(rowIndex);
 
         if (!index && selectedRows && selectedRows.length > 0) {
-            index = selectedRows[0];
+            index = parseInt(selectedRows[0]);
         }
 
-        if (index >= 0) {
+        if (index) {
             const entityData = data[index];
 
             if (entityData) {
                 const d = reduce(
-                    entityData, 
+                    entityData,
                     (r, v, k) => {
                         if (k === "id") return;
                         else r[k] = v;
@@ -143,25 +151,32 @@ class EmbeddedManagerField extends Component {
                     this.setState({
                         copy: true,
                         edit: true,
-                        entityData: d
+                        entityData: d,
+                        current: null
                     })
                 }
             }
         }
     }
 
-    actionRemove(rowIndex = null) {
-        const { selectedRows } = this.state;
+    actionToggle(rowIndex = null) {
+        const { selectedRows, data } = this.state;
 
         let index = parseInt(rowIndex);
 
         if (!index && selectedRows && selectedRows.length > 0) {
-            index = selectedRows[0];
+            index = parseInt(selectedRows[0]);
         }
 
-        if (index >= 0) {
-            log('request removing item ', index);
-            this.onEditFormProceed(index, {state: 0});
+        if (index) {
+            const flatRow = data[index];
+            console.log("flatRow: ", flatRow);
+
+            if (flatRow && typeof flatRow === 'object') {
+                this.onEditFormProceed(index, { state: flatRow.state === 0 ? 1 : 0 });
+            } else {
+                this.onEditFormProceed(index, { state: 0 });
+            }
         }
     }
 
@@ -178,6 +193,7 @@ class EmbeddedManagerField extends Component {
     handleChange(value) {
         const { onChange } = this.props;
 
+        console.log("EmbeddedManagerField.handleChange: ", value);
         if (onChange && typeof onChange === 'function') {
             onChange(value);
         }
@@ -192,21 +208,63 @@ class EmbeddedManagerField extends Component {
             case 'add': this.actionAdd(); break;
             case 'edit': this.actionEdit(); break;
             case 'copy': this.actionCopy(); break;
-            case 'remove': this.actionRemove(); break;
+            case 'remove': this.actionToggle(); break;
             default: break;
         }
     }
 
-    handleRowDoubleClick(e ,row) {
-        this.actionEdit(row.index);
-    } 
+    handleEnterPress() {
+        console.log("EmbeddedManagerField.handleEnterPress()");
+        this.actionEdit()
+    }
 
-    handleSelectedRowsChange(rows) {
-        this.setState({selectedRows: rows})
+    handleRowDoubleClick(e, row) {
+        console.log("EmbeddedManagerField.handleRowDoubleClick(): ", row);
+        this.actionEdit(row.index);
+    }
+
+    handleSelectedRowsChange(rows, flatRows) {
+        console.log("EmbeddedManagerField.handleSelectedRowsChange(): ", rows);
+        this.setState({ selectedRows: rows });
     }
 
     handleShowDeletedChange(val) {
-        this.setState({showDeleted: val});
+        console.log("EmbeddedManagerField.handleShowDeletedChange(): ", val);
+        this.setState({ showDeleted: val });
+    }
+
+    async handleValueSave(value, prop, entry, cell) {
+       const index = cell ? cell.index : null;
+
+        if (_.isNumber(index) && index >= 0 && entry && _.isPlainObject(entry) && cell && _.isPlainObject(cell)) {
+            const res = [];
+
+            res[index] = { [prop]: value, id: entry.id };
+
+            this.handleChange(res);
+        }
+    }
+
+    handleAction(row, type) {
+        const { index } = row;
+
+        switch (type) {
+            case 'edit':
+                this.actionEdit(index);
+                break;
+
+            case 'copy':
+                this.actionCopy(index);
+                break;
+
+            case 'remove':
+                this.actionToggle(index);
+                break;
+
+            default: break;
+        }
+
+        return false;
     }
 
     prepareHeaderActions() {
@@ -282,13 +340,39 @@ class EmbeddedManagerField extends Component {
         }
     }
 
+    prepareRowActions() {
+        const { context } = this.props;
+        const { contributions } = context;
+
+        if (!contributions) return [];
+
+        const res = [];
+        const actions = contributions.getPointContributionValues('list', this.entity, 'actions')
+
+        console.log('EMField.actions: ', actions);
+
+        if (actions && _.isArray(actions) && actions.length > 0) {
+            _.forEach(actions, (type) => {
+                res.push({
+                    type,
+                    action: (data) => this.handleAction(data, type)
+                })
+            });
+        }
+
+        return res;
+    }
+
     onEditFormProceed(index = null, newData) {
         const { data } = this.state;
+
+        console.log("EmbeddedManagerField.onEditFormProceed: ", index, newData);
 
         const newState = {
             edit: false,
             copy: false,
-            entityData: null
+            entityData: null,
+            current: null
         };
 
         const i = parseInt(index);
@@ -304,7 +388,7 @@ class EmbeddedManagerField extends Component {
         }
 
         this.handleChange(resultData);
-        
+
         this.setState(newState);
     }
 
@@ -318,11 +402,9 @@ class EmbeddedManagerField extends Component {
 
     renderEditModal() {
         const { locations } = this.props;
-        const { edit, copy, entityData, selectedRows } = this.state;
+        const { edit, copy, entityData, current } = this.state;
 
         if (edit) {
-            const rowIndex = selectedRows && selectedRows.length > 0 ? selectedRows[0] : null;
-            
             return (
                 <Modal
                     visible
@@ -331,12 +413,11 @@ class EmbeddedManagerField extends Component {
                     size="medium"
                 >
                     <EMEditForm
-                        index={rowIndex}
                         entity={this.entity}
                         isCopy={copy}
-                        isNew={!(selectedRows.length > 0)}
+                        isNew={!(current >= 0)}
                         data={entityData}
-                        onProceed={(newData) => this.onEditFormProceed(!copy ? rowIndex : null, newData)}
+                        onProceed={(newData) => this.onEditFormProceed(!copy ? current : null, newData)}
                         locations={locations}
                     />
                 </Modal>
@@ -353,7 +434,7 @@ class EmbeddedManagerField extends Component {
     }
 
     render() {
-        const { disabled } = this.props;
+        const { disabled, classifiers } = this.props;
         const { properties, rowActions, headerActions, showDeleted } = this.state;
 
         if (!this.entity) return null;
@@ -372,16 +453,20 @@ class EmbeddedManagerField extends Component {
                 <ListTable
                     entity={this.entity}
                     data={this.getData()}
+                    classifiers={classifiers}
                     manual={false}
                     showDeleted={showDeleted}
 
-                    {...tableConfig} 
+                    {...tableConfig}
 
+                    onEnterPress={this.handleEnterPress}
                     onDoubleClick={this.handleRowDoubleClick}
-                    onSelectedChange={this.handleSelectedRowsChange} 
+                    onSelectedChange={this.handleSelectedRowsChange}
                     onShowDeletedChanged={this.handleShowDeletedChange}
+                    onValueSave={this.handleValueSave}
                     rowActions={rowActions}
                     headerActions={headerActions}
+                    
                 />
 
                 {this.renderEditModal()}

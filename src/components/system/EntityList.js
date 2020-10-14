@@ -5,11 +5,15 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withStackEvents } from 'stack-events';
+
+import {
+    KEY_ESCAPE,
+    KEY_RETURN
+} from 'keycode-js';
+
 import { Search } from '../../base/components';
-
-import { ListTable } from '../common/';
-
-import { HeaderBackButton } from '../common/';
+import { HeaderBackButton, ListTable } from '../common/';
 
 import {
     setColumnsVisibility,
@@ -30,6 +34,10 @@ import {
     sendNeedRefreshListDataMessage
 } from '../../actions/';
 
+import { 
+    processData 
+} from '../../classes/helpers';
+
 class EMList extends Component {
     constructor(props) {
         super(props);
@@ -41,6 +49,9 @@ class EMList extends Component {
             searchBy: [ "name", "hq_id" ]
         };
 
+        this.handleBackClick = this.handleBackClick.bind(this);
+        this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.handleEnterPress = this.handleEnterPress.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
         this.handlePageSizeChange = this.handlePageSizeChange.bind(this);
         this.handleRowDoubleClick = this.handleRowDoubleClick.bind(this);
@@ -50,6 +61,8 @@ class EMList extends Component {
         this.handleTableFilteredChange = this.handleTableFilteredChange.bind(this);
         this.handleShowDeletedChanged = this.handleShowDeletedChanged.bind(this);
         this.handleSearchChange = this.handleSearchChange.bind(this);
+        this.handleSave = this.handleSave.bind(this);
+        this.handleError = this.handleError.bind(this);
     }
 
     componentDidMount() {
@@ -60,6 +73,14 @@ class EMList extends Component {
             rowActions,
             headerActions
         });
+
+        this.props.pushEvents({
+            "keydown": this.handleKeyPress
+        });
+    }
+
+    componentWillUnmount() {
+        this.props.popEvents();
     }
 
     prepareRowActions() {
@@ -102,9 +123,7 @@ class EMList extends Component {
                     }
                 });
             }
-
         }
-
 
         return res;
     }
@@ -163,6 +182,28 @@ class EMList extends Component {
         }
     }
 
+    handleKeyPress(event) {
+        const { keyCode } = event;
+
+        switch (keyCode) {
+            case KEY_ESCAPE: this.handleBackClick(); return;
+            case KEY_RETURN: this.handleEnterPress(); return;
+            default: break;
+        }
+    }
+
+    handleBackClick() {
+        this.props.sendCancelMessage();
+    }
+
+    handleEnterPress() {
+        const { selected } = this.state;
+
+        console.log("EntityList.handleEnterPress", selected);
+
+        this.props.sendNeedEditFormMessage(selected);
+    }
+
     handleShowDeletedChanged(value) {
         this.props.setListShowDeleted(!!value);
     }
@@ -194,10 +235,12 @@ class EMList extends Component {
     }
 
     handleAction(row, type) {
-        const { _entry: e, state } = row;
+        if (!row || !row.original) return;
+
+        const { _entry: e, state } = row.original;
         
         if (!e) {
-            console.error("no _entry record provided for row ", row)
+            throw new Error("no _entry record provided for row ", row)
         }
 
         switch (type) {
@@ -244,6 +287,7 @@ class EMList extends Component {
     }
 
     handleSelectedRowsChange(rows, flatRows) {
+        console.log("EntityList.handleSelectedRowsChange", rows, flatRows);
         const selected = [];
 
         if (rows.length > 0) {
@@ -285,6 +329,24 @@ class EMList extends Component {
         return null;
     }
 
+    async handleSave(value, prop, entry) {
+
+        console.log("Handle save: ", value, prop, entry);
+
+        const { entity } = this.props;
+        const { contributions, api } = this.props;
+
+        return processData({ contributions, api }, entity, { [prop]: value }, [ entry ]);
+    }
+
+    handleError(error) {
+        const { api } = this.props;
+        console.log("handleError", error);
+        if (error && api && _.isFunction(api.sendError)) {
+             api.sendError(error);
+        }
+    }
+
     handleSearchChange(value) {
         this.setState({ search: value || ""});
     }
@@ -304,7 +366,7 @@ class EMList extends Component {
     }
 
     render() {
-        const { entity, data, pages, page, pageSize, manual, order, total } = this.props;
+        const { entity, data, classifiers, pages, page, pageSize, manual, order, total } = this.props;
         const { rowActions, headerActions, search /*,  searchBy */ } = this.state;
 
         return (
@@ -313,7 +375,7 @@ class EMList extends Component {
                     <div className="grid clo-2 row-1">
                         <div className="cell">
                             <HeaderBackButton
-                                onClick={() => this.props.sendCancelMessage()}
+                                onClick={this.handleBackClick}
                             />
                             <h1>{this.renderHeader()}</h1>
                         </div>
@@ -329,6 +391,7 @@ class EMList extends Component {
                 <ListTable
                     entity={entity}
                     data={data}
+                    classifiers={classifiers}
                     pages={pages}
                     page={page}
                     pageSize={pageSize}
@@ -343,6 +406,8 @@ class EMList extends Component {
                     onSortedChange={this.handleTableSortedChanged}
                     onFilterChage={this.handleTableFilteredChange}
                     onShowDeletedChanged={this.handleShowDeletedChanged}
+                    onValueSave={this.handleSave}
+                    onError={this.handleError}
                     rowActions={rowActions}
                     headerActions={headerActions}
                     search={search}
@@ -353,11 +418,13 @@ class EMList extends Component {
 }
 
 const mapStateToProps = (state) => {
-    const { contributions } = state.context;
+    const { contributions, api } = state.context;
     const { list, columnsVisibility } = state.plugin;
-    const { data, showDeleted, pages, page, manual, pageSize, order, total } = list;
+    const { data, classifiers, showDeleted, pages, page, manual, pageSize, order, total } = list;
 
     return {
+        api,
+        classifiers,
         contributions,
         total,
         order: order || [],
@@ -386,4 +453,4 @@ export default connect(mapStateToProps, {
     sendNeedRemoveMessage,
     sendNeedReduceMessage,
     sendNeedRefreshListDataMessage
-})(EMList);
+})(withStackEvents(EMList));

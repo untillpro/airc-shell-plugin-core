@@ -3,10 +3,21 @@
  */
 
 import _ from 'lodash';
-import { generateId } from './Utils';
-import ForeignKeys from '../const/ForeignKeys';
+import { generateId } from './';
+import ForeignKeys from '../../const/ForeignKeys';
 import blacklist from 'blacklist';
 
+import { reduce } from './';
+
+export const isValidEntity = (context, entity) => {
+    // TODO: implement more complex checks here
+
+    if (!entity || !_.isString(entity) || entity === "") {
+        return false;
+    }
+
+    return true;
+}
 
 export const getCollection = async (context, resource, wsid, props) => {
     const { api } = context;
@@ -14,7 +25,7 @@ export const getCollection = async (context, resource, wsid, props) => {
     const result = {};
 
     if (resource && api) {
-        let wsids = _.isArray(wsid) ? wsid : [ wsid ];
+        let wsids = _.isArray(wsid) ? wsid : [wsid];
 
         return api.collection(resource, wsids, blacklist(props, "wsid"))
             .then((Data) => {
@@ -116,7 +127,7 @@ export const applyClassifiers = (Data, Entity) => {
             _.forEach(variants, (item, wsid) => {
                 if (!classifiers[wsid]) return;
 
-                const res = processClassifier(item, classifiers[wsid], entity);
+                const res = processClassifier(item, classifiers[wsid], entity, wsid);
 
                 if (!result[code]) result[code] = {};
                 result[code][wsid] = res;
@@ -127,15 +138,16 @@ export const applyClassifiers = (Data, Entity) => {
     return result;
 }
 
-export const processClassifier = (item, classifiers, entity) => {
+export const processClassifier = (item, classifiers, entity, wsid) => {
 
     if (!item) return {};
 
+
     _.forEach(item, (value, key) => {
         if (_.isArray(value)) {
-            _.each(value, (val, i) => item[key][i] = processClassifier(val, classifiers, key));
+            _.each(value, (val, i) => item[key][i] = processClassifier(val, classifiers, key, wsid));
         } else if (_.isObject(value)) {
-            processClassifier(value, classifiers, key)
+            processClassifier(value, classifiers, key, wsid)
         } else {
             if (ForeignKeys[entity] && ForeignKeys[entity][key]) {
                 let foreignEntity = ForeignKeys[entity][key];
@@ -148,6 +160,10 @@ export const processClassifier = (item, classifiers, entity) => {
             }
         }
     });
+
+    if (item.id && !item._entry) {
+        item._entry = { id: item.id, wsid };
+    }
 
     return item;
 }
@@ -225,7 +241,7 @@ export const proccessEntry = async (context, entityId, type, wsid, data) => {
     let operations = getOperation(data, id, type, 0, '', 0, '', context);
 
     operations.reverse();
-    
+
     // embeded types
 
     const embeddedTypes = getEntityEmbeddedTypes(type, contributions);
@@ -248,10 +264,10 @@ export const proccessEntry = async (context, entityId, type, wsid, data) => {
 
     const offset = 0; // TODO - ask Maxim about that offset
 
-    return api.conf(operations, [ wsid ], timestamp, offset).then((Data) => {
+    return api.conf(operations, [wsid], timestamp, offset).then((Data) => {
         return {
             ...Data,
-            ID: entityId, 
+            ID: entityId,
             WSID: wsid
         };
     });
@@ -326,10 +342,10 @@ export const checkEntries = (entries) => {
 
     for (let i = 0; i < entries.length; i++) {
         if (!entries[i]) continue;
-        
+
         const { id, wsid } = entries[i];
 
-        if((id > 0 && wsid > 0)) {
+        if ((id > 0 && wsid > 0)) {
             resultEntries.push({ id, wsid });
         }
     }
@@ -341,4 +357,19 @@ export const checkEntry = (entry) => {
     const { id, wsid } = entry;
 
     return (id > 0 && wsid > 0)
+}
+
+export const prepareCopyData = (data) => {
+    if (data && _.isPlainObject(data)) {
+        return reduce(
+            data,
+            (r, v, k) => {
+                if (k === "id") return;
+                else r[k] = v;
+            },
+            (v, k) => typeof v === 'object' && String(k).indexOf('id_') !== 0
+        );
+    }
+
+    return {};
 }

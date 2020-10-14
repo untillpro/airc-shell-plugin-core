@@ -13,7 +13,7 @@ import {
     sendError
 } from '../../../actions/MessagesActions';
 
-import data from '../../../const/TicketMockData';
+import data from '../../../mock/data/TicketMockData';
 import * as Errors from '../../../const/Errors';
 
 class TicketLayoutPreview extends Component {

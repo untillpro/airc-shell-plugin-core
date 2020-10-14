@@ -9,7 +9,7 @@ import { isNull, isUndefined } from 'util';
 import { Select } from '../../../base/components';
 import {
     buildData
-} from '../../../classes/EntityUtils';
+} from '../../../classes/helpers';
 
 const { Option, OptGroup } = Select;
 
@@ -73,19 +73,19 @@ class SelectField extends Component {
 
         if (!field) return;
 
-        const { manual, fetchUrl, accessor } = field;
+        const { manual, resource, accessor } = field;
 
         if (!manual || fetched || loading) return;
 
-        if (!fetchUrl) {
-            throw new Error(`"${accessor}" field of "${entity}" entity is in manual mode. "fetchUrl" should be provided.`);
+        if (!resource) {
+            throw new Error(`"${accessor}" field of "${entity}" entity is in manual mode. "resource" should be provided.`);
         }
 
         if (!locations || locations.length <= 0) {
             throw new Error(`Please select location for data fetch.`);
         }
 
-        api.collection(fetchUrl.resource, _.slice(locations, 0, 1))
+        api.collection(resource, _.slice(locations, 0, 1))
             .then((Data) => {
                 this.setState({
                     fetched: true,

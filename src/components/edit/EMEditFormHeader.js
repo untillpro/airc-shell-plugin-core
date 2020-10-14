@@ -5,7 +5,6 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { confirmAlert } from 'react-confirm-alert';
 
 import {
     DoubleLeftOutlined,
@@ -16,7 +15,7 @@ import {
 } from '@ant-design/icons';
 
 import {
-    Button, ConfirmModal, Toggler
+    Button, Toggler
 } from '../../base/components/';
 
 import { HeaderBackButton } from '../common';
@@ -32,43 +31,47 @@ import {
 
 
 class EMEditFormHeader extends Component {
-    handleNavClick(id) {
-        if (id) {
-            this.performWithCheckChanges(() => {
-                this.props.sendNeedEditFormMessage(id);
-                this.componentDidMount();
-            });
-        };
+    constructor() {
+        super();
+
+        this.handleBackClick = this.handleBackClick.bind(this);
+        this.handleActiveChange = this.handleActiveChange.bind(this);
+    }
+
+
+    handlePrevClick(id) {
+        const { onPrevClick } = this.props;
+
+        if (onPrevClick && _.isFunction(onPrevClick)) {
+            onPrevClick();
+        }
+    }
+
+    handleNextClick(id) {
+        const { onNextClick } = this.props;
+
+        if (onNextClick && _.isFunction(onNextClick)) {
+            onNextClick();
+        }
     }
 
     handleAction(action) {
-        const { id } = this.props;
+        const { onAdd, onCopy, onUnify } = this.props;
 
         switch (action) {
-            case 'add':
-                this.performWithCheckChanges(() => {
-                    this.props.sendNeedEditFormMessage();
-                });
-                break;
-
-            case 'copy':
-                this.performWithCheckChanges(() => {
-                    this.props.sendNeedCopyFormMessage(id);
-                });
-                break;
-
-            case 'unify':  //TODO
-                this.props.sendNeedUnifyFormMessage(id);
-                break;
-
-            default:
-                break;
+            case 'add': return onAdd && _.isFunction(onAdd) ? onAdd() : null;
+            case 'copy': return onCopy && _.isFunction(onCopy) ? onCopy() : null;
+            case 'unify': return onUnify && _.isFunction(onUnify) ? onUnify() : null;  //TODO
+            default: break;
         }
-
     }
 
     handleBackClick() {
-        this.performWithCheckChanges(() => this.props.sendCancelMessage());
+        const { onBackClick } = this.props;
+
+        if (onBackClick && typeof onBackClick === 'function') {
+            onBackClick()
+        }
     }
 
     handleActiveChange(value) {
@@ -76,16 +79,6 @@ class EMEditFormHeader extends Component {
 
         if (onStateChanged && typeof onStateChanged === 'function') {
             onStateChanged(Number(value))
-        }
-    }
-
-    performWithCheckChanges(toPerform) {
-        const { changedData } = this.props;
-
-        if (_.size(changedData) > 0) {
-            this.confirmFormClose(toPerform);
-        } else {
-            if (toPerform && typeof toPerform === 'function') toPerform();
         }
     }
 
@@ -138,25 +131,6 @@ class EMEditFormHeader extends Component {
         return this._getEditTitle();
     }
 
-    confirmFormClose(onConfirm) {
-        confirmAlert({
-            customUI: ({ onClose }) => <ConfirmModal
-                onClose={onClose}
-                header="Confirm form close"
-                text="Leaving this page will cause all unsaved changes to be lost"
-                confirmText="Discard changes and leave"
-                onConfirm={() => {
-                    if (onConfirm && typeof onConfirm === 'function') {
-                        onConfirm();
-                    }
-
-                    onClose();
-                }}
-                rejectText="Return to editing"
-                onReject={onClose}
-            />
-        });
-    }
 
     renderNavigation() {
         const { id, entityData } = this.props;
@@ -203,7 +177,7 @@ class EMEditFormHeader extends Component {
             <Toggler
                 label={'Active'}
                 right
-                onChange={this.handleActiveChange.bind(this)}
+                onChange={this.handleActiveChange}
                 checked={checked}
             />
         )
@@ -263,7 +237,7 @@ class EMEditFormHeader extends Component {
                 <div className="cell align-left span-2">
                     <div className="edit-form-header">
                         <HeaderBackButton
-                            onClick={this.handleBackClick.bind(this)}
+                            onClick={this.handleBackClick}
                         />
 
                         <h1>{this.getFormTitle()}</h1>

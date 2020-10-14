@@ -11,7 +11,8 @@ import {
     SET_REPORTS_DATETIME_FILTER,
     SEND_DO_GENERATE_REPORT_MESSAGE
 } from '../actions/Types';
-import { mergeExisting } from '../classes/Utils';
+
+import { mergeExisting } from '../classes/helpers';
 
 const whfrominit = moment("2000-01-01 05:00");
 const whtoinit = moment("2000-01-01 05:00");
