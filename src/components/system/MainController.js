@@ -4,7 +4,6 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Keypress from 'react-keypress';
 
 import RootRenderer from './RootRenderer';
 import ViewRenderer from './ViewRenderer';
@@ -34,10 +33,6 @@ class MainController extends Component {
 
     componentDidMount() {
         this.props.initBO();
-        
-        window.addEventListener('keydown', Keypress("shift a",() => {
-            this.props.toggleLocationSelector();
-        }));
     }
 
     renderStateComponent() {

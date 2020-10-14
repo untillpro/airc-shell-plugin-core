@@ -140,7 +140,8 @@ const styles = {
 };
 
 const mapStateToProps = (state) => {
-    const { locations, show_selector } = state.plugin;
+    const { show_selector } = state.options;
+    const { locations } = state.locations;
 
     if (!show_selector) return {};
 
