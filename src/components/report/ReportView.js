@@ -22,7 +22,7 @@ import {
 import { 
     TYPE_REPORTS,
     C_REPORT_NAME
-} from '../../classes/contributions/Const';
+} from '../../classes/contributions/Types';
 
 class ReportView extends Component {
     constructor(props) {
@@ -32,7 +32,6 @@ class ReportView extends Component {
             searchStr: "",
             props: {}
         };
-
 
         this.handleCancelClick = this.handleCancelClick.bind(this);
     }
@@ -61,7 +60,6 @@ class ReportView extends Component {
         const { data, loading, report, reportProps } = this.props;
         const { searchStr } = this.state;
         const { show_total } = reportProps;
-
 
         return (
             <div className='content-container'>

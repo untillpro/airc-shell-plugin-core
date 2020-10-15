@@ -94,8 +94,6 @@ class EMEditForm extends Component {
     }
 
     hadleKeyPress(event) {
-        console.log("keyPressedEvent: ", event);
-        
         const { keyCode } = event;
 
         switch (keyCode) {
@@ -294,8 +292,6 @@ class EMEditForm extends Component {
             if (section && section.fields && section.fields.length > 0) {
                 section.fields.forEach((field) => {
                     const errors = validator.validate(field, resultData, section.embedded);
-
-                    console.log(errors);
 
                     if (errors && errors.length > 0) {
                         fieldsErrors[field.accessor] = errors;

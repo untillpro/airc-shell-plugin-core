@@ -170,8 +170,6 @@ class EmbeddedManagerField extends Component {
 
         if (index) {
             const flatRow = data[index];
-            console.log("flatRow: ", flatRow);
-
             if (flatRow && typeof flatRow === 'object') {
                 this.onEditFormProceed(index, { state: flatRow.state === 0 ? 1 : 0 });
             } else {
@@ -193,7 +191,6 @@ class EmbeddedManagerField extends Component {
     handleChange(value) {
         const { onChange } = this.props;
 
-        console.log("EmbeddedManagerField.handleChange: ", value);
         if (onChange && typeof onChange === 'function') {
             onChange(value);
         }
@@ -214,22 +211,18 @@ class EmbeddedManagerField extends Component {
     }
 
     handleEnterPress() {
-        console.log("EmbeddedManagerField.handleEnterPress()");
         this.actionEdit()
     }
 
     handleRowDoubleClick(e, row) {
-        console.log("EmbeddedManagerField.handleRowDoubleClick(): ", row);
         this.actionEdit(row.index);
     }
 
     handleSelectedRowsChange(rows, flatRows) {
-        console.log("EmbeddedManagerField.handleSelectedRowsChange(): ", rows);
         this.setState({ selectedRows: rows });
     }
 
     handleShowDeletedChange(val) {
-        console.log("EmbeddedManagerField.handleShowDeletedChange(): ", val);
         this.setState({ showDeleted: val });
     }
 
@@ -349,8 +342,6 @@ class EmbeddedManagerField extends Component {
         const res = [];
         const actions = contributions.getPointContributionValues('list', this.entity, 'actions')
 
-        console.log('EMField.actions: ', actions);
-
         if (actions && _.isArray(actions) && actions.length > 0) {
             _.forEach(actions, (type) => {
                 res.push({
@@ -365,8 +356,6 @@ class EmbeddedManagerField extends Component {
 
     onEditFormProceed(index = null, newData) {
         const { data } = this.state;
-
-        console.log("EmbeddedManagerField.onEditFormProceed: ", index, newData);
 
         const newState = {
             edit: false,

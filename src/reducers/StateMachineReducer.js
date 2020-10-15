@@ -26,7 +26,6 @@ export default (state = INITIAL_STATE, action) => {
             break;
 
         case Types.SEND_SELECT_VIEW_MESSAGE:
-            console.log("SEND_SELECT_VIEW_MESSAGE: ", action.payload);
             isGlobal = true;
             shouldPop = true;
             message = new Messages.MessageSelectView(action.payload);
@@ -57,8 +56,6 @@ export default (state = INITIAL_STATE, action) => {
             break;
 
         case Types.SEND_NEED_DUPLICATE_ITEM_MESSAGE: 
-            console.log("SEND_NEED_DUPLICATE_ITEM_MESSAGE: ", action.payload);
-
             message = new Messages.MessageNeedEdit(action.payload);
 
             break;

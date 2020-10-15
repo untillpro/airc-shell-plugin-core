@@ -10,7 +10,7 @@ import {
     TYPE_REPORTS, 
     C_REPORT_GENERATOR,
     C_REPORT_EVENT_TYPE 
-} from '../contributions/Const';
+} from '../contributions/Types';
 
 import { MessageNotify } from '../messages'; 
 
@@ -33,15 +33,15 @@ class ReportViewStep extends StateMachineStep {
     async MessageInit(msg, context) {
         const { report, locations, filterBy, props, from, to } = msg;
 
-
-
         if (!isValidReport(context, report)) {
-            return null;
+            throw new Error(this.getName() + '.MessageInit() exception: report not specified or wrong given: ' + report);
         }
 
         if (!isValidLocations(locations)) {
-
+            throw new Error(this.getName() + '.MessageInit() exception: locations not specified or wrong given: ' + locations.toString())
         }
+
+        this.locations = locations;
         this.reportType = report;
 
         if (filterBy && _.isPlainObject(filterBy)) {

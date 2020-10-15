@@ -29,11 +29,16 @@ class BooleanCell extends PureComponent {
             this.setState({value: this.props.value})
         }
     }
-
+    
     key() {
-        const { cell } = this.props;
-        const { nestingPath } = cell;
-        return `bool.value.${nestingPath.join(".")}`;
+        const { nestingPath } = this.props.cell;
+        const { value } = this.state;
+
+        if (nestingPath && _.isArray(nestingPath)) {
+            return `bool.value.${nestingPath.join(".")}.${value}`;
+        } else {
+            return `bool.value.${value}`;
+        }
     }
 
     saveChanges() {

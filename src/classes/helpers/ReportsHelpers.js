@@ -10,7 +10,7 @@ import {
     C_REPORT_GENERATOR,
     C_LIST_COLUMNS,
     C_REPORT_EVENT_TYPE
- } from '../contributions/Const';
+ } from '../contributions/Types';
 
 export const isValidReport = (context, reportCode) => {
     const { contributions } = context;

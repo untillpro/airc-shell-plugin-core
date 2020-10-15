@@ -27,8 +27,6 @@ class EmbeddedManagerPredefinedField extends EmbeddedManagerField {
 
         this.fetchDependencyData()
             .then((res) => {
-                console.log("fetchDependencyData: ", res);
-                
                 this.setState({
                     data: _.map(value, (o) => o) || [],
                     dep_data: this.buildDefaultData(res) || []

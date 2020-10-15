@@ -199,8 +199,6 @@ class EMList extends Component {
     handleEnterPress() {
         const { selected } = this.state;
 
-        console.log("EntityList.handleEnterPress", selected);
-
         this.props.sendNeedEditFormMessage(selected);
     }
 
@@ -289,7 +287,6 @@ class EMList extends Component {
     }
 
     handleSelectedRowsChange(rows, flatRows) {
-        console.log("EntityList.handleSelectedRowsChange", rows, flatRows);
         const selected = [];
 
         if (rows.length > 0) {
@@ -340,7 +337,6 @@ class EMList extends Component {
 
     handleError(error) {
         const { api } = this.props;
-        console.log("handleError", error);
         if (error && api && _.isFunction(api.sendError)) {
              api.sendError(error);
         }

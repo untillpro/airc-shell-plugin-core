@@ -37,8 +37,6 @@ class DateTimeCell extends PureComponent {
     }
 
     handleChange(value) {
-        console.log("Date cell handleChange: ", value);
-
         const { onSave, onError, cell, prop } = this.props;
         const { _entry } = cell.original;
         const { saving } = this.state;
@@ -66,11 +64,15 @@ class DateTimeCell extends PureComponent {
         return this.props.editable === true
     }
 
-
     key() {
         const { nestingPath } = this.props.cell;
+        const { value } = this.state;
 
-        return `datetime.value.${nestingPath.join(".")}`;
+        if (nestingPath && _.isArray(nestingPath)) {
+            return `datetime.value.${nestingPath.join(".")}.${value}`;
+        } else {
+            return `datetime.value.${value}`;
+        }
     }
 
     format() {
