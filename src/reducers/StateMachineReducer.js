@@ -64,15 +64,16 @@ export default (state = INITIAL_STATE, action) => {
             break;
 
         case Types.SEND_NEED_REMOVE_ITEM_MESSAGE:
-            if (_.isPlainObject(action.payload)) {
-                message = new Messages.MessageSetItemState({ entry: action.payload, state: 0 });
+            console.log("SEND_NEED_REMOVE_ITEM_MESSAGE: ", action);
+            if (_.isArray(action.payload)) {
+                message = new Messages.MessageSetItemState({ entries: action.payload, state: 0 });
             }
             
             break;
 
         case Types.SEND_NEED_REDUCE_ITEM_MESSAGE:
-            if (_.isPlainObject(action.payload)) {
-                message = new Messages.MessageSetItemState({ entry: action.payload, state: 1});
+            if (_.isArray(action.payload)) {
+                message = new Messages.MessageSetItemState({ entries: action.payload, state: 1});
             }
 
             break;

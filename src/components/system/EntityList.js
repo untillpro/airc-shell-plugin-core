@@ -211,6 +211,8 @@ class EMList extends Component {
     handleHeaderAction(action) {
         const { selected } = this.state;
 
+        console.log("EntityList.handleHeaderAction: ", action, selected);
+
         switch (action) {
             case 'add':
                 this.props.sendNeedEditFormMessage(null);
@@ -258,9 +260,9 @@ class EMList extends Component {
 
             case 'remove':
                 if (state === 1) {
-                    this.props.sendNeedRemoveMessage(e);
+                    this.props.sendNeedRemoveMessage([e]);
                 } else {
-                    this.props.sendNeedReduceMessage(e);
+                    this.props.sendNeedReduceMessage([e]);
                 }
 
                 break;
@@ -330,9 +332,6 @@ class EMList extends Component {
     }
 
     async handleSave(value, prop, entry) {
-
-        console.log("Handle save: ", value, prop, entry);
-
         const { entity } = this.props;
         const { contributions, api } = this.props;
 

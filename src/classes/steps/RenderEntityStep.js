@@ -114,14 +114,14 @@ class RenderEntityStep extends StateMachineStep {
 
     async MessageSetItemState(msg, context) {
         const { api, contributions } = context;
-        const { entry, state } = msg;
+        let { entries, state } = msg;
         const { entity } = this;
 
-        if (!entry) this.error('Error occured while MessageDeleteItem(): entry not specified', msg);
+        if (!entries) this.error('Error occured while MessageDeleteItem(): entries not specified', msg);
         if (!api || !contributions) this.error('Can\'t fetch entity item data.', api, contributions);
         if (!entity) this.error('Entity are not specified.', entity);
 
-        const entries = checkEntries([entry]);
+        entries = checkEntries(entries);
 
         if (entries.length === 0) return;
 

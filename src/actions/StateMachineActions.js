@@ -141,17 +141,17 @@ export const sendNeedUnifyFormMessage = (entries = []) => {
 };
 
 // removing entites items by id; // TODO Locations
-export const sendNeedRemoveMessage = (entry) => {
+export const sendNeedRemoveMessage = (entries) => {
     return {
         type: SEND_NEED_REMOVE_ITEM_MESSAGE,
-        payload: entry
+        payload: entries
     };
 };
 
-export const sendNeedReduceMessage = (entry) => {
+export const sendNeedReduceMessage = (entries) => {
     return {
         type: SEND_NEED_REDUCE_ITEM_MESSAGE,
-        payload: entry
+        payload: entries
     };
 };
 
