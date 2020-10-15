@@ -31,7 +31,6 @@ class ReportViewStep extends StateMachineStep {
     }
 
     async MessageInit(msg, context) {
-        console.log("ReportViewStep.MessageInit message: ", msg);
         const { report, locations, filterBy, props, from, to } = msg;
 
         if (!isValidReport(context, report)) {

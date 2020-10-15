@@ -43,13 +43,16 @@ class StringCell extends PureComponent {
             this.setState({ value: this.props.value, currentValue: this.props.value })
         }
     }
-
+   
     key() {
-        const { cell } = this.props;
-        const { nestingPath } = cell;
+        const { nestingPath } = this.props.cell;
         const { value } = this.state;
 
-        return `string.value.${nestingPath.join(".")}.${value}`;
+        if (nestingPath && _.isArray(nestingPath)) {
+            return `string.value.${nestingPath.join(".")}.${value}`;
+        } else {
+            return `string.value.${value}`;
+        }
     }
 
     handleFocus() {

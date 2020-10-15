@@ -59,7 +59,11 @@ class NumberCell extends PureComponent {
         const { nestingPath } = this.props.cell;
         const { value } = this.state;
 
-        return `number.value.${nestingPath.join(".")}.${value}`;
+        if (nestingPath && _.isArray(nestingPath)) {
+            return `number.value.${nestingPath.join(".")}.${value}`;
+        } else {
+            return `number.value.${value}`;
+        }
     }
 
     handleKeyDown(event) {
