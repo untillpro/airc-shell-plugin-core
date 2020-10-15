@@ -17,16 +17,22 @@ export const selectReportType = (code) => {
 };
 
 export const sendDoGenerateReport = (report, from, to, filterBy, props) => {
-    return {
-        type: SEND_DO_GENERATE_REPORT_MESSAGE,
-        payload: {
-            report,
-            from, 
-            to, 
-            filterBy,
-            props
-        }
+    return (dispatch, getState) => {
+        const { locations } = getState();
+
+        dispatch({
+            type: SEND_DO_GENERATE_REPORT_MESSAGE,
+            payload: {
+                locations: locations.locations,
+                report,
+                from, 
+                to, 
+                filterBy,
+                props,
+            }
+        });
     };
+    
 };
 
 export const selectFilterPeriod = (periodCode) => {
