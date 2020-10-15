@@ -257,8 +257,6 @@ class ListTable extends PureComponent {
         event.preventDefault();
         event.stopPropagation();
 
-        console.log("selectedRows: ", selectedRows);
-
         if (allowSelection) {
             let selectedRowsNew;
             let selectedFlatRowsNew;
@@ -493,7 +491,7 @@ class ListTable extends PureComponent {
             column.Footer = (info) => {
                 const { column, data } = info;
 
-                return column.Cell({ value: renderTotalCell(column, data) })
+                return column.Cell({ value: renderTotalCell(column, data) });
             }
         }
 
@@ -514,8 +512,6 @@ class ListTable extends PureComponent {
         if (width) {
             column.width = width;
         }
-
-        console.log(column);
 
         return column;
     };
