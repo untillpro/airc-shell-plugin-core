@@ -7,9 +7,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { Radio, Checkbox, Col } from 'antd';
-
-import Logger from '../../base/classes/Logger'
+import { Logger, Radio, Checkbox } from 'airc-shell-core';
 
 import {
     setLocation

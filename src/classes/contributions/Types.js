@@ -18,7 +18,9 @@ export const TYPE_LANGUAGE = "lang";
 export const TYPE_LIST = "list";
 export const TYPE_URL = "url";
 export const TYPE_FORMS = "forms";
+export const TYPE_FORMSGROUPS = "formsgroups";
 export const TYPE_SECTIONS = "sections";
+export const TYPE_COLLECTION = "collection";
 
 // ## POINTS CONTRIBUTIONS
 
@@ -78,10 +80,21 @@ export const C_URL_POST_URL = "postUrl";
 
 export const C_FORMS_COMPONENT = "component";
 export const C_FORMS_SECTIONS = "sections";
+export const C_FORMS_EMBEDDED_TYPE = "embeddedTypes";
+export const C_FORMS_HIDDEN = "hidden";
+
+// ### FORMSGROUPS
+
+export const C_FORMSGROUPS_NAME = "name"
+export const C_FORMSGROUPS_TABS = "tabs"
+export const C_FORMSGROUPS_PROPS = "tabsProps"
 
 // ### SECTIONS
 
 export const C_SECTION_NAME = "name";
 export const C_SECTION_FIELDS = "fields";
 
+// ### COLLECTION
 
+export const C_COLLECTION_REQUIRED_CLASSIFIERS = "required_classifiers";
+export const C_COLLECTION_REQUIRED_FIELDS = "required_fields";

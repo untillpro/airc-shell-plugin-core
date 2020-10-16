@@ -5,13 +5,12 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Empty } from 'antd';
 import {
     EyeOutlined,
     EyeInvisibleOutlined,
 } from '@ant-design/icons';
 
-import { Button, Popover, Toggler } from '../../../base/components/';
+import { Button, Popover, Toggler, Empty } from 'airc-shell-core';
 
 
 class ListColumnsToggler extends Component {

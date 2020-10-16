@@ -3,8 +3,7 @@
  */
 
 import React, { Component } from 'react';
-
-import { Radio } from '../../../base/components'
+import { Radio } from 'airc-shell-core';
 
 class RadioField extends Component {
     handleChange(event) {

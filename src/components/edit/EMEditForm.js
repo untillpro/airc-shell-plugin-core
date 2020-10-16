@@ -21,7 +21,7 @@ import {
     Sections,
     SectionItem,
     ConfirmModal
-} from '../../base/components';
+} from 'airc-shell-core';
 
 import { 
     makeValidator, 

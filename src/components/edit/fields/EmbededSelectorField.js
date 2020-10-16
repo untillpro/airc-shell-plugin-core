@@ -7,7 +7,7 @@ import {
     EllipsisOutlined
 } from '@ant-design/icons';
 
-import { TextInput, Modal } from '../../../base/components';
+import { TextInput, Modal } from 'airc-shell-core';
 import EmbeddedManagerSelectField from './EmbeddedManagerSelectField'
 
 class EmbededSelectorField extends PureComponent {

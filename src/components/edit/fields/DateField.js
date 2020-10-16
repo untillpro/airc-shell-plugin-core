@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 import moment from 'moment';
-import { DatePicker } from '../../../base/components';
+import { DatePicker } from 'airc-shell-core';
 
 import log from '../../../classes/Log';
 

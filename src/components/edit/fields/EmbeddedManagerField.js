@@ -7,7 +7,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import EMEditForm from '../EMEditForm';
-import { Modal } from '../../../base/components';
+import { Modal } from 'airc-shell-core';
 import { reduce } from '../../../classes/helpers';
 import { ListTable } from '../../common';
 import isEqual from 'react-fast-compare'

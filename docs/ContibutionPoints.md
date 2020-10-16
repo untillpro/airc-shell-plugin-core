@@ -84,7 +84,7 @@ As `point` name more often a name of Entity Manger is used.
             'sortable': false
         });
 
-        manager.registerContribution('list', resourceName, 'columns', { // dinamic column
+        manager.registerContribution(TYPE_LIST, resourceName, C_LIST_COLUMNS, { // dinamic column
             'accessor': d => d.PRICES, // or string PRICES
             'dynamic': true,
             'generator': item => {

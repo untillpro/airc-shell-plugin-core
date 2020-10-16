@@ -1,5 +1,5 @@
 import React from "react";
-import { Input } from "antd";
+import { Input } from "airc-shell-core";
 
 const StringFilter = (props) => {
     const { onChange } = props;

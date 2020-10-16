@@ -3,8 +3,7 @@
  */
 
 import React, { Component } from 'react';
-
-import { NumberInput } from '../../../base/components'
+import { NumberInput } from 'airc-shell-core';
 
 class NumberField extends Component {
     handleChange(value = null) {

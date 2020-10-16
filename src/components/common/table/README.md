@@ -52,7 +52,7 @@ This properties can be passed throw `list.<entity>.component` contribution point
 
 Example: 
 ```javascript
-manager.registerContribution('list', resourceName, 'component', {
+manager.registerContribution(TYPE_LIST, resourceName, C_LIST_COMPONENT, {
     'allowMultyselect': false,
     'allowSelection': true,
     'showColumnsToggler': true,
@@ -120,13 +120,13 @@ Represents a list of columns for `TableList` component; list of available proper
 
 Example: 
 ```javascript
-manager.registerContribution('list', resourceName, 'columns', {
+manager.registerContribution(TYPE_LIST, resourceName, C_LIST_COLUMNS, {
     'Header': 'Name',
     'accessor': 'name',
     'filterable': true,
 });
 
-manager.registerContribution('list', resourceName, 'columns', {
+manager.registerContribution(TYPE_LIST, resourceName, C_LIST_COLUMNS, {
     'id': 'hq_id',
     'Header': 'HQ ID',
     'accessor': d => d.hq_id || ' - ',

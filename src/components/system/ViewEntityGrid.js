@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Message, Grid, Card } from '../../base/components';
+import { Message, Grid, Card } from 'airc-shell-core';
 import { withStackEvents } from 'stack-events';
 
 import {

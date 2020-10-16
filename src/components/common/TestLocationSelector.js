@@ -5,8 +5,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Button } from 'antd';
-import { Grid } from '../../base/components'    
+import { Grid, Input, Button, Form } from 'airc-shell-core';
 import { setLocation } from '../../actions/';
 
 class TestLocationSelector extends Component {

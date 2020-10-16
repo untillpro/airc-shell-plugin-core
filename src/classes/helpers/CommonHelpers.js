@@ -3,7 +3,7 @@
  */
 
 import _ from 'lodash';
-import log from '../../base/classes/Logger';
+import { Logger } from 'airc-shell-core';
 
 export const isValidLocations = ( locations ) => {
     if (!locations || !_.isArray( locations ) || locations.length === 0) {
@@ -25,12 +25,12 @@ export const checkColumnDeclaration = (declaration) => {
     const { Header, accessor } = declaration;
 
     if (!Header || typeof Header !== 'string') {
-        log.error(`column field "Header" wrong specified; string is expected but got `, typeof Header)
+        Logger.error(`column field "Header" wrong specified; string is expected but got `, typeof Header)
         return false;
     }
 
     if (!accessor || (typeof accessor !== 'string' && typeof accessor !== 'function')) {
-        log.error(`column field "accessor" wrong specified; string is expected but got `, typeof accessor)
+        Logger.error(`column field "accessor" wrong specified; string is expected but got `, typeof accessor)
         return false;
     }
 

@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import React from 'react';
 
-import { Button } from '../../../base/components';
+import { Button } from 'airc-shell-core';
 import EmbeddedManagerField from './EmbeddedManagerField';
 
 import {

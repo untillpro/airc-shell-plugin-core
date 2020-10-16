@@ -5,13 +5,13 @@
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { Button, DateTimeFilterModal } from '../../base/components/';
+import { Button, DateTimeFilterModal } from 'airc-shell-core';
 
 import {
     ReloadOutlined
 } from '@ant-design/icons';
 
-import { getDatetimePeriods } from '../../classes/helpers/ReportsHelpers';
+import { getDatetimePeriods } from '../../classes/helpers';
 import { sendDoGenerateReport } from '../../actions';
 
 class RListHeader extends PureComponent {

@@ -5,7 +5,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-import { IconButton } from '../../../base/components';
+import { IconButton } from 'airc-shell-core';
 
 import {
     ICON_ADD,

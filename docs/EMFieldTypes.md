@@ -127,7 +127,7 @@ Simple text input. Can display strings and numbers.
 Example: 
 
 ```javascript
-manager.registerContribution('sections', 'salesAreasGeneral', 'fields', {
+manager.registerContribution(TYPE_SECTIONS, 'salesAreasGeneral', 'fields', {
     "type": "text",
     "label": "Name",
     "required": true,
@@ -165,7 +165,7 @@ manager.registerContribution('sections', 'salesAreasGeneral', 'fields', {
 Example:
 
 ```javascript
-manager.registerContribution('sections', 'SalesRangeGeneral', 'fields', {
+manager.registerContribution(TYPE_SECTIONS, 'SalesRangeGeneral', 'fields', {
     "type": "number",
     "label": "From",
     "required": true,
@@ -202,7 +202,7 @@ manager.registerContribution('sections', 'SalesRangeGeneral', 'fields', {
 Example:
 
 ```javascript
-manager.registerContribution('sections', 'usersPersonal', 'fields', {
+manager.registerContribution(TYPE_SECTIONS, 'usersPersonal', 'fields', {
     "type": "textarea",
     "label": "Address",
     "accessor": "address",
@@ -232,7 +232,7 @@ manager.registerContribution('sections', 'usersPersonal', 'fields', {
 
 Example:
 ```javascript
-manager.registerContribution('sections', 'salesAreasGeneral', 'fields', {
+manager.registerContribution(TYPE_SECTIONS, 'salesAreasGeneral', 'fields', {
     "type": "checkbox",
     "text": "Only when covers more than",
     "accessor": "if_covers",
@@ -279,7 +279,7 @@ manager.registerContribution('sections', 'salesAreasGeneral', 'fields', {
 Example: 
 
 ```javascript
-manager.registerContribution('sections', 'SalesAreaExceptionsGeneral', 'fields', {
+manager.registerContribution(TYPE_SECTIONS, 'SalesAreaExceptionsGeneral', 'fields', {
     "type": "select",
     "label": "Period",
     "placeholder": 'Please select period',
@@ -313,7 +313,7 @@ manager.registerContribution('sections', 'SalesAreaExceptionsGeneral', 'fields',
 Example: 
 
 ```javascript
-manager.registerContribution('sections', 'salesAreasGeneral', 'fields', {
+manager.registerContribution(TYPE_SECTIONS, 'salesAreasGeneral', 'fields', {
     "type": "radio",
     "text": "No service charge",
     "accessor": "sctype",
@@ -345,7 +345,7 @@ manager.registerContribution('sections', 'salesAreasGeneral', 'fields', {
 Example: 
 
 ```javascript
-manager.registerContribution('sections', 'usersGeneral', 'fields', {
+manager.registerContribution(TYPE_SECTIONS, 'usersGeneral', 'fields', {
     "type": "radiogroup",
     "label": "Hand",
     "accessor": "lefthand",
@@ -414,7 +414,7 @@ manager.registerContribution('sections', 'usersGeneral', 'fields', {
 Example: 
 
 ```javascript
-manager.registerContribution('sections', 'discountsAppearance', 'fields', {
+manager.registerContribution(TYPE_SECTIONS, 'discountsAppearance', 'fields', {
     "type": "color",
     "label": "Background color",
     "accessor": "color",
@@ -460,7 +460,7 @@ manager.registerContribution('sections', 'discountsAppearance', 'fields', {
 Example: 
 
 ```javascript
-manager.registerContribution('sections', 'salesAreasGeneral', 'fields', {
+manager.registerContribution(TYPE_SECTIONS, 'salesAreasGeneral', 'fields', {
     "type": "embedded",
     "entity": "SalesAreaExceptions",
     "header": "Exceptions",
@@ -498,7 +498,7 @@ manager.registerContribution('sections', 'salesAreasGeneral', 'fields', {
 Example: 
 
 ```javascript
-manager.registerContribution('sections', 'SalesAreaExceptionsGeneral', 'fields', {
+manager.registerContribution(TYPE_SECTIONS, 'SalesAreaExceptionsGeneral', 'fields', {
     "type": "embedded_selector",
     "header": "Price levels",
     "entity": 'PriceLevels',

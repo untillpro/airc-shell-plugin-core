@@ -4,8 +4,7 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
-
-import { TextInput } from '../../../base/components'
+import { TextInput } from 'airc-shell-core';
 
 //TODO regexp and max length
 

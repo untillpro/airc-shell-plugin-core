@@ -12,7 +12,7 @@ import {
     sendSelectViewMessage
 } from '../../actions/';
 
-import UShellAPIGate from '../../base/classes/UShellAPIGate';
+import { UShellAPIGate } from 'airc-shell-core';
 import MockAlphaApiGate from '../../mock/MockAlphaApiGate';
 
 class ApiProvider extends Component {

@@ -14,9 +14,7 @@ import {
     BlockOutlined
 } from '@ant-design/icons';
 
-import {
-    Button, Toggler
-} from '../../base/components/';
+import { Button, Toggler } from 'airc-shell-core';
 
 import { HeaderBackButton } from '../common';
 
@@ -28,6 +26,8 @@ import {
     sendNeedCopyFormMessage,
     sendNeedUnifyFormMessage
 } from '../../actions/';
+
+import { TYPE_LANGUAGE } from '../../classes/contributions/Types';
 
 
 class EMEditFormHeader extends Component {
@@ -87,7 +87,7 @@ class EMEditFormHeader extends Component {
 
         //TODO language supports
 
-        const title = contributions.getPointContributionValue('lang', entity, 'new_entity');
+        const title = contributions.getPointContributionValue(TYPE_LANGUAGE, entity, 'new_entity');
 
         if (title && typeof title === 'string') {
             return title;
@@ -99,7 +99,7 @@ class EMEditFormHeader extends Component {
     _getEditTitle() {
         const { data, contributions, entity } = this.props;
 
-        const title = contributions.getPointContributionValue('lang', entity, 'edit_entity');
+        const title = contributions.getPointContributionValue(TYPE_LANGUAGE, entity, 'edit_entity');
 
         if (title && typeof title === 'string') {
             return `${title} ${data && data.name ? `: ${data.name}` : ''}`;
@@ -111,7 +111,7 @@ class EMEditFormHeader extends Component {
     _getCopyTitle() {
         const { data, contributions, entity } = this.props;
 
-        const title = contributions.getPointContributionValue('lang', entity, 'copy_entity');
+        const title = contributions.getPointContributionValue(TYPE_LANGUAGE, entity, 'copy_entity');
 
         if (title && typeof title === 'string') {
             return `${title} ${data && data.name ? `: ${data.name}` : ''}`;

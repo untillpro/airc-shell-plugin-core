@@ -5,15 +5,14 @@
 import _ from 'lodash';
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Empty } from 'antd';
+import { Message, Select, Button, Empty } from 'airc-shell-core';
 
-import { Message, Select, Button } from '../../../base/components';
 import EMEditFormFieldsBuilder from '../EMEditFormFieldsBuilder';
 import TicketLayoutPreview from './TicketLayoutPreview';
 
 import {
     sendError
-} from '../../../actions/MessagesActions';
+} from '../../../actions/';
 
 import * as Errors from '../../../const/Errors';
 

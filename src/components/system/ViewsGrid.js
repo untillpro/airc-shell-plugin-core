@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStackEvents } from 'stack-events';
 import cn from 'classnames';
+import { Grid, Card, Message, Logger } from 'airc-shell-core';
 
 import {
     KEY_RETURN,
@@ -16,11 +17,9 @@ import {
     KEY_DOWN,
 } from 'keycode-js';
 
-import { Grid, Card, Message } from '../../base/components';
 import { sendSelectViewMessage } from '../../actions';
 import { GridLocationSelector } from '../common'
 
-import Logger from '../../base/classes/Logger';
 import * as Errors from '../../const/Errors';
 
 class ViewsGrid extends Component {

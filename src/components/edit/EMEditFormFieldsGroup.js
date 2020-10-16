@@ -5,11 +5,9 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Tabs } from 'antd';
+import { Tabs, Logger } from 'airc-shell-core';
 
 import EMEditFormField from './EMEditFormField';
-
-import Logger from '../../base/classes/Logger';
 
 class EMEditFormFieldsGroup extends Component {
     constructor(props) {

@@ -12,7 +12,7 @@ import {
     KEY_RETURN
 } from 'keycode-js';
 
-import { Search } from '../../base/components';
+import { Search } from 'airc-shell-core';
 import { HeaderBackButton, ListTable } from '../common/';
 
 import {

@@ -4,7 +4,7 @@
 
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { ImageSelector, Tip } from '../../../base/components'
+import { ImageSelector, Tip } from 'airc-shell-core';
 
 import {
     sendError

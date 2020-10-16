@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Toggler, Button } from '../../../base/components/';
+import { Toggler, Button } from 'airc-shell-core';
 
 import {
     PlusOutlined,

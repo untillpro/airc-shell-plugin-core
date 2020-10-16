@@ -3,7 +3,7 @@
  */
 
 import React, { Component } from 'react';
-import { Spin } from 'antd';
+import { Spin } from 'airc-shell-core';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 
 class AppLoared extends Component {

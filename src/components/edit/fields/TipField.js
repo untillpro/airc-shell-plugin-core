@@ -4,7 +4,7 @@
 
 import React from 'react';
 
-import { Tip } from '../../../base/components'
+import { Tip } from 'airc-shell-core';
 
 export default (props) => {
     const { field } = props;

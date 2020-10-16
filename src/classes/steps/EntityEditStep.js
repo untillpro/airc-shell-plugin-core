@@ -4,7 +4,7 @@
 
 import _ from 'lodash';
 import StateMachineStep from '../StateMachineStep';
-import Logger from '../../base/classes/Logger';
+import { Logger } from 'airc-shell-core';
 import { MessageInit, MessageNotify } from '../messages';
 
 import {
@@ -38,7 +38,7 @@ class EntityEditStep extends StateMachineStep {
 
     _data() {
         return {
-            data: this.data, 
+            data: this.data,
             classifiers: this.classifiers,
             next: this.next,
             prev: this.prev
@@ -158,7 +158,7 @@ class EntityEditStep extends StateMachineStep {
 
         let entries = this.buildRequestEntires(items);
 
-        const doProps = { 
+        const doProps = {
             entries,
             required_classifiers: contributions.getPointContributionValues('collection', entity, 'required_classifiers')
         };

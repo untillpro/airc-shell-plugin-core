@@ -3,7 +3,7 @@
  */
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
-import { InputNumber } from 'antd';
+import { InputNumber } from 'airc-shell-core';
 import {withStackEvents } from 'stack-events';
 
 import { 

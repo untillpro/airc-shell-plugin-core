@@ -5,3 +5,4 @@ export * from './Icons';
 export * from './Languages';
 export * from './PaymentKind';
 export * from './Order';
+export * from './Period';

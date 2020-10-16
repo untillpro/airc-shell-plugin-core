@@ -3,7 +3,7 @@
  */
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
-import { DatePicker } from 'antd';
+import { DatePicker } from 'airc-shell-core';
 
 import moment from 'moment';
 

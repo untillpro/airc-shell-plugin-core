@@ -3,7 +3,7 @@ import React, { PureComponent } from "react";
 import { connect } from 'react-redux';
 import PropTypes from "prop-types";
 import blacklist from "blacklist";
-import { Checkbox } from 'antd';
+import { Checkbox, Logger } from 'airc-shell-core';
 
 import { 
     KEY_RETURN,
@@ -11,7 +11,7 @@ import {
     KEY_DOWN
 } from 'keycode-js';
 
-import { Table } from '../../../base/components';
+import Table from 'react-table';
 
 import ListTableRowAction from './ListTableRowAction';
 import ListTableHeader from './ListTableHeader';
@@ -30,8 +30,6 @@ import {
     filterGroup,
     renderTotalCell
 } from './helpers';
-
-import log from "../../../classes/Log";
 
 const DefaultVisibleColumns = { "ID": false, "id": false, "Id": false };
 
@@ -770,7 +768,7 @@ class ListTable extends PureComponent {
     }
 
     render() {
-        log('%c Render Table List', 'color: green; font-size: 120%');
+        Logger.l('%c Render Table List', 'color: green; font-size: 120%');
 
         const { data, pages, page, pageSize, manual, order, filter, total, headerActions, search, loading } = this.props;
         const { selectedRows, selectedFlatRows, properties, component, showDeleted, expanded } = this.state;

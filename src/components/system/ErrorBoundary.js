@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import {
     Button,
     Message
-} from '../../base/components';
+} from 'airc-shell-core';
 
 import {
     sendCancelMessage

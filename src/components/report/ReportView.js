@@ -12,7 +12,7 @@ import {
     ListTable
 } from '../common/';
 
-import { Search } from '../../base/components';
+import { Search } from 'airc-shell-core';
 
 import { 
     sendCancelMessage, 

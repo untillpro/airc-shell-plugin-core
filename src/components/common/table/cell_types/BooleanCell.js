@@ -3,7 +3,7 @@
  */
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
-import { Checkbox } from 'antd';
+import { Checkbox } from 'airc-shell-core';
 
 class BooleanCell extends PureComponent {
     constructor() {

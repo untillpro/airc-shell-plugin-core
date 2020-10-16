@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 
-import { Checkbox } from '../../../base/components'
+import { Checkbox } from 'airc-shell-core';
 
 class CheckboxField extends Component {
     handleChange(event) {

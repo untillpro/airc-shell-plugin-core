@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import Axios from 'axios';
 import { message } from 'antd';
-import SProtBuilder from 'base/classes/SProtBuilder';
+import { SProtBuilder } from 'airc-shell-core';
 import DepartmentData from './data/department_data.json';
 
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjI1NTM2LCJEZXZpY2VJRCI6MSwiZXhwIjoxNTc3NTE5MDQzfQ.dXnbwFUtjcue8_LXNpir3lltj0qoDUarbZ1BDkj5Zno';

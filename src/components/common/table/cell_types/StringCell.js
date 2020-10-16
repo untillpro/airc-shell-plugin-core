@@ -4,7 +4,7 @@
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import { withStackEvents } from 'stack-events';
-import { Input } from 'antd';
+import { Input } from 'airc-shell-core';
 import { EditOutlined, LoadingOutlined } from '@ant-design/icons';
 import { KEY_RETURN, KEY_ESCAPE } from 'keycode-js';
 

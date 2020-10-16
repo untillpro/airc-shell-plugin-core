@@ -6,19 +6,16 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import EMEditFormFieldsBuilder from '../edit/EMEditFormFieldsBuilder';
+
 import {
     sendDoGenerateReport,
     selectFilterPeriod,
     setDatetimeFilter
 } from '../../actions/';
 
-import DateTimeFilter from '../../base/components/common/DateTimeFilter';
-import EMEditFormFieldsBuilder from '../edit/EMEditFormFieldsBuilder';
-
-import { Button } from '../../base/components';
-import { getDatetimePeriods } from '../../classes/helpers/ReportsHelpers';
-
-import { makeValidator } from '../../classes/helpers';
+import { DateTimeFilter, Button } from 'airc-shell-core';
+import { getDatetimePeriods, makeValidator } from '../../classes/helpers/';
 
 class ReportDetails extends Component {
     constructor(props) {

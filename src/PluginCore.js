@@ -6,21 +6,16 @@ import moment from 'moment';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { StackEvents } from 'stack-events';
+import { CoreProvider } from 'airc-shell-core';
 
-import MainController from './components/system/MainController';
-import ApiProvider from './components/system/ApiProvider';
-import AppLoared from './components/system/AppLoared';
+import { StateMachineProvider, ErrorBoundary, AppLoared, ApiProvider, MainController } from './components/';
+
+import { ContributionFactory } from './classes/';
 
 import configureStore from './configureStore';
 
-import { StateMachineProvider, ErrorBoundary } from './components/';
-import ContributionFactory from './classes/contributions/Factory';
-
 //css
 
-import 'antd/dist/antd.css';
-import './base/css/untill-base.css';
-import './base/css/antd_custom.css';
 import './assets/css/main.css';
 import './assets/css/confirm-alert.css';
 import './assets/css/ticket.css';
@@ -53,14 +48,16 @@ class PluginCore extends Component {
                     persistor={cfg.persistor}
                 >
                     <StackEvents events={[ "keydown" ]}>
-                        <ApiProvider>
-                            <StateMachineProvider>
-                                <ErrorBoundary>
-                                    <MainController />
-                                </ErrorBoundary>
-                            </StateMachineProvider>
-                            <AppLoared />
-                        </ApiProvider>
+                        <CoreProvider>
+                            <ApiProvider>
+                                <StateMachineProvider>
+                                    <ErrorBoundary>
+                                        <MainController />
+                                    </ErrorBoundary>
+                                </StateMachineProvider>
+                                <AppLoared />
+                            </ApiProvider>
+                        </CoreProvider>
                     </StackEvents>
                 </PersistGate>
             </Provider>

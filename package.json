@@ -6,7 +6,6 @@
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
     "airc-shell-core": "file:src/base",
-    "antd": "^4.6.6",
     "axios": "^0.18.1",
     "blacklist": "^1.1.4",
     "classnames": "^2.2.6",

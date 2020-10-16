@@ -5,8 +5,8 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { isNull, isUndefined } from 'util';
+import { Select } from 'airc-shell-core';
 
-import { Select } from '../../../base/components';
 import {
     buildData
 } from '../../../classes/helpers';

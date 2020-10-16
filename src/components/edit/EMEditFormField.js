@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Label, FieldError, Tip } from '../../base/components'
+import { Label, FieldError, Tip } from 'airc-shell-core';
 import isEqual from 'react-fast-compare';
 
 import {

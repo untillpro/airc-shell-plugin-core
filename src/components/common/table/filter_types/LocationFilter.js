@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { selectLocations } from '../../../../selectors';
-import { Select } from 'antd';
+import { Select } from 'airc-shell-core';
 
 const { Option } = Select;
 

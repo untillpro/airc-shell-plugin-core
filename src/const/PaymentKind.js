@@ -2,7 +2,7 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-export default {
+export const PAYMENT_KIND = {
     0: "Cash",
     1: "Card",
     2: "Account",

@@ -3,9 +3,8 @@
  */
 
 import React, { Component } from 'react';
-import { Popover, Button } from 'antd';
 
-import { ColorPicker, ColorPreview } from '../../../base/components';
+import { Popover, Button, ColorPicker, ColorPreview } from 'airc-shell-core';
 
 class ColorPickerField extends Component {
     constructor() {
