@@ -86,8 +86,8 @@ class ListTableHeader extends Component {
                             text={text}
                             disabled={typeof disabled === "function" ? disabled(rows) : disabled}
                             onClick={() => onClick(rows)}
-                        />
-                    )
+                        > {text} </Button>
+                    );
             }
 
         });

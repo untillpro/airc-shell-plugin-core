@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from "prop-types";
 import blacklist from "blacklist";
 import { Checkbox, Logger } from 'airc-shell-core';
+import isEqual from 'react-fast-compare';
 
 import { 
     KEY_RETURN,
@@ -153,6 +154,17 @@ class ListTable extends PureComponent {
         document.removeEventListener("keydown", this.handleKeyPress)
     }
 
+    componentDidUpdate(oldProps) {
+        const { selectedRows, selectedFlatRows } = this.props;
+
+        if (!isEqual(selectedRows, oldProps.selectedRows) || !isEqual(selectedFlatRows, oldProps.selectedFlatRows)) {
+            this.setState({ 
+                selectedRows: selectedRows || [],
+                selectedFlatRows: selectedFlatRows || {},
+            })
+        }
+    }
+
     changeSelected(offset) {
         const { selectedRows } = this.state;
         const { onSelectedChange } = this.props;
@@ -250,7 +262,7 @@ class ListTable extends PureComponent {
         const { selectedRows, selectedFlatRows, component } = this.state;
         const { allowMultyselect, allowSelection } = component;
 
-        const { nestingPath, original } = row;
+        const { index, original } = row;
 
         event.preventDefault();
         event.stopPropagation();
@@ -258,7 +270,9 @@ class ListTable extends PureComponent {
         if (allowSelection) {
             let selectedRowsNew;
             let selectedFlatRowsNew;
-            const rowIndex = nestingPath.join('.');
+
+            //const rowIndex = nestingPath.join('.');
+            const rowIndex = index;
 
             if (allowMultyselect) {
                 selectedFlatRowsNew = { ...selectedFlatRows };
@@ -640,8 +654,8 @@ class ListTable extends PureComponent {
         }
 
         if (row) {
-            const { nestingPath } = row;
-            const rowIndex = nestingPath.join('.');
+            //const { nestingPath } = row;
+            const rowIndex = row.index;
 
             if (selectedRows.indexOf(rowIndex) >= 0) {
                 resultClasses += ' -selected';
@@ -701,8 +715,9 @@ class ListTable extends PureComponent {
         const { selectedRows } = this.state;
         const { index } = row;
 
-        const { nestingPath } = row;
-        const rowIndex = nestingPath.join('.');
+        //const { nestingPath } = row;
+        //const rowIndex = nestingPath.join('.');
+        const rowIndex = index;
 
         if (selectedRows.indexOf(rowIndex) >= 0) {
             return (
@@ -861,6 +876,8 @@ ListTable.propTypes = {
     manual: PropTypes.bool,
     order: PropTypes.array,
     total: PropTypes.number,
+    selectedRows: PropTypes.array,
+    selectedFlatRows: PropTypes.object,
     onPageChange: PropTypes.func,
     onPageSizeChange: PropTypes.func,
     onEnterPress: PropTypes.func,

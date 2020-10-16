@@ -45,6 +45,8 @@ class EMList extends Component {
         this.state = {
             loading: false,
             selected: [],
+            selectedRows: [],
+            selectedFlatRows: {},
             search: "",
             searchBy: [ "name", "hq_id" ]
         };
@@ -229,6 +231,8 @@ class EMList extends Component {
                     this.props.sendNeedRemoveMessage(selected);
                 }
 
+                this.setState({selected: [], selectedRows: [], selectedFlatRows: {}});
+
                 break;
             default: break;
         }
@@ -286,14 +290,14 @@ class EMList extends Component {
         if (_.isPlainObject(entry)) this.props.sendNeedEditFormMessage([ entry ]);
     }
 
-    handleSelectedRowsChange(rows, flatRows) {
+    handleSelectedRowsChange(selectedRows, selectedFlatRows) {
         const selected = [];
 
-        if (rows.length > 0) {
-            _.forEach(flatRows, (row) => row._entry ? selected.push(row._entry) : null);
+        if (selectedRows.length > 0) {
+            _.forEach(selectedFlatRows, (row) => row._entry ? selected.push(row._entry) : null);
         }
         
-        this.setState({ selected });
+        this.setState({ selected, selectedRows, selectedFlatRows });
     }
 
     handlePageChange(page) {
@@ -362,7 +366,7 @@ class EMList extends Component {
 
     render() {
         const { entity, data, classifiers, pages, page, pageSize, manual, order, total } = this.props;
-        const { rowActions, headerActions, search /*,  searchBy */ } = this.state;
+        const { rowActions, headerActions, search, selectedRows, selectedFlatRows  /*,  searchBy */ } = this.state;
 
         return (
             <div className='content-container'>
@@ -393,6 +397,8 @@ class EMList extends Component {
                     manual={manual}
                     order={order}
                     total={total}
+                    selectedRows={selectedRows}
+                    selectedFlatRows={selectedFlatRows}
                     onPageChange={this.handlePageChange}
                     onPageSizeChange={this.handlePageSizeChange}
                     onDoubleClick={this.handleRowDoubleClick}

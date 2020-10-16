@@ -65,11 +65,11 @@ class DateTimeCell extends PureComponent {
     }
 
     key() {
-        const { nestingPath } = this.props.cell;
+        const { index } = this.props.cell;
         const { value } = this.state;
 
-        if (nestingPath && _.isArray(nestingPath)) {
-            return `datetime.value.${nestingPath.join(".")}.${value}`;
+        if (index && index >= 0) {
+            return `datetime.value.${index}.${value}`;
         } else {
             return `datetime.value.${value}`;
         }

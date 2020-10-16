@@ -78,10 +78,24 @@ class EMEditFormFieldsBuilder extends Component {
         });
     }
 
+    renderFooter() {
+        const { footer } = this.props;
+
+        if (footer) {
+            if (_.isFunction(footer)) {
+                return footer();
+            } else if (React.isValidElement(footer)) {
+                return footer;
+            }
+        }
+
+        return null;
+    }
+
     render() {
-        const { hasErrors, opened, footer } = this.props;
+        const { hasErrors, opened } = this.props;
         const { groups } = this.state;
-    
+
         if (!groups) return null;
 
         return (
@@ -93,7 +107,7 @@ class EMEditFormFieldsBuilder extends Component {
                     {opened ? this.buildFieldsGroups() : null}
                 </div>
 
-                {footer}
+                {this.renderFooter()}
             </div>
         );
     }

@@ -236,11 +236,7 @@ class ReportDetails extends Component {
     renderButtons() {
         return (
             <div className="page-section-content-buttons">
-                <Button
-                    text="Generate Report"
-                    type="primary"
-                    onClick={this.doGenerate}
-                />
+                <Button type="primary" onClick={this.doGenerate}> {"Generate Report"} </Button>
             </div>
         );
     }

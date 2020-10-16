@@ -443,7 +443,7 @@ class EMEditForm extends Component {
                         fields={sec.fields}
                         contributions={contributions}
                         opened={section === i}
-                        footer={this.renderButtons()}
+                        footer={() => this.renderButtons()}
                         embedded={sec.embedded}
                         onDataChanged={this.handleDataChanged}
 
@@ -484,16 +484,18 @@ class EMEditForm extends Component {
             <div className="page-section-content-buttons">
                 {allowValidate === true ? (
                     <Button
-                        text="Validate"
                         onClick={this.doValidate}
-                    />
+                    >
+                        {"Validate"}
+                    </Button>
                 ) : null}
 
                 <Button
-                    text="Proceed"
                     type="primary"
                     onClick={this.doProceed}
-                />
+                >
+                    {"Proceed"}
+                </Button>
             </div>
         );
     }

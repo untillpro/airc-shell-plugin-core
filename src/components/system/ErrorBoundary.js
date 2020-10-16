@@ -23,6 +23,8 @@ class ErrorBoundary extends Component {
             error: null,
             errorStep: null
         };
+
+        this.dropError = this.dropError.bind();
     }
 
     setError(error, info) {
@@ -72,10 +74,7 @@ class ErrorBoundary extends Component {
             <Message
                 header={"Air Shell Exception"}
                 footer={
-                    <Button 
-                        onClick={() => this.dropError()}
-                        text="Ok"
-                    />
+                    <Button  onClick={this.dropError} > Ok </Button>
                 }
 
                 footerAlign="right"

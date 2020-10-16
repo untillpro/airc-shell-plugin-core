@@ -108,8 +108,8 @@ class EmbeddedManagerField extends Component {
         const { selectedRows, data } = this.state;
 
         let index = parseInt(rowIndex);
-
-        if (!_.isNumber(index) && selectedRows && selectedRows.length > 0) {
+        
+        if (_.isNaN(index) && selectedRows && selectedRows.length > 0) {
             index = parseInt(selectedRows[0]);
         }
 
@@ -130,11 +130,11 @@ class EmbeddedManagerField extends Component {
         const { selectedRows, data } = this.state;
         let index = parseInt(rowIndex);
 
-        if (!index && selectedRows && selectedRows.length > 0) {
+        if (_.isNaN(index) && selectedRows && selectedRows.length > 0) {
             index = parseInt(selectedRows[0]);
         }
 
-        if (index) {
+        if (index >= 0) {
             const entityData = data[index];
 
             if (entityData) {
@@ -164,17 +164,20 @@ class EmbeddedManagerField extends Component {
 
         let index = parseInt(rowIndex);
 
-        if (!index && selectedRows && selectedRows.length > 0) {
+        if (_.isNaN(index) && selectedRows && selectedRows.length > 0) {
             index = parseInt(selectedRows[0]);
         }
 
-        if (index) {
+        if (index >= 0) {
             const flatRow = data[index];
-            if (flatRow && typeof flatRow === 'object') {
+
+            if (flatRow && _.isObject(flatRow)) {
                 this.onEditFormProceed(index, { state: flatRow.state === 0 ? 1 : 0 });
             } else {
                 this.onEditFormProceed(index, { state: 0 });
             }
+
+            this.setState({selectedRows: []});
         }
     }
 
@@ -219,6 +222,8 @@ class EmbeddedManagerField extends Component {
     }
 
     handleSelectedRowsChange(rows, flatRows) {
+        console.log("EMField handleSelectedRowsChange: ", rows, flatRows);
+
         this.setState({ selectedRows: rows });
     }
 
@@ -394,6 +399,9 @@ class EmbeddedManagerField extends Component {
         const { edit, copy, entityData, current } = this.state;
 
         if (edit) {
+
+            let isNew = !(_.isNumber(current) && current >= 0);
+
             return (
                 <Modal
                     visible
@@ -404,7 +412,7 @@ class EmbeddedManagerField extends Component {
                     <EMEditForm
                         entity={this.entity}
                         isCopy={copy}
-                        isNew={!(current >= 0)}
+                        isNew={isNew}
                         data={entityData}
                         onProceed={(newData) => this.onEditFormProceed(!copy ? current : null, newData)}
                         locations={locations}
@@ -424,7 +432,7 @@ class EmbeddedManagerField extends Component {
 
     render() {
         const { disabled, classifiers } = this.props;
-        const { properties, rowActions, headerActions, showDeleted } = this.state;
+        const { properties, rowActions, headerActions, showDeleted, selectedRows } = this.state;
 
         if (!this.entity) return null;
 
@@ -434,8 +442,6 @@ class EmbeddedManagerField extends Component {
             ...properties,
             className: disabled ? "disabled-table" : null
         };
-
-
 
         return (
             <div className="embedded-manager-field">
@@ -448,6 +454,7 @@ class EmbeddedManagerField extends Component {
 
                     {...tableConfig}
 
+                    selectedRows={selectedRows}
                     onEnterPress={this.handleEnterPress}
                     onDoubleClick={this.handleRowDoubleClick}
                     onSelectedChange={this.handleSelectedRowsChange}
@@ -455,7 +462,6 @@ class EmbeddedManagerField extends Component {
                     onValueSave={this.handleValueSave}
                     rowActions={rowActions}
                     headerActions={headerActions}
-                    
                 />
 
                 {this.renderEditModal()}

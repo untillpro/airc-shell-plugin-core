@@ -31,11 +31,11 @@ class BooleanCell extends PureComponent {
     }
     
     key() {
-        const { nestingPath } = this.props.cell;
+        const { index } = this.props.cell;
         const { value } = this.state;
 
-        if (nestingPath && _.isArray(nestingPath)) {
-            return `bool.value.${nestingPath.join(".")}.${value}`;
+        if (index && index >= 0) {
+            return `bool.value.${index}.${value}`;
         } else {
             return `bool.value.${value}`;
         }
