@@ -5,10 +5,8 @@
 import _ from 'lodash'
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { useSelector } from 'react-redux';
 import { InputNumber } from 'airc-shell-core';
 import { withStackEvents } from 'stack-events';
-import { selectSystemCurrency } from '../../../../selectors';
 import { formatPriceValue } from '../../../../classes/helpers';
 
 class PriceCell extends PureComponent {
