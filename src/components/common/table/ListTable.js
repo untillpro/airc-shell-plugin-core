@@ -38,9 +38,11 @@ const getDynamicValue = (cell, key, props) => {
     let val = null;
     const { accessor, value_accessor, classifier_link, defaultValue } = props;
 
+    /*
     if (!_.isNil(defaultValue)) {
         val = defaultValue;
     }
+    */
     // TODO: ПОменять названия переменных. Сейчас как-то топорно. Заполнить README
 
     if (cell[accessor]) {
