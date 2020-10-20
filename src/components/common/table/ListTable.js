@@ -6,7 +6,7 @@ import blacklist from "blacklist";
 import { Checkbox, Logger } from 'airc-shell-core';
 import isEqual from 'react-fast-compare';
 
-import { 
+import {
     KEY_RETURN,
     KEY_UP,
     KEY_DOWN
@@ -75,6 +75,9 @@ const getCellRenderer = (d, opts) => {
 
         case 'date':
             return <DateTimeCell type="time" cell={d} value={d.value} editable={editable} prop={prop} format="DD/MM/YYYY" onSave={onValueSave} onError={onError} />;
+        
+        case 'datetime':
+            return <DateTimeCell cell={d} value={d.value} editable={editable} prop={prop} format="DD/MM/YYYY HH:mm" onSave={onValueSave} onError={onError} />;
 
         default:
             return <StringCell cell={d} value={d.value} editable={editable} prop={prop} onSave={onValueSave} onError={onError} />;
@@ -104,7 +107,7 @@ class ListTable extends PureComponent {
                 'showPageSizeOptions': true,
             },
             component: {
-                'showActionsColumn': true,
+                'showActionsColumn': false,
                 'allowMultyselect': false,
                 'allowSelection': true,
                 'showColumnsToggler': true,
@@ -158,7 +161,7 @@ class ListTable extends PureComponent {
         const { selectedRows, selectedFlatRows } = this.props;
 
         if (!isEqual(selectedRows, oldProps.selectedRows) || !isEqual(selectedFlatRows, oldProps.selectedFlatRows)) {
-            this.setState({ 
+            this.setState({
                 selectedRows: selectedRows || [],
                 selectedFlatRows: selectedFlatRows || {},
             })
@@ -172,7 +175,7 @@ class ListTable extends PureComponent {
         const selectedRowsNew = [];
         const selectedFlatRowsNew = {};
 
-        let lastIndex = 0; 
+        let lastIndex = 0;
         let nextIndex = 0;
 
         let rowsLength = _.size(this.pageRows);
@@ -297,7 +300,7 @@ class ListTable extends PureComponent {
             if (_.isFunction(onSelectedChange)) {
                 onSelectedChange(selectedRowsNew, selectedFlatRowsNew);
             }
-    
+
             this.setState({
                 selectedRows: selectedRowsNew,
                 selectedFlatRows: selectedFlatRowsNew
@@ -391,18 +394,18 @@ class ListTable extends PureComponent {
 
     prepareDynamicColumns(columnProps) {
         const { classifiers, onValueSave, onError } = this.props;
-        
+
         if (!classifiers || !_.isPlainObject(classifiers) || _.size(classifiers) === 0) {
             return [];
         }
 
-        const { 
-            classificator, 
-            text_accessor, 
-            value_accessor, 
-            classifier_link, 
+        const {
+            classificator,
+            text_accessor,
+            value_accessor,
+            classifier_link,
             accessor,
-            type, 
+            type,
             editable,
             defaultValue
         } = columnProps;
@@ -436,10 +439,10 @@ class ListTable extends PureComponent {
                         columns[key] = {
                             "id": key,
                             "Header": key,
-                            "accessor": (d) => getDynamicValue(d, key, props ),
+                            "accessor": (d) => getDynamicValue(d, key, props),
                             "type": type || null,
                             "linked": [],
-                            "Cell": (d) => getCellRenderer(d, { prop: value_accessor, type, editable, onValueSave, onError})
+                            "Cell": (d) => getCellRenderer(d, { prop: value_accessor, type, editable, onValueSave, onError })
                         };
                     }
 
@@ -519,7 +522,7 @@ class ListTable extends PureComponent {
             column.editable = editable;
         }
 
-        column.Cell = (d) => getCellRenderer(d, { type, prop: propName || id || accessor, editable , onValueSave, onError} );
+        column.Cell = (d) => getCellRenderer(d, { type, prop: propName || id || accessor, editable, onValueSave, onError });
 
         if (width) {
             column.width = width;
@@ -596,7 +599,7 @@ class ListTable extends PureComponent {
                             columns.push(c)
                         }
                     }
-                    
+
                 }
             });
         }
