@@ -2,20 +2,58 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-import React from 'react';
-import { useSelector } from 'react-redux';
-
-import { selectSystemCurrency } from '../../../../selectors';
+import _ from 'lodash'
+import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
+import { InputNumber } from 'airc-shell-core';
+import { withStackEvents } from 'stack-events';
 import { formatPriceValue } from '../../../../classes/helpers';
 
-const PriceCell = (props) => {
-    const { value } = props;
+class PriceCell extends PureComponent {
+    constructor() {
+        super();
 
-    const currency = useSelector(selectSystemCurrency)
-    
-    const formatedValue = formatPriceValue(value, currency)
+        this.handleSave = this.handleSave.bind(this);
+    }
 
-    return <span className="table-cell price-value">{formatedValue}</span>; 
+    handleSave(value) {
+        const { onSave, cell, prop } = this.props;
+        const { _entry } = cell.original;
+
+        onSave(value, prop, _entry, cell);
+    };
+
+
+    render() {
+        const { value, editable, currency, defaultCurrency } = this.props;
+
+        if (_.isNil(value)) return <span className="table-cell">-</span>;
+
+        
+        if (editable === true) {
+            return (
+                <InputNumber
+                    onClick={(event) => event.stopPropagation()}
+                    defaultValue={value}
+                    value={value}
+                    formatter={(value) => formatPriceValue(value, currency || defaultCurrency)}
+                    onChange={this.handleSave}
+                />
+            );
+        }
+
+        const formatedValue = formatPriceValue(value, currency)
+
+        return <span className="table-cell price-value">{formatedValue}</span>;
+    }
 }
 
-export default React.memo(PriceCell)
+const mapStateToProps = (state) => {
+    const { currency, defaultCurrency } = state.options;
+    
+    return { currency, defaultCurrency };
+}
+
+const mapDispatchToProps = {};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStackEvents(PriceCell))
