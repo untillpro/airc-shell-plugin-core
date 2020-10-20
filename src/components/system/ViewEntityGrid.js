@@ -54,6 +54,14 @@ class ViewEntityGrid extends Component {
         });
     }
 
+    componentDidUpdate( oldProps ) {
+        if (oldProps.view !== this.props.view) {
+            this.setState({
+                entities: this.prepareEntities()
+            });
+        }
+    }
+
     componentWillUnmount() {
         this.props.popEvents();
     }
