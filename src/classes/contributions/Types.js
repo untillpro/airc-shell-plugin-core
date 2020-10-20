@@ -59,6 +59,7 @@ export const C_REPORT_FIELDS = "fields";
 export const C_REPORT_COLUMNS = "columns";
 export const C_REPORT_TABLE_PROPS = "table_props";
 export const C_REPORT_EVENT_TYPE = "event_type";
+export const C_REPORT_COMPLEX = "is_complex";
 
 // ### EMBEDED MANAGERS
 
