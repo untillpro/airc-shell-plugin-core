@@ -221,8 +221,12 @@ class MockAlphaApiGate {
             params['ToDateTime'] = parseInt(to);
         }
 
-        if (type !== null && type !== undefined && typeof type === 'string') {
-            params['Type'] = type;
+        if (!_.isNil(type)) {
+            if (_.isString(type)) {
+                params['Type'] = [ type ];
+            } else if (_.isArray(type)) {
+                params['Type'] = type;
+            }   
         }
 
         if (from_offset) {
