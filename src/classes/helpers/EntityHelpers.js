@@ -138,22 +138,25 @@ export const applyClassifiers = (Data, Entity) => {
     return result;
 }
 
-export const processClassifier = (item, classifiers, entity, wsid) => {
+export const processClassifier = (item, classifiers, entity, wsid, maxLevel = 3, level = 0) => {
 
     if (!item) return {};
 
+    if (maxLevel > 0 && level >= maxLevel) return item;
 
     _.forEach(item, (value, key) => {
         if (_.isArray(value)) {
-            _.each(value, (val, i) => item[key][i] = processClassifier(val, classifiers, key, wsid));
+            _.each(value, (val, i) => item[key][i] = processClassifier(val, classifiers, key, wsid, maxLevel, level + 1, ));
         } else if (_.isObject(value)) {
-            processClassifier(value, classifiers, key, wsid)
+            processClassifier(value, classifiers, key, wsid, maxLevel, level + 1)
         } else {
             if (ForeignKeys[entity] && ForeignKeys[entity][key]) {
                 let foreignEntity = ForeignKeys[entity][key];
 
                 if (_.isNumber(value) && classifiers[foreignEntity] && classifiers[foreignEntity][value]) {
                     item[key] = classifiers[foreignEntity][value];
+
+                    processClassifier(item[key], classifiers, foreignEntity, wsid, maxLevel, level + 1);
                 } else {
                     item[key] = value;
                 }

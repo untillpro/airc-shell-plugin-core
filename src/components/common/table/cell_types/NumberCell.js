@@ -136,9 +136,9 @@ class NumberCell extends PureComponent {
     }
 
     renderReadOnly() {
-        const { value, key } = this.state;
+        const { value, key, formatter } = this.state;
 
-        return <div key={key} className="table-cell string-value">{value}</div>;;
+        return <div key={key} className="table-cell string-value">{formatter ? formatter(value) : value}</div>;;
     }
 
 

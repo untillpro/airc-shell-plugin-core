@@ -66,6 +66,9 @@ const getCellRenderer = (d, opts) => {
         case 'number':
             return <NumberCell cell={d} value={d.value} editable={editable} prop={prop} onSave={onValueSave} onError={onError} />;
 
+        case 'float':
+            return <NumberCell cell={d} value={d.value} editable={editable} prop={prop} onSave={onValueSave} onError={onError} type="float" />;
+
         case 'boolean':
             return <BooleanCell cell={d} value={d.value} editable={editable} prop={prop} onSave={onValueSave} onError={onError} />;
 
@@ -77,7 +80,7 @@ const getCellRenderer = (d, opts) => {
 
         case 'date':
             return <DateTimeCell type="time" cell={d} value={d.value} editable={editable} prop={prop} format="DD/MM/YYYY" onSave={onValueSave} onError={onError} />;
-        
+
         case 'datetime':
             return <DateTimeCell cell={d} value={d.value} editable={editable} prop={prop} format="DD/MM/YYYY HH:mm" onSave={onValueSave} onError={onError} />;
 

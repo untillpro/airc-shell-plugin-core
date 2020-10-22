@@ -5,10 +5,10 @@
 import _ from 'lodash';
 import StateMachineStep from '../StateMachineStep';
 
-import { isValidReport, isValidLocations } from '../helpers';
+import { isValidReport, isValidLocations, prepareReportFilter } from '../helpers';
 import { 
     TYPE_REPORTS, 
-    C_REPORT_GENERATOR,
+    C_REPORT_REQUIRED_CLASSIFIERS,
     C_REPORT_EVENT_TYPE 
 } from '../contributions/Types';
 
@@ -73,10 +73,8 @@ class ReportViewStep extends StateMachineStep {
     }
 
     async MessageGenerateReport(msg, context) {
-        const { contributions } = context;
+        //const { contributions } = context;
         const { report, filterBy, props, from, to } = msg;
-
-        let reportData = null;
 
         if (report && typeof report === 'string') {
             this.reportType = report;
@@ -97,23 +95,13 @@ class ReportViewStep extends StateMachineStep {
             this.toDateTime = to;
         }
 
-        const { fromDateTime, toDateTime } = this;
+        //const { fromDateTime, toDateTime } = this;
 
         const Data = await this.fetchReportData(context);
         
-        if (Data && _.size(Data) > 0) {
-            let generator = contributions.getPointContributionValue(TYPE_REPORTS, this.reportType, C_REPORT_GENERATOR);
-
-            reportData = generator(Data, { ...this.props, fromDateTime, toDateTime});
-        }
-
-        if (!reportData || !_.isArray(reportData)) {
-            reportData = [];
-        }
-
         return {
             changedData: {
-                reportData, 
+                reportData: Data || {}, 
                 fetchingData: false
             }
         };
@@ -131,20 +119,28 @@ class ReportViewStep extends StateMachineStep {
             reportType: type, 
             fromDateTime: from, 
             toDateTime: to, 
-            filterBy: filter,
+            filterBy,
         } = this;
 
-        let event_type = contributions.getPointContributionValue(TYPE_REPORTS, type, C_REPORT_EVENT_TYPE);
-        
+        let event_type = contributions.getPointContributionValues(TYPE_REPORTS, type, C_REPORT_EVENT_TYPE);
+
         const props = { 
             type: event_type, 
             from, 
             to, 
-            filter,
             show: true,
             from_offset: 0, // mock
-            to_offset: 1000000 // mock
+            to_offset: 1000000,// mock
+            required_classifiers: contributions.getPointContributionValues(TYPE_REPORTS, type, C_REPORT_REQUIRED_CLASSIFIERS)
         };
+
+        if (filterBy && _.isPlainObject(filterBy)) {
+            const filterProps = prepareReportFilter(context, type, filterBy);
+
+            if (filterProps && _.size(filterProps) > 0) {
+                props["filterBy"] = filterProps;
+            }
+        }
 
         return api.log(locations, props)
             .then((res) => { 

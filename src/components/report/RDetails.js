@@ -192,11 +192,13 @@ class ReportDetails extends Component {
     }
 
     renderReportFilters() {
+        const { locations } = this.props;
         const { reportFields, reportFilter, fieldsErrors } = this.state;
 
         if (reportFields && reportFields.length > 0) {
             return (
                 <EMEditFormFieldsBuilder
+                    locations={locations}
                     fields={reportFields}
                     fieldsErrors={fieldsErrors}
                     opened={true}
@@ -213,12 +215,14 @@ class ReportDetails extends Component {
     }
 
     renderRenderReportParams() {
+        const { locations } = this.props;
         const { propsFields, reportProps } = this.state;
         // тут будут выводиться некие общие фильтры, возможно даже и не фильтры вовсе, а параметры, которые будут передаваться в функцию генерации
 
         if (propsFields && propsFields.length > 0) {
             return (
                 <EMEditFormFieldsBuilder
+                    locations={locations}
                     fields={propsFields}
                     opened={true}
 
@@ -255,6 +259,7 @@ class ReportDetails extends Component {
 
 const mapStateToProps = (state) => {
     const { contributions } = state.context;
+    const { locations } = state.locations;
 
     const {
         fromDateTime,
@@ -266,6 +271,7 @@ const mapStateToProps = (state) => {
         mostUsedPeriods } = state.reports;
 
     return {
+        locations,
         contributions,
         fromDateTime,
         toDateTime,

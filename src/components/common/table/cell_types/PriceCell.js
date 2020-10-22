@@ -42,7 +42,7 @@ class PriceCell extends PureComponent {
             );
         }
 
-        const formatedValue = formatPriceValue(value, currency)
+        const formatedValue = formatPriceValue(value, currency || defaultCurrency)
 
         return <span className="table-cell price-value">{formatedValue}</span>;
     }
