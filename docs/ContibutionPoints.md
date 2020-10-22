@@ -112,7 +112,7 @@ As `point` name more often a name of Entity Manger is used.
         'showColumnsToggler': true, // if true displays column selector in component header
         'showDeletedToggler': true, // if true displayi control, that allows to show/hide non active items in list
         'deletedTogglerLabel': 'Show deleted categories', // label of Deleted Toggler. If not  specified a default text will be used/
-        'showPositionColum': true, //if true will add position column to a list
+        'showPositionColumn': true, //if true will add position column to a list
         'actions': [ // actions in right side of table header; common table actions.
             'add', //adds 'Add item' button.
             'remove', //adds 'Removed' button. Active if line selected. Can be used with multyselect

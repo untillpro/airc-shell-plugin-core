@@ -73,7 +73,7 @@ For full list of table properties you can check [Table properties](#table-proper
         "showColumnsToggler": Boolean,
         "showDeletedToggler": Boolean,
         "deletedTogglerLabel": String,
-        "showPositionColum": Boolean,
+        "showPositionColumn": Boolean,
         "showPagination": Boolean, //true
         "showPaginationTop": Boolean, //false
         "showPaginationBottom": Boolean, //true

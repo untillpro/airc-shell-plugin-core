@@ -102,7 +102,7 @@ class ListTable extends PureComponent {
             allColumns: [],
             selectedRows: [],
             selectedFlatRows: {},
-            showPositionColum: true,
+            showPositionColumn: true,
             showDeleted: false,
             columnsVisibility: DefaultVisibleColumns,
             properties: {
@@ -117,7 +117,7 @@ class ListTable extends PureComponent {
                 'allowSelection': true,
                 'showColumnsToggler': true,
                 'showDeletedToggler': true,
-                'showPositionColum': true,
+                'showPositionColumn': true,
                 'showHeaderButtons': true,
                 'showColumnFilter': false,
                 'allowSearch': true,
@@ -538,12 +538,12 @@ class ListTable extends PureComponent {
 
     getColumns(component) {
         const { contributions, entity } = this.props;
-        const { showPositionColum, showActionsColumn } = component;
+        const { showPositionColumn, showActionsColumn } = component;
 
         let columns = [];
 
         // position column
-        if (showPositionColum) {
+        if (showPositionColumn) {
             columns.push({
                 'Header': () => this.renderRowsSelector(),
                 'width': 40,

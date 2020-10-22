@@ -39,7 +39,7 @@ This properties can be passed throw `list.<entity>.component` contribution point
 - `allowMultyselect` - `bool` - if `true` multy row selection will be allowed(`true` by default);
 - `showColumnsToggler` - `bool` - if `true` will display column toggler on table header (`true` by default);
 - `showDeletedToggler` - `bool` - if `true` will display `Show deleted` toggler on table header(`true` by default);
-- `showPositionColum` - `bool` - if `true` will display `Position` column per row (`true` by default);
+- `showPositionColumn` - `bool` - if `true` will display `Position` column per row (`true` by default);
 - `showTotal` - `bool` - if `true` will display total for columns that have `totalType` props specified; `false` by default; 
 - `actions`- `[ <string> ]` - allowed action buttons to display on header; a list of allowed values (not all values suports by all components): 
   - `add`,
@@ -58,7 +58,7 @@ manager.registerContribution(TYPE_LIST, resourceName, C_LIST_COMPONENT, {
     'showColumnsToggler': true,
     'showDeletedToggler': true,
     'deletedTogglerLabel': 'Show deleted courses',
-    'showPositionColum': true,
+    'showPositionColumn': true,
     'showTotal': true,
     'actions': [ 
         'add',
