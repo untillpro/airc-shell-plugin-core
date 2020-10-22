@@ -42,19 +42,19 @@ class ReportView extends Component {
         const { report, contributions } = this.props;
 
         const isComplex = contributions.getPointContributionValue(TYPE_REPORTS, report, C_REPORT_COMPLEX);
-        console.log("ReportView.componentDidMount: ", isComplex);    
-        
+        console.log("ReportView.componentDidMount: ", isComplex);
+
         if (isComplex) {
             const types = contributions.getPointContributionValues(TYPE_REPORTS, report, C_REPORT_COMPLEX_TYPE);
-            console.log("ReportView.componentDidMount types: ", types);    
-            
-            this.setState({ 
-                isComplex: true, 
+            console.log("ReportView.componentDidMount types: ", types);
+
+            this.setState({
+                isComplex: true,
                 reportTypes: types
             });
         } else {
             this.setState({
-                reportTypes: [ report ]
+                reportTypes: [report]
             })
         }
 
@@ -83,43 +83,47 @@ class ReportView extends Component {
         const { show_total } = reportProps;
 
         return (
-            <div className='content-container'>
-                <div className="content-header">
-                    <div className="grid clo-2 row-1">
-                        <div className="cell">
-                            <HeaderBackButton
-                                onClick={this.handleCancelClick}
-                            />
-                            <h1>{this.renderEntityName()}</h1>
-                        </div>
+            <>
+                <div className='content-container'>
+                    <div className="content-header">
+                        <div className="grid clo-2 row-1">
+                            <div className="cell">
+                                <HeaderBackButton
+                                    onClick={this.handleCancelClick}
+                                />
+                                <h1>{this.renderEntityName()}</h1>
+                            </div>
 
-                        {
-                            /*
-                                <div className="cell align-right">
-                                    <Search defaultValue={searchStr}/>
-                                </div>
-                            */
-                        }
+                            {
+                                /*
+                                    <div className="cell align-right">
+                                        <Search defaultValue={searchStr}/>
+                                    </div>
+                                */
+                            }
+                        </div>
                     </div>
                 </div>
 
-                <RListHeader />
-                {_.map(reportTypes, (report) => {
-                    return (
-                        <>
-                            <RListTable
-                                showTitle={isComplex}
-                                reportProps={reportProps}
-                                contributions={contributions}
-                                report={report}
-                                loading={loading}
-                                data={data || []}
-                                showTotal={show_total === 1}
-                            />
-                        </>
-                    );
-                })}
-            </div>
+                <div className='content-container'>
+                    <RListHeader />
+                    {_.map(reportTypes, (report) => {
+                        return (
+                            <>
+                                <RListTable
+                                    showTitle={isComplex}
+                                    reportProps={reportProps}
+                                    contributions={contributions}
+                                    report={report}
+                                    loading={loading}
+                                    data={data || []}
+                                    showTotal={show_total === 1}
+                                />
+                            </>
+                        );
+                    })}
+                </div>
+            </>
         );
     }
 }
