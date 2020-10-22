@@ -2,7 +2,7 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-export default {
+export const LANGUAGES = {
     '0000': {
         culture: '',
         name: 'English (Default)',
