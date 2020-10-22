@@ -150,7 +150,7 @@ class StringCell extends PureComponent {
             val = value.toString();
         }
 
-        return (<div key={key} className="table-cell string-value">{val}</div>);
+        return (<div key={key} className="table-cell string-value" title={val}>{val}</div>);
     }
 
     render() {
