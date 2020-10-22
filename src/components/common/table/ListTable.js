@@ -507,7 +507,7 @@ class ListTable extends PureComponent {
 
         if (Footer) {
             column.Footer = Footer;
-        } else if (showTotal === true) {
+        } else if (showTotal === true && totalType) {
             column.Footer = (info) => {
                 const { column, data } = info;
 
