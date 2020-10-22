@@ -8,7 +8,7 @@ import { message } from 'antd';
 
 import { SProtBuilder } from 'airc-shell-core';
 
-const operationKeys = [ 'ID', 'Type', 'ParentID', 'ParentType', /*'PartID', 'PartType',*/ 'DocID', 'DocType', 'Data'];
+const operationKeys = ['ID', 'Type', 'ParentID', 'ParentType', /*'PartID', 'PartType',*/ 'DocID', 'DocType', 'Data'];
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjI1NTM2LCJEZXZpY2VJRCI6MSwiZXhwIjoxNTc3NTE5MDQzfQ.dXnbwFUtjcue8_LXNpir3lltj0qoDUarbZ1BDkj5Zno';
 
 class MockAlphaApiGate {
@@ -30,18 +30,18 @@ class MockAlphaApiGate {
             let prom = null;
 
             switch (m) {
-                case 'delete': 
-                case 'head': 
-                case 'options': 
-                case 'get': prom =  Axios[m](`${this.host}/${queueId}/${resource}`, params); break;
-                
+                case 'delete':
+                case 'head':
+                case 'options':
+                case 'get': prom = Axios[m](`${this.host}/${queueId}/${resource}`, params); break;
+
                 case 'post':
                 case 'put':
-                case 'patch': prom =  Axios[m](`${this.host}/${queueId}/${resource}`, params, config); break;
+                case 'patch': prom = Axios[m](`${this.host}/${queueId}/${resource}`, params, config); break;
 
                 default: break;
             }
-         
+
             if (prom) {
                 return prom.then((e) => {
                     if (e.data && e.status === 200) {
@@ -52,7 +52,7 @@ class MockAlphaApiGate {
                 });
             }
         }
-        
+
         throw new Error(`method "${m}" not alowed at Axios`);
     }
 
@@ -139,7 +139,7 @@ class MockAlphaApiGate {
             "PageSize": page_size,
             "ShowDeleted": show_deleted,
             "Type": type,
-            "WSIDs": _.isArray(wsids) ? wsids : [ wsids ],
+            "WSIDs": _.isArray(wsids) ? wsids : [wsids],
             "Entries": entries,
             "Fields": required_fields || [],
             "RequiredClassifiers": required_classifiers || [],
@@ -201,7 +201,7 @@ class MockAlphaApiGate {
 
     async log(wsids, props) {
         console.log('log call with props: ', wsids, props);
-        const { from, to, type, from_offset, to_offset, show } = props;
+        const { from, to, type, from_offset, to_offset, show, filterBy, required_classifiers } = props;
 
         const params = {};
         let location = null;
@@ -223,10 +223,10 @@ class MockAlphaApiGate {
 
         if (!_.isNil(type)) {
             if (_.isString(type)) {
-                params['Type'] = [ type ];
+                params['Type'] = [type];
             } else if (_.isArray(type)) {
                 params['Type'] = type;
-            }   
+            }
         }
 
         if (from_offset) {
@@ -237,6 +237,18 @@ class MockAlphaApiGate {
 
         if (to_offset && to_offset > 0) {
             params['ToOffset'] = parseInt(to_offset);
+        }
+
+        if (filterBy) {
+            if (_.isPlainObject(filterBy)) {
+                params['FilterBy'] = JSON.stringify(filterBy);
+            } else if (_.isString(filterBy)) {
+                params['FilterBy'] = filterBy;
+            }
+        }
+
+        if (required_classifiers && _.isArray(required_classifiers)) {
+            params['RequiredClassifiers'] = required_classifiers;
         }
 
         params['Show'] = !!show;
@@ -257,7 +269,7 @@ class MockAlphaApiGate {
                     console.error(e);
                     throw new Error(e);
                 }
-                
+
             }
 
             return result;
@@ -265,10 +277,10 @@ class MockAlphaApiGate {
     }
 
     // ----- private methods -----
-    _checkOperation( operation ) {
+    _checkOperation(operation) {
         const o = {};
-    
-        if ( operation && _.isObject(operation)) {
+
+        if (operation && _.isObject(operation)) {
             _.forEach(operationKeys, (key) => {
                 if (key in operation) {
                     o[key] = operation[key];
@@ -279,18 +291,18 @@ class MockAlphaApiGate {
         } else {
             throw new Error(`operation wrong specified: ${operation}`);
         }
-    
+
         return o;
     };
-    
+
     _checkConfOperations(operations) {
         const ops = [];
-    
+
         if (operations) {
             if (_.isArray(operations)) {
                 _.forEach(operations, (operation, i) => {
-                    try { 
-                        const o =  this._checkOperation(operation);
+                    try {
+                        const o = this._checkOperation(operation);
                         ops.push(o);
                     } catch (e) {
                         throw new Error(`Operation ${i} error: ${e}`);
@@ -299,11 +311,11 @@ class MockAlphaApiGate {
             } else {
                 throw new Error('Operations must be an array'); // операции должны быть массивом
             }
-    
+
         } else {
             throw new Error('Operations are not specified.'); // операции пустые
         }
-    
+
         return ops;
     };
 }
