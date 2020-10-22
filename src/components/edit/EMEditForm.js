@@ -228,7 +228,7 @@ class EMEditForm extends Component {
             if (this.validateFields()) {
                 const resultData = this.getProceedData();
 
-                log("%c Result data!!!", "color: red; font-size: 30px;");
+                log("%c doProceed: result data: ", "color: red; font-size: 30px;");
                 log(resultData);
 
                 onProceed(resultData);

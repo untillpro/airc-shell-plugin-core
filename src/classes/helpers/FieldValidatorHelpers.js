@@ -24,7 +24,7 @@ class FieldValidator {
 
             const req = typeof required === 'function' ? required(field, data) : !!required;
 
-            if (!type || type === 'text') {
+            if (value && (!type || type === 'text' || type === 'string')) {
                 value = String(value).trim();
             }
 
@@ -39,7 +39,6 @@ class FieldValidator {
                 if (Number(maxLength) >= 1) this.validateMaxLengthValue(maxLength, value, errors);
                 if (regexp) this.validateRegexp(value, regexp, errors);
             }
-
         }
 
         return errors;
@@ -114,7 +113,7 @@ class FieldValidator {
     }
 
     validateRequired(value, errors) {
-        if (!value && value !== 0 && value !== false) {
+        if (_.isNil(value)) {
             errors.push(Errors.REQUIRED_VALUE_ERROR);
         }
     }
