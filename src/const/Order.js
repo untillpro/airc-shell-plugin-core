@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 export const ORDER_BUTTON_TYPES = {
     "---Common": "",
     "Confirm": "confirm",

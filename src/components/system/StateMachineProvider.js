@@ -32,7 +32,7 @@ class StateMachineProvider extends Component {
     }
 
     render() {
-        const { context, message, state, isGlobal, shouldPop } = this.props;
+        const { context, message, isGlobal, shouldPop } = this.props;
         const { api } = context;
         /**
          * if message was specified then send it to state machine
@@ -73,10 +73,9 @@ class StateMachineProvider extends Component {
 
 const mapStateToProps = (state) => {
     const { message, isGlobal, shouldPop } = state.machine;
-
+    const { contributions, api } = state.context;
     return { 
-        context: state.context,
-        state: state.plugin,
+        context: { contributions, api },
         message, 
         isGlobal, 
         shouldPop 

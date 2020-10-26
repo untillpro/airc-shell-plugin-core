@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 
 export const VALUE_TYPE = {
     0: "Weekly values",

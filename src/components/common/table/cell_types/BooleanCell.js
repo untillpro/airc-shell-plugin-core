@@ -42,12 +42,12 @@ class BooleanCell extends PureComponent {
     }
 
     saveChanges() {
-        const { onSave, onError, cell, prop } = this.props;
+        const { onSave, onError, cell, entity, prop } = this.props;
         const { _entry } = cell.original;
         const { value } = this.state;
 
         if (_.isFunction(onSave) && _.isObject(_entry)) {
-            onSave(Number(!value), prop, _entry, cell)
+            onSave(Number(!value), entity, prop, _entry, cell)
                 .then(() => {
                     this.setState({ value: !value});
                 })

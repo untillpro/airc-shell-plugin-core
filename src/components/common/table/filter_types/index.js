@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import DateTimeFilter from './DateTimeFilter';
 import GroupFilter from './GroupFilter';
 import NumberFilter from './NumberFilter';

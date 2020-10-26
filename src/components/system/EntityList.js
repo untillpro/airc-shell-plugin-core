@@ -332,8 +332,10 @@ class EMList extends Component {
         return null;
     }
 
-    async handleSave(value, prop, entry) {
-        const { entity } = this.props;
+    async handleSave(value, entity, prop, entry) {
+        //const { entity } = this.props;
+        console.log("handle save: ", value, prop, entry, entity);
+
         const { contributions, api } = this.props;
 
         return processData({ contributions, api }, entity, { [prop]: value }, [ entry ]);
@@ -397,8 +399,8 @@ class EMList extends Component {
                     manual={manual}
                     order={order}
                     total={total}
-                    selectedRows={selectedRows}
-                    selectedFlatRows={selectedFlatRows}
+                    selectedRows={selectedRows || []}
+                    selectedFlatRows={selectedFlatRows || {}}
                     onPageChange={this.handlePageChange}
                     onPageSizeChange={this.handlePageSizeChange}
                     onDoubleClick={this.handleRowDoubleClick}

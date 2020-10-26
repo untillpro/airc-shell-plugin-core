@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import _ from 'lodash';
 import React, { PureComponent } from "react";
 import { connect } from 'react-redux';
@@ -36,19 +40,14 @@ const DefaultVisibleColumns = { "ID": false, "id": false, "Id": false };
 
 const getDynamicValue = (cell, key, props) => {
     let val = null;
-    const { accessor, value_accessor, classifier_link, defaultValue } = props;
+    const { accessor, classifier_link /*, defaultValue */ } = props;
 
-    /*
-    if (!_.isNil(defaultValue)) {
-        val = defaultValue;
-    }
-    */
     // TODO: ПОменять названия переменных. Сейчас как-то топорно. Заполнить README
 
     if (cell[accessor]) {
         _.forEach(cell[accessor], (row) => {
             if (_.get(row, classifier_link) === key) {
-                val = row[value_accessor];
+                val = row;
             }
         });
     }
@@ -57,35 +56,45 @@ const getDynamicValue = (cell, key, props) => {
 };
 
 const getCellRenderer = (d, opts) => {
-    const { type, prop, editable, onValueSave, onError } = opts;
+    const { type, value_accessor, editable, onValueSave, onError, entity, dynamic } = opts;
+
+    const props = { cell: d, entity, editable, prop: value_accessor, onSave:onValueSave, onError, dynamic: !!dynamic };
+
+    if (dynamic === true) {
+        props.value = _.get(d.value, [ value_accessor ]);
+        props.entry = _.get(d.value, [ "_entry" ]);
+    } else {
+        props.value = d.value;
+        props.entry = _.get(d.original, [ "_entry" ]);
+    }
 
     switch (type) {
         case 'location':
             return <LocationCell value={d.value} />;
 
         case 'number':
-            return <NumberCell cell={d} value={d.value} editable={editable} prop={prop} onSave={onValueSave} onError={onError} />;
+            return <NumberCell  {...props} />;
 
         case 'float':
-            return <NumberCell cell={d} value={d.value} editable={editable} prop={prop} onSave={onValueSave} onError={onError} type="float" />;
+            return <NumberCell {...props} type="float" />;
 
         case 'boolean':
-            return <BooleanCell cell={d} value={d.value} editable={editable} prop={prop} onSave={onValueSave} onError={onError} />;
+            return <BooleanCell {...props} />;
 
         case 'price':
-            return <PriceCell cell={d} value={d.value} editable={editable} prop={prop} onSave={onValueSave} onError={onError} />;
+            return <PriceCell {...props} />;
 
         case 'time':
-            return <DateTimeCell cell={d} value={d.value} editable={editable} prop={prop} format="HH:mm" onSave={onValueSave} onError={onError} />;
+            return <DateTimeCell {...props} type="time" format="HH:mm" />;
 
         case 'date':
-            return <DateTimeCell type="time" cell={d} value={d.value} editable={editable} prop={prop} format="DD/MM/YYYY" onSave={onValueSave} onError={onError} />;
+            return <DateTimeCell {...props} format="DD/MM/YYYY" />;
 
         case 'datetime':
-            return <DateTimeCell cell={d} value={d.value} editable={editable} prop={prop} format="DD/MM/YYYY HH:mm" onSave={onValueSave} onError={onError} />;
+            return <DateTimeCell {...props} format="DD/MM/YYYY HH:mm" />;
 
         default:
-            return <StringCell cell={d} value={d.value} editable={editable} prop={prop} onSave={onValueSave} onError={onError} />;
+            return <StringCell {...props} />;
     }
 }
 
@@ -186,9 +195,10 @@ class ListTable extends PureComponent {
         let rowsLength = _.size(this.pageRows);
         if (rowsLength > 0) {
             if (_.size(selectedRows) > 0) {
-                const lastRowId = _.last(selectedRows);
-                const arr = lastRowId.split('.');
-                lastIndex = Number(arr[0]);
+                lastIndex = _.last(selectedRows);
+                //const lastRowId = _.last(selectedRows);
+                //const arr = lastRowId.split('.');
+                //lastIndex = Number(arr[0]);
 
                 nextIndex = lastIndex + offset;
 
@@ -202,7 +212,7 @@ class ListTable extends PureComponent {
             }
 
             const row = this.pageRows[nextIndex];
-            const rowId = nextIndex.toString();
+            const rowId = nextIndex;
 
             selectedRowsNew.push(rowId);
             selectedFlatRowsNew[rowId] = row._original;
@@ -410,9 +420,11 @@ class ListTable extends PureComponent {
             value_accessor,
             classifier_link,
             accessor,
+            entity,
             type,
             editable,
-            defaultValue
+            defaultValue,
+            width
         } = columnProps;
 
         if (!classificator || !_.isString(classificator)) {
@@ -431,11 +443,14 @@ class ListTable extends PureComponent {
             throw new Error("Dynamic fields should provide \"classifier_link\" property");
         }
 
+        if (!entity || !_.isString(entity)) {
+            throw new Error("Dynamic fields should provide \"entity\" property");
+        }
+
         const columns = {};
         const props = { accessor, value_accessor, classifier_link, defaultValue };
 
         _.forEach(classifiers, (lc) => { // lc - location classifier
-
             if (lc && lc[classificator]) {
                 _.forEach(lc[classificator], (c) => {
                     const key = c[text_accessor];
@@ -447,7 +462,8 @@ class ListTable extends PureComponent {
                             "accessor": (d) => getDynamicValue(d, key, props),
                             "type": type || null,
                             "linked": [],
-                            "Cell": (d) => getCellRenderer(d, { prop: value_accessor, type, editable, onValueSave, onError })
+                            "width": width,
+                            "Cell": (d) => getCellRenderer(d, { entity, value_accessor, type, editable, onValueSave, onError, dynamic: true })
                         };
                     }
 
@@ -460,7 +476,7 @@ class ListTable extends PureComponent {
     }
 
     prepareColumn(columnProps, component) {
-        const { onValueSave, onError } = this.props;
+        const { onValueSave, onError, entity } = this.props;
 
         const {
             accessor,
@@ -527,7 +543,7 @@ class ListTable extends PureComponent {
             column.editable = editable;
         }
 
-        column.Cell = (d) => getCellRenderer(d, { type, prop: propName || id || accessor, editable, onValueSave, onError });
+        column.Cell = (d) => getCellRenderer(d, { type, entity, value_accessor: propName || id || accessor, editable, onValueSave, onError });
 
         if (width) {
             column.width = width;
@@ -721,17 +737,13 @@ class ListTable extends PureComponent {
 
     renderPosition(row) {
         const { selectedRows } = this.state;
-        const { index } = row;
+        const { viewIndex, page, pageSize, index } = row;
 
-        //const { nestingPath } = row;
-        //const rowIndex = nestingPath.join('.');
-        const rowIndex = index;
-
-        if (selectedRows.indexOf(rowIndex) >= 0) {
+        if (selectedRows.indexOf(index) >= 0) {
             return (
                 <div className="centered">
                     <Checkbox
-                        key={`row_${rowIndex}`}
+                        key={`row_${index}`}
                         onChange={(e) => this.handleRowClick(e, row)}
                         checked
                     />
@@ -739,8 +751,9 @@ class ListTable extends PureComponent {
             );
         }
 
+        const rowIndex = viewIndex + page * pageSize + 1;
 
-        return <div className="centered">{index + 1}</div>;
+        return <div className="centered">{rowIndex}</div>;
     }
 
     renderActions(row) {
@@ -853,8 +866,8 @@ class ListTable extends PureComponent {
                                 <ListTableHeader
                                     showDeleted={showDeleted}
                                     columns={allDecoratedColumns}
-                                    rows={selectedRows}
-                                    flatRows={selectedFlatRows}
+                                    rows={selectedRows || []}
+                                    flatRows={selectedFlatRows || {}}
                                     component={component}
                                     buttons={headerActions}
                                     onVisibleChange={this.handleVisibleChange}

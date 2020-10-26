@@ -37,7 +37,7 @@ class DateTimeCell extends PureComponent {
     }
 
     handleChange(value) {
-        const { onSave, onError, cell, prop } = this.props;
+        const { onSave, onError, cell, entity, prop } = this.props;
         const { _entry } = cell.original;
         const { saving } = this.state;
 
@@ -47,7 +47,7 @@ class DateTimeCell extends PureComponent {
             if (value !== this.state.value) {
                 this.setState({ saving: true });
 
-                onSave(value, prop, _entry)
+                onSave(value, entity, prop, _entry)
                     .then(() => {
                         this.setState({ value: value, saving: false });
                     })

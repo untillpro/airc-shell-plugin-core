@@ -2,49 +2,25 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-import _ from 'lodash'
+import EditableCell from './EditableCell';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { InputNumber } from 'airc-shell-core';
-import { withStackEvents } from 'stack-events';
 import { formatPriceValue } from '../../../../classes/helpers';
 
 class PriceCell extends PureComponent {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
-        this.handleSave = this.handleSave.bind(this);
+        this.format = this.format.bind(this);
     }
 
-    handleSave(value) {
-        const { onSave, cell, prop } = this.props;
-        const { _entry } = cell.original;
-
-        onSave(value, prop, _entry, cell);
-    };
-
+    format(value) {
+        const { currency, defaultCurrency } = this.props;
+        return formatPriceValue(value, currency || defaultCurrency)
+    }
 
     render() {
-        const { value, editable, currency, defaultCurrency } = this.props;
-
-        if (_.isNil(value)) return <span className="table-cell">-</span>;
-
-        
-        if (editable === true) {
-            return (
-                <InputNumber
-                    onClick={(event) => event.stopPropagation()}
-                    defaultValue={value}
-                    value={value}
-                    formatter={(value) => formatPriceValue(value, currency || defaultCurrency)}
-                    onChange={this.handleSave}
-                />
-            );
-        }
-
-        const formatedValue = formatPriceValue(value, currency || defaultCurrency)
-
-        return <span className="table-cell price-value">{formatedValue}</span>;
+        return <EditableCell {...this.props} formatter={this.format} type="number" />;
     }
 }
 
@@ -54,6 +30,4 @@ const mapStateToProps = (state) => {
     return { currency, defaultCurrency };
 }
 
-const mapDispatchToProps = {};
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStackEvents(PriceCell))
+export default connect(mapStateToProps, null)(PriceCell)

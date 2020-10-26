@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 export * from './Common';
 export * from './Errors';
 export * from './ForeignKeys';
