@@ -231,7 +231,13 @@ class EmbeddedManagerField extends Component {
         this.setState({ showDeleted: val });
     }
 
-    async handleValueSave(value, prop, entry, cell) {
+    async handleValueSave(entity, data, entry, rowIndex) {
+        let res = [];
+        res[rowIndex] = data;
+
+        this.handleChange(res);
+
+        /*
        const index = cell ? cell.index : null;
 
         if (_.isNumber(index) && index >= 0 && entry && _.isPlainObject(entry) && cell && _.isPlainObject(cell)) {
@@ -241,6 +247,7 @@ class EmbeddedManagerField extends Component {
 
             this.handleChange(res);
         }
+        */
     }
 
     handleAction(row, type) {

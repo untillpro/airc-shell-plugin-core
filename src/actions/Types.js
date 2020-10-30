@@ -29,6 +29,8 @@ export const SEND_NEED_LIST_DATA_REFRESH = 'message_need_list_data_refresh';
 export const SEND_NEED_EDIT_FORM_MESSAGE = 'message_need_edit_form';
 export const SEND_NEED_MASSEDIT_FORM_MESSAGE = 'message_need_massedit_form';
 
+
+export const SEND_NEED_ITEM_PROCESS_DATA = 'send_need_item_process_data';
 export const SEND_NEED_DUPLICATE_ITEM_MESSAGE = 'message_duplicate_items';
 export const SEND_NEED_UNIFY_ITEM_MESSAGE = 'message_unify_items';
 export const SEND_NEED_REMOVE_ITEM_MESSAGE = 'message_remove_items';

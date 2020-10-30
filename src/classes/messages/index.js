@@ -131,8 +131,8 @@ export class MessageNeedNavigation extends StateMachineMessage {
     }
 }
 
-export class MessageSetItemState extends StateMachineMessage {
+export class MessageProcessItemData extends StateMachineMessage {
     getName() {
-        return 'MessageSetItemState';
+        return 'MessageProcessItemData';
     }
 }

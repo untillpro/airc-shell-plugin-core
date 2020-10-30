@@ -10,6 +10,7 @@ import {
     SEND_NEED_FETCH_LIST_DATA,
     SEND_NEED_EDIT_FORM_MESSAGE,
     SEND_NEED_MASSEDIT_FORM_MESSAGE,
+    SEND_NEED_ITEM_PROCESS_DATA,
     SEND_NEED_DUPLICATE_ITEM_MESSAGE,
     SEND_NEED_UNIFY_ITEM_MESSAGE,
     SEND_NEED_REMOVE_ITEM_MESSAGE,
@@ -19,6 +20,40 @@ import {
     SEND_NEED_LIST_DATA_REFRESH,
     SEND_FORM_NEED_NAVIGATION
 } from './Types';
+
+import {
+    MessageProcessItemData
+} from '../classes/messages';
+
+export const doProccess = (entries, data) => {
+    console.log("doProccess", entries, data);
+    return (dispatch, getState) => {
+        const { context } = getState();
+        const { api, sm } = context;
+
+        const msg = new MessageProcessItemData({entries, data});
+
+        return sm.sendMessage(msg, context)
+            .then((data) => {
+                console.log("doProccess.then", data);
+
+                dispatch(sendStateMachineResult(
+                    sm.getCurrenStepName(),
+                    data
+                ));
+
+                // if response has errors will send error to shell
+                if (data.error) {
+                    api.sendError(data.error);
+                }
+            })
+            .catch((e) => {
+                console.log("doProccess.catch", e);
+                // if request crashed will send error to shell
+                api.sendError(e);
+            });
+    }
+}
 
 export const sendStateMachineResult = (step, data) => {
     return {
@@ -79,9 +114,9 @@ export const sendNeedRefreshListDataMessage = () => {
     };
 }
 
-export const sendNeedEditFormMessage = ( entries = [] ) => {
+export const sendNeedEditFormMessage = (entries = []) => {
     return (dispatch, getState) => {
-        const { locations, plugin} = getState();
+        const { locations, plugin } = getState();
 
         dispatch({
             type: SEND_NEED_EDIT_FORM_MESSAGE,
@@ -91,12 +126,12 @@ export const sendNeedEditFormMessage = ( entries = [] ) => {
                 locations: locations.locations
             }
         })
-    }; 
+    };
 };
 
-export const sendNeedMassEditFormMessage = ( entries = [] ) => {
+export const sendNeedMassEditFormMessage = (entries = []) => {
     return (dispatch, getState) => {
-        const { locations, plugin} = getState();
+        const { locations, plugin } = getState();
 
         dispatch({
             type: SEND_NEED_MASSEDIT_FORM_MESSAGE,
@@ -111,7 +146,7 @@ export const sendNeedMassEditFormMessage = ( entries = [] ) => {
 
 export const sendNeedCopyFormMessage = (entries = []) => {
     return (dispatch, getState) => {
-        const { locations, plugin} = getState();
+        const { locations, plugin } = getState();
 
         dispatch({
             type: SEND_NEED_DUPLICATE_ITEM_MESSAGE,
@@ -122,12 +157,12 @@ export const sendNeedCopyFormMessage = (entries = []) => {
                 copy: true
             }
         })
-    }; 
+    };
 };
 
 export const sendNeedUnifyFormMessage = (entries = []) => {
     return (dispatch, getState) => {
-        const { locations, plugin} = getState();
+        const { locations, plugin } = getState();
 
         dispatch({
             type: SEND_NEED_UNIFY_ITEM_MESSAGE,
@@ -140,7 +175,14 @@ export const sendNeedUnifyFormMessage = (entries = []) => {
     };
 };
 
-// removing entites items by id; // TODO Locations
+export const sendNeedProcessMessage = (entries, data) => {
+    return {
+        type: SEND_NEED_ITEM_PROCESS_DATA,
+        payload: { entries, data }
+    };
+};
+
+// removing entites items by id; 
 export const sendNeedRemoveMessage = (entries) => {
     return {
         type: SEND_NEED_REMOVE_ITEM_MESSAGE,

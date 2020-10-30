@@ -25,7 +25,9 @@ import {
     setListFilter,
     setListOrder,
     setListShowDeleted,
-
+    
+    doProccess,
+    sendNeedProcessMessage,
     sendNeedEditFormMessage,
     sendNeedCopyFormMessage,
     sendNeedUnifyFormMessage,
@@ -33,10 +35,6 @@ import {
     sendNeedReduceMessage,
     sendNeedRefreshListDataMessage
 } from '../../actions/';
-
-import { 
-    processData 
-} from '../../classes/helpers';
 
 class EMList extends Component {
     constructor(props) {
@@ -332,13 +330,11 @@ class EMList extends Component {
         return null;
     }
 
-    async handleSave(value, entity, prop, entry) {
+    async handleSave(entity, data, entry) {
         //const { entity } = this.props;
-        console.log("handle save: ", value, prop, entry, entity);
+        console.log("handle save: ", data, entry, entity);
 
-        const { contributions, api } = this.props;
-
-        return processData({ contributions, api }, entity, { [prop]: value }, [ entry ]);
+        return this.props.doProccess([ entry ], data);
     }
 
     handleError(error) {
@@ -451,6 +447,8 @@ export default connect(mapStateToProps, {
     setListFilter,
     setListOrder,
     setListShowDeleted,
+    doProccess,
+    sendNeedProcessMessage,
     sendNeedCopyFormMessage,
     sendNeedUnifyFormMessage,
     sendNeedRemoveMessage,

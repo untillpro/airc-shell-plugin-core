@@ -9,6 +9,7 @@ import EntityEditStep from './EntityEditStep';
 //import EntityMassEditStep from './EntityMassEditStep';
 
 import {
+    mergeDeep,
     getCollection,
     processData,
     checkEntries,
@@ -112,27 +113,28 @@ class RenderEntityStep extends StateMachineStep {
         return await this.fetchListData(context);
     }
 
-    async MessageSetItemState(msg, context) {
+    async MessageProcessItemData(msg, context) {
         const { api, contributions } = context;
-        let { entries, state } = msg;
+        let { entries, data } = msg;
         const { entity } = this;
 
         if (!entries) this.error('Error occured while MessageDeleteItem(): entries not specified', msg);
         if (!api || !contributions) this.error('Can\'t fetch entity item data.', api, contributions);
         if (!entity) this.error('Entity are not specified.', entity);
+        if (!_.isPlainObject(data)) this.error('Wrong item data specified; plain object expected.', data);
 
         entries = checkEntries(entries);
 
         if (entries.length === 0) return;
 
-        return processData(context, entity, { state }, entries).then((res) => {
+        return processData(context, entity, data, entries).then((res) => {
             if (res && _.isArray(res) && res.length > 0) {
                 _.each(res, (d) => {
                     if (d && d.result === "ok" && d.ID && d.ID > 0) {
                         const index = _.findIndex(this.resolvedData, o => o.id === d.ID);
 
                         if (index >= 0) {
-                            this.resolvedData[index] = { ...this.resolvedData[index], state };
+                            this.resolvedData[index] = mergeDeep(this.resolvedData[index], data);
                         };
                     }
                 });

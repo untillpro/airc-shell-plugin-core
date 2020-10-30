@@ -1,100 +1,59 @@
 /*
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
-import _ from 'lodash';
+
 import React, { PureComponent } from 'react';
+import EditableCell from './EditableCell';
+
+import { formatNumber } from '../../../../classes/helpers';
+
 import { Checkbox } from 'airc-shell-core';
 
 class BooleanCell extends PureComponent {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
-        this.saveChanges = this.saveChanges.bind(this);
-
-        this.state = {
-            saving: false,
-            value: null,
-            key: null
-        };
+        this.format = this.format.bind(this);
+        this.value = this.value.bind(this);
+        this.renderInput = this.renderInput.bind(this);
     }
 
-    componentDidMount() {
-        const { value } = this.props;
-
-        this.setState({ value, key: this.key() });
+    format(value) {
+        return value;
     }
 
-    componentDidUpdate(oldProps) {
-        if (this.props.value !== oldProps.value) {
-            this.setState({value: this.props.value})
+    value(value) {
+        return value ? 1 : 0;
+    }
+
+    renderInput(value, onSave, onChange) {
+        const { editable } = this.props;
+
+        if (editable === true) {
+            return (
+                <Checkbox
+                    onClick={(event) => event.stopPropagation()}
+                    checked={!!value}
+                    onChange={(evt) => onSave(evt.target.checked)}
+                />
+            );
         }
-    }
-    
-    key() {
-        const { index } = this.props.cell;
-        const { value } = this.state;
 
-        if (index && index >= 0) {
-            return `bool.value.${index}.${value}`;
-        } else {
-            return `bool.value.${value}`;
-        }
-    }
-
-    saveChanges() {
-        const { onSave, onError, cell, entity, prop } = this.props;
-        const { _entry } = cell.original;
-        const { value } = this.state;
-
-        if (_.isFunction(onSave) && _.isObject(_entry)) {
-            onSave(Number(!value), entity, prop, _entry, cell)
-                .then(() => {
-                    this.setState({ value: !value});
-                })
-                .catch((e) => {
-                    if(_.isFunction(onError)) {
-                        onError(e)
-                    }
-                });
-        }
-    }
-
-    isEditable() {
-        return this.props.editable === true
-    }
-
-    renderEditable() {
-        const { value } = this.state;
-
-        return (
-            <Checkbox
-                onClick={(event) => event.stopPropagation()}
-                checked={!!value}
-                onChange={this.saveChanges}
-            />
-        );
-    }
-
-    renderReadOnly() {
-        const { value } = this.state;
-
-        return (
-            <Checkbox
-                onClick={(event) => event.stopPropagation()}
-                checked={!!value}
-                disabled
-            />
-        );
-    }
+        return (<Checkbox
+            onClick={(event) => event.stopPropagation()}
+            checked={!!value}
+            disabled
+        />);
+    } 
 
     render() {
-        const { key } = this.state;
-
-        return (
-            <div key={key} className="table-cell bool-value">
-                {this.isEditable() ? this.renderEditable() : this.renderReadOnly()}
-            </div>
-        );
+        return <EditableCell 
+            {...this.props} 
+            formatter={this.format} 
+            type="number" 
+            preparearer={this.value}
+            renderer={this.renderInput}
+        />;
     }
 }
 

@@ -45,58 +45,16 @@ const getDynamicValue = (cell, key, props) => {
     // TODO: ПОменять названия переменных. Сейчас как-то топорно. Заполнить README
 
     if (cell[accessor]) {
-        _.forEach(cell[accessor], (row) => {
+        _.forEach(cell[accessor], (row, index) => {
             if (_.get(row, classifier_link) === key) {
                 val = row;
+                val._index = index;
             }
         });
     }
 
     return val;
 };
-
-const getCellRenderer = (d, opts) => {
-    const { type, value_accessor, editable, onValueSave, onError, entity, dynamic } = opts;
-
-    const props = { cell: d, entity, editable, prop: value_accessor, onSave:onValueSave, onError, dynamic: !!dynamic };
-
-    if (dynamic === true) {
-        props.value = _.get(d.value, [ value_accessor ]);
-        props.entry = _.get(d.value, [ "_entry" ]);
-    } else {
-        props.value = d.value;
-        props.entry = _.get(d.original, [ "_entry" ]);
-    }
-
-    switch (type) {
-        case 'location':
-            return <LocationCell value={d.value} />;
-
-        case 'number':
-            return <NumberCell  {...props} />;
-
-        case 'float':
-            return <NumberCell {...props} type="float" />;
-
-        case 'boolean':
-            return <BooleanCell {...props} />;
-
-        case 'price':
-            return <PriceCell {...props} />;
-
-        case 'time':
-            return <DateTimeCell {...props} type="time" format="HH:mm" />;
-
-        case 'date':
-            return <DateTimeCell {...props} format="DD/MM/YYYY" />;
-
-        case 'datetime':
-            return <DateTimeCell {...props} format="DD/MM/YYYY HH:mm" />;
-
-        default:
-            return <StringCell {...props} />;
-    }
-}
 
 class ListTable extends PureComponent {
     constructor(props) {
@@ -139,6 +97,7 @@ class ListTable extends PureComponent {
         this.handlePageSizeChange = this.handlePageSizeChange.bind(this);
         this.handleRowClick = this.handleRowClick.bind(this);
         this.handleRowDoubleClick = this.handleRowDoubleClick.bind(this);
+        this.handleCellSave = this.handleCellSave.bind(this);
         this.handleTableSortedChanged = this.handleTableSortedChanged.bind(this);
         this.handleTableFilteredChange = this.handleTableFilteredChange.bind(this);
         this.handleExpandedChange = this.handleExpandedChange.bind(this);
@@ -179,6 +138,53 @@ class ListTable extends PureComponent {
                 selectedRows: selectedRows || [],
                 selectedFlatRows: selectedFlatRows || {},
             })
+        }
+    }
+
+    getCellRenderer(d, opts) {
+        const { type, value_accessor, editable, entity, dynamic } = opts;
+    
+        const props = { cell: d, entity, editable, prop: value_accessor, dynamic: !!dynamic };
+    
+        if (dynamic === true) {
+            props.value = _.get(d.value, [ value_accessor ]);
+            props.id = _.get(d.value, [ "id" ]);
+            props.index = _.get(d.value, [ "_index" ]);
+        } else {
+            props.value = d.value;
+            props.id = _.get(d.original, [ "id" ]);
+            props.index = null;
+        }
+    
+        props.onSave = this.handleCellSave;
+    
+        switch (type) {
+            case 'location':
+                return <LocationCell value={d.value} />;
+    
+            case 'number':
+                return <NumberCell  {...props} />;
+    
+            case 'float':
+                return <NumberCell {...props} type="float" />;
+    
+            case 'boolean':
+                return <BooleanCell {...props} />;
+    
+            case 'price':
+                return <PriceCell {...props} />;
+    
+            case 'time':
+                return <DateTimeCell {...props} type="time" format="HH:mm" />;
+    
+            case 'date':
+                return <DateTimeCell {...props} format="DD/MM/YYYY" />;
+    
+            case 'datetime':
+                return <DateTimeCell {...props} format="DD/MM/YYYY HH:mm" />;
+    
+            default:
+                return <StringCell {...props} />;
         }
     }
 
@@ -353,6 +359,21 @@ class ListTable extends PureComponent {
         }
     }
 
+    async handleCellSave(row, data) {
+        const { entity } = this.props;
+        const { _entry } = row.original;
+        const { onValueSave, onError } = this.props;
+        const { index } = row;
+
+        console.log("handleCellSave: ", row, data);
+
+        //do validation before
+        
+        if (_.isFunction(onValueSave)) {
+            return onValueSave(entity, data, _entry, index);
+        }
+    }
+
     handlePageChange(page) {
         const { onPageChange } = this.props;
 
@@ -463,7 +484,7 @@ class ListTable extends PureComponent {
                             "type": type || null,
                             "linked": [],
                             "width": width,
-                            "Cell": (d) => getCellRenderer(d, { entity, value_accessor, type, editable, onValueSave, onError, dynamic: true })
+                            "Cell": (d) => this.getCellRenderer(d, { entity, value_accessor, type, editable, dynamic: true })
                         };
                     }
 
@@ -543,7 +564,7 @@ class ListTable extends PureComponent {
             column.editable = editable;
         }
 
-        column.Cell = (d) => getCellRenderer(d, { type, entity, value_accessor: propName || id || accessor, editable, onValueSave, onError });
+        column.Cell = (d) => this.getCellRenderer(d, { type, entity, value_accessor: propName || id || accessor, editable });
 
         if (width) {
             column.width = width;

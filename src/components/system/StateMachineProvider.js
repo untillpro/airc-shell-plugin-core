@@ -10,6 +10,7 @@ import StateMachine from '../../classes/StateMachine';
 import { RootStep } from '../../classes/steps/';
 
 import {
+    setContext,
     sendStateMachineResult
 } from '../../actions/';
 
@@ -22,6 +23,10 @@ class StateMachineProvider extends Component {
 
         // root state of state machine is added manually
         this.stateMachine.add(new RootStep());
+    }
+
+    componentDidMount() {
+        this.props.setContext("sm", this.stateMachine);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -82,6 +87,9 @@ const mapStateToProps = (state) => {
     };
 };
 
-export default connect(mapStateToProps, {
+const mapDispatchToProps = {
+    setContext,
     sendStateMachineResult
-})(StateMachineProvider);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(StateMachineProvider);

@@ -14,13 +14,24 @@ class PriceCell extends PureComponent {
         this.format = this.format.bind(this);
     }
 
+    value(value) {
+        return Number(value);
+    }
+
     format(value) {
         const { currency, defaultCurrency } = this.props;
         return formatPriceValue(value, currency || defaultCurrency)
     }
 
     render() {
-        return <EditableCell {...this.props} formatter={this.format} type="number" />;
+        return (
+            <EditableCell 
+                {...this.props} 
+                formatter={this.format} 
+                preparearer={this.value}
+                type="number" 
+            />
+        );
     }
 }
 

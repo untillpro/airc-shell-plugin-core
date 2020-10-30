@@ -60,19 +60,22 @@ export default (state = INITIAL_STATE, action) => {
 
             break;
 
-        case Types.SEND_NEED_REMOVE_ITEM_MESSAGE:
-            console.log("SEND_NEED_REMOVE_ITEM_MESSAGE: ", action);
-            if (_.isArray(action.payload)) {
-                message = new Messages.MessageSetItemState({ entries: action.payload, state: 0 });
+        case Types.SEND_NEED_ITEM_PROCESS_DATA: 
+            if (!_.isNil(action.payload) && _.isPlainObject(action.payload)) {
+                message = new Messages.MessageProcessItemData(action.payload);
             }
-            
+            break;
+
+        case Types.SEND_NEED_REMOVE_ITEM_MESSAGE:
+            if (_.isArray(action.payload)) {
+                message = new Messages.MessageProcessItemData({ entries: action.payload, data: {state: 0}});
+            }
             break;
 
         case Types.SEND_NEED_REDUCE_ITEM_MESSAGE:
             if (_.isArray(action.payload)) {
-                message = new Messages.MessageSetItemState({ entries: action.payload, state: 1});
+                message = new Messages.MessageProcessItemData({ entries: action.payload, data: {state: 1}});
             }
-
             break;
 
         case Types.ENTITY_LIST_SET_SHOW_DELTED: 

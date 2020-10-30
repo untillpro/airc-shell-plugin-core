@@ -3,76 +3,23 @@
  */
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
-import { DatePicker } from 'airc-shell-core';
-
 import moment from 'moment';
+import EditableCell from './EditableCell';
+import { DatePicker } from 'airc-shell-core';
 
 const defaultFormat = "LLLL";
 
 class DateTimeCell extends PureComponent {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
-        this.state = {
-            value: null,
-            saving: false
-        };
-
-        this.handleChange = this.handleChange.bind(this);
+        this.format = this.format.bind(this);
+        this.value = this.value.bind(this);
+        this.renderInput = this.renderInput.bind(this);
     }
 
-    componentDidMount() {
-        const { value } = this.props;
-
-        this.setState({
-            value,
-            key: this.key()
-        });
-    }
-
-    componentDidUpdate(oldProps) {
-        if (this.props.value !== oldProps.value) {
-            this.setState({ value: this.props.value})
-        }
-    }
-
-    handleChange(value) {
-        const { onSave, onError, cell, entity, prop } = this.props;
-        const { _entry } = cell.original;
-        const { saving } = this.state;
-
-        if (saving) return;
-
-        if (_.isFunction(onSave) && _.isObject(_entry)) {
-            if (value !== this.state.value) {
-                this.setState({ saving: true });
-
-                onSave(value, entity, prop, _entry)
-                    .then(() => {
-                        this.setState({ value: value, saving: false });
-                    })
-                    .catch((e) => {
-                        if (_.isFunction(onError)) {
-                            onError(e)
-                        }
-                    });
-            }
-        }
-    }
-
-    isEditable() {
-        return this.props.editable === true
-    }
-
-    key() {
-        const { index } = this.props.cell;
-        const { value } = this.state;
-
-        if (index && index >= 0) {
-            return `datetime.value.${index}.${value}`;
-        } else {
-            return `datetime.value.${value}`;
-        }
+    value(value) {
+        return value ? Number(value) : null;
     }
 
     format() {
@@ -82,44 +29,46 @@ class DateTimeCell extends PureComponent {
     }
 
     type() {
-        switch(this.props.type) {
+        switch (this.props.type) {
             case "time": return "time";
             default: return "date";
         }
     }
 
-    renderEditable() {
-        const { value, key } = this.state;
+    renderInput(value, onSave, onChange) {
+        const { editable } = this.props;
 
-        return (
-            <div key={key} className="table-cell datetime-value">
-                <DatePicker 
-                    type={this.type()}
+        if (editable === true) {
+            return (
+                <DatePicker
+                    key={`dt_${value}`}
+                    picker={this.type()}
                     format={this.format()}
-                    //value={this.getValue()}
-                    //defaultValue={moment(new Date().valueOf(), this.getFormat())}
                     defaultValue={value > 0 ? moment(value) : null}
-                    onChange={this.handleChange} 
+                    onChange={onSave}
+                    size={"small"}
                 />
-            </div>
-        );
-    }
+            );
+        }
 
-    renderReadOnly() {
-        const { value, key } = this.state;
         let formatedValue = '';
 
         if (value) {
             formatedValue = moment(value).format(this.format());
         }
 
-        return <div key={key} className="table-cell string-value">{formatedValue}</div>;;
+        return formatedValue;
     }
 
-
     render() {
-        return this.isEditable() ? this.renderEditable() : this.renderReadOnly()
+        return <EditableCell
+            {...this.props}
+            formatter={this.format}
+            type="number"
+            preparearer={this.value}
+            renderer={this.renderInput}
+        />;
     }
 }
 
-export default DateTimeCell;
+export default DateTimeCell

@@ -40,7 +40,7 @@ class NumberCell extends PureComponent {
             {...this.props} 
             formatter={this.format} 
             type="number" 
-            prepareValue={this.value}
+            preparearer={this.value}
         />;
     }
 }

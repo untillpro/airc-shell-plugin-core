@@ -103,22 +103,31 @@ class EditableCell extends PureComponent {
         this.props.popEvents();
     }
 
-    save() {
-        const { onSave, entity, prop, prepareValue, entry } = this.props;
+    save(newValue = null) {
+        const { cell, onSave, entity, prop, preparearer, id, index } = this.props;
         const { value, initValue, edit, loading } = this.state;
 
-        if (!edit || loading) return;
+        if (loading) return;
+        const val = !_.isNull(newValue) ? newValue : value;
 
-        if (_.isFunction(onSave) && _.isObject(entry)) {
-            if (value !== initValue) {
+        if (_.isFunction(onSave)) {
+            if (val !== initValue) {
                 this.setState({ loading: true });
 
-                const v = _.isFunction(prepareValue) ? prepareValue(value) : value;
+                const data = {};
+                const v = _.isFunction(preparearer) ? preparearer(val) : val;
 
-                onSave(v, entity, prop, entry)
+                if (!_.isNil(index) && index >= 0) {
+                    _.set(data, [entity, index, "id"], id);
+                    _.set(data, [entity, index, prop], v);
+                } else {
+                    data[prop] = v;
+                    data["id"] = id;
+                }
+
+                onSave(cell, data)
                     .then(() => {
-                        this.cancel({ initValue: value, value, loading: false })
-
+                        this.cancel({ initValue: val, value: val, loading: false })
                     })
                     .catch((e) => {
                         this.error(e);
@@ -126,6 +135,7 @@ class EditableCell extends PureComponent {
                     });
             }
         }
+
     }
 
     error(e) {
@@ -146,7 +156,7 @@ class EditableCell extends PureComponent {
         return value;
     }
 
-    renderValue() {
+    defaultRender() {
         const { editable } = this.props;
         const { value, edit, loading } = this.state;
 
@@ -185,9 +195,12 @@ class EditableCell extends PureComponent {
     }
 
     render() {
+        const { value } = this.state;
+        const { renderer } = this.props;
+        
         return (
             <div className="table-editable-cell">
-                {this.renderValue()}
+                {renderer && _.isFunction(renderer) ? renderer(value, this.save, this.handleChange) : this.defaultRender()}
             </div>
         );
     }

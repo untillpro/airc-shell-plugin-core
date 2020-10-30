@@ -127,7 +127,7 @@ export const applyClassifiers = (Data, Entity) => {
             _.forEach(variants, (item, wsid) => {
                 if (!classifiers[wsid]) return;
 
-                const res = processClassifier(item, classifiers[wsid], entity, wsid);
+                const res = processClassifier(item, classifiers[wsid], entity, wsid, 0, null);
 
                 if (!result[code]) result[code] = {};
                 result[code][wsid] = res;
@@ -139,7 +139,6 @@ export const applyClassifiers = (Data, Entity) => {
 }
 
 export const processClassifier = (item, classifiers, entity, wsid, maxLevel = 3, level = 0) => {
-
     if (!item) return {};
 
     if (maxLevel > 0 && level >= maxLevel) return item;
@@ -200,6 +199,8 @@ export const resolveData = (data) => {
 
 
 export const processData = async (context, entity, data, entries) => {
+    console.log("ProcessData call: ", data);
+    
     const { api, contributions } = context;
 
     if (!api || !contributions || !entity) {
