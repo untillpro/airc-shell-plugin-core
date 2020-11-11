@@ -3,11 +3,21 @@
  */
 
 import _ from 'lodash';
+import blacklist from 'blacklist';
+import { Logger } from 'airc-shell-core';
+
 import { generateId } from './';
 import ForeignKeys from '../../const/ForeignKeys';
-import blacklist from 'blacklist';
 
 import { reduce } from './';
+
+import {
+    TYPE_FORMS,
+    TYPE_SECTIONS,
+    TYPE_COLLECTION,
+    C_COLLECTION_FILTER_BY,
+    C_COLLECTION_ENTITY
+} from '../contributions/Types';
 
 export const isValidEntity = (context, entity) => {
     // TODO: implement more complex checks here
@@ -69,7 +79,7 @@ export const buildData = (Data, locations) => {
 }
 
 export const getEntityEmbeddedTypes = (entity, contributions) => {
-    const sectionsContributon = contributions.getPointContributions("forms", entity);
+    const sectionsContributon = contributions.getPointContributions(TYPE_FORMS, entity);
 
     if (sectionsContributon && sectionsContributon["embeddedTypes"]) {
         return sectionsContributon["embeddedTypes"];
@@ -79,7 +89,7 @@ export const getEntityEmbeddedTypes = (entity, contributions) => {
 }
 
 export const getEntityFields = (entity, contributions, nonEmbedded = false) => {
-    const sectionsContributon = contributions.getPointContributions("forms", entity);
+    const sectionsContributon = contributions.getPointContributions(TYPE_FORMS, entity);
     let sections = null;
 
     if (sectionsContributon && sectionsContributon["sections"]) {
@@ -90,7 +100,7 @@ export const getEntityFields = (entity, contributions, nonEmbedded = false) => {
 
     if (sections) {
         _.each(sections, (section) => {
-            const sectionFields = contributions.getPointContributions("sections", section)["fields"];
+            const sectionFields = contributions.getPointContributions(TYPE_SECTIONS, section)["fields"];
 
             if (sectionFields && sectionFields.length > 0) {
                 fields = [...fields, ...sectionFields];
@@ -195,26 +205,38 @@ export const resolveData = (data) => {
     return resultData;
 };
 
+export const getFilterByString = (context, entity) => {
+    const { contributions } = context;
+
+    if (!contributions) return null;
+
+    let filter = contributions.getPointContributionValue(TYPE_COLLECTION, entity, C_COLLECTION_FILTER_BY);
+
+    if (filter) {
+        if (_.isString(filter)) {
+            try {
+                if (JSON.parse(filter)) {
+                    return filter;
+                }
+            } catch (e) {
+                Logger.error(e.toString(), `Wrong filter string specified for ${entity} entity`, "EntityHelpers.getFilterByString()");
+            }
+        } else if (_.isPlainObject(filter)) {
+            return JSON.stringify(filter);
+        }
+    }
+
+    return null;
+};
+
 // DATA PROCESSING
 
 
 export const processData = async (context, entity, data, entries) => {
     console.log("ProcessData call: ", data);
     
-    const { api, contributions } = context;
-
-    if (!api || !contributions || !entity) {
-        throw new Error('Cant fetch entity item data.');
-    }
-
     if (!data || typeof data !== 'object') {
         throw new Error('Wrong data specified to .', data);
-    }
-
-    const url = contributions.getPointContributionValue('url', entity, 'postUrl');
-
-    if (!url || !url.resource || !url.queue) {
-        throw new Error(`"postUrl" contribution is not specified for entity "${entity}"`)
     }
 
     let promises = [];
@@ -277,12 +299,13 @@ export const proccessEntry = async (context, entityId, type, wsid, data) => {
     });
 }
 
-export const getOperation = (data, entityId, type, parentId, parentType, docId, docType, context) => {
+export const getOperation = (data, entityId, entity, parentId, parentType, docId, docType, context) => {
     const { contributions } = context;
     let resultData = {};
     let operations = [];
 
     const id = entityId || -(generateId());
+    let type = contributions.getPointContributionValue(TYPE_COLLECTION, entity, C_COLLECTION_ENTITY) || entity;
 
     if ("state" in data) resultData.state = Number(data.state) || 0;
 
@@ -290,7 +313,7 @@ export const getOperation = (data, entityId, type, parentId, parentType, docId, 
 
     if (fields && fields.length > 0) {
         _.each(fields, (field) => {
-            const { accessor, value_accessor, entity, type: ftype } = field;
+            const { accessor, value_accessor, entity: fentity, type: ftype } = field;
 
             if (!accessor || data[accessor] === undefined) return;
 
@@ -298,7 +321,7 @@ export const getOperation = (data, entityId, type, parentId, parentType, docId, 
                 _.each(data[accessor], (d) => {
                     if (!d) return;
 
-                    const ops = getOperation(d, d.id, entity, id, type, !docId ? id : docId, !docType ? type : docType, context);
+                    const ops = getOperation(d, d.id, fentity, id, type, !docId ? id : docId, !docType ? type : docType, context);
 
                     if (ops && ops.length > 0) {
                         operations = [...operations, ...ops];
@@ -314,7 +337,7 @@ export const getOperation = (data, entityId, type, parentId, parentType, docId, 
         });
     }
 
-    const hiddenValues = contributions.getPointContributionValue('forms', type, 'hidden');
+    const hiddenValues = contributions.getPointContributionValue(TYPE_FORMS, entity, 'hidden');
 
     if (hiddenValues && typeof _.isObject(hiddenValues) && !_.isArray(hiddenValues)) {
         resultData = { ...resultData, ...hiddenValues };

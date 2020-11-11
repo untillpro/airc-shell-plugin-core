@@ -129,9 +129,11 @@ class MockAlphaApiGate {
         return this.do("airs-bp", `${location}/conf`, params, "post");
     }
 
+    //${this.host}/${queueId}/${resource}
+    //Mock api call for /collection/ function
     async collection(type, wsids, props = {}) {
-        const { entries, page, page_size, show_deleted, required_fields, required_classifiers } = props;
-        //${this.host}/${queueId}/${resource}
+        const { entries, page, page_size, show_deleted, required_fields, required_classifiers, filter_by } = props;
+        
         let resultData = {};
 
         let params = {
@@ -143,7 +145,8 @@ class MockAlphaApiGate {
             "Entries": entries,
             "Fields": required_fields || [],
             "RequiredClassifiers": required_classifiers || [],
-            "EmbeddedAsArrays": true
+            "EmbeddedAsArrays": true,
+            "FilterBy": filter_by || null
         }
 
         return this.do("airs-bp", `${_.isArray(wsids) ? wsids[0] : wsids}/collection`, params, "post").then((response) => {

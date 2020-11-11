@@ -98,5 +98,7 @@ export const C_SECTION_FIELDS = "fields";
 
 // ### COLLECTION
 
+export const C_COLLECTION_ENTITY = "entity";
 export const C_COLLECTION_REQUIRED_CLASSIFIERS = "required_classifiers";
 export const C_COLLECTION_REQUIRED_FIELDS = "required_fields";
+export const C_COLLECTION_FILTER_BY = "filter_by";

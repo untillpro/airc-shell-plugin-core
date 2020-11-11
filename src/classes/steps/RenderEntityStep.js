@@ -9,12 +9,21 @@ import EntityEditStep from './EntityEditStep';
 //import EntityMassEditStep from './EntityMassEditStep';
 
 import {
+    TYPE_LIST,
+    TYPE_COLLECTION,
+    C_COLLECTION_ENTITY,
+    C_COLLECTION_REQUIRED_CLASSIFIERS,
+    C_COLLECTION_REQUIRED_FIELDS,
+} from '../contributions/Types';
+
+import {
     mergeDeep,
     getCollection,
     processData,
     checkEntries,
     isValidLocations,
-    isValidEntity
+    isValidEntity,
+    getFilterByString
     //checkEntry
 } from '../helpers';
 
@@ -67,7 +76,7 @@ class RenderEntityStep extends StateMachineStep {
         this.entity = entity;
         this.locations = locations;
 
-        this.manual = !!contributions.getPointContributionValue('list', entity, 'manual'); // подумать чтобы передавать этот параметр извне
+        this.manual = !!contributions.getPointContributionValue(TYPE_LIST, entity, 'manual'); // подумать чтобы передавать этот параметр извне
 
         return this.fetchListData(context);
     }
@@ -276,9 +285,12 @@ class RenderEntityStep extends StateMachineStep {
         const { entity, locations: wsid, page, pageSize, showDeleted, manual } = this;
         const { contributions } = context;
 
+        let resource = contributions.getPointContributionValue(TYPE_COLLECTION, entity, C_COLLECTION_ENTITY) || entity;
+
         let doProps = {
-            required_fields: contributions.getPointContributionValues('collection', entity, 'required_fields'),
-            required_classifiers: contributions.getPointContributionValues('collection', entity, 'required_classifiers')
+            required_fields: contributions.getPointContributionValues(TYPE_COLLECTION, entity, C_COLLECTION_REQUIRED_FIELDS),
+            required_classifiers: contributions.getPointContributionValues(TYPE_COLLECTION, entity, C_COLLECTION_REQUIRED_CLASSIFIERS),
+            filter_by: getFilterByString(context, entity)
         };
 
         if (manual) {
@@ -292,9 +304,8 @@ class RenderEntityStep extends StateMachineStep {
             };
         }
 
-
         try {
-            return getCollection(context, entity, wsid, doProps)
+            return getCollection(context, resource, wsid, doProps)
                 .then((response) => {
                     console.log("getCollection response: ", response);
                     const { data, resolvedData, Data } = response;

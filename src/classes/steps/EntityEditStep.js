@@ -10,14 +10,19 @@ import { MessageInit, MessageNotify } from '../messages';
 import {
     prepareCopyData,
     isValidLocations,
-    isValidEntity
-} from '../helpers';
-
-import {
+    isValidEntity,
     getCollection,
     processData,
     checkEntries
 } from '../helpers';
+
+import {
+    TYPE_FORMS,
+    TYPE_COLLECTION,
+    C_COLLECTION_ENTITY,
+    C_COLLECTION_REQUIRED_CLASSIFIERS
+} from '../contributions/Types';
+
 
 class EntityEditStep extends StateMachineStep {
     constructor(...args) {
@@ -98,6 +103,7 @@ class EntityEditStep extends StateMachineStep {
 
     async MessageProceed(msg, context) {
         let { entries, entity, locations } = this;
+        const { contributions } = context;
         const { data } = msg;
 
         if (msg.entity && typeof msg.entity === 'string') {
@@ -121,7 +127,7 @@ class EntityEditStep extends StateMachineStep {
                 this.error('Proceed data error: locations are not specefied');
             }
         }
-
+        
         return processData(context, entity, data, entries).then((res) => {
             return {
                 pop: true,
@@ -160,10 +166,12 @@ class EntityEditStep extends StateMachineStep {
 
         const doProps = {
             entries,
-            required_classifiers: contributions.getPointContributionValues('collection', entity, 'required_classifiers')
+            required_classifiers: contributions.getPointContributionValues(TYPE_COLLECTION, entity, C_COLLECTION_REQUIRED_CLASSIFIERS)
         };
 
-        return getCollection(context, entity, wsid, doProps)
+        let resource = contributions.getPointContributionValue(TYPE_COLLECTION, entity, C_COLLECTION_ENTITY) || entity;
+
+        return getCollection(context, resource, wsid, doProps)
             .then(({ Data, resolvedData }) => {
                 if (resolvedData && resolvedData.length > 0) {
                     this.classifiers = _.get(Data, "classifiers");
@@ -183,7 +191,7 @@ class EntityEditStep extends StateMachineStep {
 
         const Data = { ...data };
 
-        const pointContributions = contributions.getPointContributions('forms', entity);
+        const pointContributions = contributions.getPointContributions(TYPE_FORMS, entity);
         const embedded_types = pointContributions ? pointContributions.embeddedTypes : null;
 
         if (embedded_types && embedded_types.length > 0) {
