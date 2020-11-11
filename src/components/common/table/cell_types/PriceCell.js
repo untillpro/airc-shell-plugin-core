@@ -24,6 +24,12 @@ class PriceCell extends PureComponent {
     }
 
     render() {
+        const { value } = this.props;
+
+        if (value === undefined || value === null) {
+            return " - ";
+        }
+
         return (
             <EditableCell 
                 {...this.props} 
