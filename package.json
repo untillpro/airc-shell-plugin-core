@@ -1,6 +1,6 @@
 {
   "name": "airc-shell-plugin-core",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": true,
   "homepage": ".",
   "dependencies": {
@@ -38,7 +38,8 @@
     "tagser4js": "^1.0.3",
     "voca": "^1.4.0",
     "keycode-js": "^3.1.0",
-    "stack-events": "^0.1.17"
+    "stack-events": "^0.1.17",
+    "js-base64": "^3.6.0"
   },
   "scripts": {
     "start": "react-scripts start",
