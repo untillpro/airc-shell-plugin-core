@@ -357,7 +357,8 @@ export default {
 		"id_articles": "articles",
 		"id_option_article": "option_article",
 		"id_size_modifier_item": "size_modifier_item",
-		"id_umc": "unity_conversion"
+		"id_umc": "unity_conversion",
+		"id_recipe": "recipe"
 	},
 	"clock_in_out": {
 		"id_untill_users": "untill_users",
@@ -616,7 +617,9 @@ export default {
 		"id_bookkeeping_turnover": "bookkeeping",
 		"id_bookkeeping_vat": "bookkeeping"
 	},
-	"func_panel_tabs": {},
+	"func_panel_tabs": {
+		"id_payments": "payments"
+	},
 	"restaurant_falcons": {
 		"id_preparation_area": "preparation_area",
 		"id_ks": "kitchen_screens",
@@ -1208,12 +1211,81 @@ export default {
 		"id_order_type": "order_type",
 		"id_alter_user": "untill_users",
 		"id_time_article": "articles",
-		"id_bo_service_charge": "bo_service_charge"
+		"id_bo_service_charge": "bo_service_charge",
+		"id_serving_time": "serving_time",
+		"id_callers_last": "callers"
 	},
 	"smartcard_tables": {
 		"id_smartcards": "smartcards"
 	},
 	"client_smartcard_uids": {
 		"id_clients": "clients"
+	},
+	"kitchen_screens_substations": {
+		"id_ks_sub": "kitchen_screens",
+		"id_ks_main": "kitchen_screens"
+	},
+	"menu_item": {
+		"id_options": "options",
+		"id_option_article": "option_article",
+		"id_size_modifier_item": "size_modifier_item",
+		"id_article_options": "article_options",
+		"id_articles": "articles",
+		"id_prices": "prices",
+		"id_courses": "courses",
+		"id_menu": "menus"
+	},
+	"menu_item_newyse_data": {
+		"id_menu_item": "menu_item",
+		"id_prepaid_groups": "prepaid_groups"
+	},
+	"menu_item_bookp": {
+		"id_bookkeeping_turnover": "bookkeeping",
+		"id_bookkeeping_vat": "bookkeeping",
+		"id_menu_item": "menu_item"
+	},
+	"menu_item_newyse_prices": {
+		"id_menu_item": "menu_item"
+	},
+	"menus": {},
+	"smartcard_table_cards": {
+		"id_smartcards": "smartcards",
+		"id_smartcard_tables": "smartcard_tables"
+	},
+	"apostill_hddcodes": {
+		"id_dealers": "dealers"
+	},
+	"client_cards": {
+		"id_clients": "clients",
+		"id_client_cards_name": "client_card_names"
+	},
+	"dealers": {
+		"id_clients": "clients",
+		"id_banks": "banks"
+	},
+	"pbill_cashm_payments_info": {
+		"id_pbill_payments": "pbill_payments"
+	},
+	"client_card_names": {},
+	"banks": {
+		"id_currency": "currency",
+		"id_order_layout": "tickets"
+	},
+	"licenses": {
+		"id_dealers": "dealers",
+		"id_licenses_prev": "licenses",
+		"id_bill": "bill"
+	},
+	"serving_time": {},
+	"art_free_opt_defaults": {
+		"id_articles_free_options": "articles_free_options",
+		"id_option_article": "option_article"
+	},
+	"dep_position_ex": {
+		"id_sales_area": "sales_area",
+		"id_department": "department"
+	},
+	"licenses_online": {
+		"id_licenses": "licenses"
 	}
 };
