@@ -6,7 +6,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Tabs, Logger } from 'airc-shell-core';
-
+import { immutableArrayMerge } from '../../classes/helpers';
 import EMEditFormField from './EMEditFormField';
 
 class EMEditFormFieldsGroup extends Component {
@@ -44,9 +44,9 @@ class EMEditFormFieldsGroup extends Component {
         });
     }
 
-    handleFieldChanged(field, value) {
+    handleFieldChanged(field, value, mlValue) {
         const { changedData, embedded: embedded_type, onDataChanged, data: Data } = this.props;
-        const { accessor, onChange } = field;
+        const { accessor, ml_accessor, onChange } = field;
 
         Logger.log({
             value,
@@ -57,7 +57,7 @@ class EMEditFormFieldsGroup extends Component {
         let data = {};
         let path = accessor;
 
-        Logger.log("EMEditFormFieldsGroup.handleFieldChanged() ", field, value);
+        //Logger.log("EMEditFormFieldsGroup.handleFieldChanged() ", field, value);
 
         if (embedded_type) {
             value = { [accessor]: value }
@@ -74,13 +74,17 @@ class EMEditFormFieldsGroup extends Component {
             if (_.isPlainObject(v)) {
                 v = _.merge({ ...v }, value);
             } else if (_.isArray(v)) {
-                v = _.merge(v, value);
+                v = immutableArrayMerge(v, value);
             } else {
                 v = value;
             }
         } 
-        
+
         _.set(data, path, v);
+
+        if (!_.isNil(mlValue) && _.isString(ml_accessor)) {
+            _.set(data, ml_accessor, mlValue);
+        }
 
         if (onChange && typeof onChange === 'function') {
             data = { ...data, ...onChange(value, data) };
@@ -99,6 +103,8 @@ class EMEditFormFieldsGroup extends Component {
             locations,
             fieldsErrors,
             embedded,
+            isNew,
+            isCopy,
         } = this.props;
 
         const {
@@ -122,6 +128,9 @@ class EMEditFormFieldsGroup extends Component {
                     locations={locations}
                     showError
                     onChange={this.handleFieldChanged}
+
+                    isNew={isNew}
+                    isCopy={isCopy}
                 />;
 
                 if (isTabs) {

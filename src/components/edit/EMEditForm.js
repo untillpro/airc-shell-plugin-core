@@ -23,16 +23,16 @@ import {
     ConfirmModal
 } from 'airc-shell-core';
 
-import { 
-    makeValidator, 
-    mergeDeep 
+import {
+    makeValidator,
+    mergeDeep
 } from '../../classes/helpers';
 
-import { 
+import {
     sendNeedEditFormMessage,
     sendNeedCopyFormMessage,
-    sendCancelMessage, 
-    sendError 
+    sendCancelMessage,
+    sendError
 } from '../../actions/';
 
 import log from '../../classes/Log';
@@ -127,7 +127,7 @@ class EMEditForm extends Component {
         if (!_entry || !_.isObject(_entry)) return;
 
         this.performWithCheckChanges(() => {
-            this.props.sendNeedCopyFormMessage([ _entry ]);
+            this.props.sendNeedCopyFormMessage([_entry]);
         });
     }
 
@@ -155,9 +155,14 @@ class EMEditForm extends Component {
                     _.forEach(section.fields, (field) => {
                         if (field &&
                             field.accessor &&
-                            typeof field.accessor === 'string' &&  
+                            typeof field.accessor === 'string' &&
                             field.value !== undefined) {
+
+                            if (_.isFunction(field.value)) {
+                                changedData[field.accessor] = field.value();
+                            } else {
                                 changedData[field.accessor] = field.value;
+                            }
                         }
                     });
                 }
@@ -167,7 +172,8 @@ class EMEditForm extends Component {
         return changedData;
     }
 
-    
+
+
     performWithCheckChanges(toPerform) {
         const { changedData } = this.props;
 
@@ -178,7 +184,7 @@ class EMEditForm extends Component {
         }
     }
 
-    
+
     confirmFormClose(onConfirm) {
         confirmAlert({
             customUI: ({ onClose }) => <ConfirmModal
@@ -215,14 +221,7 @@ class EMEditForm extends Component {
     }
 
     doProceed() {
-        const { changedData } = this.state;
         const { onProceed } = this.props;
-
-        if (_.size(changedData) === 0) {
-            this.props.sendCancelMessage();
-            
-            return;
-        }
 
         if (onProceed && typeof onProceed === 'function') {
             if (this.validateFields()) {
@@ -287,7 +286,7 @@ class EMEditForm extends Component {
         const validator = makeValidator();
 
         let validated = true;
-
+        
         sections.forEach((section, index) => {
             if (section && section.fields && section.fields.length > 0) {
                 section.fields.forEach((field) => {
@@ -386,12 +385,11 @@ class EMEditForm extends Component {
 
         this.setState({
             changedData: {
-                ...changedData, 
+                ...changedData,
                 state: s,
             }
         });
     }
-
 
     handleDataChanged(newChangedData) {
         log("EMEditForm.handleDataChanged() ", newChangedData);
@@ -429,7 +427,7 @@ class EMEditForm extends Component {
         const { data, classifiers, entity, contributions, isNew, isCopy, locations } = this.props;
 
         let mergedData = mergeDeep({}, data, changedData);
-        
+
         log("EMEditForm data", data);
         log("EMEditForm changedData", changedData);
         log("EMEditForm mergedData", mergedData);
@@ -450,10 +448,11 @@ class EMEditForm extends Component {
                         locations={locations}
                         data={mergedData}
                         classifiers={classifiers}
-                        isNew={isNew}
-                        isCopy={isCopy}
                         changedData={changedData}
                         fieldsErrors={fieldsErrors}
+
+                        isNew={isNew}
+                        isCopy={isCopy}
                     />
                 );
 
@@ -547,7 +546,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
     sendNeedEditFormMessage,
     sendNeedCopyFormMessage,
-    sendCancelMessage, 
+    sendCancelMessage,
     sendError
 }
 export default connect(mapStateToProps, mapDispatchToProps)(withStackEvents(EMEditForm));

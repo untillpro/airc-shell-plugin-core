@@ -103,7 +103,6 @@ class EntityEditStep extends StateMachineStep {
 
     async MessageProceed(msg, context) {
         let { entries, entity, locations } = this;
-        const { contributions } = context;
         const { data } = msg;
 
         if (msg.entity && typeof msg.entity === 'string') {
@@ -137,7 +136,6 @@ class EntityEditStep extends StateMachineStep {
                 }
             };
         }).catch((e) => {
-            console.error(e.toString());
             this.error(e.toString());
         });
     }

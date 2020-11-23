@@ -8,3 +8,4 @@ export * from './StateMachineActions';
 export * from './MessagesActions';
 export * from './ReportsActions';
 export * from './ContextActions';
+export * from './OptionsActions';

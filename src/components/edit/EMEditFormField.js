@@ -10,6 +10,7 @@ import isEqual from 'react-fast-compare';
 
 import {
     TextField,
+    MLTextField,
     CheckboxField,
     NumberField,
     RadioField,
@@ -30,9 +31,7 @@ class EMEditFormField extends Component {
     constructor() {
         super();
 
-        this.state = {
-            value: null
-        };
+        this.handleChange = this.handleChange.bind(this);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -66,14 +65,12 @@ class EMEditFormField extends Component {
         return false;
     }
 
-    handleChange(value) {
+    handleChange(value, mlValue) {
         const { field, onChange } = this.props;
 
         if (onChange && typeof onChange === 'function') {
-            onChange(field, value)
+            onChange(field, value, mlValue)
         }
-
-        this.setState({ value });
     }
 
     getValue() {
@@ -104,6 +101,8 @@ class EMEditFormField extends Component {
             locations,
             entity,
             classifiers,
+            isNew,
+            isCopy
         } = this.props;
 
         let FieldComponent;
@@ -116,6 +115,7 @@ class EMEditFormField extends Component {
 
         if (accessor && typeof accessor === 'string') {
             switch (type) {
+                case 'ml_text': FieldComponent = MLTextField; break;
                 case 'number': FieldComponent = NumberField; break;
                 case 'radio': FieldComponent = RadioField; break
                 case 'radiogroup': FieldComponent = RadioGroupField; break
@@ -162,10 +162,13 @@ class EMEditFormField extends Component {
                             disabled={typeof disabled === 'function' ? disabled(field, data) : Boolean(disabled)}
                             showError={showError}
                             errors={errors}
-                            onChange={(value) => this.handleChange(value)}
+                            onChange={this.handleChange}
                             value={fieldValue}
                             data={data}
                             classifiers={classifiers}
+
+                            isNew={isNew}
+                            isCopy={isCopy}
                         />
 
                         { !label && tip ? <Tip text={tip} /> : null}

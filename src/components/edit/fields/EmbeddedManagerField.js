@@ -3,7 +3,7 @@
  */
 
 import _ from 'lodash';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import EMEditForm from '../EMEditForm';
@@ -20,7 +20,7 @@ import isEqual from 'react-fast-compare'
  * */
 const DEFAULT_MINIMUM_ROWS = 5;
 
-class EmbeddedManagerField extends Component {
+class EmbeddedManagerField extends PureComponent {
     constructor() {
         super();
 
@@ -189,8 +189,6 @@ class EmbeddedManagerField extends Component {
         });
     }
 
-    //***********
-
     handleChange(value) {
         const { onChange } = this.props;
 
@@ -232,22 +230,13 @@ class EmbeddedManagerField extends Component {
     }
 
     async handleValueSave(entity, data, entry, rowIndex) {
+        const { data: Data } = this.state;
+
         let res = [];
-        res[rowIndex] = data;
+        res[rowIndex] = { id: Data[rowIndex].id, ...data };
+
 
         this.handleChange(res);
-
-        /*
-       const index = cell ? cell.index : null;
-
-        if (_.isNumber(index) && index >= 0 && entry && _.isPlainObject(entry) && cell && _.isPlainObject(cell)) {
-            const res = [];
-
-            res[index] = { [prop]: value, id: entry.id };
-
-            this.handleChange(res);
-        }
-        */
     }
 
     handleAction(row, type) {

@@ -4,9 +4,11 @@
 
 import _ from 'lodash';
 import { Logger } from 'airc-shell-core';
+import { Base64 } from 'js-base64';
+import Stream from '../Stream';
 
-export const isValidLocations = ( locations ) => {
-    if (!locations || !_.isArray( locations ) || locations.length === 0) {
+export const isValidLocations = (locations) => {
+    if (!locations || !_.isArray(locations) || locations.length === 0) {
         return false;
     }
 
@@ -77,7 +79,7 @@ export const mergeDeep = (target, ...sources) => {
                 if (!target[key]) Object.assign(target, { [key]: {} });
                 mergeDeep(target[key], source[key]);
             } else if (_.isArray(source[key]) && _.isArray(target[key])) {
-                Object.assign(target, { [key]: _.merge([], target[key], source[key])});
+                Object.assign(target, { [key]: _.merge([], target[key], source[key]) });
             } else {
                 Object.assign(target, { [key]: source[key] });
             }
@@ -91,7 +93,7 @@ export const mergeExisting = (target, source) => {
     if (!_.isPlainObject(target) || !_.isPlainObject(source)) {
         throw new Error(`target and source object should be a plain objects`);
     }
-    
+
     const result = { ...target };
 
     _.forEach(source, (value, key) => {
@@ -153,7 +155,7 @@ export const formatPriceValue = (value, currency) => {
         }
 
         return Number(value).toFixed(round || 2).toString() + (symbol ? symbol : '');
-    } 
+    }
 
     return value;
 }
@@ -162,16 +164,16 @@ export const formatNumber = (amount, decimalCount = 2, decimal = ".", thousands 
     try {
         decimalCount = Math.abs(decimalCount);
         decimalCount = isNaN(decimalCount) ? 2 : decimalCount;
-    
+
         const negativeSign = amount < 0 ? "-" : "";
-    
+
         let i = parseInt(amount = Math.abs(Number(amount) || 0).toFixed(decimalCount)).toString();
         let j = (i.length > 3) ? i.length % 3 : 0;
-    
+
         return negativeSign + (j ? i.substr(0, j) + thousands : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousands) + (decimalCount ? decimal + Math.abs(amount - i).toFixed(decimalCount).slice(2) : "");
-      } catch (e) {
+    } catch (e) {
         console.error(e)
-      }
+    }
 }
 
 
@@ -181,4 +183,83 @@ function makeGenerator() {
     return function () {
         return currentCount++;
     };
+}
+
+export const bufferToLangMap = (base64str) => {
+    if (base64str === null) return null;
+
+    let res = {};
+
+    try {
+        let decodedStr = Base64.toUint8Array(base64str);
+
+        let s = new Stream(decodedStr);
+
+        let n = s.readBigUInt();
+
+        if (n <= 140) {
+            let code;
+
+            code = s.next();
+
+            while (code != null) {
+                let value = s.next();
+
+                res[code] = value;
+
+                code = s.next()
+            }
+        }
+    } catch (e) {
+        console.error(e);
+        return null;
+    }
+
+    return res.length === 0 ? null : res;
+}
+
+export const langMapToBuffer = (langMap) => {
+    let s = new Stream([]);
+
+    try {
+        let str = JSON.stringify(langMap);
+
+        s.alloc(str.length * 4);
+
+        s.writeBigInt(_.size(langMap));
+
+        _.forEach(langMap, (value, code) => {
+            s.writeBigInt(_.size(code));
+            s.write(code);
+
+            s.writeBigInt(_.size(value));
+            s.write(value);
+        });
+
+        let bytes = s.bytes();
+        let res = Base64.fromUint8Array(new Uint8Array(bytes));
+        
+        return res;
+    } catch (e) {
+        console.error(e);
+        return null;
+    }
+}
+
+export const immutableArrayMerge = (...arrays) => {
+    const resultArray = [];
+
+    if (arrays.length > 0) {
+        arrays.forEach(array => {
+            if (array && array.length > 0) {
+                for (let i = 0; i < array.length; i++) {
+                    if ( array[i] !== undefined) {
+                        resultArray[i] = array[i];
+                    } 
+                }
+            }
+        });
+    }
+
+    return resultArray;
 }

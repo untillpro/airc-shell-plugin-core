@@ -201,13 +201,11 @@ class ListTable extends PureComponent {
         let rowsLength = _.size(this.pageRows);
         if (rowsLength > 0) {
             if (_.size(selectedRows) > 0) {
-                lastIndex = _.last(selectedRows);
-                //const lastRowId = _.last(selectedRows);
-                //const arr = lastRowId.split('.');
-                //lastIndex = Number(arr[0]);
+                let lastId = _.last(selectedRows);
+
+                lastIndex = _.findIndex(this.pageRows, (o) => o._index === lastId);
 
                 nextIndex = lastIndex + offset;
-
                 if (nextIndex < 0) {
                     nextIndex = 0;
                 }
@@ -218,7 +216,7 @@ class ListTable extends PureComponent {
             }
 
             const row = this.pageRows[nextIndex];
-            const rowId = nextIndex;
+            const rowId = row._index;
 
             selectedRowsNew.push(rowId);
             selectedFlatRowsNew[rowId] = row._original;
@@ -295,7 +293,6 @@ class ListTable extends PureComponent {
             let selectedRowsNew;
             let selectedFlatRowsNew;
 
-            //const rowIndex = nestingPath.join('.');
             const rowIndex = index;
 
             if (allowMultyselect) {
@@ -362,7 +359,7 @@ class ListTable extends PureComponent {
     async handleCellSave(row, data) {
         const { entity } = this.props;
         const { _entry } = row.original;
-        const { onValueSave, onError } = this.props;
+        const { onValueSave } = this.props;
         const { index } = row;
 
         console.log("handleCellSave: ", row, data);

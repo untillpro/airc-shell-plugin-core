@@ -61,3 +61,8 @@ export const SET_REPORTS_DATETIME_FILTER = "set_reports_datetime_filter";
 /* CONTEXT ACTIONS */
 
 export const ADD_TO_CONTEXT = "add_to_context";
+
+/* OPTIONS ACTIONS */
+
+export const ADD_AVAILABLE_LANGUAGE = "add_available_language";
+

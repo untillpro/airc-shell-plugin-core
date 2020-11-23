@@ -56,7 +56,7 @@ class EMEditFormFieldsBuilder extends Component {
     buildFieldsGroups() {
         if (!this.state.groups) return null;
         
-        const { embedded, data, classifiers, changedData, locations, fieldsErrors, onDataChanged  } = this.props;
+        const { embedded, data, classifiers, changedData, locations, fieldsErrors, onDataChanged, isNew, isCopy  } = this.props;
 
         let counter = 0;
 
@@ -74,6 +74,9 @@ class EMEditFormFieldsBuilder extends Component {
 
                 group={group}
                 fields={fields}
+                
+                isNew={isNew}
+                isCopy={isCopy}
             />;
         });
     }

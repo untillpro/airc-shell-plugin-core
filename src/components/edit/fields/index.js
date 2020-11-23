@@ -3,6 +3,7 @@
  */
 
 import TextField from './TextField';
+import MLTextField from './MLTextField';
 import NumberField from './NumberField';
 import RadioGroupField from './RadioGroupField';
 import SelectField from './SelectField';
@@ -20,6 +21,7 @@ import EmbeddedManagerPredefinedField from './EmbeddedManagerPredefinedField'
 
 export {
     TextField,
+    MLTextField,
     NumberField,
     RadioGroupField,
     SelectField,

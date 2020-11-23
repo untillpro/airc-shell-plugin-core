@@ -113,3 +113,13 @@ body {
   display: block;
   margin-bottom: 4px;
 }
+
+/*******************/
+
+.ml-lang-list-container {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+  margin-right: 50px;
+}

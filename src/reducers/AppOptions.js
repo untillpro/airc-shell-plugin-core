@@ -1,13 +1,15 @@
 /*
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
-
+import _ from 'lodash';
 import { 
-     TOGGLE_LOCATIONS_SELECTOR 
+     TOGGLE_LOCATIONS_SELECTOR,
+     ADD_AVAILABLE_LANGUAGE
 } from '../actions/Types';
 
 const INITIAL_STATE = {
-    lang: 'en', //todo
+    lang: '0000', //todo
+    defaultLang: '0000',
     maxUploadImageSize: 102400,
     showLocationSelector: true,
     allowMultyLocations: false,
@@ -24,7 +26,8 @@ const INITIAL_STATE = {
         "sym_alignment": 1,
         "symbol": "€"
     },
-    currency: null
+    currency: null,
+    availableLanguages: [ "0000", "0406", "0813", "040C", "0407", "0410" ]
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -34,6 +37,13 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 show_selector: !state.show_selector
             };
+        case ADD_AVAILABLE_LANGUAGE: 
+
+            return {
+                ...state,
+                availableLanguages: _.uniq([ ...state.availableLanguages, action.payload ])
+            };
+
         default: return state;
     }
 };

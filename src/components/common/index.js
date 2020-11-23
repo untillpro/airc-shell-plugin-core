@@ -3,6 +3,8 @@
  */
 import HeaderBackButton from './HeaderBackButton';
 import GridLocationSelector from './GridLocationSelector';
+import SelectLanguageForm from './SelectLanguageForm';
+
 import {
     ListTable,
     BooleanCell,
@@ -24,5 +26,6 @@ export {
     PriceCell,
     StringCell,
     LocationCell,
-    DateTimeCell
+    DateTimeCell,
+    SelectLanguageForm,
 }

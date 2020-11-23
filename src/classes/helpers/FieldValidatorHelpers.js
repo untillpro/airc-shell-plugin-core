@@ -113,7 +113,7 @@ class FieldValidator {
     }
 
     validateRequired(value, errors) {
-        if (_.isNil(value)) {
+        if (_.isNil(value) || value === "") {
             errors.push(Errors.REQUIRED_VALUE_ERROR);
         }
     }
