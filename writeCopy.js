@@ -72,8 +72,6 @@ async function checkFiles(files) {
 
     console.log('files withoud copy:');
     console.log(noCopyFiles);
-
-    
 }
 
 getFiles('./src', function (err, files) {

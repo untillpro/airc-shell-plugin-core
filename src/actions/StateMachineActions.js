@@ -26,17 +26,14 @@ import {
 } from '../classes/messages';
 
 export const doProccess = (entries, data) => {
-    console.log("doProccess", entries, data);
     return (dispatch, getState) => {
         const { context } = getState();
         const { api, sm } = context;
 
-        const msg = new MessageProcessItemData({entries, data});
+        const msg = new MessageProcessItemData({ entries, data });
 
         return sm.sendMessage(msg, context)
             .then((data) => {
-                console.log("doProccess.then", data);
-
                 dispatch(sendStateMachineResult(
                     sm.getCurrenStepName(),
                     data
@@ -48,7 +45,6 @@ export const doProccess = (entries, data) => {
                 }
             })
             .catch((e) => {
-                console.log("doProccess.catch", e);
                 // if request crashed will send error to shell
                 api.sendError(e);
             });
