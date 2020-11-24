@@ -164,17 +164,19 @@ class ReportViewStep extends StateMachineStep {
         const { classifiers = {}, events = {} } = Data;
         const result = {};
 
+        console.log("_mock data: ", Data);
+
         if (locations && _.isArray(locations)) {
             _.forEach(locations, (loc) => {
                 result[loc] = {
                     events,
-                    classifiers: classifiers[loc]
+                    classifiers: classifiers[loc] || {}
                 }
             })
         } else if (locations && _.isNumber(locations)) {
             result[locations] = {
                 events,
-                classifiers: classifiers[locations]
+                classifiers: classifiers[locations] || {}
             }
         }
 

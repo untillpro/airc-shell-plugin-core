@@ -148,9 +148,10 @@ export const applyClassifiers = (Data, Entity) => {
     return result;
 }
 
-export const processClassifier = (item, classifiers, entity, wsid, maxLevel = 3, level = 0) => {
+export const processClassifier = (item, classifiers = {}, entity, wsid, maxLevel = 3, level = 0) => {
     if (!item) return {};
 
+    if (!classifiers || _.size(classifiers) == 0) return item;
     if (maxLevel > 0 && level >= maxLevel) return item;
 
     _.forEach(item, (value, key) => {

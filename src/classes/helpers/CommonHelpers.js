@@ -263,3 +263,21 @@ export const immutableArrayMerge = (...arrays) => {
 
     return resultArray;
 }
+
+export const valueFromClassifierField = (value, accessor, defaultValue) => {
+    let resultValue = defaultValue !== undefined ? defaultValue : value;
+    
+    try {
+        if (_.isPlainObject(value)) {
+            let tempValue = _.get(value, accessor);
+    
+            if (tempValue !== undefined) {
+                resultValue = tempValue;
+            }
+        }
+    } catch (e) {
+        resultValue = defaultValue || value;
+    }
+
+    return resultValue;
+}
