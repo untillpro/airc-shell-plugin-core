@@ -67,3 +67,21 @@ export const translateOptions = (options, entity) => {
 
     return res;
 }
+
+export const translateOptionValue = (value, options, entity) => {
+    let res = '';
+
+    if (_.isNil(value)) return '';
+
+    res = value;
+
+    if (_.isObject(options) && _.size(options) > 0) {
+        let k = _.findKey(options, (o) => o === value);
+
+        res = contributionTranslate(entity, k, "options");
+    } else {
+        res = contributionTranslate(entity, value, "options");
+    }
+
+    return res;
+}
