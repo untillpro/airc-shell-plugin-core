@@ -6,7 +6,19 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Tabs, Logger } from 'airc-shell-core';
-import { immutableArrayMerge } from '../../classes/helpers';
+
+import { 
+    immutableArrayMerge,
+    funcOrString 
+} from '../../classes/helpers';
+
+import {
+    TYPE_FORMSGROUPS,
+    C_FORMSGROUPS_NAME,
+    C_FORMSGROUPS_TABS,
+    C_FORMSGROUPS_PROPS
+} from '../../classes/contributions/Types';
+
 import EMEditFormField from './EMEditFormField';
 
 class EMEditFormFieldsGroup extends Component {
@@ -32,16 +44,27 @@ class EMEditFormFieldsGroup extends Component {
 
         const sortedFields = _.sortBy(fields, (o) => o.order);
 
-        const groupHeader = contributions.getPointContributionValue('formsgroups', group, 'name');
-        const isTabs = contributions.getPointContributionValue('formsgroups', group, 'tabs');
-        const tabsProps = contributions.getPointContributionValue('formsgroups', group, 'tabsProps') || {};
+        const header = contributions.getPointContributionValue(TYPE_FORMSGROUPS, group, C_FORMSGROUPS_NAME);
+        const isTabs = contributions.getPointContributionValue(TYPE_FORMSGROUPS, group, C_FORMSGROUPS_TABS);
+        const tabsProps = contributions.getPointContributionValue(TYPE_FORMSGROUPS, group, C_FORMSGROUPS_PROPS) || {};
 
         this.setState({
             sortedFields,
-            groupHeader,
+            groupHeader: _.isFunction(header) ? header() : header,
             isTabs,
             tabsProps
         });
+    }
+
+    componentDidUpdate(olpProps) {
+        if (this.props.currentLanguage !== olpProps.currentLanguage) {
+            const { contributions, group } = this.props;
+            const header = contributions.getPointContributionValue(TYPE_FORMSGROUPS, group, C_FORMSGROUPS_NAME);
+
+            this.setState({
+                groupHeader: _.isFunction(header) ? header() : header,
+            });
+        }
     }
 
     handleFieldChanged(field, value, mlValue) {
@@ -56,8 +79,6 @@ class EMEditFormFieldsGroup extends Component {
 
         let data = {};
         let path = accessor;
-
-        //Logger.log("EMEditFormFieldsGroup.handleFieldChanged() ", field, value);
 
         if (embedded_type) {
             value = { [accessor]: value }
@@ -135,7 +156,10 @@ class EMEditFormFieldsGroup extends Component {
 
                 if (isTabs) {
                     return (
-                        <Tabs.TabPane tab={field.header || 'empty'} key={`${index}`}>
+                        <Tabs.TabPane 
+                            key={`${index}`}
+                            tab={funcOrString(field.header)} 
+                        >
                             {fieldComponent}
                         </Tabs.TabPane>
                     );
@@ -177,9 +201,11 @@ class EMEditFormFieldsGroup extends Component {
 }
 
 const mapStateToProps = (state) => {
+    const { currentLanguage } = state.options;
     const { contributions } = state.context;
 
     return {
+        currentLanguage,
         contributions
     };
 }

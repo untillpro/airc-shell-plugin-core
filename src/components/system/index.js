@@ -15,6 +15,7 @@ import ViewEntityGrid from './ViewEntityGrid';
 import ViewRenderer from './ViewRenderer';
 import ViewReportsList from './ViewReportsList';
 import ViewsGrid from './ViewsGrid';
+import LangProvider from './LangProvider';
 
 export {
     ApiProvider,
@@ -30,4 +31,5 @@ export {
     ViewRenderer,
     ViewReportsList,
     ViewsGrid,
+    LangProvider
 };

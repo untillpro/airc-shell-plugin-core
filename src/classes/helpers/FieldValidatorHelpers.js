@@ -3,7 +3,7 @@
  */
 
 import _ from 'lodash';
-import * as Errors from '../../lang/Errors';
+import i18next from 'i18next';
 
 class FieldValidator {
     validate(field, data, embedded_type) {
@@ -49,9 +49,9 @@ class FieldValidator {
         const curVal = Number(value);
 
         if (!curVal) {
-            errors.push(Errors.CURRENT_VALUE_NOT_NUMBER_ERROR);
+            errors.push(i18next.t("errors.current_value_not_number_error"));
         } else if (curVal < minVal) {
-            errors.push(Errors.MIN_VALUE_ERROR.replace("#VALUE#", minVal));
+            errors.push(i18next.t("errors.min_value_error", { value: minVal}));
         }
     }
 
@@ -60,9 +60,9 @@ class FieldValidator {
         const curVal = Number(value);
 
         if (!curVal) {
-            errors.push(Errors.CURRENT_VALUE_NOT_NUMBER_ERROR);
+            errors.push(i18next.t("errors.current_value_not_number_error"));
         } else if (curVal > maxVal) {
-            errors.push(Errors.MAX_VALUE_ERROR.replace("#VALUE#", maxVal));
+            errors.push(i18next.t("errors.max_value_error", { value: maxVal}));
         }
     }
 
@@ -71,7 +71,7 @@ class FieldValidator {
         const curValue = String(value);
 
         if (curValue.length < minVal) {
-            errors.push(Errors.MIN_LENGTH_ERROR.replace("#VALUE#", minVal));
+            errors.push(i18next.t("errors.min_length_error", {value: minVal}));
         }
     }
 
@@ -80,14 +80,14 @@ class FieldValidator {
         const curValue = String(value);
 
         if (curValue.length > maxVal) {
-            errors.push(Errors.MAX_LENGTH_ERROR.replace("#VALUE#", maxVal));
+            errors.push(i18next.t("errors.max_length_error", {value: maxVal}));
         }
     }
 
     validateNumber(value, errors) {
         const curVal = Number(value);
         if (!curVal) {
-            errors.push(Errors.NUMBER_VALUE_ERROR);
+            errors.push(i18next.t("errors.number_value_error"));
         }
     }
 
@@ -96,7 +96,7 @@ class FieldValidator {
         var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
         if (!re.test(curVal)) {
-            errors.push(Errors.CURRENT_VALUE_NOT_EMAIL_ERROR);
+            errors.push(i18next.t("errors.current_value_not_email_error"));
         }
     }
 
@@ -104,17 +104,16 @@ class FieldValidator {
         const re = new RegExp(regexp);
         const curVal = String(value);
 
-        if (!re) {
-            errors.push(Errors.WRONG_REGEXP_ERROR)
+        if (!re) {//
+            errors.push(i18next.t("errors.wrong_regexp_error"));
         } else if (!re.test(curVal)) {
-            errors.push(Errors.NOT_VALID_VALUE_ERROR)
+            errors.push(i18next.t("errors.not_valid_value_error"))
         }
-
     }
 
     validateRequired(value, errors) {
         if (_.isNil(value) || value === "") {
-            errors.push(Errors.REQUIRED_VALUE_ERROR);
+            errors.push(i18next.t("errors.required_value_error"));
         }
     }
 }

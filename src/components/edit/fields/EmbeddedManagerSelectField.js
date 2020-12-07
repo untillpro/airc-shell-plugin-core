@@ -62,7 +62,6 @@ class EmbeddedManagerSelectField extends EmbeddedManagerField {
                 return { id, wsid };
             });
 
-            //TODO use of context
             processData(context, entity, newData, entries)
                 .then(() => {
                     return this.fetchListData()
@@ -96,8 +95,6 @@ class EmbeddedManagerSelectField extends EmbeddedManagerField {
                     if (row) {
                         onRowSelect(row);
                     }
-                } else {
-                    console.error('No data returned by index: ', index);
                 }
             } 
         } else {

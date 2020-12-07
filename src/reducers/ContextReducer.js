@@ -4,10 +4,14 @@
 
 import _ from 'lodash';
 import {
-    ADD_TO_CONTEXT
+    ADD_TO_CONTEXT,
+    INIT_CONTEXT_LANG,
+    SET_PLUGIN_LANGUAGE
 } from '../actions/Types';
 
 const INITIAL_STATE = {
+    lang: "en",
+    langCode: "0000",
     manager: null,
     api: null
 };
@@ -27,6 +31,28 @@ export default (state = INITIAL_STATE, action) => {
                 return {
                     ...state,
                     ...action.payload
+                }
+            }
+
+            return state;
+
+        case SET_PLUGIN_LANGUAGE:
+            if (_.isPlainObject(action.payload)) {
+                return {
+                    ...state,
+                    langCode: action.payload.code,
+                    lang: action.payload.locale
+                };
+            }
+
+            return state;
+
+        case INIT_CONTEXT_LANG:
+            if (_.isPlainObject(action.payload)) {
+                const { lang, langCode } = action.payload;
+
+                if (_.isString(lang) && _.isString(langCode)) {
+                    return { ...state, langCode, lang };
                 }
             }
 

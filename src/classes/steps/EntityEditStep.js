@@ -3,6 +3,7 @@
  */
 
 import _ from 'lodash';
+
 import StateMachineStep from '../StateMachineStep';
 import { Logger } from 'airc-shell-core';
 import { MessageInit, MessageNotify } from '../messages';
@@ -54,11 +55,11 @@ class EntityEditStep extends StateMachineStep {
         const { entries, copy, entity, locations } = msg;
 
         if (!isValidEntity(context, entity)) {
-            throw new Error(this.getName() + '.MessageInit() exception: entity not specified or wrong given: ' + entity.toString());
+            this.error(this.getName() + '.MessageInit() exception: entity not specified or wrong given: ' + entity.toString());
         }
 
         if (!isValidLocations(locations)) {
-            throw new Error(this.getName() + '.MessageInit() exception: locations not specified or wrong given: ' + locations.toString());
+            this.error(this.getName() + '.MessageInit() exception: locations not specified or wrong given: ' + locations.toString());
         }
 
         this.entity = entity;

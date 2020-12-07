@@ -4,6 +4,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import i18next from 'i18next';
 
 class ListPaginatorSize extends Component {
     constructor(props) {
@@ -43,7 +44,7 @@ class ListPaginatorSize extends Component {
         if (options && options.length > 1) {
             return (
                 <div className='-pageSize' key={`${this.name}_${size}`}>
-                    View
+                    {i18next.t("list.pagginator_size_title")}
 
                     <select 
                         onChange={(event) => this.handleChange(event)} 
@@ -61,8 +62,6 @@ class ListPaginatorSize extends Component {
                         }
 
                     </select>
-
-                    items per page
                 </div>
             );
         }

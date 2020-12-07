@@ -3,9 +3,27 @@
  */
 
 import { makeValidator } from '../../src/classes/helpers';
-import * as Errors from "../../src/lang/Errors";
+
+const CURRENT_VALUE_NOT_NUMBER_ERROR = 'Enter valid number';
+const CURRENT_VALUE_NOT_EMAIL_ERROR = 'Enter valid email';
+const MIN_VALUE_ERROR = 'Value should be more than #VALUE#';
+const MIN_WRONG_VALUE_ERROR = 'Incorect minimum value declared';
+const MAX_VALUE_ERROR = 'Value should be less than #VALUE#';
+const MAX_WRONG_VALUE_ERROR = 'Incorect maximum value declared';
+const NUMBER_VALUE_ERROR = 'Value must be a number';
+const EMAIL_VALUE_ERROR = 'Value must be an email';
+const REQUIRED_VALUE_ERROR = 'Required field';
+const REGEXP_VALUE_ERROR = 'Not a valid value';
+const MIN_LENGTH_WRONG_VALUE_ERROR = 'Incorect min length value declared';
+const MIN_LENGTH_ERROR = 'String length should be more than #VALUE#';
+const MAX_LENGTH_WRONG_VALUE_ERROR = 'Incorect max length value declared';
+const MAX_LENGTH_ERROR = 'String length should be less than #VALUE#';
+const WRONG_REGEXP_ERROR = 'Unvalid regexp declared';
+const NOT_VALID_VALUE_ERROR = 'Not a valid value';
 
 const validate = makeValidator()
+
+//TODO - initialize i18next with english language
 
 test('Required field test #1 - value not specified', () => {
 
@@ -36,7 +54,7 @@ test('Required field test #2 - value specified but empty', () => {
 
     expect(errors).toEqual(
         [
-            Errors.REQUIRED_VALUE_ERROR
+            REQUIRED_VALUE_ERROR
         ]
     );
 });
@@ -94,7 +112,7 @@ test('Required field test #4 - 2 level depth of accessor; field not specified', 
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.REQUIRED_VALUE_ERROR
+        REQUIRED_VALUE_ERROR
     ]);
 });
 
@@ -114,7 +132,7 @@ test('Validate number field test #1 - wrong value is given (string)', () => {
 
     expect(errors).toEqual(
         [
-            Errors.NUMBER_VALUE_ERROR
+            NUMBER_VALUE_ERROR
         ]
     );
 });
@@ -186,7 +204,7 @@ test('Validate number field test #5 - wring value is given (3,15); should be in 
 
     expect(errors).toEqual(
         [
-            Errors.NUMBER_VALUE_ERROR
+            NUMBER_VALUE_ERROR
         ]
     );
 });
@@ -207,8 +225,8 @@ test('Validate email field test #1 - wrong value; empty email;', () => {
 
     expect(errors).toEqual(
         [
-            Errors.REQUIRED_VALUE_ERROR,
-            Errors.CURRENT_VALUE_NOT_EMAIL_ERROR
+            REQUIRED_VALUE_ERROR,
+            CURRENT_VALUE_NOT_EMAIL_ERROR
         ]
     );
 });
@@ -229,7 +247,7 @@ test('Validate email field test #2 - wrong value ("abscf"); not an email', () =>
 
     expect(errors).toEqual(
         [
-            Errors.CURRENT_VALUE_NOT_EMAIL_ERROR
+            CURRENT_VALUE_NOT_EMAIL_ERROR
         ]
     );
 });
@@ -249,7 +267,7 @@ test('Validate email field test #3 - wrong value ("abscf@..."); not an email.', 
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.CURRENT_VALUE_NOT_EMAIL_ERROR
+        CURRENT_VALUE_NOT_EMAIL_ERROR
     ]);
 });
 
@@ -269,7 +287,7 @@ test('Validate email field test #3 - wrong value ("abscf@index."); not an email.
 
     expect(errors).toEqual(
         [
-            Errors.CURRENT_VALUE_NOT_EMAIL_ERROR
+            CURRENT_VALUE_NOT_EMAIL_ERROR
         ]
     );
 });
@@ -290,7 +308,7 @@ test('Validate email field test #4 - wrong value; number is given', () => {
 
     expect(errors).toEqual(
         [
-            Errors.CURRENT_VALUE_NOT_EMAIL_ERROR
+            CURRENT_VALUE_NOT_EMAIL_ERROR
         ]
     );
 });
@@ -311,7 +329,7 @@ test('Validate email field test #5 - wrong value; boolean is given', () => {
 
     expect(errors).toEqual(
         [
-            Errors.CURRENT_VALUE_NOT_EMAIL_ERROR
+            CURRENT_VALUE_NOT_EMAIL_ERROR
         ]
     );
 });
@@ -349,7 +367,7 @@ test('Validate min value field test #1 - wrong value is given; string', () => {
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.CURRENT_VALUE_NOT_NUMBER_ERROR
+        CURRENT_VALUE_NOT_NUMBER_ERROR
     ]);
 });
 
@@ -368,7 +386,7 @@ test('Validate min value field test #2 - wrong value; boolean; converts to 1; le
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.MIN_VALUE_ERROR.replace("#VALUE#", 5)
+        MIN_VALUE_ERROR.replace("#VALUE#", 5)
     ]);
 });
 
@@ -387,7 +405,7 @@ test('Validate min value field test #3 - wrong value; less than min value', () =
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.MIN_VALUE_ERROR.replace("#VALUE#", 5)
+        MIN_VALUE_ERROR.replace("#VALUE#", 5)
     ]);
 });
 
@@ -493,7 +511,7 @@ test('Validate max value field test #1 - wrong value is given; string', () => {
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.CURRENT_VALUE_NOT_NUMBER_ERROR
+        CURRENT_VALUE_NOT_NUMBER_ERROR
     ]);
 });
 
@@ -512,7 +530,7 @@ test('Validate max value field test #2 - wrong value; boolean; converts to 1; mo
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.MAX_VALUE_ERROR.replace("#VALUE#", '0')
+        MAX_VALUE_ERROR.replace("#VALUE#", '0')
     ]);
 });
 
@@ -531,7 +549,7 @@ test('Validate max value field test #3 - wrong value; more than max value', () =
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.MAX_VALUE_ERROR.replace("#VALUE#", 5)
+        MAX_VALUE_ERROR.replace("#VALUE#", 5)
     ]);
 });
 
@@ -584,7 +602,7 @@ test('Validate max value field test #6 - wrong value; big float is given;', () =
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.MAX_VALUE_ERROR.replace("#VALUE#", 100)
+        MAX_VALUE_ERROR.replace("#VALUE#", 100)
     ]);
 });
 
@@ -656,7 +674,7 @@ test('Validate both min and max value field test #2 - more', () => {
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.MAX_VALUE_ERROR.replace("#VALUE#", 10)
+        MAX_VALUE_ERROR.replace("#VALUE#", 10)
     ]);
 });
 
@@ -676,7 +694,7 @@ test('Validate both min and max value field test #3 - less', () => {
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.MIN_VALUE_ERROR.replace("#VALUE#", 5)
+        MIN_VALUE_ERROR.replace("#VALUE#", 5)
     ]);
 });
 
@@ -694,7 +712,7 @@ test('Validate min length field test #1 - null value', () => {
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.MIN_LENGTH_ERROR.replace("#VALUE#", 5)
+        MIN_LENGTH_ERROR.replace("#VALUE#", 5)
     ]);
 });
 
@@ -712,7 +730,7 @@ test('Validate min length field test #2 - empty string', () => {
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.MIN_LENGTH_ERROR.replace("#VALUE#", 5)
+        MIN_LENGTH_ERROR.replace("#VALUE#", 5)
     ]);
 });
 
@@ -730,7 +748,7 @@ test('Validate min length field test #3 - short string', () => {
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.MIN_LENGTH_ERROR.replace("#VALUE#", 5)
+        MIN_LENGTH_ERROR.replace("#VALUE#", 5)
     ]);
 });
 
@@ -814,7 +832,7 @@ test('Validate max length field test #4 - to long string', () => {
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.MAX_LENGTH_ERROR.replace("#VALUE#", 5)
+        MAX_LENGTH_ERROR.replace("#VALUE#", 5)
     ]);
 });
 
@@ -833,7 +851,7 @@ test('Both min and max length field test #1 - to short string', () => {
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.MIN_LENGTH_ERROR.replace("#VALUE#", 5)
+        MIN_LENGTH_ERROR.replace("#VALUE#", 5)
     ]);
 });
 
@@ -852,7 +870,7 @@ test('Both min and max length field test #2 - to long string', () => {
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.MAX_LENGTH_ERROR.replace("#VALUE#", 10)
+        MAX_LENGTH_ERROR.replace("#VALUE#", 10)
     ]);
 });
 
@@ -887,7 +905,7 @@ test('Validate regexp field test #1 - unvalid string', () => {
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.NOT_VALID_VALUE_ERROR
+        NOT_VALID_VALUE_ERROR
     ]);
 });
 
@@ -922,7 +940,7 @@ test('Validate regexp field test #3 - unvalid string', () => {
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.NOT_VALID_VALUE_ERROR
+        NOT_VALID_VALUE_ERROR
     ]);
 });
 
@@ -956,6 +974,6 @@ test('Validate regexp field test #5 - valid number', () => {
     const errors = validate(field, data);
 
     expect(errors).toEqual([
-        Errors.NOT_VALID_VALUE_ERROR
+        NOT_VALID_VALUE_ERROR
     ]);
 });

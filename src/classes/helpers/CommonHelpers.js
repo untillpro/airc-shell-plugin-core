@@ -5,7 +5,15 @@
 import _ from 'lodash';
 import { Logger } from 'airc-shell-core';
 import { Base64 } from 'js-base64';
+import i18next from 'i18next';
 import Stream from '../Stream';
+
+import {
+    PERIOD_VALUE_TYPE,
+    WEEK_DAY,
+    PAYMENT_KIND,
+    ORDER_BUTTON_TYPES
+} from '../../const';
 
 export const isValidLocations = (locations) => {
     if (!locations || !_.isArray(locations) || locations.length === 0) {
@@ -280,4 +288,64 @@ export const valueFromClassifierField = (value, accessor, defaultValue) => {
     }
 
     return resultValue;
+}
+
+export const getPaymentKindsOptions = () => {
+    const options = {};
+
+    if (PAYMENT_KIND && _.size(PAYMENT_KIND) > 0) {
+        _.forEach(PAYMENT_KIND, (v, k) => {
+            const name = i18next.t(`payment_kind.${PAYMENT_KIND[k]}`);
+            options[name] = parseInt(k);
+        });
+    }
+
+    return options;
+};
+
+export const getWeekDay = (num) => {
+    return i18next.t(`week_day.${WEEK_DAY[num]}`);
+};
+
+export const getWeekDayOptions = () => {
+    const options = {};
+
+    if (WEEK_DAY && _.size(WEEK_DAY) > 0) {
+        _.forEach(WEEK_DAY, (v, k) => {
+            const name = i18next.t(`week_day.${WEEK_DAY[k]}`);
+            options[name] = parseInt(k);
+        });
+    }
+
+    return options;
+};
+
+export const getPeriodValueType = (num) => {
+    return i18next.t(`period_value_types.${PERIOD_VALUE_TYPE[num]}`);
+};
+
+export const getPeriodValueTypesOptions = () => {
+    const options = {};
+
+    if (PERIOD_VALUE_TYPE && _.size(PERIOD_VALUE_TYPE) > 0) {
+        _.forEach(PERIOD_VALUE_TYPE, (v, k) => {
+            const name = i18next.t(`period_value_types.${PERIOD_VALUE_TYPE[k]}`);
+            options[name] = parseInt(k);
+        });
+    }
+
+    return options;
+};
+
+export const getOrderButtonTypesOptions = () => {
+    const options = {};
+
+    if (ORDER_BUTTON_TYPES && _.size(ORDER_BUTTON_TYPES) > 0) {
+        _.forEach(ORDER_BUTTON_TYPES, (v, k) => {
+            const name = i18next.t(`order_button_types.${k}`);
+            options[name] = v;
+        });
+    }
+
+    return options;
 }

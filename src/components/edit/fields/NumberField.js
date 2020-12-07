@@ -57,11 +57,8 @@ class NumberField extends Component {
 
     render() {
         const { field, disabled } = this.props;
-
         if (!field) return null;
-
         const { placeholder } = field;
-
         const props = this.getComponentProps();
 
         return (

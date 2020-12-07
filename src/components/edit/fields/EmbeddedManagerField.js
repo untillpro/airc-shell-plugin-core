@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-
+import i18next from 'i18next';
 import EMEditForm from '../EMEditForm';
 import { Modal } from 'airc-shell-core';
 import { reduce } from '../../../classes/helpers';
@@ -220,8 +220,6 @@ class EmbeddedManagerField extends PureComponent {
     }
 
     handleSelectedRowsChange(rows, flatRows) {
-        console.log("EMField handleSelectedRowsChange: ", rows, flatRows);
-
         this.setState({ selectedRows: rows });
     }
 
@@ -325,7 +323,7 @@ class EmbeddedManagerField extends PureComponent {
                     buttonType: "simple",
                     type: 'primary',
                     key: 'header-action-edit',
-                    text: 'Edit item',
+                    text: i18next.t("list.edit_button_text"),
                     disabled: disabled ? disabled : (rows) => rows.length !== 1,
                     onClick: (rows) => this.handleHeaderAction(actionType, rows)
                 };
@@ -395,7 +393,6 @@ class EmbeddedManagerField extends PureComponent {
         const { edit, copy, entityData, current } = this.state;
 
         if (edit) {
-
             let isNew = !(_.isNumber(current) && current >= 0);
 
             return (

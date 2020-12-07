@@ -5,6 +5,8 @@
 import React, { Component } from 'react';
 import { Radio } from 'airc-shell-core';
 
+import { funcOrString } from '../../../classes/helpers';
+
 class RadioField extends Component {
     handleChange(event) {
         const { onChange } = this.props;
@@ -49,7 +51,7 @@ class RadioField extends Component {
                 checked={String(value) === String(val)}
                 onChange={this.handleChange.bind(this)}
             >
-                {text}
+                {funcOrString(text)}
             </Radio>
         );
     }

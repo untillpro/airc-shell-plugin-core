@@ -6,7 +6,7 @@ import _ from 'lodash';
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Message, Select, Button, Empty } from 'airc-shell-core';
-
+import i18next from "i18next";
 import EMEditFormFieldsBuilder from '../EMEditFormFieldsBuilder';
 import TicketLayoutPreview from './TicketLayoutPreview';
 
@@ -14,7 +14,16 @@ import {
     sendError
 } from '../../../actions/';
 
-import * as Errors from '../../../const/Errors';
+import { 
+    funcOrString
+} from "../../../classes/helpers";
+
+import { 
+    TYPE_LAYOUTS,
+    TYPE_HELPERS,
+    C_LAYOUTS_NAME,
+    C_LAYOUTS_TEMPLATE
+} from "../../../classes/contributions/Types";
 
 const Buffer = require('buffer').Buffer;
 
@@ -79,7 +88,7 @@ class TicketLayoutField extends Component {
 
         if (points.length > 0) {
             _.each(points, (code) => {
-                const layoutName = contributions.getPointContributionValue('layouts', code, 'name');
+                const layoutName = funcOrString(contributions.getPointContributionValue(TYPE_LAYOUTS, code, C_LAYOUTS_NAME));
 
                 if (layoutName) {
                     layouts[code] = layoutName;
@@ -163,7 +172,7 @@ class TicketLayoutField extends Component {
         const { context } = this.props;
         const { contributions } = context;
 
-        const tpl = contributions.getPointContributionValue('layouts', code, 'template');
+        const tpl = contributions.getPointContributionValue(TYPE_LAYOUTS, code, C_LAYOUTS_TEMPLATE);
 
         if (tpl && template && tpl !== template) {
             return true;
@@ -199,7 +208,7 @@ class TicketLayoutField extends Component {
         const { context } = this.props;
         const { contributions } = context;
 
-        const template = contributions.getPointContributionValue('layouts', code, 'template');
+        const template = contributions.getPointContributionValue(TYPE_LAYOUTS, code, C_LAYOUTS_TEMPLATE);
 
         return template;
     }
@@ -210,7 +219,7 @@ class TicketLayoutField extends Component {
 
         let settings = [];
 
-        const LAYOUT = contributions.getPointContributions('layouts', code);
+        const LAYOUT = contributions.getPointContributions(TYPE_LAYOUTS, code);
         settings = LAYOUT.settings || [];
 
         return settings;
@@ -222,7 +231,7 @@ class TicketLayoutField extends Component {
 
         const helpers = {};
  
-        const HELPERS = contributions.getPointContributions('helpers', code);
+        const HELPERS = contributions.getPointContributions(TYPE_HELPERS, code);
 
         if (_.size(HELPERS) > 0) {
             _.each(HELPERS, (arr, name) => helpers[name] = arr[0]);
@@ -252,7 +261,7 @@ class TicketLayoutField extends Component {
 
         if (!code) return;
 
-        if (!layouts[code]) this.props.sendError(Errors.WRONG_SELECTED_TICKET_LAYOUT);
+        if (!layouts[code]) this.props.sendError(i18next.t("errors.wrong_selected_ticket_layout"));
         
         const template = this.getTemplate(code);
         const settings = this.getSettings(code);
@@ -263,7 +272,7 @@ class TicketLayoutField extends Component {
         }
 
         if (!template || typeof template !== 'string') {
-            this.props.sendError(Errors.TICKET_TEMPLATE_WRONG_GIVEN);
+            this.props.sendError(i18next.t("errors.ticket_template_wrong_given"));
         } else {
             this.setState({
                 selectedLayout: code,
@@ -298,10 +307,10 @@ class TicketLayoutField extends Component {
         return (
             <Message
                 type="warning"
-                header={'Template has changed'}
-                footer={<Button onClick={this.refreshTemplate.bind(this)}>Refresh template</Button>}
+                header={i18next.t("form.ticket_template_warning_label")}
+                footer={<Button onClick={this.refreshTemplate.bind(this)}>{i18next.t("form.ticket_template_refresh")}</Button>}
             >
-                The current version of the template is different from that used in this ticket. Refresh template?
+                {i18next.t("form.ticket_template_warning")}
             </Message>
         );
     }
@@ -318,7 +327,7 @@ class TicketLayoutField extends Component {
             return (
                 <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE}
-                    description={<span>Please, select layout</span>}
+                    description={<span>{i18next.t("form.empty_layout_message")}</span>}
                 />
             );
 

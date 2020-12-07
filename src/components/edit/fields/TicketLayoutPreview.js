@@ -6,6 +6,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Handlebars from 'handlebars';
+import i18next from 'i18next';
 
 import DefaultHelpers from '../classes/DefaultHelpers';
 
@@ -14,7 +15,6 @@ import {
 } from '../../../actions/MessagesActions';
 
 import data from '../../../mock/data/TicketMockData';
-import * as Errors from '../../../const/Errors';
 
 class TicketLayoutPreview extends Component {
     constructor() {
@@ -32,7 +32,7 @@ class TicketLayoutPreview extends Component {
         const { helpers, settings, template } = this.props;
 
         if (!template || typeof template !== 'string') {
-            this.sendError(Errors.TICKET_TEMPLATE_WRONG_GIVEN);
+            this.sendError(i18next.t("errors.ticket_template_wrong_given"));
         } else {
             this.initTemplate(template);
         }

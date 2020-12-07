@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
-
 import * as Types from '../actions/Types';
 import { mergeExisting } from '../classes/helpers';
 

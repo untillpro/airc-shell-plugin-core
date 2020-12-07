@@ -4,6 +4,9 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import isProd from 'is-prod';
+
+import TestLangSelector from '../common/TestLangSelector';
 
 import RootRenderer from './RootRenderer';
 import ViewRenderer from './ViewRenderer';
@@ -13,7 +16,7 @@ import EntityEditor from './EntityEditor';
 import ReportView from '../report/ReportView';
 
 import log from '../../classes/Log';
-import { initBO, toggleLocationSelector } from '../../actions/';
+import { toggleLocationSelector } from '../../actions/';
 
 // import { ViewsGrid } from 'components';
 
@@ -29,10 +32,6 @@ class MainController extends Component {
             errorCatched: false,
             error: null
         };
-    }
-
-    componentDidMount() {
-        this.props.initBO();
     }
 
     renderStateComponent() {
@@ -65,6 +64,16 @@ class MainController extends Component {
         return null;
     }
 
+    renderProdComponents() {
+        if (!isProd.isDevelopment()) return null;
+        
+        return (
+            <>
+                <TestLangSelector />
+            </>
+        );
+    }
+
     render() {
         const { errorCatched, error } = this.state;
 
@@ -80,6 +89,8 @@ class MainController extends Component {
             <div className='page-content'>
                 {this.renderStateComponent()}
 
+                {this.renderProdComponents()}
+
                 <div className="plugin-version">
                     {process.env.REACT_APP_NAME}: {process.env.REACT_APP_VERSION}
                 </div>
@@ -94,4 +105,4 @@ const mapStateToProps = (state) => {
     return { step };
 };
 
-export default connect(mapStateToProps, { initBO, toggleLocationSelector })(MainController);
+export default connect(mapStateToProps, { toggleLocationSelector })(MainController);

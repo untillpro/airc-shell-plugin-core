@@ -6,12 +6,14 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import i18next from 'i18next';
 
 import { Logger, Radio, Checkbox } from 'airc-shell-core';
 
 import {
     setLocation
 } from '../../actions';
+
 
 class GridLocationSelector extends PureComponent {
     constructor(props) {
@@ -123,9 +125,9 @@ class GridLocationSelector extends PureComponent {
         const { debug, locations } = this.props;
         return (
             <div className="grid-location-selector-header">
-                {"Location:"}
+                {i18next.t("common.location_header")}
 
-                {debug ? (<span className="debug">selected: {locations.join(", ")}</span>) : null}
+                {debug ? (<span className="debug">{i18next.t("common.selected_label")}: {locations.join(", ")}</span>) : null}
 
             </div>
         );
@@ -155,11 +157,12 @@ GridLocationSelector.propTypes = {
 }
 
 const mapStateToProps = (state) => {
-    const { showLocationSelector, allowMultyLocations } = state.options;
+    const { showLocationSelector, allowMultyLocations, currentLanguage } = state.options;
     const { locations, locationGroups, locationsOptions } = state.locations;
 
 
     return {
+        currentLanguage,
         showLocationSelector,
         allowMultyLocations,
         locations,

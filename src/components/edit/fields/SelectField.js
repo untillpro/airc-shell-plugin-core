@@ -8,7 +8,8 @@ import { isNull, isUndefined } from 'util';
 import { Select } from 'airc-shell-core';
 
 import {
-    buildData
+    buildData,
+    funcOrString
 } from '../../../classes/helpers';
 
 const { Option, OptGroup } = Select;
@@ -32,9 +33,17 @@ class SelectField extends Component {
         const { manual, selector, options, mapper } = field;
 
         if (!manual) {
-            if (options && _.size(options) > 0) {
+            if (options) {
+                let ops = {};
+
+                if (_.isFunction(options)) {
+                    ops = options();
+                } else if (_.isPlainObject(options)) {
+                    ops = options;
+                }
+
                 this.setState({
-                    data: options
+                    data: ops
                 });
             } else if (selector) {
                 let selectData = null;
@@ -58,7 +67,7 @@ class SelectField extends Component {
                 });
             }
         } else {
-            if (value && typeof value === 'object') {
+            if (_.isPlainObject(value)) {
                 this.setState({
                     data: [value]
                 });
@@ -144,8 +153,8 @@ class SelectField extends Component {
             props.filterOption = (input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
         }
 
-        if (placeholder && typeof placeholder === 'string') {
-            props.placeholder = placeholder;
+        if (placeholder) {
+            props.placeholder = funcOrString(placeholder);
         }
 
         return props;
@@ -242,7 +251,5 @@ class SelectField extends Component {
         );
     }
 }
-
-
 
 export default SelectField;

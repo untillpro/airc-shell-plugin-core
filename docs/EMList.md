@@ -68,8 +68,8 @@ For full list of table properties you can check [Table properties](#table-proper
 
 ```javascript
     {
-        "allowSelect": Boolean, //TODO
-        "allowMultyselect": Boolean, //TODO
+        "allowSelect": Boolean,
+        "allowMultyselect": Boolean,
         "showColumnsToggler": Boolean,
         "showDeletedToggler": Boolean,
         "deletedTogglerLabel": String,

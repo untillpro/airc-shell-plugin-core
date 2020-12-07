@@ -2,13 +2,19 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 import React, { Component } from 'react';
-import moment from 'moment';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { StackEvents } from 'stack-events';
 import { CoreProvider } from 'airc-shell-core';
 
-import { StateMachineProvider, ErrorBoundary, AppLoared, ApiProvider, MainController } from './components/';
+import {
+    StateMachineProvider,
+    ErrorBoundary,
+    AppLoared,
+    ApiProvider,
+    MainController,
+    LangProvider
+} from './components/';
 
 import { ContributionFactory } from './classes/';
 
@@ -20,16 +26,13 @@ import './assets/css/main.css';
 import './assets/css/confirm-alert.css';
 import './assets/css/ticket.css';
 
-//import 'moment/locale/uk';
+// i18n
+
+import * as systemLanguages from './lang';
 
 class PluginCore extends Component {
     shouldComponentUpdate() {
         return false;
-    }
-
-    _init() {
-        // TODO l10n
-        moment.locale('en');
     }
 
     render() {
@@ -37,22 +40,22 @@ class PluginCore extends Component {
 
         let manager = ContributionFactory(contributions);
 
-        const cfg = configureStore(persistConfig, { "context": { "contributions": manager } });
-
-        this._init();
+        const { store, persistor } = configureStore(persistConfig, { "context": { "contributions": manager } });
 
         return (
-            <Provider store={cfg.store} >
+            <Provider store={store} >
                 <PersistGate
                     loading={null}
-                    persistor={cfg.persistor}
+                    persistor={persistor}
                 >
-                    <StackEvents events={[ "keydown" ]}>
+                    <StackEvents events={["keydown"]}>
                         <CoreProvider>
                             <ApiProvider>
                                 <StateMachineProvider>
                                     <ErrorBoundary>
-                                        <MainController />
+                                        <LangProvider languages={systemLanguages}>
+                                            <MainController />
+                                        </LangProvider>
                                     </ErrorBoundary>
                                 </StateMachineProvider>
                                 <AppLoared />

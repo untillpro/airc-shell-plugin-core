@@ -7,7 +7,9 @@ import { connect } from 'react-redux';
 import isProd from 'is-prod';
 
 import {
+    initPlugin,
     setContext,
+    setLanguage,
     sendData,
     sendSelectViewMessage
 } from '../../actions/';
@@ -18,7 +20,9 @@ import MockAlphaApiGate from '../../mock/MockAlphaApiGate';
 class ApiProvider extends Component {
     componentDidMount() {
         const API = {
-            selectView: (view) => this._selectView(view)
+            selectView: (view) => this._selectView(view),
+            setLanguage: (lang) => this._setLanguage(lang),
+            init: (payload) => this._init(payload)
         };
 
         let apiGate = null;
@@ -60,6 +64,20 @@ class ApiProvider extends Component {
         }
     }
 
+    _init(payload) {
+        console.group("Init method in airc-shell-bo: ");
+        console.log("payload: ", payload);
+        console.groupEnd()
+
+        this.props.initPlugin(payload);
+    }
+
+    _setLanguage(lang) {
+        console.log("Language selected in airc-shell-bo: ", lang);
+
+        this.props.setLanguage(lang)
+    }
+
     _selectView(view) {
         this.props.sendSelectViewMessage(view); 
     }
@@ -77,6 +95,8 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, { 
+    initPlugin,
+    setLanguage,
     setContext,
     sendData, 
     sendSelectViewMessage

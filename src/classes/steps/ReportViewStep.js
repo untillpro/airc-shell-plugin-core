@@ -34,11 +34,11 @@ class ReportViewStep extends StateMachineStep {
         const { report, locations, filterBy, props, from, to } = msg;
 
         if (!isValidReport(context, report)) {
-            throw new Error(this.getName() + '.MessageInit() exception: report not specified or wrong given: ' + report);
+            this.error(this.getName() + '.MessageInit() exception: report not specified or wrong given: ' + report);
         }
 
         if (!isValidLocations(locations)) {
-            throw new Error(this.getName() + '.MessageInit() exception: locations not specified or wrong given: ' + locations.toString())
+            this.error(this.getName() + '.MessageInit() exception: locations not specified or wrong given: ' + locations.toString())
         }
 
         this.locations = locations;

@@ -9,6 +9,10 @@ import { Label, FieldError, Tip } from 'airc-shell-core';
 import isEqual from 'react-fast-compare';
 
 import {
+    funcOrString
+} from '../../classes/helpers';
+
+import {
     TextField,
     MLTextField,
     CheckboxField,
@@ -111,7 +115,7 @@ class EMEditFormField extends Component {
 
         const hasErrors = errors && errors.length > 0;
 
-        const { type, accessor, label, name, disabled, span, tip, predefined } = field;
+        const { type, accessor, label, disabled, span, tip, predefined } = field;
 
         if (accessor && typeof accessor === 'string') {
             switch (type) {
@@ -147,7 +151,7 @@ class EMEditFormField extends Component {
                     {label ? (
                             <Label  
                                 error={hasErrors}
-                                text={label}
+                                text={funcOrString(field.label)}
                                 tip={tip || null}
                             />
                         ) : null}
@@ -171,7 +175,7 @@ class EMEditFormField extends Component {
                             isCopy={isCopy}
                         />
 
-                        { !label && tip ? <Tip text={tip} /> : null}
+                        { !label && tip ? <Tip text={funcOrString(field.tip)} /> : null}
                     </div>
 
                     {hasErrors ? (<FieldError text={errors[0]} />) : null}
@@ -179,7 +183,7 @@ class EMEditFormField extends Component {
             );
         }
         
-        throw new Error(`Field "${label || name || 'unknown'}" has wrong "accessor" param declared: ${accessor}`, field);
+        throw new Error(`Field has wrong "accessor" param declared: ${accessor}`, field);
     }
 }
 

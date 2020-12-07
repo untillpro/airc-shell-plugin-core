@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
+import i18next from 'i18next';
 import { Form, Select, Button } from 'antd';
 
 import { LANGUAGES } from '../../const';
@@ -35,8 +36,6 @@ class SelectLanguageForm extends PureComponent {
                 }
             });
 
-            console.log("Languages ion selector:", languages);
-
             this.setState({ languages });
         } else {
             throw new Error('No languages available. Check LANGUAGES const file.');
@@ -47,8 +46,6 @@ class SelectLanguageForm extends PureComponent {
         const { onChange } = this.props;
         const { language } = values;
 
-        console.log("handle finish: ", values);
-
         if (_.isString(language) && _.isFunction(onChange)) {
             onChange(language);
         }
@@ -56,8 +53,6 @@ class SelectLanguageForm extends PureComponent {
 
     handleCancel() {
         const { onCancel } = this.props;
-
-        console.log("handle cancel");
 
         if (_.isFunction(onCancel)) {
             onCancel();
@@ -68,10 +63,10 @@ class SelectLanguageForm extends PureComponent {
         const { languages } = this.state;
 
         return (
-            <Form.Item name="language" label="Language" /* rules={[{ validator: checkPrice }]} */>
+            <Form.Item name="language" label={i18next.t("form.language_selector_form_label")} /* rules={[{ validator: checkPrice }]} */>
                 <Select
                     showSearch
-                    placeholder="Select a language"
+                    placeholder={i18next.t("form.language_selector_placeholder")}
                     optionFilterProp="children"
                     filterOption={(input, option) =>
                         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -98,13 +93,13 @@ class SelectLanguageForm extends PureComponent {
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
-                        Submit
+                        {i18next.t("form.language_selector_form_submit")}
                     </Button>
                 </Form.Item>
 
                 <Form.Item>
                     <Button onClick={this.handleCancel}>
-                        Cancel
+                        {i18next.t("form.language_selector_form_cancel")}
                     </Button>
                 </Form.Item>
             </Form>

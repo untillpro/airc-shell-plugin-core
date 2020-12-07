@@ -43,8 +43,6 @@ class StateMachineProvider extends Component {
          * if message was specified then send it to state machine
          */
 
-        //TODO - remove state from messages
-        
         if (message) {
             let promise = null;
 
@@ -78,9 +76,9 @@ class StateMachineProvider extends Component {
 
 const mapStateToProps = (state) => {
     const { message, isGlobal, shouldPop } = state.machine;
-    const { contributions, api } = state.context;
+
     return { 
-        context: { contributions, api },
+        context: state.context,
         message, 
         isGlobal, 
         shouldPop 

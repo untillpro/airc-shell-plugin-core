@@ -30,11 +30,16 @@ import PriceCell from './cell_types/PriceCell';
 import StringCell from './cell_types/StringCell';
 import DateTimeCell from './cell_types/DateTimeCell';
 
+import { 
+    funcOrString
+} from '../../../classes/helpers';
+
 import {
     filterString,
     filterGroup,
-    renderTotalCell
+    renderTotalCell,
 } from './helpers';
+import i18next from 'i18next';
 
 const DefaultVisibleColumns = { "ID": false, "id": false, "Id": false };
 
@@ -362,9 +367,7 @@ class ListTable extends PureComponent {
         const { onValueSave } = this.props;
         const { index } = row;
 
-        console.log("handleCellSave: ", row, data);
-
-        //do validation before
+        //TODO: do validation before
         
         if (_.isFunction(onValueSave)) {
             return onValueSave(entity, data, _entry, index);
@@ -426,7 +429,7 @@ class ListTable extends PureComponent {
     }
 
     prepareDynamicColumns(columnProps) {
-        const { classifiers, onValueSave, onError } = this.props;
+        const { classifiers /*, onValueSave, onError*/ } = this.props;
 
         if (!classifiers || !_.isPlainObject(classifiers) || _.size(classifiers) === 0) {
             return [];
@@ -494,7 +497,7 @@ class ListTable extends PureComponent {
     }
 
     prepareColumn(columnProps, component) {
-        const { onValueSave, onError, entity } = this.props;
+        const { /* onValueSave, onError, */ entity } = this.props;
 
         const {
             accessor,
@@ -524,7 +527,7 @@ class ListTable extends PureComponent {
 
         const column = {
             "id": typeof accessor === "string" ? accessor : id,
-            "Header": header || Header,
+            "Header": funcOrString(header || Header),
             "accessor": accessor,
             "filterMethod": this.doFilter,
             "type": type || null,
@@ -647,7 +650,7 @@ class ListTable extends PureComponent {
         if (showActionsColumn) {
             columns.push({
                 'id': "actions",
-                'Header': 'Actions',
+                'Header': i18next.t("list.actions_column_header"),
                 'width': 150,
                 'Cell': this.renderActions.bind(this),
                 'sortable': false,
@@ -686,7 +689,6 @@ class ListTable extends PureComponent {
         const { selectedRows, component } = this.state;
         const { allowSelection } = component;
 
-
         let resultClasses = "";
 
         if (allowSelection !== false) {
@@ -696,7 +698,6 @@ class ListTable extends PureComponent {
         }
 
         if (row) {
-            //const { nestingPath } = row;
             const rowIndex = row.index;
 
             if (selectedRows.indexOf(rowIndex) >= 0) {
@@ -838,7 +839,7 @@ class ListTable extends PureComponent {
             sorted: order,
             filtered: filter,
             expanded: expanded,
-            subRowsKey: "variants"
+            subRowsKey: "childs"
         };
 
         if (manual) {

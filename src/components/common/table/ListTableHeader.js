@@ -4,6 +4,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import i18next from 'i18next';
 import { Toggler, Button } from 'airc-shell-core';
 
 import {
@@ -111,19 +112,18 @@ class ListTableHeader extends Component {
                 {
                     showDeletedToggler ? (
                         <Toggler
-                            label='Show deleted'
+                            label={i18next.t("list.show_deleted_label")}
                             right
                             onChange={this.handleShowDeletedChange}
                             checked={showDeleted}
                         />
                     ) : null
                 }
-
                 {
                     showColumnsToggler ? (
                         <ListColumnsToggler
                             columns={columns}
-                            label='Hide columns'
+                            label={i18next.t("list.hide_columns_label")}
                             onChange={this.handleColumnsVisibleChange}
                         />
                     ) : null
@@ -135,12 +135,8 @@ class ListTableHeader extends Component {
     render() {
         return (
             <div className='untill-base-table-header header-actions'>
-                {
-                    this.renderHeaderTogglers()
-                }
-                {
-                    this.renderHeaderButtons()
-                }
+                {this.renderHeaderTogglers()}
+                {this.renderHeaderButtons()}
             </div>
         );
     }

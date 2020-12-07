@@ -2,6 +2,8 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
+import { contributionTranslate } from '../helpers';
+
 class IContributor {
     /**
      * 
@@ -9,6 +11,10 @@ class IContributor {
      * 
      */
 
+    t(code, section = null, options = null) {
+        return contributionTranslate(this.entity(), code, section, options);
+    }
+    
     register() {
         throw new Error(`Class ${this.constructor.name} should implement register() method`);
     }

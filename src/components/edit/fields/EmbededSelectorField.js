@@ -35,7 +35,7 @@ class EmbededSelectorField extends PureComponent {
 
     handleSelectorChange(event) {
         if (!event.target.value) {
-            this.handleChange(0);
+            this.handleChange(null);
         }
     }
 
@@ -51,7 +51,7 @@ class EmbededSelectorField extends PureComponent {
         event.preventDefault();
 
         if (event.keyCode === 8) {
-            this.handleChange(0);
+            this.handleChange(null);
         }
         return false;
     }
@@ -158,7 +158,6 @@ class EmbededSelectorField extends PureComponent {
                     disabled={disabled}
                     className="selector-input"
                     {...props}
-                    //allowClear={false}
                     addonAfter={
                         <div 
                             onClick={this.openSelector.bind(this)}
@@ -176,7 +175,6 @@ class EmbededSelectorField extends PureComponent {
                     value={inputValue}
                     onKeyDown={this.handleKeyPress}
                     onDoubleClick={this.openSelector}
-                    //onChange={this.handleSelectorChange}
                     onChange={this.handleSelectorChange}
                 />
 

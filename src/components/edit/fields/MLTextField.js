@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
+import i18next from 'i18next';
 import { connect } from 'react-redux';
 
 import { TextInput, Button, Modal } from 'airc-shell-core';
@@ -187,7 +188,7 @@ class MLTextField extends Component {
         return (
             <Form.Item {...tailLayout}>
                 <Button type="dashed" onClick={this.handleAddLanguage} icon={<PlusOutlined />} block>
-                    Add language
+                    {i18next.t("form.add_language_button_text")}
                 </Button>
             </Form.Item>
         );
@@ -214,7 +215,7 @@ class MLTextField extends Component {
             <Modal
                 visible
                 footer={null}
-                title={"Internationalization"}
+                title={i18next.t("form.ml_form_title")}
                 onOk={this.handleMlModalConfirm}
                 onCancel={this.handleModalClose}
                 size="small"
@@ -247,7 +248,7 @@ class MLTextField extends Component {
 
                         <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">
-                                Submit
+                                {i18next.t("form.ml_form_submit_button_text")}
                             </Button>
                         </Form.Item>
                     </Form>
@@ -287,12 +288,12 @@ class MLTextField extends Component {
 }
 
 const mapStateToProps = (state) => {
-    const { availableLanguages, lang, defaultLange } = state.options;
+    const { availableLanguages, langCode, defaultLangCode } = state.options;
 
     return {
         availableLanguages,
-        lang,
-        defaultLange
+        lang: langCode,
+        defaultLang: defaultLangCode
     };
 }
 

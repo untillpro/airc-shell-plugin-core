@@ -4,9 +4,10 @@
 
 import * as Types from './Types';
 
-export const initBO = () => {
+export const initPlugin = (payload) => {
     return {
-        type: Types.INIT_BO_PLUGIN,
+        payload,
+        type: Types.INIT_PLUGIN,
     };
 };
 

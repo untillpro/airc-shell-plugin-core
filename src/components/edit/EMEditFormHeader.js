@@ -27,7 +27,8 @@ import {
     sendNeedUnifyFormMessage
 } from '../../actions/';
 
-import { TYPE_LANGUAGE } from '../../classes/contributions/Types';
+import { TYPE_TEXT } from '../../classes/contributions/Types';
+import i18next from 'i18next';
 
 
 class EMEditFormHeader extends Component {
@@ -85,38 +86,43 @@ class EMEditFormHeader extends Component {
     _getNewTitle() {
         const { contributions, entity } = this.props;
 
-        //TODO language supports
+        const title = contributions.getPointContributionValue(TYPE_TEXT, entity, 'new_entity');
 
-        const title = contributions.getPointContributionValue(TYPE_LANGUAGE, entity, 'new_entity');
-
-        if (title && typeof title === 'string') {
+        if (_.isString(title)) {
             return title;
+        } else if (_.isFunction(title)) {
+            return title();
         }
 
-        return 'New item';
+        return i18next.t("form.new_header");
     }
 
     _getEditTitle() {
         const { data, contributions, entity } = this.props;
 
-        const title = contributions.getPointContributionValue(TYPE_LANGUAGE, entity, 'edit_entity');
+        const title = contributions.getPointContributionValue(TYPE_TEXT, entity, 'edit_entity');
 
-        if (title && typeof title === 'string') {
+        if (_.isString(title)) {
             return `${title} ${data && data.name ? `: ${data.name}` : ''}`;
+        } else if (_.isFunction(title)) {
+            return title({name: data ? data.name : ''});
         }
 
-        return `Editing${data && data.name ? `: ${data.name}` : ''}`;
+        return i18next.t('form.edit_header', {name: data ? data.name : ''});
     }
 
     _getCopyTitle() {
         const { data, contributions, entity } = this.props;
 
-        const title = contributions.getPointContributionValue(TYPE_LANGUAGE, entity, 'copy_entity');
+        const title = contributions.getPointContributionValue(TYPE_TEXT, entity, 'copy_entity');
 
-        if (title && typeof title === 'string') {
+        if (_.isString(title)) {
             return `${title} ${data && data.name ? `: ${data.name}` : ''}`;
+        } else if (_.isFunction(title)) {
+            return title({name: data ? data.name : ''});
         }
-        return `Copy${data && data.name ? ` of ${data.name}` : ''}`;
+
+        return i18next.t("form.copy_header", {name: data ? data.name : ''});
     }
 
     getFormTitle() {
@@ -142,13 +148,13 @@ class EMEditFormHeader extends Component {
                     {prev ? (
                         <Button onClick={() => this.handleNavClick(prev)}>
                             <DoubleLeftOutlined />
-                            Previous
+                            {i18next.t("form.prev_button_text")}
                         </Button>
                     ) : null}
 
                     {next ? (
                         <Button onClick={() => this.handleNavClick(next)}>
-                            Next
+                             {i18next.t("form.next_button_text")}
                             <DoubleRightOutlined />
                         </Button>
                     ) : null}
@@ -175,7 +181,7 @@ class EMEditFormHeader extends Component {
 
         return (
             <Toggler
-                label={'Active'}
+                label={i18next.t("form.active_togler_label")}
                 right
                 onChange={this.handleActiveChange}
                 checked={checked}

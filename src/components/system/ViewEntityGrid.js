@@ -18,8 +18,19 @@ import {
 } from 'keycode-js';
 
 import {
-    isValidEntity
+    isValidEntity,
+    funcOrString
 } from '../../classes/helpers';
+
+import {
+    TYPE_VIEWS,
+    TYPE_ENTITIES,
+    C_VIEW_NAME,
+    C_ENTITY_NAME,
+    C_ENTITY_DESCRIPTION,
+    C_ENTITY_ICO,
+    C_ENTITY_ORDER
+} from '../../classes/contributions/Types';
 
 import {
     HeaderBackButton
@@ -54,7 +65,7 @@ class ViewEntityGrid extends Component {
         });
     }
 
-    componentDidUpdate( oldProps ) {
+    componentDidUpdate(oldProps) {
         if (oldProps.view !== this.props.view) {
             this.setState({
                 entities: this.prepareEntities()
@@ -68,23 +79,21 @@ class ViewEntityGrid extends Component {
 
     prepareEntities() {
         const { view, contributions } = this.props;
-        const viewPoint = contributions.getPointContributions('views', view);
-
+        const viewPoint = contributions.getPointContributions(TYPE_VIEWS, view);
         const entities = viewPoint.managers;
 
         let declarations = [];
 
         _.each(entities, (entityName) => {
+            const cp = contributions.getPoint(TYPE_ENTITIES, entityName);
 
-            const entityManagerPoint = contributions.getPoint('entities', entityName);
-
-            if (entityManagerPoint) {
+            if (cp) {
                 declarations.push({
-                    "name": entityManagerPoint.getContributuionValue("name"),
+                    "name": funcOrString(cp.getContributuionValue(C_ENTITY_NAME)),
                     "code": entityName,
-                    "description": entityManagerPoint.getContributuionValue("description"),
-                    "ico": entityManagerPoint.getContributuionValue("ico"),
-                    "order": entityManagerPoint.getContributuionValue("order")
+                    "description": funcOrString(cp.getContributuionValue(C_ENTITY_DESCRIPTION)),
+                    "ico": cp.getContributuionValue(C_ENTITY_ICO),
+                    "order": cp.getContributuionValue(C_ENTITY_ORDER)
                 });
             }
         });
@@ -135,12 +144,12 @@ class ViewEntityGrid extends Component {
 
     selectEntity(index) {
         const { entities } = this.state;
-        
+
         if (entities && _.size(entities) > 0 && index >= 0) {
             const e = entities[index];
 
             if (e && isValidEntity({}, e.code)) {
-                this.setState({selectedEntity: e.code});
+                this.setState({ selectedEntity: e.code });
                 this.props.sendSelectEntityMessage(e.code);
             }
         }
@@ -149,7 +158,7 @@ class ViewEntityGrid extends Component {
     renderHeader() {
         const { view, contributions } = this.props;
 
-        let header = contributions.getPointContributionValue('views', view, 'name') || '';
+        let header = funcOrString(contributions.getPointContributionValue(TYPE_VIEWS, view, C_VIEW_NAME));
 
         return (
             <div className="content-header">

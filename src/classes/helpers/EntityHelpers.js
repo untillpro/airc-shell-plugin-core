@@ -6,7 +6,6 @@ import _ from 'lodash';
 import blacklist from 'blacklist';
 import { Logger } from 'airc-shell-core';
 
-import { generateId } from './';
 import ForeignKeys from '../../const/ForeignKeys';
 
 import { reduce } from './';
@@ -18,6 +17,11 @@ import {
     C_COLLECTION_FILTER_BY,
     C_COLLECTION_ENTITY
 } from '../contributions/Types';
+
+import {
+    generateId,
+    bufferToLangMap
+} from './';
 
 export const isValidEntity = (context, entity) => {
     // TODO: implement more complex checks here
@@ -43,7 +47,12 @@ export const getCollection = async (context, resource, wsid, props) => {
                     result.Data = Data;
                     result.data = applyClassifiers(Data, resource);
 
-                    if (result.data) result.resolvedData = resolveData(result.data);
+
+                    if (result.data) {
+                        applyML(context, result.data, resource);
+
+                        result.resolvedData = resolveData(result.data);
+                    }
                 }
 
                 return result;
@@ -151,12 +160,12 @@ export const applyClassifiers = (Data, Entity) => {
 export const processClassifier = (item, classifiers = {}, entity, wsid, maxLevel = 3, level = 0) => {
     if (!item) return {};
 
-    if (!classifiers || _.size(classifiers) == 0) return item;
+    if (!classifiers || _.size(classifiers) === 0) return item;
     if (maxLevel > 0 && level >= maxLevel) return item;
 
     _.forEach(item, (value, key) => {
         if (_.isArray(value)) {
-            _.each(value, (val, i) => item[key][i] = processClassifier(val, classifiers, key, wsid, maxLevel, level + 1, ));
+            _.each(value, (val, i) => item[key][i] = processClassifier(val, classifiers, key, wsid, maxLevel, level + 1));
         } else if (_.isObject(value)) {
             processClassifier(value, classifiers, key, wsid, maxLevel, level + 1)
         } else {
@@ -175,11 +184,26 @@ export const processClassifier = (item, classifiers = {}, entity, wsid, maxLevel
     });
 
     if (item.id && !item._entry) {
+        item._wsid = wsid;
         item._entry = { id: item.id, wsid };
     }
 
     return item;
 }
+
+// mutating given data with i18n values for fields, that has ML value
+export const applyML = (context, data, Entity) => {
+    let entity = String(Entity).toLowerCase();
+    const ml = {};
+
+    if (data && _.isObject(data) && _.size(data) > 0) {
+        _.forEach(data, (variants) => {
+            _.forEach(variants, (item) => {
+                applyMLToItem(context, entity, item, ml)
+            });
+        });
+    }
+};
 
 export const resolveData = (data) => {
     let resultData = [];
@@ -191,13 +215,13 @@ export const resolveData = (data) => {
                 id: Number(row.id),
                 wsid: Number(loc)
             };
-        });
-
+        }); 
+        
         const arr = Object.values(o);
         const item = { ...arr[0] };
 
         if (arr.length > 1) {
-            item.variants = arr;
+            item.childs = arr;
         }
 
         resultData.push(item);
@@ -234,8 +258,6 @@ export const getFilterByString = (context, entity) => {
 
 
 export const processData = async (context, entity, data, entries) => {
-    console.log("ProcessData call: ", data);
-    
     if (!data || typeof data !== 'object') {
         throw new Error('Wrong data specified to .', data);
     }
@@ -243,7 +265,6 @@ export const processData = async (context, entity, data, entries) => {
     let promises = [];
 
     if (entries && entries.length > 0) {
-
         promises = entries.map((entry) => {
             const { id, wsid } = entry;
 
@@ -400,4 +421,68 @@ export const prepareCopyData = (data) => {
     }
 
     return {};
+}
+
+//*************/
+
+const applyMLToItem = (context, entity, item, ml) => {
+    if (!ml[entity]) {
+        ml[entity] = getEntityML(context, entity);
+    }
+
+    _.forEach(item, (value, key) => {
+        if (_.isArray(value)) {
+            _.each(value, (val) => applyMLToItem(context, key, val, ml));
+        } else if (_.isObject(value)) {
+            applyMLToItem(context, key, value, ml);
+        } else {
+            if (ml[entity][key]) {
+                let mlField = ml[entity][key];
+
+                if (_.isString(item[mlField])) {
+                    item[key] = getMLValue(context, item[mlField], value)
+                }
+            }
+        }
+    });
+}
+
+const getEntityML = (context, entity) => {
+    const { contributions } = context;
+    const entityContribution = contributions.getPointContributions('forms', entity);
+    const res = {};
+
+    if (entityContribution && entityContribution.sections) {
+        _.each(entityContribution.sections, (sectionName) => {
+            const s = contributions.getPointContributions('sections', sectionName);
+
+            if (s.fields.length > 0) {
+                _.forEach(s.fields, (f, n) => {
+                    const { accessor, ml_accessor } = f;
+
+                    if (accessor && ml_accessor) {
+                        res[accessor] = ml_accessor
+                    }
+                });
+            }
+        });
+    }
+
+    return res;
+}
+
+const getMLValue = (context, blob, dafaultValue) => {
+    const { langCode } = context;
+
+    let res = dafaultValue;
+
+    if (blob && _.isString(blob)) {
+        const ml = bufferToLangMap(blob);
+
+        if (ml && ml[langCode]) {
+            res = ml[langCode];
+        }
+    }
+
+    return res;
 }

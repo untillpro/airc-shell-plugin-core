@@ -40,8 +40,10 @@ class RadioGroupField extends Component {
 
         const { options, accessor } = field;
 
-        if (!options || _.size(options) <= 0) throw new Error(`There is no options to option group field "${accessor}"`);
-        if (typeof options !== 'object') throw new Error(`Wrong "options" variable type. Object expected.`);
+        const opts = _.isFunction(options) ? options() : options;
+
+        if (!opts || _.size(opts) <= 0) throw new Error(`There is no options to option group field "${accessor}"`);
+        if (typeof opts !== 'object') throw new Error(`Wrong "options" variable type. Object expected.`);
 
         const props = this.getComponentProps();
 
@@ -52,7 +54,7 @@ class RadioGroupField extends Component {
                 onChange={(val) => this.handleChange(val)}
                 value={value}
             >
-                {_.map(options, (value, text) => {
+                {_.map(opts, (value, text) => {
                     return (
                         <Radio 
                             key={`${accessor}_option_${value}`} 

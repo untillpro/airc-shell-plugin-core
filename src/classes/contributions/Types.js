@@ -14,13 +14,16 @@ export const TYPE_VIEWS = "views";
 export const TYPE_ENTITIES = "entities";
 export const TYPE_REPORTS = "reports";
 export const TYPE_EMBEDED_MANAGERS = "embededManagers";
-export const TYPE_LANGUAGE = "lang";
+export const TYPE_TEXT = "text";
+export const TYPE_LANGUAGE = "language";
 export const TYPE_LIST = "list";
 export const TYPE_URL = "url";
 export const TYPE_FORMS = "forms";
 export const TYPE_FORMSGROUPS = "formsgroups";
 export const TYPE_SECTIONS = "sections";
 export const TYPE_COLLECTION = "collection";
+export const TYPE_LAYOUTS = "layouts";
+export const TYPE_HELPERS = "helpers";
 
 // ## POINTS CONTRIBUTIONS
 
@@ -84,6 +87,7 @@ export const C_FORMS_COMPONENT = "component";
 export const C_FORMS_SECTIONS = "sections";
 export const C_FORMS_EMBEDDED_TYPE = "embeddedTypes";
 export const C_FORMS_HIDDEN = "hidden";
+export const C_FORMS_DEFAULT = "default";
 
 // ### FORMSGROUPS
 
@@ -102,3 +106,9 @@ export const C_COLLECTION_ENTITY = "entity";
 export const C_COLLECTION_REQUIRED_CLASSIFIERS = "required_classifiers";
 export const C_COLLECTION_REQUIRED_FIELDS = "required_fields";
 export const C_COLLECTION_FILTER_BY = "filter_by";
+
+// ###LAYOUTS
+
+export const C_LAYOUTS_NAME = "name";
+export const C_LAYOUTS_TEMPLATE = "template";
+

@@ -13,7 +13,7 @@ import rootReducer from './reducers';
 const persistConfigDefauult = {
     key: 'plugin',
     storage,
-    blacklist: ['plugin', 'list', 'machine', 'options', 'context']
+    blacklist: ['plugin', 'list', 'machine', 'context']
 };
 
 const loggerMiddleware = createLogger()

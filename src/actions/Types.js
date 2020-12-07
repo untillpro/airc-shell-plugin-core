@@ -2,7 +2,9 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-export const INIT_BO_PLUGIN = 'init_bo_plugin';
+
+
+export const INIT_PLUGIN = 'init_plugin';
 export const SET_LOCAIOTNS = 'set_locations';
 export const TOGGLE_LOCATIONS_SELECTOR = 'toggle_locations_selector';
 
@@ -61,8 +63,10 @@ export const SET_REPORTS_DATETIME_FILTER = "set_reports_datetime_filter";
 /* CONTEXT ACTIONS */
 
 export const ADD_TO_CONTEXT = "add_to_context";
+export const INIT_CONTEXT_LANG = "init_context_lang";
 
 /* OPTIONS ACTIONS */
 
+export const SET_PLUGIN_LANGUAGE = "set_plugin_language";
 export const ADD_AVAILABLE_LANGUAGE = "add_available_language";
 

@@ -123,3 +123,14 @@ body {
   box-sizing: border-box;
   margin-right: 50px;
 }
+
+/*********************/
+
+.test-lang-selector {
+  position: fixed;
+  width: 120px;
+  left: 10px;
+  bottom: 10px;
+
+  z-index: 100;
+}

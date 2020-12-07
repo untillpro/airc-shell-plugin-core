@@ -251,7 +251,7 @@ manager.registerContribution(TYPE_SECTIONS, 'salesAreasGeneral', 'fields', {
     "label": String,
     "placeholder": String,
     "value": String | Number,
-    "options": Object | Array, //options variants
+    "options": Object | Array,
     "disabled": Boolean | Function,
     "group": String,
     "name": String,

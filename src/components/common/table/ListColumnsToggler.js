@@ -26,10 +26,9 @@ class ListColumnsToggler extends Component {
         const { onChange } = this.props;
 
         if (onChange && typeof onChange === "function") {
-
             onChange(value, columnId);
         } else {
-            console.error("onChanged callback is not defined");
+            throw new Error("onChanged callback is not defined");
         }
     }
 

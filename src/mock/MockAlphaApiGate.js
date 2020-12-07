@@ -15,6 +15,7 @@ class MockAlphaApiGate {
     constructor() {
         this.name = "MockAlphaApiGate";
         this.host = 'https://air-alpha.untill.ru/api';
+        //this.host = 'https://air-rc.untill.ru/api';
     }
 
 
@@ -139,7 +140,7 @@ class MockAlphaApiGate {
         let params = {
             "Page": page,
             "PageSize": page_size,
-            "ShowDeleted": show_deleted,
+            "ShowDeleted": !!show_deleted,
             "Type": type,
             "WSIDs": _.isArray(wsids) ? wsids : [wsids],
             "Entries": entries,

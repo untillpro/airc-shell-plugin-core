@@ -64,13 +64,13 @@ class RenderEntityStep extends StateMachineStep {
     async MessageInit(msg, context) {
         const { contributions } = context;
         const { entity, locations } = msg;
-        
+
         if (!isValidEntity(context, entity)) {
-            throw new Error(this.getName() + '.MessageInit() exception: entity not specified or wrong given: ' + entity.toString());
+            this.error(this.getName() + '.MessageInit() exception: entity not specified or wrong given: ' + entity.toString());
         }
 
         if (!isValidLocations(locations)) {
-            throw new Error(this.getName() + '.MessageInit() exception: locations not specified or wrong given: ' + locations.toString());
+            this.error(this.getName() + '.MessageInit() exception: locations not specified or wrong given: ' + locations.toString());
         }
 
         this.entity = entity;
@@ -101,14 +101,8 @@ class RenderEntityStep extends StateMachineStep {
     }
 
     async MessageNeedMassEdit() {
-        throw Error("RenderEntityStep.MessageNeedMassEdit() not implemented yet;")
-
-        /*
-        return {
-            message: new MessageInit(),
-            newStep: new EntityMassEditStep()
-        };
-        */
+        //TOIMPLEMENT
+        this.error("RenderEntityStep.MessageNeedMassEdit() not implemented yet;")
     }
 
     async MessageCancel() {

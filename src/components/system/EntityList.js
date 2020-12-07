@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
+import i18next from 'i18next';
 import { connect } from 'react-redux';
 import { withStackEvents } from 'stack-events';
 
@@ -14,6 +15,7 @@ import {
 
 import { Search } from 'airc-shell-core';
 import { HeaderBackButton, ListTable } from '../common/';
+import { funcOrString } from '../../classes/helpers';
 
 import {
     setColumnsVisibility,
@@ -162,7 +164,7 @@ class EMList extends Component {
                     buttonType: "simple",
                     type: 'primary',
                     key: 'header-action-edit',
-                    text: 'Edit item',
+                    text: i18next.t("list.edit_button_text"),
                     disabled: (rows) => rows.length !== 1,
                     onClick: (rows) => this.handleHeaderAction(actionType, rows)
                 };
@@ -172,7 +174,7 @@ class EMList extends Component {
                     buttonType: "simple",
                     type: 'primary',
                     key: 'header-action-massedit',
-                    text: 'Mass edit',
+                    text:  i18next.t("list.mass_edit_button_text"),
                     hidden: (rows) => (!rows || rows.length <= 0),
                     disabled: (rows) => rows.length <= 1,
                     onClick: (rows) => this.handleHeaderAction(actionType, rows)
@@ -352,11 +354,7 @@ class EMList extends Component {
         const { entity, contributions } = this.props;
 
         if (entity) {
-            const name = contributions.getPointContributionValue('entities', entity, 'name');
-
-            if (name) {
-                return name;
-            }
+            return funcOrString(contributions.getPointContributionValue('entities', entity, 'name'));
         }
 
         return '<Noname>'; //todo default name.
@@ -401,7 +399,7 @@ class EMList extends Component {
                     onPageSizeChange={this.handlePageSizeChange}
                     onDoubleClick={this.handleRowDoubleClick}
                     onRowClick={this.handleRowClick}
-                    onSelectedChange={this.handleSelectedRowsChange} //TODO
+                    onSelectedChange={this.handleSelectedRowsChange}
                     onSortedChange={this.handleTableSortedChanged}
                     onFilterChage={this.handleTableFilteredChange}
                     onShowDeletedChanged={this.handleShowDeletedChanged}

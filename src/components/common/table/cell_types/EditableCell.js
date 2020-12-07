@@ -105,7 +105,7 @@ class EditableCell extends PureComponent {
 
     save(newValue = null) {
         const { cell, onSave, entity, prop, preparearer, id, index } = this.props;
-        const { value, initValue, edit, loading } = this.state;
+        const { value, initValue, loading } = this.state;
 
         if (loading) return;
         const val = !_.isNull(newValue) ? newValue : value;
@@ -197,7 +197,7 @@ class EditableCell extends PureComponent {
     render() {
         const { value } = this.state;
         const { renderer } = this.props;
-        
+
         return (
             <div className="table-editable-cell">
                 {renderer && _.isFunction(renderer) ? renderer(value, this.save, this.handleChange) : this.defaultRender()}

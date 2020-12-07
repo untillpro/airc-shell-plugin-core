@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { withStackEvents } from 'stack-events';
 import cn from 'classnames';
 import { Grid, Card, Message, Logger } from 'airc-shell-core';
+import i18next from 'i18next';
 
 import {
     KEY_RETURN,
@@ -17,10 +18,9 @@ import {
     KEY_DOWN,
 } from 'keycode-js';
 
+import { funcOrString } from '../../classes/helpers';
 import { sendSelectViewMessage } from '../../actions';
 import { GridLocationSelector } from '../common'
-
-import * as Errors from '../../const/Errors';
 
 class ViewsGrid extends Component {
     constructor(props) {
@@ -97,12 +97,11 @@ class ViewsGrid extends Component {
 
         _.each(declarations, (view) => {
             const viewDeclaration = contributions.getPoint('views', view);
-
             const declare = {};
 
-            declare.name = viewDeclaration.getContributuionValue('name');
+            declare.name = funcOrString(viewDeclaration.getContributuionValue('name'));
             declare.code = viewDeclaration.getContributuionValue('code');
-            declare.description = viewDeclaration.getContributuionValue('description');
+            declare.description = funcOrString(viewDeclaration.getContributuionValue('description'));
             declare.ico = viewDeclaration.getContributuionValue('ico');
             declare.order = viewDeclaration.getContributuionValue('order');
 
@@ -180,7 +179,7 @@ class ViewsGrid extends Component {
         return (
             <div>
                 <Message type='error' >
-                    {Errors.VIEWS_NOT_SPECIFIED}
+                    {i18next.t("errors.views_not_specified")}
                 </Message>
             </div>
         );

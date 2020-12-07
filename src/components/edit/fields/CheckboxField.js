@@ -6,6 +6,8 @@ import React, { Component } from 'react';
 
 import { Checkbox } from 'airc-shell-core';
 
+import { funcOrString } from '../../../classes/helpers';
+
 class CheckboxField extends Component {
     handleChange(event) {
         const { onChange } = this.props;
@@ -21,15 +23,13 @@ class CheckboxField extends Component {
 
         if (!field) return null;
 
-        const { text } = field;
-
         return (
             <Checkbox
                 disabled={disabled}
                 onChange={(val) => this.handleChange(val)}
                 checked={!!value}
             >
-                {text}
+                {funcOrString(field.text)}
             </Checkbox>
         );
     }

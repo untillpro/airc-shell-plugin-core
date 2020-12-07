@@ -5,8 +5,6 @@
 import React, { PureComponent } from 'react';
 import EditableCell from './EditableCell';
 
-import { formatNumber } from '../../../../classes/helpers';
-
 import { Checkbox } from 'airc-shell-core';
 
 class BooleanCell extends PureComponent {

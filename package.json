@@ -1,6 +1,6 @@
 {
   "name": "airc-shell-plugin-core",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "private": true,
   "homepage": ".",
   "dependencies": {
@@ -11,6 +11,7 @@
     "classnames": "^2.2.6",
     "color-shorthand-hex-to-six-digit": "^2.10.58",
     "handlebars": "^4.7.6",
+    "i18next": "^19.8.4",
     "iframe-api": "^0.10.0",
     "is-prod": "^1.0.1",
     "lodash": "^4.17.15",

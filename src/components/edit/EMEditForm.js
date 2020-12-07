@@ -25,8 +25,14 @@ import {
 
 import {
     makeValidator,
-    mergeDeep
+    mergeDeep,
+    funcOrString
 } from '../../classes/helpers';
+
+import {
+    TYPE_FORMS,
+    C_FORMS_DEFAULT
+} from '../../classes/contributions/Types';
 
 import {
     sendNeedEditFormMessage,
@@ -36,6 +42,7 @@ import {
 } from '../../actions/';
 
 import log from '../../classes/Log';
+import i18next from 'i18next';
 
 class EMEditForm extends Component {
     constructor() {
@@ -143,13 +150,13 @@ class EMEditForm extends Component {
         const { contributions, entity } = this.props;
         let changedData = { state: 1 };
 
-        const defaultValues = contributions.getPointContributionValue('forms', entity, 'default');
+        const defaultValues = contributions.getPointContributionValue(TYPE_FORMS, entity, C_FORMS_DEFAULT);
 
-        if (defaultValues && typeof defaultValues === 'object') {
+        if (_.isPlainObject(defaultValues)) {
             changedData = { ...changedData, ...defaultValues };
         }
 
-        if (sections && _.isArray(sections)) {
+        if (_.isArray(sections)) {
             _.forEach(sections, (section) => {
                 if (section && section.fields && _.isArray(section.fields)) {
                     _.forEach(section.fields, (field) => {
@@ -189,9 +196,9 @@ class EMEditForm extends Component {
         confirmAlert({
             customUI: ({ onClose }) => <ConfirmModal
                 onClose={onClose}
-                header="Confirm form close"
-                text="Leaving this page will cause all unsaved changes to be lost"
-                confirmText="Discard changes and leave"
+                header={i18next.t("form.confirm_modal.header")}
+                text={i18next.t("form.confirm_modal.text")}
+                confirmText={i18next.t("form.confirm_modal.confirm_text")}
                 onConfirm={() => {
                     if (onConfirm && typeof onConfirm === 'function') {
                         onConfirm();
@@ -199,7 +206,7 @@ class EMEditForm extends Component {
 
                     onClose();
                 }}
-                rejectText="Return to editing"
+                rejectText={i18next.t("form.confirm_modal.reject_text")}
                 onReject={onClose}
             />
         });
@@ -409,7 +416,7 @@ class EMEditForm extends Component {
                             return <SectionItem
                                 error={sectionsErrors ? sectionsErrors[index] : false}
                                 key={`tab_${index}`}
-                                text={item.name}
+                                text={funcOrString(item.name)}
                                 active={index === section}
                                 onClick={() => this.handleSectionSelect(index)}
                             />
@@ -485,7 +492,7 @@ class EMEditForm extends Component {
                     <Button
                         onClick={this.doValidate}
                     >
-                        {"Validate"}
+                        {i18next.t("form.validate_button_text")}
                     </Button>
                 ) : null}
 
@@ -493,7 +500,7 @@ class EMEditForm extends Component {
                     type="primary"
                     onClick={this.doProceed}
                 >
-                    {"Proceed"}
+                    {i18next.t("form.proceed_button_text")}
                 </Button>
             </div>
         );
