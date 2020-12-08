@@ -57,9 +57,7 @@ class LangProvider extends PureComponent {
             }, (err, t) => {
                 if(!err) {
                     this._initEntitiesI18n()
-
-                    moment.locale(i18next.language);
-
+                    moment.locale(lng);
                     this.props.initContextLang(lng, code)
                 } else {
                     console.log(err);

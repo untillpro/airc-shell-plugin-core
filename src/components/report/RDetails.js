@@ -16,6 +16,7 @@ import {
 
 import { DateTimeFilter, Button } from 'airc-shell-core';
 import { getDatetimePeriods, makeValidator } from '../../classes/helpers/';
+import i18next from 'i18next';
 
 class ReportDetails extends Component {
     constructor(props) {
@@ -173,10 +174,10 @@ class ReportDetails extends Component {
                 <div className="page-section-field span-6">
                     <DateTimeFilter
                         showCustom
+                        customTitle={i18next.t("form.custom_tab_text")}
                         periods={periods}
 
                         error={isError}
-                        errorMessage={"Please select datetime range"}
                         from={fromDateTime}
                         to={toDateTime}
                         fromTime={workingHoursFrom}
@@ -185,6 +186,14 @@ class ReportDetails extends Component {
                         onTabChange={null}
                         onChange={this.handleDateTimeChange}
                         onPeriodSelected={this.handlePeriodSelected}
+
+                        nowLabel={i18next.t("form.datetime_filter_now_label")}
+                        
+                        fromLabel={i18next.t("form.datetime_filter_from_label")}
+                        toLabel={i18next.t("form.datetime_filter_to_label")}
+
+                        emptymessage={i18next.t("errors.no_periods_found")}
+                        errorMessage={i18next.t("errors.select_date_time_range")}
                     />
                 </div>
             </div>
@@ -240,7 +249,7 @@ class ReportDetails extends Component {
     renderButtons() {
         return (
             <div className="page-section-content-buttons">
-                <Button type="primary" onClick={this.doGenerate}> {"Generate Report"} </Button>
+                <Button type="primary" onClick={this.doGenerate}> {i18next.t("form.generate_report_button_text")} </Button>
             </div>
         );
     }

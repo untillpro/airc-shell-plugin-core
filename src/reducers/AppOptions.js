@@ -2,6 +2,8 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 import _ from 'lodash';
+import moment from 'moment';
+
 import {
     INIT_PLUGIN,
     SET_PLUGIN_LANGUAGE,
@@ -60,7 +62,8 @@ export default (state = INITIAL_STATE, action) => {
 
         case SET_PLUGIN_LANGUAGE:
             if (_.isPlainObject(action.payload)) {
-                console.log("setting lanh to: ", action.payload);
+                moment.locale(action.payload.locale);
+
                 return {
                     ...state,
                     langCode: action.payload.code,

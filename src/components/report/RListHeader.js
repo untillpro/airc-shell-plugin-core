@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
+import i18next from 'i18next';
 import { connect } from 'react-redux';
 import { Button, DateTimeFilterModal } from 'airc-shell-core';
 
@@ -66,6 +67,14 @@ class RListHeader extends PureComponent {
                     format="DD/MM/YYYY HH:mm"
 
                     onChange={this.handleDateFilterChange}
+
+                    nowLabel={i18next.t("form.datetime_filter_now_label")}
+                    
+                    fromLabel={i18next.t("form.datetime_filter_from_label")}
+                    toLabel={i18next.t("form.datetime_filter_to_label")}
+
+                    emptymessage={i18next.t("errors.no_periods_found")}
+                    errorMessage={i18next.t("errors.select_date_time_range")}
                 />
             </div>
         );

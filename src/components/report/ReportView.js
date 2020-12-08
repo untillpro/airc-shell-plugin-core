@@ -24,6 +24,10 @@ import {
     C_REPORT_COMPLEX_TYPE
 } from '../../classes/contributions/Types';
 
+import { 
+    funcOrString
+} from '../../classes/helpers';
+
 class ReportView extends Component {
     constructor(props) {
         super(props);
@@ -42,11 +46,9 @@ class ReportView extends Component {
         const { report, contributions } = this.props;
 
         const isComplex = contributions.getPointContributionValue(TYPE_REPORTS, report, C_REPORT_COMPLEX);
-        console.log("ReportView.componentDidMount: ", isComplex);
 
         if (isComplex) {
             const types = contributions.getPointContributionValues(TYPE_REPORTS, report, C_REPORT_COMPLEX_TYPE);
-            console.log("ReportView.componentDidMount types: ", types);
 
             this.setState({
                 isComplex: true,
@@ -68,7 +70,7 @@ class ReportView extends Component {
     renderEntityName() {
         const { report, contributions } = this.props;
 
-        const name = contributions.getPointContributionValue(TYPE_REPORTS, report, C_REPORT_NAME);
+        const name = funcOrString(contributions.getPointContributionValue(TYPE_REPORTS, report, C_REPORT_NAME));
 
         if (name) {
             return name;

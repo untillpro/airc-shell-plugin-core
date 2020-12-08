@@ -22,6 +22,8 @@ import {
     sendCancelMessage,
 } from '../../actions/';
 
+import { funcOrString } from '../../classes/helpers';
+
 import ReportDetails from '../report/RDetails';
 
 class ViewReportsList extends Component {
@@ -72,7 +74,7 @@ class ViewReportsList extends Component {
 
                 if (point) {
                     reports.push({
-                        "name": contributions.getPointContributionValue('reports', code, 'name'),
+                        "name": funcOrString(contributions.getPointContributionValue('reports', code, 'name')),
                         "code": code,
                         "order": contributions.getPointContributionValue('reports', code, 'order') || 0
                     });
@@ -107,8 +109,8 @@ class ViewReportsList extends Component {
         const { searchStr } = this.state;
         const { view, contributions } = this.props;
 
-        let header = contributions.getPointContributionValue('views', view, 'name') || '';
-
+        let header = funcOrString(contributions.getPointContributionValue('views', view, 'name'));
+        
         return (
             <div className="content-header">
                 <div className="grid clo-2 row-1">

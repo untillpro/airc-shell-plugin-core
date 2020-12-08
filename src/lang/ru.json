@@ -42,7 +42,13 @@
                 "text": "Если вы покинете эту страницу, все несохраненные изменения будут потеряны.",
                 "confirm_text": "Отменить изменения и выйти",
                 "reject_text": "Вернуться к редактированию"
-            }
+            },
+            "generate_report_button_text": "Сгенерировать отчет",
+            "change_date_button_text": "Поменять дату",
+            "datetime_filter_from_label": "С:",
+            "datetime_filter_to_label": "По:",
+            "datetime_filter_now_label": "сейчас",
+            "custom_tab_text": "Пользовательская"
         },
         "payment_kind": {
             "cash": "Cash",

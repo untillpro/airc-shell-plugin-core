@@ -39,7 +39,13 @@
                 "text": "Leaving this page will cause all unsaved changes to be lost",
                 "confirm_text": "Discard changes and leave",
                 "reject_text": "Return to editing"
-            }
+            },
+            "generate_report_button_text": "Generate Report",
+            "change_date_button_text": "Change date",
+            "datetime_filter_from_label": "From:",
+            "datetime_filter_to_label": "To:",
+            "datetime_filter_now_label": "now",
+            "custom_tab_text": "Custom"
         },
         "payment_kind": {
             "cash": "Cash",
@@ -135,7 +141,9 @@
             "not_valid_value_error": "Not a valid value",
             "views_not_specified": "There is no pcesified views for this plugin",
             "wrong_selected_ticket_layout": "Selected layout not presented in available ticket layouts",
-            "ticket_template_wrong_given": "Layout's template not specified or wrong given"
+            "ticket_template_wrong_given": "Layout's template not specified or wrong given",
+            "select_date_time_range": "Please select datetime range",
+            "no_periods_found": "No periods found"
         }
     }
 }
