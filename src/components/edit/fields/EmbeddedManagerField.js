@@ -5,9 +5,8 @@
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import i18next from 'i18next';
 import EMEditForm from '../EMEditForm';
-import { Modal } from 'airc-shell-core';
+import { Modal, translate as t } from 'airc-shell-core';
 import { reduce } from '../../../classes/helpers';
 import { ListTable } from '../../common';
 import isEqual from 'react-fast-compare'
@@ -323,7 +322,7 @@ class EmbeddedManagerField extends PureComponent {
                     buttonType: "simple",
                     type: 'primary',
                     key: 'header-action-edit',
-                    text: i18next.t("list.edit_button_text"),
+                    text: t("Edit item", "list"),
                     disabled: disabled ? disabled : (rows) => rows.length !== 1,
                     onClick: (rows) => this.handleHeaderAction(actionType, rows)
                 };

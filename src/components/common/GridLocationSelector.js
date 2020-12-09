@@ -6,7 +6,7 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import i18next from 'i18next';
+import { translate as t } from 'airc-shell-core';
 
 import { Logger, Radio, Checkbox } from 'airc-shell-core';
 
@@ -122,13 +122,9 @@ class GridLocationSelector extends PureComponent {
     }
 
     renderHeader() {
-        const { debug, locations } = this.props;
         return (
             <div className="grid-location-selector-header">
-                {i18next.t("common.location_header")}
-
-                {debug ? (<span className="debug">{i18next.t("common.selected_label")}: {locations.join(", ")}</span>) : null}
-
+                {t("location_header", "common")}
             </div>
         );
     }

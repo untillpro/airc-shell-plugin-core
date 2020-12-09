@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { translate as t } from 'airc-shell-core';
 import EMEditFormFieldsBuilder from '../edit/EMEditFormFieldsBuilder';
 
 import {
@@ -16,7 +16,6 @@ import {
 
 import { DateTimeFilter, Button } from 'airc-shell-core';
 import { getDatetimePeriods, makeValidator } from '../../classes/helpers/';
-import i18next from 'i18next';
 
 class ReportDetails extends Component {
     constructor(props) {
@@ -174,7 +173,6 @@ class ReportDetails extends Component {
                 <div className="page-section-field span-6">
                     <DateTimeFilter
                         showCustom
-                        customTitle={i18next.t("form.custom_tab_text")}
                         periods={periods}
 
                         error={isError}
@@ -187,13 +185,15 @@ class ReportDetails extends Component {
                         onChange={this.handleDateTimeChange}
                         onPeriodSelected={this.handlePeriodSelected}
 
-                        nowLabel={i18next.t("form.datetime_filter_now_label")}
-                        
-                        fromLabel={i18next.t("form.datetime_filter_from_label")}
-                        toLabel={i18next.t("form.datetime_filter_to_label")}
+                        customTitle={t("Custom", "form")}
 
-                        emptymessage={i18next.t("errors.no_periods_found")}
-                        errorMessage={i18next.t("errors.select_date_time_range")}
+                        nowLabel={t("now", "form")}
+                        
+                        fromLabel={t("From", "form")}
+                        toLabel={t("To", "form")}
+
+                        emptymessage={t("No periods found", "errors")}
+                        errorMessage={t("Please select datetime range", "errors")}
                     />
                 </div>
             </div>
@@ -249,7 +249,7 @@ class ReportDetails extends Component {
     renderButtons() {
         return (
             <div className="page-section-content-buttons">
-                <Button type="primary" onClick={this.doGenerate}> {i18next.t("form.generate_report_button_text")} </Button>
+                <Button type="primary" onClick={this.doGenerate}> {t("Generate Report", "form")} </Button>
             </div>
         );
     }

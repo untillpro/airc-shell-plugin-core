@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import i18next from 'i18next';
+import { translate as t } from 'airc-shell-core';
 import { Toggler, Button } from 'airc-shell-core';
 
 import {
@@ -112,7 +112,7 @@ class ListTableHeader extends Component {
                 {
                     showDeletedToggler ? (
                         <Toggler
-                            label={i18next.t("list.show_deleted_label")}
+                            label={t("Show deleted", "list")}
                             right
                             onChange={this.handleShowDeletedChange}
                             checked={showDeleted}
@@ -123,7 +123,7 @@ class ListTableHeader extends Component {
                     showColumnsToggler ? (
                         <ListColumnsToggler
                             columns={columns}
-                            label={i18next.t("list.hide_columns_label")}
+                            label={t("Hide columns", "list")}
                             onChange={this.handleColumnsVisibleChange}
                         />
                     ) : null

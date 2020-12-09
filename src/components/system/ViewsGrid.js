@@ -7,8 +7,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStackEvents } from 'stack-events';
 import cn from 'classnames';
-import { Grid, Card, Message, Logger } from 'airc-shell-core';
-import i18next from 'i18next';
+import { 
+    Grid, 
+    Card, 
+    Message, 
+    Logger,
+    translate as t
+} from 'airc-shell-core';
 
 import {
     KEY_RETURN,
@@ -179,7 +184,7 @@ class ViewsGrid extends Component {
         return (
             <div>
                 <Message type='error' >
-                    {i18next.t("errors.views_not_specified")}
+                    {t("views_not_specified", "errors")}
                 </Message>
             </div>
         );

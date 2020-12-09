@@ -7,7 +7,7 @@ import React, { PureComponent } from "react";
 import { connect } from 'react-redux';
 import PropTypes from "prop-types";
 import blacklist from "blacklist";
-import { Checkbox, Logger } from 'airc-shell-core';
+import { Checkbox, Logger, translate as t } from 'airc-shell-core';
 import isEqual from 'react-fast-compare';
 
 import {
@@ -39,7 +39,6 @@ import {
     filterGroup,
     renderTotalCell,
 } from './helpers';
-import i18next from 'i18next';
 
 const DefaultVisibleColumns = { "ID": false, "id": false, "Id": false };
 
@@ -650,7 +649,7 @@ class ListTable extends PureComponent {
         if (showActionsColumn) {
             columns.push({
                 'id': "actions",
-                'Header': i18next.t("list.actions_column_header"),
+                'Header': t("Actions", "list"),
                 'width': 150,
                 'Cell': this.renderActions.bind(this),
                 'sortable': false,

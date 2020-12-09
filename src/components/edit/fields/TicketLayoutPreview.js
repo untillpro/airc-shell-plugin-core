@@ -6,8 +6,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Handlebars from 'handlebars';
-import i18next from 'i18next';
-
+import { translate as t } from 'airc-shell-core';
 import DefaultHelpers from '../classes/DefaultHelpers';
 
 import {
@@ -32,7 +31,7 @@ class TicketLayoutPreview extends Component {
         const { helpers, settings, template } = this.props;
 
         if (!template || typeof template !== 'string') {
-            this.sendError(i18next.t("errors.ticket_template_wrong_given"));
+            this.sendError(t("Layout's template not specified or wrong given", "errors"));
         } else {
             this.initTemplate(template);
         }

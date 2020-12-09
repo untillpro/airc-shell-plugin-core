@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
-import i18next from 'i18next';
+import { translate as t } from 'airc-shell-core';
 import { Form, Select, Button } from 'antd';
 
 import { LANGUAGES } from '../../const';
@@ -63,10 +63,13 @@ class SelectLanguageForm extends PureComponent {
         const { languages } = this.state;
 
         return (
-            <Form.Item name="language" label={i18next.t("form.language_selector_form_label")} /* rules={[{ validator: checkPrice }]} */>
+            <Form.Item 
+                name="language" 
+                label={t("Language", "form")}
+            >
                 <Select
                     showSearch
-                    placeholder={i18next.t("form.language_selector_placeholder")}
+                    placeholder={t("Select a language", "form")}
                     optionFilterProp="children"
                     filterOption={(input, option) =>
                         option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -93,13 +96,13 @@ class SelectLanguageForm extends PureComponent {
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
-                        {i18next.t("form.language_selector_form_submit")}
+                        {t("Submit", "common")}
                     </Button>
                 </Form.Item>
 
                 <Form.Item>
                     <Button onClick={this.handleCancel}>
-                        {i18next.t("form.language_selector_form_cancel")}
+                        {t("Cancel", "common")}
                     </Button>
                 </Form.Item>
             </Form>

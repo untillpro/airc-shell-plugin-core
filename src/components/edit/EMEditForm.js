@@ -7,7 +7,6 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { confirmAlert } from 'react-confirm-alert';
 import { withStackEvents } from 'stack-events';
-
 import {
     KEY_RETURN,
     KEY_ESCAPE
@@ -20,7 +19,8 @@ import {
     Button,
     Sections,
     SectionItem,
-    ConfirmModal
+    ConfirmModal,
+    translate as t
 } from 'airc-shell-core';
 
 import {
@@ -42,7 +42,6 @@ import {
 } from '../../actions/';
 
 import log from '../../classes/Log';
-import i18next from 'i18next';
 
 class EMEditForm extends Component {
     constructor() {
@@ -196,9 +195,9 @@ class EMEditForm extends Component {
         confirmAlert({
             customUI: ({ onClose }) => <ConfirmModal
                 onClose={onClose}
-                header={i18next.t("form.confirm_modal.header")}
-                text={i18next.t("form.confirm_modal.text")}
-                confirmText={i18next.t("form.confirm_modal.confirm_text")}
+                header={t("header", "form.confirm_modal")}
+                text={t("text", "form.confirm_modal")}
+                confirmText={t("Discard changes and leave", "form.confirm_modal")}
                 onConfirm={() => {
                     if (onConfirm && typeof onConfirm === 'function') {
                         onConfirm();
@@ -206,7 +205,7 @@ class EMEditForm extends Component {
 
                     onClose();
                 }}
-                rejectText={i18next.t("form.confirm_modal.reject_text")}
+                rejectText={t("reject_text", "form.confirm_modal")}
                 onReject={onClose}
             />
         });
@@ -492,7 +491,7 @@ class EMEditForm extends Component {
                     <Button
                         onClick={this.doValidate}
                     >
-                        {i18next.t("form.validate_button_text")}
+                        {t("Validate", "common")}
                     </Button>
                 ) : null}
 
@@ -500,7 +499,7 @@ class EMEditForm extends Component {
                     type="primary"
                     onClick={this.doProceed}
                 >
-                    {i18next.t("form.proceed_button_text")}
+                    {t("Proceed", "common")}
                 </Button>
             </div>
         );

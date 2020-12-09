@@ -5,7 +5,6 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import {
     DoubleLeftOutlined,
     DoubleRightOutlined,
@@ -14,8 +13,7 @@ import {
     BlockOutlined
 } from '@ant-design/icons';
 
-import { Button, Toggler } from 'airc-shell-core';
-
+import { Button, Toggler, translate as t } from 'airc-shell-core';
 import { HeaderBackButton } from '../common';
 
 import {
@@ -28,7 +26,6 @@ import {
 } from '../../actions/';
 
 import { TYPE_TEXT } from '../../classes/contributions/Types';
-import i18next from 'i18next';
 
 
 class EMEditFormHeader extends Component {
@@ -94,7 +91,7 @@ class EMEditFormHeader extends Component {
             return title();
         }
 
-        return i18next.t("form.new_header");
+        return t("new_header", "common");
     }
 
     _getEditTitle() {
@@ -108,7 +105,7 @@ class EMEditFormHeader extends Component {
             return title({name: data ? data.name : ''});
         }
 
-        return i18next.t('form.edit_header', {name: data ? data.name : ''});
+        return t('edit_header', 'common', {name: data ? data.name : ''});
     }
 
     _getCopyTitle() {
@@ -122,7 +119,7 @@ class EMEditFormHeader extends Component {
             return title({name: data ? data.name : ''});
         }
 
-        return i18next.t("form.copy_header", {name: data ? data.name : ''});
+        return t("copy_header", 'common', {name: data ? data.name : ''});
     }
 
     getFormTitle() {
@@ -148,13 +145,13 @@ class EMEditFormHeader extends Component {
                     {prev ? (
                         <Button onClick={() => this.handleNavClick(prev)}>
                             <DoubleLeftOutlined />
-                            {i18next.t("form.prev_button_text")}
+                            {t("Previous", "form")}
                         </Button>
                     ) : null}
 
                     {next ? (
                         <Button onClick={() => this.handleNavClick(next)}>
-                             {i18next.t("form.next_button_text")}
+                             {t("Next", "form")}
                             <DoubleRightOutlined />
                         </Button>
                     ) : null}
@@ -181,7 +178,7 @@ class EMEditFormHeader extends Component {
 
         return (
             <Toggler
-                label={i18next.t("form.active_togler_label")}
+                label={t("Is active", "form")}
                 right
                 onChange={this.handleActiveChange}
                 checked={checked}

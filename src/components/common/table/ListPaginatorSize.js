@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import i18next from 'i18next';
+import { translate as t } from 'airc-shell-core';
 
 class ListPaginatorSize extends Component {
     constructor(props) {
@@ -44,7 +44,7 @@ class ListPaginatorSize extends Component {
         if (options && options.length > 1) {
             return (
                 <div className='-pageSize' key={`${this.name}_${size}`}>
-                    {i18next.t("list.pagginator_size_title")}
+                    {t("Items per page:", "list")}
 
                     <select 
                         onChange={(event) => this.handleChange(event)} 

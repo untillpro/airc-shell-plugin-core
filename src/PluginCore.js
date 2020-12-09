@@ -30,7 +30,7 @@ import './assets/css/ticket.css';
 
 import 'moment/locale/ru';
 
-import * as systemLanguages from './lang';
+import * as systemLanguages from './.lang';
 
 class PluginCore extends Component {
     shouldComponentUpdate() {

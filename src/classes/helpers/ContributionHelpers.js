@@ -1,8 +1,7 @@
 import _ from 'lodash';
-import i18next from 'i18next';
+import { translate as t } from 'airc-shell-core';
 
 import { TYPE_LANGUAGE } from '../contributions/Types';
-
 
 export const addContributionLanguages = (manager, contribution, languages) => {
     if (languages && _.isObject(languages) && _.size(languages) > 0) {
@@ -28,13 +27,7 @@ export const contributionTranslate = (entity, code, section, options) => {
         path += `.${section}`;
     }
 
-    path += `.${code}`;
-
-    if (i18next.exists(path)) {
-        return i18next.t(path, options);
-    }
-
-    return code;
+    return t(code, path, options);;
 };
 
 //funcOrString

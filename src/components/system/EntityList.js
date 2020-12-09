@@ -4,7 +4,7 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
-import i18next from 'i18next';
+import { translate as t } from 'airc-shell-core';
 import { connect } from 'react-redux';
 import { withStackEvents } from 'stack-events';
 
@@ -164,7 +164,7 @@ class EMList extends Component {
                     buttonType: "simple",
                     type: 'primary',
                     key: 'header-action-edit',
-                    text: i18next.t("list.edit_button_text"),
+                    text: t("Edit item", "list"),
                     disabled: (rows) => rows.length !== 1,
                     onClick: (rows) => this.handleHeaderAction(actionType, rows)
                 };
@@ -174,7 +174,7 @@ class EMList extends Component {
                     buttonType: "simple",
                     type: 'primary',
                     key: 'header-action-massedit',
-                    text:  i18next.t("list.mass_edit_button_text"),
+                    text:  t("Mass edit", "list"),
                     hidden: (rows) => (!rows || rows.length <= 0),
                     disabled: (rows) => rows.length <= 1,
                     onClick: (rows) => this.handleHeaderAction(actionType, rows)

@@ -4,8 +4,7 @@
 
 import _ from 'lodash';
 import React from 'react';
-import i18next from 'i18next';
-import { Button } from 'airc-shell-core';
+import { Button, translate as t } from 'airc-shell-core';
 import EmbeddedManagerField from './EmbeddedManagerField';
 
 import {
@@ -45,7 +44,7 @@ class EmbeddedManagerPredefinedField extends EmbeddedManagerField {
                     buttonType: "simple",
                     type: 'primary',
                     key: 'header-action-edit',
-                    text: i18next.t("list.edit_button_text"),
+                    text: t("Edit item", "list"),
                     disabled: disabled ? disabled : (rows) => rows.length !== 1,
                     onClick: (rows) => this.handleHeaderAction(actionType, rows)
                 };

@@ -3,7 +3,7 @@
  */
 
 import _ from 'lodash';
-import i18next from 'i18next';
+import { translate as t } from 'airc-shell-core';
 
 class FieldValidator {
     validate(field, data, embedded_type) {
@@ -49,9 +49,9 @@ class FieldValidator {
         const curVal = Number(value);
 
         if (!curVal) {
-            errors.push(i18next.t("errors.current_value_not_number_error"));
+            errors.push(t("Enter valid number", "errors"));
         } else if (curVal < minVal) {
-            errors.push(i18next.t("errors.min_value_error", { value: minVal}));
+            errors.push(t("Value should be more than {{value}}", "errors", { value: minVal}));
         }
     }
 
@@ -60,9 +60,9 @@ class FieldValidator {
         const curVal = Number(value);
 
         if (!curVal) {
-            errors.push(i18next.t("errors.current_value_not_number_error"));
+            errors.push(t("Enter valid number", "errors"));
         } else if (curVal > maxVal) {
-            errors.push(i18next.t("errors.max_value_error", { value: maxVal}));
+            errors.push(t("Value should be less than {{value}}", "errors", { value: maxVal}));
         }
     }
 
@@ -71,7 +71,7 @@ class FieldValidator {
         const curValue = String(value);
 
         if (curValue.length < minVal) {
-            errors.push(i18next.t("errors.min_length_error", {value: minVal}));
+            errors.push(t("String length should be more than {{value}}", "errors", {value: minVal}));
         }
     }
 
@@ -80,14 +80,14 @@ class FieldValidator {
         const curValue = String(value);
 
         if (curValue.length > maxVal) {
-            errors.push(i18next.t("errors.max_length_error", {value: maxVal}));
+            errors.push(t("String length should be less than {{value}}", "errors", {value: maxVal}));
         }
     }
 
     validateNumber(value, errors) {
         const curVal = Number(value);
         if (!curVal) {
-            errors.push(i18next.t("errors.number_value_error"));
+            errors.push(t("Value must be a number", "errors"));
         }
     }
 
@@ -96,7 +96,7 @@ class FieldValidator {
         var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
         if (!re.test(curVal)) {
-            errors.push(i18next.t("errors.current_value_not_email_error"));
+            errors.push(t("Enter valid email", "errors"));
         }
     }
 
@@ -105,15 +105,15 @@ class FieldValidator {
         const curVal = String(value);
 
         if (!re) {//
-            errors.push(i18next.t("errors.wrong_regexp_error"));
+            errors.push(t("Unvalid regexp declared", "errors"));
         } else if (!re.test(curVal)) {
-            errors.push(i18next.t("errors.not_valid_value_error"))
+            errors.push(t("Not a valid value", "errors"))
         }
     }
 
     validateRequired(value, errors) {
         if (_.isNil(value) || value === "") {
-            errors.push(i18next.t("errors.required_value_error"));
+            errors.push(t("Required field", "errors"));
         }
     }
 }

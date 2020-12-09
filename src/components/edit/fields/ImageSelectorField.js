@@ -3,10 +3,8 @@
  */
 
 import React, { Component, Fragment } from 'react';
-import i18next from 'i18next';
 import { connect } from 'react-redux';
-import { ImageSelector, Tip } from 'airc-shell-core';
-
+import { ImageSelector, Tip, translate as t  } from 'airc-shell-core';
 import {
     sendError
 } from '../../../actions/MessagesActions';
@@ -28,7 +26,7 @@ class NumberField extends Component {
         if (maxImageSize && typeof maxImageSize === 'number' && maxImageSize > 0) {
             const size = getFileSize(maxImageSize);
             
-            return <Tip text={i18next.t("form.max_image_size", {size: size.formated})} />
+            return <Tip text={t("Max image size: {{size}}", "form", {size: size.formated})} />
         }
     }
 

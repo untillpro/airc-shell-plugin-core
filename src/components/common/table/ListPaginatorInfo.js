@@ -3,7 +3,7 @@
  */
 
 import React, { Component } from 'react';
-import i18next from 'i18next';
+import { translate as t } from 'airc-shell-core';
 import PropTypes from 'prop-types';
 
 class ListPaginatorInfo extends Component {
@@ -19,7 +19,7 @@ class ListPaginatorInfo extends Component {
         
         return (
             <div>
-                {i18next.t("list.pagginator_info", {from, to: to < t ? to : t, total: t})} 
+                {t("{{from}} - {{to}} out of {{total}} items", "list", {from, to: to < t ? to : t, total: t})} 
             </div>
         );
     }

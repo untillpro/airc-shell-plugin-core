@@ -5,8 +5,7 @@
 import _ from 'lodash';
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Message, Select, Button, Empty } from 'airc-shell-core';
-import i18next from "i18next";
+import { Message, Select, Button, Empty, translate as t } from 'airc-shell-core';
 import EMEditFormFieldsBuilder from '../EMEditFormFieldsBuilder';
 import TicketLayoutPreview from './TicketLayoutPreview';
 
@@ -261,7 +260,7 @@ class TicketLayoutField extends Component {
 
         if (!code) return;
 
-        if (!layouts[code]) this.props.sendError(i18next.t("errors.wrong_selected_ticket_layout"));
+        if (!layouts[code]) this.props.sendError(t("Selected layout not presented in available ticket layouts", "errors"));
         
         const template = this.getTemplate(code);
         const settings = this.getSettings(code);
@@ -272,7 +271,7 @@ class TicketLayoutField extends Component {
         }
 
         if (!template || typeof template !== 'string') {
-            this.props.sendError(i18next.t("errors.ticket_template_wrong_given"));
+            this.props.sendError(t("Layout's template not specified or wrong given", "errors"));
         } else {
             this.setState({
                 selectedLayout: code,
@@ -307,10 +306,10 @@ class TicketLayoutField extends Component {
         return (
             <Message
                 type="warning"
-                header={i18next.t("form.ticket_template_warning_label")}
-                footer={<Button onClick={this.refreshTemplate.bind(this)}>{i18next.t("form.ticket_template_refresh")}</Button>}
+                header={t("Template has changed", "form")}
+                footer={<Button onClick={this.refreshTemplate.bind(this)}>{t("Refresh template", "form")}</Button>}
             >
-                {i18next.t("form.ticket_template_warning")}
+                {t("The current version of the template is different from that used in this ticket", "form")}
             </Message>
         );
     }
@@ -327,7 +326,7 @@ class TicketLayoutField extends Component {
             return (
                 <Empty
                     image={Empty.PRESENTED_IMAGE_SIMPLE}
-                    description={<span>{i18next.t("form.empty_layout_message")}</span>}
+                    description={<span>{t("Please select layout", "form")}</span>}
                 />
             );
 

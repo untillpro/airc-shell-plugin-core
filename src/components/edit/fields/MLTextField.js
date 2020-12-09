@@ -4,10 +4,9 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
-import i18next from 'i18next';
 import { connect } from 'react-redux';
 
-import { TextInput, Button, Modal } from 'airc-shell-core';
+import { TextInput, Button, Modal, translate as t } from 'airc-shell-core';
 import { EllipsisOutlined, PlusOutlined } from '@ant-design/icons';
 import { Form, Input } from 'antd';
 
@@ -188,7 +187,7 @@ class MLTextField extends Component {
         return (
             <Form.Item {...tailLayout}>
                 <Button type="dashed" onClick={this.handleAddLanguage} icon={<PlusOutlined />} block>
-                    {i18next.t("form.add_language_button_text")}
+                    {t("Add language", "form")}
                 </Button>
             </Form.Item>
         );
@@ -215,7 +214,7 @@ class MLTextField extends Component {
             <Modal
                 visible
                 footer={null}
-                title={i18next.t("form.ml_form_title")}
+                title={t("ml_form_title", "form")}
                 onOk={this.handleMlModalConfirm}
                 onCancel={this.handleModalClose}
                 size="small"
@@ -248,7 +247,7 @@ class MLTextField extends Component {
 
                         <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">
-                                {i18next.t("form.ml_form_submit_button_text")}
+                                {t("Save", "common")}
                             </Button>
                         </Form.Item>
                     </Form>
