@@ -124,7 +124,7 @@ class GridLocationSelector extends PureComponent {
     renderHeader() {
         return (
             <div className="grid-location-selector-header">
-                {t("location_header", "common")}
+                {t("Location", "common")}
             </div>
         );
     }

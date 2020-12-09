@@ -8,9 +8,9 @@ import PropTypes from 'prop-types';
 
 class ListPaginatorInfo extends Component {
     render() {
-        const { page: p, pageSize: s, total: t } = this.props;
+        const { page: p, pageSize: s, total } = this.props;
 
-        if (t <= 0) {
+        if (total <= 0) {
             return null;
         }
         
@@ -19,7 +19,7 @@ class ListPaginatorInfo extends Component {
         
         return (
             <div>
-                {t("{{from}} - {{to}} out of {{total}} items", "list", {from, to: to < t ? to : t, total: t})} 
+                {t("{{from}} - {{to}} out of {{total}} items", "list", {from, to: to < total ? to : total, total})} 
             </div>
         );
     }
