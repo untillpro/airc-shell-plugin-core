@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import * as Helpers from '../../src/classes/helpers'; 
 
 test('Helpers.bufferToLangMap test #1', () => {

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 class Stream {
     constructor(bytes) {
         this.buffer = Buffer.from(bytes);
