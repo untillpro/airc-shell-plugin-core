@@ -15,7 +15,7 @@
         },
         "list": {
             "{{from}} - {{to}} out of {{total}} items": "{{from}} - {{to}} out of {{total}} items",
-            "Items per page:": "Items per page: ",
+            "Items per page": "Items per page: ",
             "Show deleted": "Show deleted",
             "Hide columns": "Hide columns",
             "Actions": "Actions",

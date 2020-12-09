@@ -16,9 +16,11 @@ class SelectLanguageForm extends PureComponent {
         super(props);
 
         this.state = {
+            value: null,
             languages: []
         };
 
+        this.handleChange = this.handleChange.bind(this);
         this.handleFinish = this.handleFinish.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
     }
@@ -46,12 +48,17 @@ class SelectLanguageForm extends PureComponent {
         }
     }
 
+    handleChange(value) {
+        console.log("lang selected: ", value);
+        this.setState({ value })
+    }
+
     handleFinish(values) {
         const { onChange } = this.props;
-        const { language } = values;
+        const { value } = this.state;
 
-        if (_.isString(language) && _.isFunction(onChange)) {
-            onChange(language);
+        if (_.isString(value) && _.isFunction(onChange)) {
+            onChange(value);
         }
     }
 
@@ -68,19 +75,17 @@ class SelectLanguageForm extends PureComponent {
 
         return (
             <Form.Item 
-                name="language" 
                 label={t("Language", "form")}
             >
                 <Select
+                    style={{ width: 150 }}
                     showSearch
                     placeholder={t("Select a language", "form")}
                     optionFilterProp="children"
-                    filterOption={(input, option) =>
-                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                    }
+                    onChange={this.handleChange}
                 >
                     {languages.map(lang => {
-                        return (<Option value={lang.code}>{lang.name}</Option>);
+                        return (<Option key={lang.code} value={lang.code}>{lang.name}</Option>);
                     })}
                 </Select>
             </Form.Item>
@@ -88,18 +93,12 @@ class SelectLanguageForm extends PureComponent {
     }
 
     render() {
-
         return (
-            <Form
-                name="language_add_form"
-                layout="inline"
-                onFinish={this.handleFinish}
-            >
-
+            <div className="ant-form ant-form-inline">
                 {this.renderSelector()}
 
                 <Form.Item>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" onClick={this.handleFinish}>
                         {t("Submit", "common")}
                     </Button>
                 </Form.Item>
@@ -109,7 +108,7 @@ class SelectLanguageForm extends PureComponent {
                         {t("Cancel", "common")}
                     </Button>
                 </Form.Item>
-            </Form>
+            </div>
         );
     }
 }

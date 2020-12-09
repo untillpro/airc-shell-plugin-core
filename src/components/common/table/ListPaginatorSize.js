@@ -44,7 +44,7 @@ class ListPaginatorSize extends Component {
         if (options && options.length > 1) {
             return (
                 <div className='-pageSize' key={`${this.name}_${size}`}>
-                    {t("Items per page:", "list")}
+                    {t("Items per page", "list")}
 
                     <select 
                         onChange={(event) => this.handleChange(event)} 

@@ -5,17 +5,13 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import { TextInput, Button, Modal, translate as t } from 'airc-shell-core';
 import { EllipsisOutlined, PlusOutlined } from '@ant-design/icons';
 import { Form, Input } from 'antd';
 
 import { SelectLanguageForm } from "../../common";
-
 import { bufferToLangMap, langMapToBuffer } from '../../../classes/helpers';
-
 import { LANGUAGES } from '../../../const';
-
 import { addAvailableLanguage } from '../../../actions';
 
 const layout = {
@@ -214,7 +210,7 @@ class MLTextField extends Component {
             <Modal
                 visible
                 footer={null}
-                title={t("ml_form_title", "form")}
+                title={t("Internationalization", "form")}
                 onOk={this.handleMlModalConfirm}
                 onCancel={this.handleModalClose}
                 size="small"

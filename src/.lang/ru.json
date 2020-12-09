@@ -15,7 +15,7 @@
         },
         "list": {
             "{{from}} - {{to}} out of {{total}} items": "{{from}} - {{to}} из {{total}} записей",
-            "Items per page:": "Записей на страницу: ",
+            "Items per page": "Записей на страницу: ",
             "Show deleted": "Показывать удаленные",
             "Hide columns": "Скрыть колонки",
             "Actions": "Действия",
