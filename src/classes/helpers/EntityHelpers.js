@@ -456,7 +456,7 @@ const getEntityML = (context, entity) => {
         _.each(entityContribution.sections, (sectionName) => {
             const s = contributions.getPointContributions('sections', sectionName);
 
-            if (s.fields.length > 0) {
+            if (s && _.isArray(s.fields) && s.fields.length > 0) {
                 _.forEach(s.fields, (f, n) => {
                     const { accessor, ml_accessor } = f;
 

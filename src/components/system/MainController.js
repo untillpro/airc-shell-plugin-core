@@ -75,7 +75,13 @@ class MainController extends Component {
     }
 
     render() {
+        const { contributions } = this.props;
         const { errorCatched, error } = this.state;
+
+        if (!contributions) return null;
+        if (typeof contributions !== 'object') {
+            throw new Error('Contibution manager corrupted! Plugin core has critical problems.')
+        }
 
         if (errorCatched) {
             return (
@@ -100,9 +106,10 @@ class MainController extends Component {
 }
 
 const mapStateToProps = (state) => {
+    const { contributions } = state.context;
     const { step } = state.plugin;
     
-    return { step };
+    return { contributions, step };
 };
 
 export default connect(mapStateToProps, { toggleLocationSelector })(MainController);

@@ -7,7 +7,7 @@ import {
     EllipsisOutlined
 } from '@ant-design/icons';
 
-import { TextInput, Modal } from 'airc-shell-core';
+import { TextInput, Modal, translate as t} from 'airc-shell-core';
 import EmbeddedManagerSelectField from './EmbeddedManagerSelectField'
 
 class EmbededSelectorField extends PureComponent {
@@ -124,6 +124,8 @@ class EmbededSelectorField extends PureComponent {
             return (
                 <Modal
                     visible
+                    cancelText={t("Cancel", "common")}
+                    okText={t("Ok", "common")}
                     onCancel={() => this.handleModalCancel()}
                     onOk={() => this.handleModalOk()}
                     width={"80%"}
