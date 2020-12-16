@@ -3,6 +3,7 @@
  */
 import _ from 'lodash';
 import moment from 'moment';
+import lc from 'langcode-info';
 
 import {
     INIT_PLUGIN,
@@ -61,13 +62,15 @@ export default (state = INITIAL_STATE, action) => {
             return state;
 
         case SET_PLUGIN_LANGUAGE:
-            if (_.isPlainObject(action.payload)) {
-                moment.locale(action.payload.locale);
+            if (_.isString(action.payload)) {
+                const lang = lc.langByHex(action.payload);
+
+                moment.locale(lang.locale());
 
                 return {
                     ...state,
-                    langCode: action.payload.code,
-                    currentLanguage: action.payload.locale
+                    langCode: lang.hex(),
+                    currentLanguage: lang.lex()
                 };
             }
 
