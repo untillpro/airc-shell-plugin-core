@@ -1,11 +1,8 @@
-/*
- * Copyright (c) 2020-present unTill Pro, Ltd.
- */
-
-import en from './en.json';
-import ru from './ru.json';
+import enEN from "./en-EN.json"; 
+import ruRU from "./ru-RU.json"; 
 
 
 export {
-    en, ru
-}
+    enEN,
+    ruRU,
+};
