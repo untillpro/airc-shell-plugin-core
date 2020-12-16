@@ -3,6 +3,8 @@
  */
 
 import _ from 'lodash';
+import lc from 'langcode-info';
+
 import {
     ADD_TO_CONTEXT,
     INIT_CONTEXT_LANG,
@@ -37,11 +39,13 @@ export default (state = INITIAL_STATE, action) => {
             return state;
 
         case SET_PLUGIN_LANGUAGE:
-            if (_.isPlainObject(action.payload)) {
+            if (_.isString(action.payload)) {
+                const lang = lc.langByHex(action.payload);
+
                 return {
                     ...state,
-                    langCode: action.payload.code,
-                    lang: action.payload.locale
+                    langCode: lang.hex(),
+                    lang: lang.lex()
                 };
             }
 

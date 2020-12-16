@@ -5,6 +5,7 @@
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import lc from 'langcode-info';
 
 import { Select } from 'antd';
 
@@ -13,18 +14,8 @@ import { setLanguage } from '../../actions/';
 const { Option } = Select;
 
 const MOCK_LANG = {
-    "en": {
-        "name": "English",
-        "code": "0000",
-        "locale": "en",
-        "iso": "en-EN",
-    },
-    "ru": {
-        "name": "Русский",
-        "code": "0419",
-        "locale": "ru",
-        "iso": "ru-RU",
-    }
+    "enEN": "0000",
+    "ruRU": "0419"
 };
 
 class TestLangSelector extends PureComponent {
@@ -49,12 +40,22 @@ class TestLangSelector extends PureComponent {
     render() {
         const { currentLanguage } = this.props;
 
-        return (
-            <div className="test-lang-selector">
-                <Select defaultValue={currentLanguage} onChange={this.handleChange} style={{width: "100%"}}>
-                    {_.map(MOCK_LANG, (v, k) => <Option key={`opt_${k}`} value={k}>{v.name}</Option>)}
-                </Select>
-            </div>
+        return (<div className="test-lang-selector" >
+            <Select defaultValue={currentLanguage}
+                onChange={this.handleChange}
+                style={
+                    { width: "100%" }
+                }
+            >
+                {_.map(MOCK_LANG, (hex, lex) => {
+                    return (
+                        <Option key={`opt_${lex}`}
+                            value={lex} > {lc.langByHex(hex).name()}
+                        </Option>
+                    );
+                })}
+            </Select >
+        </div >
         );
     }
 }
