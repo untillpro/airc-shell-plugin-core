@@ -32,7 +32,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "jest",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "pack": "packlng -o \"./.output\" -i \"./src/\" -e \".lng\" -pr \"untill\"",
+    "unpack": "unpacklng -i \"./.output\" -o \"./src/\" -e \".lng\" -pr \"untill\" -in"
   },
   "eslintConfig": {
     "extends": "react-app"
