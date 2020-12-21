@@ -65,7 +65,7 @@ export const reduce = (data, func1 = null, func2 = null) => {
     }
 
     _.reduce(data, (result, value, key) => {
-        if (func2(value, key)) result[key] = reduce(value, func1);
+        if (func2(value, key)) result[key] = reduce(value, func1, func2);
         else func1(result, value, key);
         return result;
     }, accum);
