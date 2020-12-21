@@ -284,14 +284,14 @@ class RenderEntityStep extends StateMachineStep {
         let doProps = {
             required_fields: contributions.getPointContributionValues(TYPE_COLLECTION, entity, C_COLLECTION_REQUIRED_FIELDS),
             required_classifiers: contributions.getPointContributionValues(TYPE_COLLECTION, entity, C_COLLECTION_REQUIRED_CLASSIFIERS),
-            filter_by: getFilterByString(context, entity)
+            filter_by: getFilterByString(context, entity),
+            show_deleted: showDeleted ? false : true,
         };
 
         if (manual) {
             //if ReactTable works in server-side mode page and pageeSize should be sent to server
             doProps = {
                 ...doProps,
-                show_deleted: showDeleted ? 0 : 1,
                 page: page + 1,
                 page_size: pageSize,
                 //order_by: {} //TODO
