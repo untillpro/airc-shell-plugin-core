@@ -285,7 +285,7 @@ class RenderEntityStep extends StateMachineStep {
             required_fields: contributions.getPointContributionValues(TYPE_COLLECTION, entity, C_COLLECTION_REQUIRED_FIELDS),
             required_classifiers: contributions.getPointContributionValues(TYPE_COLLECTION, entity, C_COLLECTION_REQUIRED_CLASSIFIERS),
             filter_by: getFilterByString(context, entity),
-            show_deleted: showDeleted ? false : true,
+            
         };
 
         if (manual) {
@@ -294,8 +294,11 @@ class RenderEntityStep extends StateMachineStep {
                 ...doProps,
                 page: page + 1,
                 page_size: pageSize,
+                show_deleted: !!showDeleted,
                 //order_by: {} //TODO
             };
+        } else {
+            doProps["show_deleted"] = true;
         }
 
         try {
