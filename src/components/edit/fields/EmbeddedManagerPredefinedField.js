@@ -124,7 +124,7 @@ class EmbeddedManagerPredefinedField extends EmbeddedManagerField {
         const listData = this.getData();
 
         const rowData = listData[index];
-
+        
         const newState = {
             edit: false,
             copy: false,
@@ -147,7 +147,7 @@ class EmbeddedManagerPredefinedField extends EmbeddedManagerField {
                     }
                 });
             } else {
-                resultData = _.concat(data, resultRowData);
+                resultData[index] = resultRowData;
             }
         }
 
