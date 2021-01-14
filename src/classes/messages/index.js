@@ -136,3 +136,9 @@ export class MessageProcessItemData extends StateMachineMessage {
         return 'MessageProcessItemData';
     }
 }
+
+export class MessageLanguageChanged extends StateMachineMessage {
+    getName() {
+        return 'MessageLanguageChanged';
+    }
+}

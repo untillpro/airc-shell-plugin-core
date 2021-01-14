@@ -116,6 +116,10 @@ class RenderEntityStep extends StateMachineStep {
         return await this.fetchListData(context);
     }
 
+    async MessageLanguageChanged(msg, context) {
+        return await this.fetchListData(context);
+    }
+
     async MessageProcessItemData(msg, context) {
         const { api, contributions } = context;
         let { entries, data } = msg;

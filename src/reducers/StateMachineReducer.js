@@ -107,6 +107,10 @@ export default (state = INITIAL_STATE, action) => {
             message = new Messages.MessageGenerateReport(action.payload);
             break;
 
+        case Types.SEND_LANGUAGE_CHANGED_MESSAGE:   
+            message = new Messages.MessageLanguageChanged(action.payload);
+            break;  
+
         default: break;
     }
 

@@ -53,6 +53,8 @@ export const SEND_INFO_MESSAGE = 'send_info_api_message';
 export const SEND_SUCCESS_MESSAGE = 'send_success_api_message';
 export const SEND_WARNING_MESSAGE = 'send_warning_api_message';
 
+export const SEND_LANGUAGE_CHANGED_MESSAGE = 'send_language_changed_message';
+
 /* REPORTS ACTIONS */
 
 export const SELECT_REPORT_TYPE_MESSAGE = "select_report_type_message";

@@ -10,7 +10,10 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import i18next from 'i18next';
 
-import { initContextLang } from '../../actions';
+import { 
+    initContextLang, 
+    sendLanguageChanged 
+} from '../../actions';
 
 //import 'moment/locale/uk';
 
@@ -25,6 +28,12 @@ class LangProvider extends PureComponent {
         console.log("LangProvider.componentDidMount: current language: " + currentLanguage);
 
         this.init();
+    }
+
+    componentDidUpdate(oldProps) {
+        if (this.props.currentLanguage !== oldProps.currentLanguage) {
+            this.props.sendLanguageChanged(this.props.currentLanguage);
+        }
     }
 
     init() {
@@ -123,8 +132,13 @@ LangProvider.propTypes = {
     contributions: PropTypes.object.isRequired,
     currentLanguage: PropTypes.string.isRequired,
     defaultLanguage: PropTypes.string.isRequired,
-    languages: PropTypes.object.isRequired
+    languages: PropTypes.object.isRequired,
+    initContextLang: PropTypes.func.isRequired,
+    sendLanguageChanged: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps, { initContextLang })(LangProvider);
+export default connect(mapStateToProps, { 
+    initContextLang,
+    sendLanguageChanged 
+})(LangProvider);
 

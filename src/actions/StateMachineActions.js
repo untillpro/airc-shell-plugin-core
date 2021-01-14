@@ -18,7 +18,8 @@ import {
     SEND_NEED_PROCCESS_DATA_MESSAGE,
     SEND_NEED_VALIDATE_DATA_MESSAGE,
     SEND_NEED_LIST_DATA_REFRESH,
-    SEND_FORM_NEED_NAVIGATION
+    SEND_FORM_NEED_NAVIGATION,
+    SEND_LANGUAGE_CHANGED_MESSAGE
 } from './Types';
 
 import {
@@ -215,5 +216,14 @@ export const sendNeedFormNavigation = (id) => {
     return {
         type: SEND_FORM_NEED_NAVIGATION,
         payload: id
+    };
+}
+
+// send message that language was changed
+
+export const sendLanguageChanged = (lng) => {
+    return {
+        type: SEND_LANGUAGE_CHANGED_MESSAGE,
+        payload: lng
     };
 }
