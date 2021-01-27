@@ -18,6 +18,7 @@ import ImageSelectorField from './ImageSelectorField';
 import EmbeddedManagerField from './EmbeddedManagerField';
 import EmbededSelectorField from './EmbededSelectorField'
 import EmbeddedManagerPredefinedField from './EmbeddedManagerPredefinedField'
+import TablePlanEditor from './TablePlanEditor'
 
 export {
     TextField,
@@ -35,5 +36,6 @@ export {
     ImageSelectorField,
     EmbeddedManagerField,
     EmbededSelectorField,
-    EmbeddedManagerPredefinedField
+    EmbeddedManagerPredefinedField,
+    TablePlanEditor
 };

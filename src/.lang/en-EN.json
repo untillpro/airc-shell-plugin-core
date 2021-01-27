@@ -22,6 +22,9 @@
             "Edit item": "Edit item",
             "Mass edit": "Mass edit"
         },
+        "tableplan": {
+            "No locations selected": "No locations selected"
+        },
         "form": {
             "Is active": "Is active",
             "Previous": "Previous",

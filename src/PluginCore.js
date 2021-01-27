@@ -17,19 +17,15 @@ import {
 } from './components/';
 
 import { ContributionFactory } from './classes/';
-
 import configureStore from './configureStore';
 
-//css
+//styles
 
-import './assets/css/main.css';
-import './assets/css/confirm-alert.css';
-import './assets/css/ticket.css';
+import './assets/css/index.scss';
 
 // i18n
 
 import 'moment/locale/ru';
-
 import * as systemLanguages from './.lang';
 
 class PluginCore extends Component {

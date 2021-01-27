@@ -1,3 +1,27 @@
+/* ticket field */
+
+.ticket-layout-selector-field {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.ticket-layout-selector-field-body {
+    border-top: 1px solid var(--color-light-400);
+    padding-top: 20px;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+.ticket-layout-selector-field-settings {
+    flex: 1;
+}
+
+.ticket-layout-selector-field-preview {
+    width: 320px;
+}
+
 .ticket-area {
     width: 100%;
     min-width: 320px;
@@ -155,7 +179,7 @@
     width: 20px;
     height: 20px;
 
-    background: url(../images/ticket/qr_code.jpg) center center no-repeat;
+    background: url(../../images/ticket/qr_code.jpg) center center no-repeat;
     background-size: 100% 100%;
 }
 
@@ -201,7 +225,7 @@
 
 .ticket-area bar {
     display: inline-block;
-    background: #fff url(../images/ticket/bar_ean_13.jpg) center center no-repeat;
+    background: #fff url(../../images/ticket/bar_ean_13.jpg) center center no-repeat;
     background-size: 100% 100%;
 }
 
@@ -231,39 +255,39 @@
 }
 
 .ticket-area bar[type='1'] {
-    background-image: url(../images/ticket/bar_upc_a.jpg);
+    background-image: url(../../images/ticket/bar_upc_a.jpg);
 }
 
 .ticket-area bar[type='2'] {
-    background-image: url(../images/ticket/bar_upc_e.jpg);
+    background-image: url(../../images/ticket/bar_upc_e.jpg);
 }
 
 .ticket-area bar[type='3'] {
-    background-image: url(../images/ticket/bar_ean_13.jpg);
+    background-image: url(../../images/ticket/bar_ean_13.jpg);
 }
 
 .ticket-area bar[type='4'] {
-    background-image: url(../images/ticket/bar_ean_8.jpg);
+    background-image: url(../../images/ticket/bar_ean_8.jpg);
 }
 
 .ticket-area bar[type='5'] {
-    background-image: url(../images/ticket/bar_code_39.jpg);
+    background-image: url(../../images/ticket/bar_code_39.jpg);
 }
 
 .ticket-area bar[type='6'] {
-    background-image: url(../images/ticket/bar_itf.jpg);
+    background-image: url(../../images/ticket/bar_itf.jpg);
 }
 
 .ticket-area bar[type='7'] {
-    background-image: url(../images/ticket/bar_nw7.jpg);
+    background-image: url(../../images/ticket/bar_nw7.jpg);
 }
 
 .ticket-area bar[type='8'] {
-    background-image: url(../images/ticket/bar_code_93.jpg);
+    background-image: url(../../images/ticket/bar_code_93.jpg);
 }
 
 .ticket-area bar[type='9'] {
-    background-image: url(../images/ticket/bar_code_128.jpg);
+    background-image: url(../../images/ticket/bar_code_128.jpg);
 }
 
 [width='1'] {

@@ -178,8 +178,6 @@ class EMEditForm extends Component {
         return changedData;
     }
 
-
-
     performWithCheckChanges(toPerform) {
         const { changedData } = this.props;
 
@@ -189,7 +187,6 @@ class EMEditForm extends Component {
             if (toPerform && typeof toPerform === 'function') toPerform();
         }
     }
-
 
     confirmFormClose(onConfirm) {
         confirmAlert({

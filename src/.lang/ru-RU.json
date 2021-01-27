@@ -22,6 +22,9 @@
             "Edit item": "Редактировать",
             "Mass edit": "Мн. редактирование"
         },
+        "tableplan": {
+            "No locations selected": "Не выбраны локации"
+        },
         "form": {
             "Is active": "Активность",
             "Previous": "Previous",

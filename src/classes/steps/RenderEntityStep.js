@@ -317,7 +317,6 @@ class RenderEntityStep extends StateMachineStep {
 
                     if (Data && typeof Data === "object") {
                         this.classifiers = _.get(Data, "classifiers");
-
                         let t = _.get(Data, "meta.total");
 
                         if (t && t > 0 && pageSize > 0) {
@@ -375,6 +374,7 @@ class RenderEntityStep extends StateMachineStep {
             pages,
             total,
             manual,
+            data,
             resolvedData,
             classifiers,
             showDeleted,
@@ -387,6 +387,7 @@ class RenderEntityStep extends StateMachineStep {
             pages,
             total,
             manual,
+            initialData: data,
             data: this.buildData(resolvedData),
             classifiers,
             showDeleted,

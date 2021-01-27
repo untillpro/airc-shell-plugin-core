@@ -5,11 +5,15 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import Point from './Point';
+import Set from './Set';
 
 class ContibutionManager {
     constructor() {
         this.points = {};
         this.prefetched = {};
+
+        this.sets = {};
+        this.prefetchedSets = {};
     }
 
     registerPoint(type, pointName) {
@@ -19,6 +23,15 @@ class ContibutionManager {
 
         if (!this.points[type][pointName]) {
             this.points[type][pointName] = new Point(pointName);
+            return true;
+        }
+
+        return false;
+    }
+
+    registerSet(setName, data = null) {
+        if (!this.sets[setName]) {
+            this.sets[setName] = new Set(setName, data);
             return true;
         }
 
@@ -101,6 +114,50 @@ class ContibutionManager {
         return undefined;
     }
 
+    /*******************/
+
+    registerSetValue(setName, key, value) {
+        if (!this.prefetchedSets[setName]) {
+            this.prefetchedSets[setName] = {};
+        }
+
+        this.prefetchedSets[setName][key]= value;
+    }
+
+    registerSetValues(setName, values) {
+        if (typeof values !== 'object' ) {
+            return;
+        }
+
+        if (!this.prefetchedSets[setName]) {
+            this.prefetchedSets[setName] = {};
+        }
+
+        this.prefetchedSets[setName] = { ...this.prefetchedSets[setName], ...values };
+    }
+
+    getSet(setName) {
+        return this.sets[setName] || null;
+    }
+
+    getSetValue(setName, key) {
+        if (this.sets[setName]) {
+            return this.sets[setName].get(key);
+        }
+
+        return null;
+    }
+
+    getSetValues(setName) {
+        if (this.sets[setName]) {
+            return this.sets[setName].values();
+        }
+
+        return null;
+    }
+
+    //resolve 
+
     resolve() {
         if (this.prefetched && _.size(this.prefetched) > 0) {
             _.each(this.prefetched, (points, type) => {
@@ -116,25 +173,14 @@ class ContibutionManager {
             });
         }
 
-        this.prefetched = {};
-    }
-
-    // ???
-    /*
-    resolve() {
-        _.each(this.prefetched, (obj, key) => {
-            if (!this.points[key]) {
-                this.registerPoint(key);
-            }
-
-            _.each(obj, (value, name) => {
-                this.points[key].registerContribution(name, value);
+        if (this.prefetchedSets && _.size(this.prefetchedSets) > 0) {
+            _.each(this.prefetchedSets, (data, name) => {
+                this.registerSet(name, data);
             });
-        });
-        
+        }
+
         this.prefetched = {};
     }
-    */
 }
 
 ContibutionManager.propTypes = {

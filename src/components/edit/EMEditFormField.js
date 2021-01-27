@@ -28,7 +28,8 @@ import {
     ImageSelectorField,
     EmbeddedManagerField,
     EmbededSelectorField,
-    EmbeddedManagerPredefinedField
+    EmbeddedManagerPredefinedField,
+    TablePlanEditor
 } from './fields';
 
 class EMEditFormField extends Component {
@@ -36,6 +37,7 @@ class EMEditFormField extends Component {
         super();
 
         this.handleChange = this.handleChange.bind(this);
+        this.changeFieldValue = this.changeFieldValue.bind(this);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -74,6 +76,14 @@ class EMEditFormField extends Component {
 
         if (onChange && typeof onChange === 'function') {
             onChange(field, value, mlValue)
+        }
+    }
+
+    changeFieldValue(value, field) {
+        const { onChange } = this.props;
+
+        if (onChange && typeof onChange === 'function') {
+            onChange(field, value)
         }
     }
 
@@ -131,6 +141,7 @@ class EMEditFormField extends Component {
                 case 'tip': FieldComponent = TipField; break;
                 case 'ticket': FieldComponent = TicketLayoutField; break;
                 case 'image': FieldComponent = ImageSelectorField; break;
+                case 'table_plan_editor': FieldComponent = TablePlanEditor; break;
                 case 'embedded':   
                     if (predefined) {
                         FieldComponent = EmbeddedManagerPredefinedField; break;
@@ -157,6 +168,8 @@ class EMEditFormField extends Component {
                         ) : null}
 
                     <div className={`form-row-field ${hasErrors ? 'error' : ''}`}>
+                        
+
                         <FieldComponent 
                             locations={locations}
                             autoFocus 
@@ -167,6 +180,7 @@ class EMEditFormField extends Component {
                             showError={showError}
                             errors={errors}
                             onChange={this.handleChange}
+                            changeFieldValue={this.changeFieldValue}
                             value={fieldValue}
                             data={data}
                             classifiers={classifiers}

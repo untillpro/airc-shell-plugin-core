@@ -3,7 +3,6 @@
  */
 
 import _ from 'lodash';
-import PropTypes from 'prop-types';
 
 class ContributionPoint {
     constructor(name) {
@@ -90,10 +89,5 @@ class ContributionPoint {
         return type
     }
 }
-
-ContributionPoint.propTypes = {
-    name: PropTypes.string.isRequired,
-    contributions: PropTypes.node
-};
 
 export default ContributionPoint;

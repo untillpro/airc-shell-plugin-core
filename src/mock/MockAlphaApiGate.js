@@ -7,9 +7,12 @@ import Axios from 'axios';
 import { message } from 'antd';
 
 import { SProtBuilder } from 'airc-shell-core';
+import TablePlanData from './data/table_plan.json';
 
 const operationKeys = ['ID', 'Type', 'ParentID', 'ParentType', /*'PartID', 'PartType',*/ 'DocID', 'DocType', 'Data'];
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjI1NTM2LCJEZXZpY2VJRCI6MSwiZXhwIjoxNTc3NTE5MDQzfQ.dXnbwFUtjcue8_LXNpir3lltj0qoDUarbZ1BDkj5Zno';
+
+const uploadFileAction = "https://badrequest.ru/tests/uploader/upload.php"; //TODO: mock
 
 class MockAlphaApiGate {
     constructor() {
@@ -74,29 +77,7 @@ class MockAlphaApiGate {
     }
 
     async conf(operations, wsids, timestamp, offset) {
-        //todo
-        /*
-        {
-            "Import": true,
-            "Timestamp": 1588242130097,
-            "Offset": 1,
-            "Operations": [
-               {
-                  "ID": 25000059049,
-                  "Type": "extra_field_values",
-                  "ParentID": 0,
-                  "ParentType": "",
-                  "DocID": 0,
-                  "DocType": "",
-                  "Data": {
-                     "id": 25000059049
-                  }
-               }
-            ]
-         }
-         */
-
-        console.log('Conf method call:', operations, wsids, timestamp, offset);
+        console.log('+++ Conf method call:', operations, wsids, timestamp, offset);
 
         const params = {};
 
@@ -134,7 +115,18 @@ class MockAlphaApiGate {
     //Mock api call for /collection/ function
     async collection(type, wsids, props = {}) {
         const { entries, page, page_size, show_deleted, required_fields, required_classifiers, filter_by } = props;
-        
+        const builder = new SProtBuilder();
+
+        console.log("Api.Collection func call: ", type, wsids, props);
+
+        if (type === 'table_plan') {
+            console.log('TablePlanData:', TablePlanData['sections']);
+            let mockData = builder.build(TablePlanData['sections']);
+
+            console.log('mockData: ', mockData);
+            return mockData
+        }
+
         let resultData = {};
 
         let params = {
@@ -154,8 +146,6 @@ class MockAlphaApiGate {
             console.log('+++ api.collection result', response);
 
             if (response && response["sections"] && _.isArray(response["sections"])) {
-                console.log("Response: ", response);
-                const builder = new SProtBuilder();
                 resultData = builder.build(response["sections"]);
             }
 
@@ -166,34 +156,6 @@ class MockAlphaApiGate {
             console.error(e);
             throw e;
         });
-
-        /*
-        let response = {
-            "sections": [],
-            "status": 200,
-        }
-        let resultData = {};
-
-        if (type === "department") {
-            console.log('DepartmentData', DepartmentData);
-            response = DepartmentData;
-        } else if (type === "void_reasons") {
-            response["status"] = 501;
-            response["errorDescription"] = "Void reasons scheme not implemented yet.";
-        }
-
-        //todo
-        console.log('collection method call:', type, wsids, entries, page, page_size, show_deleted);
-
-        if (response && response["sections"] && _.isArray(response["sections"])) {
-            console.log("Response: ", response);
-            const builder = new SProtBuilder();
-            resultData = builder.build(response["sections"]);
-
-            console.log("Collections build result: ", resultData);
-        }
-
-        */
     }
 
     async sync(entries) {
@@ -280,7 +242,116 @@ class MockAlphaApiGate {
         });
     }
 
+    async blob(option) {
+        // eslint-disable-next-line no-undef
+        const xhr = new XMLHttpRequest();
+
+        if (option.onProgress && xhr.upload) {
+            xhr.upload.onprogress = function progress(e) {
+                if (e.total > 0) {
+                    e.percent = (e.loaded / e.total) * 100;
+                }
+                option.onProgress(e);
+            };
+        }
+
+        // eslint-disable-next-line no-undef
+        const formData = new FormData();
+
+        if (option.data) {
+            Object.keys(option.data).forEach(key => {
+                const value = option.data[key];
+                // support key-value array data
+                if (Array.isArray(value)) {
+                    value.forEach(item => {
+                        // { list: [ 11, 22 ] }
+                        // formData.append('list[]', 11);
+                        formData.append(`${key}[]`, item);
+                    });
+                    return;
+                }
+
+                formData.append(key, option.data[key]);
+            });
+        }
+
+        // eslint-disable-next-line no-undef
+        if (option.file instanceof Blob) {
+            formData.append(option.filename, option.file, option.file.name);
+        } else {
+            formData.append(option.filename, option.file);
+        }
+
+        xhr.onerror = function error(e) {
+            option.onError(e);
+        };
+
+        xhr.onload = () => {
+            // allow success when 2xx status
+            // see https://github.com/react-component/upload/issues/34
+            if (xhr.status < 200 || xhr.status >= 300) {
+                return option.onError(this._getError(option, xhr), this._getBody(xhr));
+            }
+
+            return option.onSuccess(this._getBody(xhr), xhr);
+        };
+
+        xhr.open(option.method, uploadFileAction, true);
+
+        // Has to be after `.open()`. See https://github.com/enyo/dropzone/issues/179
+        if (option.withCredentials && 'withCredentials' in xhr) {
+            xhr.withCredentials = true;
+        }
+
+        const headers = option.headers || {};
+
+        // when set headers['X-Requested-With'] = null , can close default XHR header
+        // see https://github.com/react-component/upload/issues/33
+        if (headers['X-Requested-With'] !== null) {
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        }
+
+        Object.keys(headers).forEach(h => {
+            if (headers[h] !== null) {
+                xhr.setRequestHeader(h, headers[h]);
+            }
+        });
+
+        xhr.send(formData);
+
+        return {
+            abort() {
+                xhr.abort();
+            },
+        };
+    }
+
     // ----- private methods -----
+
+    _getError(option, xhr) {
+        const msg = `cannot ${option.method} ${option.action} ${xhr.status}'`;
+        const err = new Error(msg);
+
+        err.status = xhr.status;
+        err.method = option.method;
+        err.url = option.action;
+
+        return err;
+    }
+
+    _getBody(xhr) {
+        const text = xhr.responseText || xhr.response;
+        if (!text) {
+            return text;
+        }
+
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            return text;
+        }
+    }
+
     _checkOperation(operation) {
         const o = {};
 

@@ -16,6 +16,8 @@ import {
     ListPaginator,
 } from './table';
 
+import { TablePlan } from './plan';
+
 export {
     ListTable,
     ListPaginator,
@@ -28,4 +30,5 @@ export {
     LocationCell,
     DateTimeCell,
     SelectLanguageForm,
+    TablePlan
 }
