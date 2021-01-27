@@ -15,7 +15,8 @@ import {
     sendLanguageChanged 
 } from '../../actions';
 
-//import 'moment/locale/uk';
+import 'moment/locale/nl';
+import 'moment/locale/nl-be';
 
 const DEFAULT_LANG = 'en';
 const DEFAULT_LANG_CODE = '0000';

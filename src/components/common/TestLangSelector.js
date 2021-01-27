@@ -15,7 +15,8 @@ const { Option } = Select;
 
 const MOCK_LANG = {
     "enEN": "0000",
-    "ruRU": "0419"
+    "ruRU": "0419",
+    "nlNL": "0413"
 };
 
 class TestLangSelector extends PureComponent {

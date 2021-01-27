@@ -17,7 +17,6 @@ import {
 } from './components/';
 
 import { ContributionFactory } from './classes/';
-
 import configureStore from './configureStore';
 
 //css
@@ -29,7 +28,6 @@ import './assets/css/ticket.css';
 // i18n
 
 import 'moment/locale/ru';
-
 import * as systemLanguages from './.lang';
 
 class PluginCore extends Component {
