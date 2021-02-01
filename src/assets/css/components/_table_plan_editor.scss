@@ -1,21 +1,34 @@
 $shadow_1: 0px 0px 5px rgba(0, 0, 0, 0.1);
 $shadow_2: 0px 0px 10px rgba(0, 0, 0, 0.1);
+$resizerColor: #176ddd;
 
 .table-plan-editor {
     flex: 1;
-    
+
     &-nav {
         padding: 10px 0px;
 
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        flex-grow: 1;
         align-items: center;
 
+        .header {
+            font-size: 110%;
+            margin-right: 20px;
+        }
+
         .actions {
+            margin-left: 20px;
+
             .action {
                 margin-left: 5px;
             }
+        }
+
+        .size {
+            font-size: 12px;
+            color: #787878;
         }
     }
 
@@ -82,6 +95,44 @@ $shadow_2: 0px 0px 10px rgba(0, 0, 0, 0.1);
         padding: 0px 10px;
         margin-top: 20px;
     }
+
+    &-row {
+        background-color: #dedede;
+        margin: 10px 10px 0px;
+
+        display: flex;
+        flex-direction: row;
+
+        align-items:center;
+
+        box-sizing: border-box;
+        padding: 10px;
+
+        .form-ico {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+
+            background-color: #aaa;
+            overflow: hidden;
+        }
+
+        .label {
+            flex: 1;
+        }
+
+        .action {
+            display: inline-block;
+            margin-left: 5px;
+            width: 20px;
+            height: 20px;
+            background-color: #aaa;
+            text-align: center;
+            line-height: 20px;
+            cursor: pointer;
+        }
+    }
+    
 }
 
 .table-area {
@@ -99,10 +150,14 @@ $shadow_2: 0px 0px 10px rgba(0, 0, 0, 0.1);
 
     overflow: hidden;
 
+    
+
     &-plan {
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
+
+        position: relative;
     }
 
     &-plan-container {
@@ -111,4 +166,169 @@ $shadow_2: 0px 0px 10px rgba(0, 0, 0, 0.1);
 
         overflow: auto;
     }
+
+    &-item {
+        display: flex;
+        flex-direction: column;
+
+        justify-content: center;
+        align-items: center;
+
+        position: relative;
+
+        cursor: move;
+
+        &.rounded {
+            border-radius: 10px;
+        }
+
+        &.circle {
+            border-radius: 1000000px;
+        }
+
+        .info {
+            position: absolute;
+
+            right: 0px;
+            top: -30px;
+
+            line-height: 1;
+
+            font-size: 12px;
+
+            color: $resizerColor;
+        }
+        
+        .table {
+            z-index: 2;
+        }
+
+        .place {
+            position: absolute;
+            z-index: -1;
+
+            background-position: center center;
+            background-size: cover;
+            background-color: #232323;
+
+            width: 24px;
+            height: 24px;
+
+            margin-top: -12px;
+            margin-left: -12px;
+        }
+    }
+}
+
+.resizeable-rect {
+    position: absolute;
+    display: flex;
+
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.resizeable-rect.selected {
+    border: 1px solid $resizerColor;
+}
+
+.square {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: white;
+    border: 1px solid $resizerColor;
+    border-radius: 1px;
+}
+
+.resizable-handler {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.resizable-handler.tl,
+.resizable-handler.t,
+.resizable-handler.tr {
+    top: -7px;
+}
+
+.resizable-handler.tl,
+.resizable-handler.l,
+.resizable-handler.bl {
+    left: -7px;
+}
+
+.resizable-handler.bl .resizable-handler.b,
+.resizable-handler.br {
+    bottom: -7px;
+}
+
+.resizable-handler.br,
+.resizable-handler.r,
+.resizable-handler.tr {
+    right: -7px;
+}
+
+.resizable-handler.l,
+.resizable-handler.r {
+    margin-top: -7px;
+}
+
+.resizable-handler.t,
+.resizable-handler.b {
+    margin-left: -7px;
+}
+
+.rotate {
+    position: absolute;
+    cursor: pointer;
+    left: 50%;
+    top: -26px;
+    transform: translateX(-50%);
+}
+
+.rotate i {
+    font-size: 18px;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+
+    color: $resizerColor;
+    font-style: normal;
+    line-height: 1.4;
+}
+
+.t,
+.tl,
+.tr {
+    top: -3px;
+}
+.b,
+.bl,
+.br {
+    bottom: -3px;
+}
+.r,
+.tr,
+.br {
+    right: -3px;
+}
+.tl,
+.l,
+.bl {
+    left: -3px;
+}
+.l,
+.r {
+    top: 50%;
+    margin-top: -3px;
+}
+.t,
+.b {
+    left: 50%;
+    margin-left: -3px;
 }

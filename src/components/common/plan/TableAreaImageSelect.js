@@ -22,7 +22,13 @@ class TableAreaImageSelect extends PureComponent {
 
         if (info.file.status === 'done') {
             if (_.isFunction(setImage)) {
-                setImage(info.file.response);
+                console.log("file upload response: ", info.file.response);
+
+                if (_.isPlainObject(info.file.response)) {
+                    setImage(info.file.response);
+                } else {
+                    message.error(info.file.response);
+                }
             }
 
             message.success(`${info.file.name} file uploaded successfully`);

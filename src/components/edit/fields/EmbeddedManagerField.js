@@ -26,6 +26,7 @@ class EmbeddedManagerField extends PureComponent {
         this.state = {
             current: null,
             data: [],
+            dataLength: null,
             entityData: {},
             edit: false,
             copy: false,
@@ -69,7 +70,7 @@ class EmbeddedManagerField extends PureComponent {
             !isEqual(value, oldProps.value) ||
             !isEqual(this.state.showDeleted, oldState.showDeleted)
         ) {
-            this.setState({ data: this.buildData(value) });
+            this.setState({ ...this.buildData(value) });
         }
     }
 
@@ -80,7 +81,7 @@ class EmbeddedManagerField extends PureComponent {
         const rowActions = this.prepareRowActions();
 
         this.setState({
-            data: this.buildData(value),
+            ...this.buildData(value),
             headerActions,
             rowActions
         });
@@ -91,14 +92,19 @@ class EmbeddedManagerField extends PureComponent {
         const res = [];
 
         if (sourceData && typeof sourceData === 'object') {
-            _.forEach(sourceData, (row) => {
+            _.forEach(sourceData, (row, index) => {
                 if (row && (showDeleted || row.state === 1)) {
-                    res.push(row);
+                    const newRow = { ...row };
+                    newRow._index = index;
+                    res.push(newRow);
                 }
             });
         }
 
-        return res;
+        return {
+            data: res,
+            dataLength: _.size(sourceData)
+        };
     }
 
     //actions
@@ -353,7 +359,7 @@ class EmbeddedManagerField extends PureComponent {
     }
 
     onEditFormProceed(index = null, newData) {
-        const { data } = this.state;
+        const { data, dataLength } = this.state;
 
         const newState = {
             edit: false,
@@ -362,20 +368,26 @@ class EmbeddedManagerField extends PureComponent {
             current: null
         };
 
-        const i = parseInt(index);
+        let i = parseInt(index);
+
+        if (i >= 0 && i < _.size(data)) {
+            const row = data[index];
+            i = row._index;
+        } else {
+            i = null;
+        }
 
         let resultData = [];
 
         if (newData && _.size(newData) > 0) {
-            if (i >= 0) {
+            if (!_.isNil(i) && i >= 0) {
                 resultData[i] = { id: data[i].id, ...newData };
             } else {
-                resultData[data.length] = { ...newData };
+                resultData[dataLength] = { ...newData };
             }
         }
 
         this.handleChange(resultData);
-
         this.setState(newState);
     }
 

@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 import cn from 'classnames';
 import { Button, Empty } from 'airc-shell-core';
 
+import TableAreaListRow from './TableAreaListRow';
+
 import {
     PlusOutlined
-  } from '@ant-design/icons';
+} from '@ant-design/icons';
 
 class TableAreaList extends PureComponent {
     constructor(props) {
@@ -31,11 +33,14 @@ class TableAreaList extends PureComponent {
     }
 
     renderToggler() {
+        const { toggleable } = this.props;
         const { closed } = this.state;
+
+        if (!toggleable) return null;
 
         return (
             <div className="table-area-list-toggler" onClick={this.handleListToggle}>
-                { closed ? 'Open' : 'Close'}
+                {closed ? 'Open' : 'Close'}
             </div>
         );
     }
@@ -45,13 +50,14 @@ class TableAreaList extends PureComponent {
 
         if (!_.isArray(tables) || _.size(tables) === 0) {
             return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
-        } 
+        }
 
-        return _.map(tables, (tableData) => 
-            <TableAreaListRow 
-                data={tableData} 
-                onEdit={onEdit} 
-                onDelete={onDelete} 
+        return _.map(tables, (tableData, index) =>
+            <TableAreaListRow
+                index={index}
+                data={tableData}
+                onEdit={onEdit}
+                onDelete={onDelete}
             />
         );
     }
@@ -61,24 +67,25 @@ class TableAreaList extends PureComponent {
 
         return (
             <div className="table-area-list-button">
-                <Button 
+                <Button
                     onClick={onAdd}
                     icon={<PlusOutlined />}
-                    type="primary" 
+                    type="primary"
                     block
                 >
                     Add table
                 </Button>
             </div>
         );
-        
-    }   
+
+    }
 
     render() {
+        const { toggleable } = this.props;
         const { closed } = this.state;
 
         return (
-            <div className={cn("table-area-list", { "__is_hidden": closed})}>
+            <div className={cn("table-area-list", { "__is_hidden": closed && toggleable })}>
                 {this.renderToggler()}
 
                 <div className="table-area-list-container">
@@ -89,21 +96,6 @@ class TableAreaList extends PureComponent {
         );
     }
 }
-
-const TableAreaListRow = (props) => {
-    const { data, onEdit, onDelete } = props;
-    const { number } = data;
-
-    return (
-        <div className="table-area-list-row">
-            <div className="label">Table #{number}</div>
-            <div className="actions">
-                <div onClick={onEdit}>Edit</div>
-                <div onClick={onDelete}>Delete</div>
-            </div>
-        </div>
-    );
-};
 
 TableAreaList.propTypes = {
     tables: PropTypes.arrayOf(PropTypes.object),

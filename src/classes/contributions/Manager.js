@@ -159,27 +159,35 @@ class ContibutionManager {
     //resolve 
 
     resolve() {
-        if (this.prefetched && _.size(this.prefetched) > 0) {
-            _.each(this.prefetched, (points, type) => {
-                _.each(points, (obj, pointName) => {
-                    if (!this.points[pointName]) {
-                        this.registerPoint(type, pointName);
-                    }
-        
-                    _.each(obj, (value, name) => {
-                        this.points[type][pointName].registerContribution(name, value);
+        try {
+            if (this.prefetched && _.size(this.prefetched) > 0) {
+                _.each(this.prefetched, (points, type) => {
+                    _.each(points, (obj, pointName) => {
+                        if (!this.points[pointName]) {
+                            this.registerPoint(type, pointName);
+                        }
+            
+                        _.each(obj, (value, name) => {
+                            this.points[type][pointName].registerContribution(name, value);
+                        });
                     });
                 });
-            });
-        }
+            }
 
-        if (this.prefetchedSets && _.size(this.prefetchedSets) > 0) {
-            _.each(this.prefetchedSets, (data, name) => {
-                this.registerSet(name, data);
-            });
-        }
+            if (this.prefetchedSets && _.size(this.prefetchedSets) > 0) {
+                _.each(this.prefetchedSets, (data, name) => {
+                    this.registerSet(name, data);
+                });
+            }
 
-        this.prefetched = {};
+            this.prefetched = {};
+            this.prefetchedSets = {};
+        } catch (e) {
+            this.points = {};
+            this.sets = {};
+
+            throw e;
+        }
     }
 }
 

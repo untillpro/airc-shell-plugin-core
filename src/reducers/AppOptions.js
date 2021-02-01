@@ -34,7 +34,7 @@ const INITIAL_STATE = {
         symbol: "€"
     },
     currency: null,
-    availableLanguages: ["0000", "0406", "0813", "040C", "0407", "0410"]
+    availableLanguages: ["0000", "0406", "0413", "040C", "0407", "0419"]
 };
 
 export default (state = INITIAL_STATE, action) => {

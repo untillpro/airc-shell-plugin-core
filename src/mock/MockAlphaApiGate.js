@@ -12,7 +12,7 @@ import TablePlanData from './data/table_plan.json';
 const operationKeys = ['ID', 'Type', 'ParentID', 'ParentType', /*'PartID', 'PartType',*/ 'DocID', 'DocType', 'Data'];
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjI1NTM2LCJEZXZpY2VJRCI6MSwiZXhwIjoxNTc3NTE5MDQzfQ.dXnbwFUtjcue8_LXNpir3lltj0qoDUarbZ1BDkj5Zno';
 
-const uploadFileAction = "https://badrequest.ru/tests/uploader/upload.php"; //TODO: mock
+const uploadFileAction = "https://badrequest.ru/tests/uploader/write.php"; //TODO: mock
 
 class MockAlphaApiGate {
     constructor() {

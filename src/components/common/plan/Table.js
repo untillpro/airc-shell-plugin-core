@@ -104,7 +104,7 @@ class Table extends PureComponent {
     }
 
     handleRotate(angle) {
-        this.setState({ angle, info: `${angle}\u00B0; ${Math.sin(toRadians(angle))}` });
+        this.setState({ angle, info: `${angle}\u00B0` });
     }
 
     handleRotateEnd() {
@@ -386,7 +386,7 @@ class Table extends PureComponent {
                 onDragEnd={this.handleDragEnd}
             >
                 <div
-                    className={`table-item _bs`}
+                    className={`table-area-item _bs`}
                     onClick={this.handleClick}
                     onDoubleClick={this.handleDoubleClick}
                     style={styles}

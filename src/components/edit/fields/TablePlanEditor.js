@@ -2,12 +2,13 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Modal } from 'antd';
+import { translate as t } from 'airc-shell-core';
 import EMEditForm from '../EMEditForm';
-import { 
-    Table, 
+import {
+    Table,
     TableArea,
-    TableAreaImageSelect, 
-    TableAreaList 
+    TableAreaImageSelect,
+    TableAreaList
 } from '../../common/plan/';
 
 import {
@@ -15,6 +16,8 @@ import {
     PlusOutlined,
     DeleteOutlined,
 } from '@ant-design/icons';
+
+import { funcOrString } from '../../../classes/helpers';
 
 class TablePlanEditor extends PureComponent {
     constructor(props) {
@@ -24,8 +27,8 @@ class TablePlanEditor extends PureComponent {
             tables: [],
             currentTable: null,
             modal: false,
-            bounds: { left: 0, top: 0, right: 600, bottom: 300 },
-            
+            bounds: { left: 0, top: 0, right: 835, bottom: 533 },
+
             width: 0,
             height: 0,
             image: null
@@ -72,11 +75,11 @@ class TablePlanEditor extends PureComponent {
     }
 
     initData() {
-        this.setState({ tables: this.props.data });
-    }
+        const { data } = this.props;
 
-    initWidthHeight(imageUrl) {
-
+        if (_.isArray(data) && _.size(data) > 0) {
+            this.setState({ tables: data });
+        }
     }
 
     changeTables(tables) {
@@ -139,12 +142,12 @@ class TablePlanEditor extends PureComponent {
 
     onTableChange(tableData, index, ops = {}) {
         const { tables } = this.state;
-        
-        const newTables = [ ...tables ];
+
+        const newTables = [...tables];
 
         if (index >= 0 && tables[index]) {
             const t = tables[index];
-            
+
             newTables[index] = { ...t, ...tableData };
         } else {
             newTables.push(tableData);
@@ -153,15 +156,16 @@ class TablePlanEditor extends PureComponent {
         this.setState({ tables: newTables, ...ops });
     }
 
-    onFormSubmit(tableData, index) {
-        this.onTableChange(tableData, index, { modal: false});
+    onFormSubmit(index, tableData) {
+        console.log("TablePlanEditor.onFormSubmit", index, tableData);
+        this.onTableChange(tableData, index, { modal: false });
     }
 
     onImageChange(data) {
         console.log("onImageChange: ", data);
-        
+
         if (_.isPlainObject(data) && "url" in data) {
-            this.setState({ image: data.url});
+            this.setState({ image: data.url });
         }
     }
 
@@ -189,7 +193,7 @@ class TablePlanEditor extends PureComponent {
 
         if (!_.isArray(tables) || _.size(tables) === 0) return null;
 
-        return _.map(tables, 
+        return _.map(tables,
             (t, k) =>
                 <Table
                     {...t}
@@ -229,7 +233,7 @@ class TablePlanEditor extends PureComponent {
                         entity={this.entity}
                         isNew={isNew}
                         data={data}
-                        onProceed={(newData) => this.onEditFormProceed(!isNew ? current : null, newData)}
+                        onProceed={(newData) => this.onFormSubmit(!isNew ? current : null, newData)}
                         locations={locations}
                     />
                 }
@@ -237,8 +241,29 @@ class TablePlanEditor extends PureComponent {
         );
     }
 
+    renderHeader() {
+        const { field } = this.props;
+        const { header } = field;
+
+        if (header) {
+            return <div className="header">{funcOrString(header)}</div>
+        }
+
+        return null;
+    }
+
+    renderSize() {
+        const { width, height } = this.state;
+
+        return (<div className="size">
+            {t("Table plan size:", "form")} {`${width} x ${height}`}
+        </div>);
+    }
+
     renderNavActions() {
-        const { currentTable } = this.state;
+        const { currentTable, image } = this.state;
+
+        const disabled = !image || typeof image !== 'string';
 
         return (
             <div className="actions">
@@ -247,19 +272,20 @@ class TablePlanEditor extends PureComponent {
                     type="primary"
                     icon={<PlusOutlined />}
                     onClick={this.addTable}
+                    disabled={disabled}
                 />
 
                 <Button
                     className="action"
                     icon={<EditOutlined />}
-                    disabled={currentTable == null}
+                    disabled={currentTable == null || disabled}
                     onClick={this.editTable}
                 />
 
                 <Button
                     className="action"
                     icon={<DeleteOutlined />}
-                    disabled={currentTable == null}
+                    disabled={currentTable == null || disabled}
                     onClick={this.removeTable}
                 />
             </div>
@@ -270,24 +296,30 @@ class TablePlanEditor extends PureComponent {
         const { tables, currentTable, width, height, image } = this.state;
 
         return (
-            <div className="table-plan-editor">
+            <div className="table-plan-editor _bs">
                 <div className="table-plan-editor-nav">
+                    {this.renderHeader()}
+
+                    <div className="grow" />
+
+                    {this.renderSize()}
                     {this.renderNavActions()}
                 </div>
 
                 <div className="table-plan-editor-container">
                     {image ? (
                         <>
-                            <TableAreaList 
+                            <TableAreaList
+                                toggleable={false}
                                 onAdd={this.addTable}
-                                data={tables}
-                                currentTable={currentTable} 
+                                tables={tables}
+                                currentTable={currentTable}
                             />
 
-                            <TableArea 
-                                width={width} 
-                                height={height} 
-                                image={image} 
+                            <TableArea
+                                width={width}
+                                height={height}
+                                image={image}
                                 onSizeChange={this.onSizeChange}
                                 onClick={() => this.onTableClick(null)}
                             >
@@ -295,11 +327,11 @@ class TablePlanEditor extends PureComponent {
                             </TableArea>
                         </>
                     ) : (
-                        <TableAreaImageSelect 
-                            setImage={this.onImageChange}
-                        />
-                    )}
-                    
+                            <TableAreaImageSelect
+                                setImage={this.onImageChange}
+                            />
+                        )}
+
                 </div>
 
                 {this.renderModal()}
