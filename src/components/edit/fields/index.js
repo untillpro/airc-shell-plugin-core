@@ -15,6 +15,7 @@ import RadioField from './RadioField';
 import TipField from './TipField';
 import TicketLayoutField from './TicketLayoutField';
 import ImageSelectorField from './ImageSelectorField';
+import ImageSetSelector from './ImageSetSelector';
 import EmbeddedManagerField from './EmbeddedManagerField';
 import EmbededSelectorField from './EmbededSelectorField'
 import EmbeddedManagerPredefinedField from './EmbeddedManagerPredefinedField'
@@ -34,6 +35,7 @@ export {
     TipField,
     TicketLayoutField,
     ImageSelectorField,
+    ImageSetSelector,
     EmbeddedManagerField,
     EmbededSelectorField,
     EmbeddedManagerPredefinedField,

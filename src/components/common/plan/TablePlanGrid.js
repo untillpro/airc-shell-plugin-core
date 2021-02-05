@@ -20,7 +20,7 @@ class TablePlanGrid extends PureComponent {
                     }}
                     description={t("No tables available")}
                 >
-                    <Button onClick={onAdd} type="primary">Add new table</Button>
+                    <Button onClick={onAdd} type="primary">{t("Add new table", "list")}</Button>
                 </Empty>
             );
         }
@@ -29,7 +29,7 @@ class TablePlanGrid extends PureComponent {
 
         return (
             <div className="table-plan-grid">
-                {_.map(data, (d) => <TablePlanCard data={d} {...ops} />)}
+                {_.map(data, (d, index) => <TablePlanCard key={`table_card_${d.id || index}`} data={d} {...ops} />)}
             </div>
         );
     }

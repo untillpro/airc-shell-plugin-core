@@ -10,12 +10,13 @@ import { TextInput } from 'airc-shell-core';
 
 class TextField extends Component {
     handleChange(event) {
-        const { onChange } = this.props;
+        const { onChange, field } = this.props;
+        const { accessor } = field;
 
         if (onChange && typeof onChange === 'function' ) {
             const value = event.target.value ? String(event.target.value) : '';
             
-            onChange(value);
+            onChange({[accessor]: value});
         }
     }
 

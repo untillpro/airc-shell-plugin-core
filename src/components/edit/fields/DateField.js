@@ -12,12 +12,13 @@ const DEFAULT_DATE_FORMAT = "DD/MM/YYYY";
 
 class DateField extends Component {
     handleChange(date, dateString) {
-        log("DateField changed: ", date, dateString, date ? date.valueOf() : null);
-
-        const { onChange } = this.props;
+        const { onChange, field } = this.props;
+        const { accessor } = field;
 
         if (onChange && typeof onChange === 'function' ) {
-            onChange(date ? date.valueOf() : null);
+            let val = date ? date.valueOf() : null;
+            
+            onChange({[accessor]: val});
         }
     }
 

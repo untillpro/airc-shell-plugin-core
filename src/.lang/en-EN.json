@@ -11,7 +11,9 @@
             "Cancel": "Cancel",
             "Validate": "Validate",
             "Proceed": "Proceed",
-            "Save": "Save"
+            "Save": "Save",
+            "Yes": "Yes",
+            "No": "No"
         },
         "list": {
             "{{from}} - {{to}} out of {{total}} items": "{{from}} - {{to}} out of {{total}} items",
@@ -20,7 +22,8 @@
             "Hide columns": "Hide columns",
             "Actions": "Actions",
             "Edit item": "Edit item",
-            "Mass edit": "Mass edit"
+            "Mass edit": "Mass edit",
+            "Add new table": "Add new table"
         },
         "tableplan": {
             "No locations selected": "No locations selected"
@@ -47,6 +50,14 @@
             "To": "To:",
             "now": "now",
             "Custom": "Custom",
+            "Table #{{number}}": "Table #{{number}}",
+            "Add table": "Add table",
+            "Are you sure to delete this table?":"Are you sure to delete this table?",
+            "Size: ": "Size: ",
+            "Select image": "Select image",
+            "Are you sure to delete background image?": "Are you sure to delete background image?",
+            "There is no image in the set": "There is no image in the set {{set}}",
+            "There is no set associated with this field": "There is no set associated with this field",
             "confirm_modal": {
                 "Confirm form close": "Confirm form close",
                 "Leaving this page will cause all unsaved changes to be lost": "Leaving this page will cause all unsaved changes to be lost",

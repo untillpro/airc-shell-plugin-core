@@ -5,11 +5,18 @@
 import _ from 'lodash';
 
 class ContributionSet {
-    constructor(name) {
+    constructor(name, data) {
         if (!name) throw new Error('ContributionSet should have name');
 
+        console.log(`creatin set ${name} with data:`, data);
+
         this.name = name;
-        this.data = new Map();
+
+        if (_.isPlainObject(data)) {
+            this.data = new Map(Object.entries(data));
+        } else {
+            this.data = new Map();
+        }
     }
 
     set(key, value) {
@@ -18,7 +25,7 @@ class ContributionSet {
     }
 
     get(key) {
-        return this.data.get();
+        return this.data.get(key);
     }
 
     has(key) {
@@ -34,7 +41,7 @@ class ContributionSet {
     }
 
     size() {
-        return this.data.size();
+        return this.data.size;
     }
 
     map() {

@@ -19,7 +19,9 @@ class Table extends PureComponent {
             angle: 0,
             info: '',
             showInfo: false,
-            round: 10
+            round: 10,
+            chairImage: null,
+            tableImage: null
         };
 
         this.handleDragStart = this.handleDragStart.bind(this);
@@ -39,11 +41,55 @@ class Table extends PureComponent {
     }
 
     componentDidMount() {
-        const { width, height, top, left, angle } = this.props;
+        const { width, height, top, left, angle, chair_image, table_image, context  } = this.props;
+        const { contributions } = context;
 
-        this.setState({
+        const res = {
             width, height, top, left, angle
-        });
+        };
+
+        
+
+        if (_.isString(chair_image)) {
+            res.chairImage = contributions.getSetValue('chair', chair_image);
+        } 
+
+        if (_.isString(table_image)) {
+            res.tableImage = contributions.getSetValue('table', table_image);
+        } 
+
+        console.log("render table", res);
+
+        this.setState(res);
+    }
+
+    componentDidUpdate(prevProps) {
+        const { width, height, top, left, angle } = this.props;
+        const newStae = {};
+
+        if (width !== prevProps.width) {
+            newStae.width = width;
+        }
+
+        if (height !== prevProps.height) {
+            newStae.height = height;
+        }
+
+        if (top !== prevProps.top) {
+            newStae.top = top;
+        }
+
+        if (left !== prevProps.left) {
+            newStae.left = left;
+        }
+
+        if (angle !== prevProps.angle) {
+            newStae.angle = angle;
+        }
+
+        if (_.size(newStae) > 0) {
+            this.setState(newStae);
+        }
     }
 
     //resize
@@ -216,15 +262,12 @@ class Table extends PureComponent {
         return pos;
     }
 
-    getColor(styles) {
-        const { color } = this.props;
-        let c = "#ffffff";
+    getBg(styles) {
+        const { tableImage } = this.state;
 
-        if (_.isString(color)) {
-            c = color;
+        if (_.isString(tableImage)) {
+            styles["backgroundImage"] = `url(${tableImage})`;
         }
-
-        styles["backgroundColor"] = c;
     }
 
     renderNumber() {
@@ -232,7 +275,7 @@ class Table extends PureComponent {
         const { angle } = this.state;
         const styles = { transform: `rotate(${-angle}deg)` };
 
-        return (<span style={styles}>{number}</span>);
+        return (<span className="num" style={styles}>{number}</span>);
     }
 
     renderInfo() {
@@ -244,6 +287,8 @@ class Table extends PureComponent {
     }
 
     renderCirclePlaces(places, width, height) {
+        const { chairImage } = this.state;
+
         const result = [];
 
         let a = 360 / places;
@@ -258,7 +303,19 @@ class Table extends PureComponent {
             let k = width >= height ? (height / width) : (width / height);
             let rotateAngle = (angle - 90);
 
-            result.push(<div className="place" style={{ left: x, top: y, transform: `rotate(${rotateAngle}deg)` }} num={i} k={k} />)
+            result.push(
+                <div 
+                    className="place" 
+                    style={{ 
+                        left: x, 
+                        top: y, 
+                        transform: `rotate(${rotateAngle}deg)`,
+                        backgroundImage: chairImage ? `url(${chairImage})` : null
+                    }} 
+                    num={i} 
+                    k={k}
+                />
+            );
         }
 
         return result;
@@ -316,6 +373,8 @@ class Table extends PureComponent {
     }
 
     generateSide(W, H, xd, yd, angle, sits, c, places, result) {
+        const { chairImage } = this.state;
+        const { index } = this.props;
         let count = c;
 
         for (let k = 0; k < 2; k++) {
@@ -325,7 +384,20 @@ class Table extends PureComponent {
             let rotateAngle = angle + (180 * k);
 
             for (let i = 0; i < sits && count < places; i++) {
-                result.push(<div className="place" style={{ left: x, top: y, transform: `rotate(${rotateAngle}deg)` }} num={i} k={k} />);
+                result.push(
+                    <div 
+                        key={`place_${index}_${count}`} 
+                        className="place" 
+                        style={{ 
+                            left: x, 
+                            top: y, 
+                            transform: `rotate(${rotateAngle}deg)`,
+                            backgroundImage: chairImage ? `url(${chairImage})` : null 
+                        }} 
+                        num={i} 
+                        k={k} 
+                    />
+                );
                 x += xd;
                 y += yd;
                 count++;
@@ -351,6 +423,7 @@ class Table extends PureComponent {
 
         return null;
     }
+    
 
     render() {
         let styles = {};
@@ -359,7 +432,7 @@ class Table extends PureComponent {
         const { current, } = this.props;
 
         this.getSize(styles);
-        this.getColor(styles);
+        this.getBg(styles);
         this.getForm(styles);
 
         return (
@@ -394,6 +467,7 @@ class Table extends PureComponent {
                     {this.renderNumber()}
                     {this.renderInfo()}
                     {this.renderPlaces()}
+                    
                 </div>
             </ResizableRect>
 
@@ -402,9 +476,10 @@ class Table extends PureComponent {
 }
 
 Table.propTypes = {
+    context: PropTypes.object.isRequired,
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
-    form: PropTypes.number.isRequired,
+    form: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
     top: PropTypes.number.isRequired,
     left: PropTypes.number.isRequired,
     angle: PropTypes.number.isRequired,

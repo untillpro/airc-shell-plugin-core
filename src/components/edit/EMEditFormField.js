@@ -9,6 +9,11 @@ import { Label, FieldError, Tip } from 'airc-shell-core';
 import isEqual from 'react-fast-compare';
 
 import {
+    simpleMutateCheck,
+    tablePlanMutateCheck,
+} from './classes/Utils';
+
+import {
     funcOrString
 } from '../../classes/helpers';
 
@@ -26,6 +31,7 @@ import {
     TipField,
     TicketLayoutField,
     ImageSelectorField,
+    ImageSetSelector,
     EmbeddedManagerField,
     EmbededSelectorField,
     EmbeddedManagerPredefinedField,
@@ -41,34 +47,21 @@ class EMEditFormField extends Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        const { data, field, errors, embedded_type } = nextProps;
-        const { accessor } = field;
+        const { field, errors, embedded_type } = nextProps;
+        const { type, disabled } = field;
 
-        let path = accessor || null ;
-        const disabled = field ? field.disabled : null;
-
-        if (disabled && typeof disabled === 'function') {
+        if (_.isFunction(disabled)) {
             return true;
-        }
-
-        if (data && path && typeof path === 'string') {
-            if (embedded_type) {
-                path = `${embedded_type}.${path}`;
-            }
-
-            const v1 = _.get(data, path);
-            const v2 = _.get(this.props.data, path);
-
-            if (!isEqual(v1,v2)) {
-                return true;
-            }
         }
 
         if (!isEqual(errors, this.props.errors)) {
             return true;
         }
 
-        return false;
+        switch (type) {
+            case 'table_plan_editor': return tablePlanMutateCheck(nextProps.data, this.props.data, field, embedded_type);
+            default: return simpleMutateCheck(nextProps.data, this.props.data, field, embedded_type)
+        }
     }
 
     handleChange(value, mlValue) {
@@ -141,6 +134,7 @@ class EMEditFormField extends Component {
                 case 'tip': FieldComponent = TipField; break;
                 case 'ticket': FieldComponent = TicketLayoutField; break;
                 case 'image': FieldComponent = ImageSelectorField; break;
+                case 'image_set': FieldComponent = ImageSetSelector; break;
                 case 'table_plan_editor': FieldComponent = TablePlanEditor; break;
                 case 'embedded':   
                     if (predefined) {

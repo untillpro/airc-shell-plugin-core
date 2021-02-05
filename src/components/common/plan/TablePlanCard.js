@@ -2,7 +2,8 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import { IconButton, NoImage, translate as t} from 'airc-shell-core';
+import { Icon, IconButton, NoImage, getBlobPath} from 'airc-shell-core';
+import * as Icons from 'airc-shell-core/const/Icons';
 
 import {
     ICON_EDIT,
@@ -69,13 +70,13 @@ class TablePlanCard extends PureComponent {
 
                 <div className="buttons">
                     <IconButton 
-                        icon={hide === 1 ? ICON_INVISIBLE : ICON_VISIBLE} 
+                        icon={<Icon icon={hide === 1 ? Icons.ICON_EYE_SOLID : Icons.ICON_HIDE} />} 
                         size="small" 
                         ghost 
                     />
 
                     <IconButton 
-                        icon={ICON_EDIT} 
+                        icon={<Icon icon={Icons.ICON_EDIT} />} 
                         size="small" 
                         ghost 
                     />
@@ -83,7 +84,7 @@ class TablePlanCard extends PureComponent {
                     <div className="grow" />
 
                     <IconButton 
-                        icon={ICON_TRASH} 
+                        icon={<Icon icon={Icons.ICON_DELETE_SOLID} />} 
                         size="small" 
                         ghost 
                     />
@@ -95,8 +96,9 @@ class TablePlanCard extends PureComponent {
     renderImage() {
         const { image } = this.props?.data;
 
-        if (_.isString(image) && !_.isEmpty(image)) {
-            const styles = { backgroundImage: `url(${image})`};
+        if (_.isNumber(image)) {
+            const url = getBlobPath(image);
+            const styles = { backgroundImage: `url(${url})`};
 
             return (
                 <div className="image" style={styles}/>
@@ -118,7 +120,7 @@ class TablePlanCard extends PureComponent {
         const { hide } = this.props.data;
 
         return (
-            <div key="table_plan_1" className={cn("table-plan-card", {"hide": hide === 1})}>
+            <div className={cn("table-plan-card", {"hide": hide === 1})}>
                 {this.renderImage()}
                 {this.renderInfo()}
             </div>
@@ -130,7 +132,7 @@ TablePlanCard.propTypes = {
     data: PropTypes.object.isRequired,
     onEdit: PropTypes.func.isRequired,
     onHide: PropTypes.func.isRequired,
-    onRemove: PropTypes.func.isRequired,
+    onDelete: PropTypes.func.isRequired,
 };
 
 export default TablePlanCard;

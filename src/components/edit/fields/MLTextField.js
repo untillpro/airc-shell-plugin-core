@@ -103,11 +103,16 @@ class MLTextField extends Component {
     }
 
     handleChange(value, ml, opt = {}) {
-        const { onChange } = this.props;
+        const { onChange, field } = this.props;
+        const { accessor, ml_accessor } = field;
 
         if (_.isFunction(onChange)) {
             let buf = langMapToBuffer(ml || {});
-            onChange(value ? String(value) : '', buf);
+
+            onChange({
+                [accessor]: value ? String(value) : '',
+                [ml_accessor]: buf
+            });
         }
 
         this.setState({ ...opt, value, ml });

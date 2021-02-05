@@ -66,7 +66,6 @@ class EditableCell extends PureComponent {
     }
 
     handleBlur() {
-        console.log('blur of editableCell');
         this.cancel();
     }
 

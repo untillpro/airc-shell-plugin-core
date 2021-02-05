@@ -3,7 +3,8 @@ $shadow_2: 0px 0px 10px rgba(0, 0, 0, 0.1);
 $resizerColor: #176ddd;
 
 .table-plan-editor {
-    flex: 1;
+    width: 100%;
+    display:block;
 
     &-nav {
         padding: 10px 0px;
@@ -29,6 +30,13 @@ $resizerColor: #176ddd;
         .size {
             font-size: 12px;
             color: #787878;
+        }
+
+        .size-input {
+            height: 30px;
+            width: 80px;
+            text-align: center;
+            margin: 0px 5px;
         }
     }
 
@@ -97,7 +105,7 @@ $resizerColor: #176ddd;
     }
 
     &-row {
-        background-color: #dedede;
+        background-color: #fff;
         margin: 10px 10px 0px;
 
         display: flex;
@@ -106,37 +114,48 @@ $resizerColor: #176ddd;
         align-items:center;
 
         box-sizing: border-box;
-        padding: 10px;
+        padding: 10px 10px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 
         .form-ico {
             width: 20px;
             height: 20px;
+            line-height: 20px;
             margin-right: 5px;
-
-            background-color: #aaa;
+            color: #aeaeae;
             overflow: hidden;
+
+            text-align: center;
         }
 
         .label {
             flex: 1;
+            font-size: 14px;
         }
 
         .action {
             display: inline-block;
-            margin-left: 5px;
-            width: 20px;
-            height: 20px;
-            background-color: #aaa;
+            margin-left: 6px;
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
             text-align: center;
             line-height: 20px;
             cursor: pointer;
+            font-size: 12px;
+
+            opacity: 0.5;
+
+            &:hover {
+                opacity: 1;
+            }
         }
     }
     
 }
 
 .table-area {
-    display: flex;
+    display: block;
     flex-direction: column;
 
     flex: 1;
@@ -149,7 +168,7 @@ $resizerColor: #176ddd;
     background: #aeaeae;
 
     overflow: hidden;
-
+    position: relative;
     
 
     &-plan {
@@ -161,9 +180,11 @@ $resizerColor: #176ddd;
     }
 
     &-plan-container {
-        max-width: 100%;
-        max-height: 100%;
-
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 100%;
+        height: 100%;
         overflow: auto;
     }
 
@@ -175,6 +196,10 @@ $resizerColor: #176ddd;
         align-items: center;
 
         position: relative;
+
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
 
         cursor: move;
 
@@ -209,13 +234,28 @@ $resizerColor: #176ddd;
 
             background-position: center center;
             background-size: cover;
-            background-color: #232323;
 
             width: 24px;
             height: 24px;
 
             margin-top: -12px;
             margin-left: -12px;
+
+            &.noimg {
+                background-color: #232323;
+            }
+        }
+
+        .num {
+            background-color: #fff;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            text-align: center;
+
+            border-radius: 10px;
+
+            box-shadow: var(--box-shadow-z-3);
         }
     }
 }

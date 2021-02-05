@@ -89,10 +89,7 @@ class EMEditForm extends Component {
         }
 
         this.setState(result);
-
-        this.props.pushEvents({
-            'keydown': this.hadleKeyPress
-        });
+       this.props.pushEvents({ 'keydown': this.hadleKeyPress });
     }
 
     componentWillUnmount() {

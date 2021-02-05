@@ -54,6 +54,7 @@ class TableAreaList extends PureComponent {
 
         return _.map(tables, (tableData, index) =>
             <TableAreaListRow
+                key={`table_${tableData.id || index}`}
                 index={index}
                 data={tableData}
                 onEdit={onEdit}

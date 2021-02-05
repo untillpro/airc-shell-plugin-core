@@ -9,11 +9,13 @@ import { funcOrString } from '../../../classes/helpers';
 
 class RadioField extends Component {
     handleChange(event) {
-        const { onChange } = this.props;
+        const { onChange, field } = this.props;
+        const { accessor } = field;
+
         const value = event.target.value;
 
         if (onChange && typeof onChange === 'function' ) {
-            onChange(value);
+            onChange({[accessor]: value});
         }
     }
 

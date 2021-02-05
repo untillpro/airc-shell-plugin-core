@@ -67,7 +67,33 @@ class EMEditFormFieldsGroup extends Component {
         }
     }
 
-    handleFieldChanged(field, value, mlValue) {
+    handleFieldChanged(field, value) {
+        const { changedData, embedded: embedded_type, onDataChanged, data: Data } = this.props;
+
+        Logger.log({
+            value,
+            changedData,
+            Data
+        }, '++++++++++ handleFieldChanged:');
+
+        let data = {};
+
+        if (embedded_type) {
+            value = { [embedded_type]: value };
+        }
+
+        if (_.isPlainObject(changedData)) data = { ...changedData };
+
+        data = _.merge(data, value);
+
+        if (onDataChanged && typeof onDataChanged === 'function') {
+            onDataChanged(data)
+        }
+    }
+
+    
+    /*
+    handleFieldChanged(field, value) {
         const { changedData, embedded: embedded_type, onDataChanged, data: Data } = this.props;
         const { accessor, ml_accessor, onChange } = field;
 
@@ -115,6 +141,7 @@ class EMEditFormFieldsGroup extends Component {
             onDataChanged(data)
         }
     }
+    */
 
     render() {
         const {

@@ -11,7 +11,7 @@ class TablePlanList extends PureComponent {
         if (_.isEmpty(data)) {
             return (
                 <Empty description={t("No tables available")} >
-                    <Button onClick={onAdd} type="primary">Add new table</Button>
+                    <Button onClick={onAdd} type="primary">{t("Add new table", "list")}</Button>
                 </Empty>
             );
         }
@@ -19,7 +19,7 @@ class TablePlanList extends PureComponent {
         const ops = { onEdit, onDelete, onHide };
 
         return (
-            <div className="table-plan-grid">
+            <div className="table-plan-list">
                 {_.map(data, (d) => <TablePlanRow data={d} {...ops} />)}
             </div>
         );

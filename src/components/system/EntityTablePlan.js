@@ -110,6 +110,7 @@ class EntityTablePlan extends Component {
 
         return _.map([1,2,3], (locId) => {
             return <TablePlan
+                key={`table_plan_${locId}`}
                 location={locId}
                 name={locationsOptions[locId]}
                 data={data ? data[locId] : null}

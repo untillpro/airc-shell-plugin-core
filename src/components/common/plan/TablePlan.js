@@ -78,9 +78,10 @@ class TablePlan extends PureComponent {
 
     render() {
         const { type } = this.state;
-        const { name, data } = this.props;
+        const { name, data, location } = this.props;
 
         const props = {
+            location,
             data,
             onEdit: this.handleEditAction,
             onAdd: this.handleAddAction,
@@ -92,6 +93,8 @@ class TablePlan extends PureComponent {
             <div className="table-plan">
                 <div className="table-plan-container">
                     <Header 
+                        location={location}
+                        key={`table_plan_header_${location}`}
                         name={name} 
                         view={type}
                         onViewChange={this.handleViewTypeChange}

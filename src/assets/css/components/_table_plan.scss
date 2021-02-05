@@ -68,6 +68,10 @@ $bradius_item: 4px;
       margin-top: 10px;
       display: flex;
       flex-direction: row;
+
+      .icon-btn {
+        font-size: 14px;
+      }
     }
 
     &.hide {
@@ -85,5 +89,56 @@ $bradius_item: 4px;
 
     background-color: #fff;
     border-radius: $bradius_item;
+
+    padding: 10px;
+
+    position: relative;
+    align-items: center;
+
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+
+    .image {
+      width: 40px;
+      height: 40px;
+      margin-right: 20px;
+
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    .info {
+      flex: 1;
+      align-items: flex-start;
+      display: flex;
+      flex-direction: column;
+
+      height: 100%;
+
+      .title {
+        font-size: 18px;
+      }
+
+      .tables {
+        margin-top: 8px;
+        font-size: 12px;
+        color: #787878;
+      }
+    }
+
+    .buttons {
+      height: 20px;
+      line-height: 20px;
+      .icon-btn {
+        display: inline-block;
+        margin-left: 5px;
+
+        font-size: 14px;
+      }
+
+      .icon-btn:last-child {
+        margin-bottom: 0px;
+      }
+    }
   }
 }

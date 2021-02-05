@@ -15,7 +15,7 @@
                     "order": 1,
                     "width": 1000,
                     "height": 800,
-                    "image": "https://raw.githubusercontent.com/Yohanson555/storage/main/images/floors/FirstFloor.png",
+                    "image": 15,
                     "table": [
                         {
                             "id": 5000000000101,
@@ -72,7 +72,7 @@
                     "order": 1,
                     "width": 1000,
                     "height": 800,
-                    "image": "",
+                    "image": 16,
                     "table": [
                         {
                             "id": 15000000000101,

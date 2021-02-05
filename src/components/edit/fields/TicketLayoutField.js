@@ -186,7 +186,8 @@ class TicketLayoutField extends Component {
 
     handleChange() {
         const { changedData, layoutTemplate, selectedLayout } = this.state;
-        const { onChange } = this.props;
+        const { onChange, field } = this.props;
+        const { accessor } = field;
 
         if (onChange && typeof onChange === 'function') {
             const result = {
@@ -199,7 +200,7 @@ class TicketLayoutField extends Component {
 
             const buffer = new Buffer(value);
 
-            onChange(buffer.toString('base64'));
+            onChange({[accessor]: buffer.toString('base64')});
         }
     }
 

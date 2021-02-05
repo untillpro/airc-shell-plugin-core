@@ -186,7 +186,7 @@ class EMList extends Component {
 
     handleKeyPress(event) {
         const { keyCode } = event;
-
+        
         switch (keyCode) {
             case KEY_ESCAPE: this.handleBackClick(); return;
             case KEY_RETURN: this.handleEnterPress(); return;

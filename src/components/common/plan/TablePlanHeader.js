@@ -10,15 +10,15 @@ import {
 
 class TablePlanHeader extends PureComponent {
     renderButtons() {
-        const { onViewChange, onAdd, view } = this.props;
+        const { onViewChange, onAdd, view, location } = this.props;
         const buttons = [];
 
         if (_.isFunction(onAdd)) {
-            buttons.push(<Button type="primary" icon={<PlusOutlined />} onClick={onAdd} />);
+            buttons.push(<Button key={`add_header_btn_${location}`} type="primary" icon={<PlusOutlined />} onClick={onAdd} />);
         }
 
         if (_.isFunction(onViewChange)) {
-            buttons.push(<Button icon={view === 'grid' ? <AppstoreOutlined /> : <MenuOutlined />} onClick={onViewChange} />);
+            buttons.push(<Button key={`style_header_btn_${location}`} icon={view === 'grid' ? <AppstoreOutlined /> : <MenuOutlined />} onClick={onViewChange} />);
         }
 
         return buttons;

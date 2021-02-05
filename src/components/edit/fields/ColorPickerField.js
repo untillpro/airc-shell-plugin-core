@@ -16,13 +16,12 @@ class ColorPickerField extends Component {
     }
 
     handleChange(value) {
-        const { onChange } = this.props;
-        
-        if (onChange && typeof onChange === 'function' ) {
+        const { onChange, field } = this.props;
+        const { accessor } = field;
 
+        if (onChange && typeof onChange === 'function' ) {
             const val = this.hexToValue(value);
-            
-            onChange(val);
+            onChange({ [ accessor ]: val });
         }    
     }
 

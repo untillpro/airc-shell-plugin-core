@@ -110,10 +110,9 @@ class ViewEntityGrid extends Component {
     }
 
     handleKeyPress(event) {
-
         const { selected } = this.state;
         const { keyCode } = event;
-
+        
         switch (keyCode) {
             case KEY_ESCAPE: this.handleBackClick(); break;
             case KEY_RETURN: this.selectEntity(selected); break;

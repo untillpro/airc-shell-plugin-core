@@ -5,18 +5,20 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { ImageSelector, Tip, translate as t  } from 'airc-shell-core';
+
 import {
     sendError
 } from '../../../actions/MessagesActions';
 
 import { getFileSize } from '../../../classes/helpers';
 
-class NumberField extends Component {
+class ImageSelecotrField extends Component {
     handleChange(value = null) {
-        const { onChange } = this.props;
+        const { onChange, field } = this.props;
+        const { accessor } = field;
 
         if (onChange && typeof onChange === 'function' ) {
-            onChange(value);
+            onChange({[accessor]: value});
         }
     }
 
@@ -61,4 +63,4 @@ const mapStateToProps = (state) => {
     }
 };
 
-export default connect(mapStateToProps, {sendError})(NumberField);
+export default connect(mapStateToProps, {sendError})(ImageSelecotrField);

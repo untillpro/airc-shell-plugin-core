@@ -109,18 +109,17 @@ class SelectField extends Component {
     handleChange(value) {
         const { data } = this.state;
         const { onChange, field } = this.props;
+        const { accessor, value_accessor } = field;
 
         if (onChange && typeof onChange === 'function') {
             let val = value;
-
-            const value_accessor = field ? field.value_accessor : null;
 
             if (value_accessor && typeof value_accessor === 'string') {
                 const composedData = _.keyBy(data, value_accessor);
                 val = _.get(composedData, val);
             }
 
-            onChange(val);
+            onChange({[accessor]: val});
         }
     }
 

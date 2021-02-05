@@ -1,10 +1,7 @@
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Empty } from 'airc-shell-core';
-
-import { Upload, Button, message } from 'antd';
+import { Empty, Upload, Button, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 
 
@@ -13,7 +10,6 @@ class TableAreaImageSelect extends PureComponent {
         super(props);
 
         this.handleChange = this.handleChange.bind(this);
-
         this.customRequest = this.customRequest.bind(this);
     }
 
@@ -22,8 +18,6 @@ class TableAreaImageSelect extends PureComponent {
 
         if (info.file.status === 'done') {
             if (_.isFunction(setImage)) {
-                console.log("file upload response: ", info.file.response);
-
                 if (_.isPlainObject(info.file.response)) {
                     setImage(info.file.response);
                 } else {
@@ -38,7 +32,8 @@ class TableAreaImageSelect extends PureComponent {
     }
 
     customRequest(data) {
-        const { api } = this.props;
+        const { context } = this.props;
+        const { api } = context;
 
         api.blob(data);
     }
@@ -46,8 +41,6 @@ class TableAreaImageSelect extends PureComponent {
     render() {
         const props = {
             onChange: this.handleChange,
-            beforeUpload: this.handleBeforeUpload,
-            onRemove: this.handleRemove,
             customRequest: this.customRequest,
             name: 'file',
             multiple: false,
@@ -66,14 +59,8 @@ class TableAreaImageSelect extends PureComponent {
 }
 
 TableAreaImageSelect.propTypes = {
-    api: PropTypes.object.isRequired,
+    context: PropTypes.object.isRequired,
     setImage: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
-    const { api } = state.context;
-
-    return { api };
-}
-
-export default connect(mapStateToProps, null)(TableAreaImageSelect);
+export default TableAreaImageSelect;

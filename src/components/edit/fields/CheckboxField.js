@@ -10,11 +10,13 @@ import { funcOrString } from '../../../classes/helpers';
 
 class CheckboxField extends Component {
     handleChange(event) {
-        const { onChange } = this.props;
+        const { onChange, field } = this.props;
+        const { accessor } = field;
+
         const value = Number(event.target.checked);
 
         if (onChange && typeof onChange === 'function' ) {
-            onChange(value);
+            onChange({[accessor]: value});
         }
     }
 

@@ -7,10 +7,11 @@ import { NumberInput } from 'airc-shell-core';
 
 class NumberField extends Component {
     handleChange(value = null) {
-        const { onChange } = this.props;
+        const { onChange, field } = this.props;
+        const { accessor } = field;
 
         if (onChange && typeof onChange === 'function' ) {
-            onChange(value);
+            onChange({[accessor]: value});
         }
     }
 

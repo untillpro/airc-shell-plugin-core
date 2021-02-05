@@ -24,12 +24,11 @@ class EmbededSelectorField extends PureComponent {
     }
     
     handleChange(value) {
-        const { onChange } = this.props;
+        const { onChange, field } = this.props;
+        const { accessor } = field;
 
         if (onChange && typeof onChange === 'function') {
-            let val = value;
-
-            onChange(val);
+            onChange({[accessor]: value});
         }
     }
 

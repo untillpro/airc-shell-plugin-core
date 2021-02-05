@@ -7,7 +7,9 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import EMEditForm from '../EMEditForm';
 import { Modal, translate as t } from 'airc-shell-core';
-import { reduce } from '../../../classes/helpers';
+
+import { reduce, immutableArrayMerge } from '../../../classes/helpers';
+
 import { ListTable } from '../../common';
 import isEqual from 'react-fast-compare'
 //import log from '../../../classes/Log';
@@ -111,7 +113,7 @@ class EmbeddedManagerField extends PureComponent {
 
     actionEdit(rowIndex = null) {
         const { selectedRows, data } = this.state;
-
+        console.log("actionEdit");
         let index = parseInt(rowIndex);
         
         if (_.isNaN(index) && selectedRows && selectedRows.length > 0) {
@@ -194,11 +196,13 @@ class EmbeddedManagerField extends PureComponent {
         });
     }
 
+    // value is array
     handleChange(value) {
-        const { onChange } = this.props;
+        const { onChange, field } = this.props;
+        const { accessor } = field;
 
         if (onChange && typeof onChange === 'function') {
-            onChange(value);
+            onChange({[accessor]: value});
         }
     }
 

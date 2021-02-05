@@ -11,14 +11,13 @@ import log from '../../../classes/Log';
 const DEFAULT_TIME_FORMAT = "HH:mm:ss";
 
 class TimeField extends Component {
-
     handleChange(date, dateString) {
-        log("TimeField changed: ", date, dateString, date.valueOf());
-
-        const { onChange } = this.props;
+        const { onChange, field } = this.props;
+        const { accessor } = field;
 
         if (onChange && typeof onChange === 'function' ) {
-            onChange(date ? date.valueOf() : null);
+            let val = date ? date.valueOf() : null;
+            onChange({[val]: accessor});
         }
     }
 
