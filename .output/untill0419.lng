@@ -11,14 +11,19 @@ Cancel	Отмена
 Validate	Проверить
 Proceed	Продолжить
 Save	Сохранить
+Yes	Да
+No	Нет
 $FORMNAME	/.lang:translation.list
 {{from}} - {{to}} out of {{total}} items	{{from}} - {{to}} из {{total}} записей
-Items per page	Записей на страницу: 
+Items per page	Записей на страницу:
 Show deleted	Показывать удаленные
 Hide columns	Скрыть колонки
 Actions	Действия
 Edit item	Редактировать
 Mass edit	Мн. редактирование
+Add new table	
+$FORMNAME	/.lang:translation.tableplan
+No locations selected	Не выбраны локации
 $FORMNAME	/.lang:translation.form
 Is active	Активность
 Previous	Previous
@@ -37,6 +42,18 @@ From	С:
 To	По:
 now	сейчас
 Custom	Пользовательская
+new_header	Новый элемент
+edit_header	Редактирование: {{name}}
+copy_header	Копия: {{name}}
+Language	Язык
+Table #{{number}}	Столик №{{number}}
+Add table	Добавить столик
+Are you sure to delete this table?	Вы уверены, что хотите удалить этот столик?
+Size:	Размер: 
+Select image	Выбрать изображение
+Are you sure to delete background image?	Вы уверены, что хотите удалить фоновое изображение?
+There is no image in the set	Набор изображений {{set}} не определён.
+There is no set associated with this field	Для поля не задан набор изображений
 $FORMNAME	/.lang:translation.form.confirm_modal
 Confirm form close	Подтвердить закрытие формы
 Leaving this page will cause all unsaved changes to be lost	Если вы покинете эту страницу, все несохраненные изменения будут потеряны.
@@ -116,7 +133,7 @@ $FORMNAME	/.lang:translation.errors
 Enter valid number	Введите корректный номер
 Enter valid email	Введите корретный e-mail
 Value should be more than {{value}}	Значение должно быть больше, чем {{value}}
-min_wrong_value_error	Ошибка декларации: неверное минимальное значение 
+min_wrong_value_error	Ошибка декларации: неверное минимальное значение
 Value should be less than {{value}}	Значение должно быть меньше {{value}}
 max_wrong_value_error	Ошибка декларации: неверное максимальное значение
 Value must be a number	Значение должно быть числом
@@ -129,7 +146,7 @@ max_length_wrong_value_error	Ошибка декларации: неверное
 String length should be less than {{value}}	Длина строки должна быть меньше {{value}}
 Unvalid regexp declared	Ошибка декларации: объявлено недействительное регулярное выражение
 Not a valid value	Недействительное значение
-views_not_specified	Для этого плагина нет специальных представлений 
+views_not_specified	Для этого плагина нет специальных представлений
 Selected layout not presented in available ticket layouts	Выбранный макет не представлен в доступных макетах билетов
 Layout's template not specified or wrong given	Шаблон макета не указан или указан неверно
 Please select datetime range	Please select datetime range
