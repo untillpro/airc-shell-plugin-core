@@ -119,6 +119,7 @@ class MockAlphaApiGate {
 
         console.log("Api.Collection func call: ", type, wsids, props);
 
+        /*
         if (type === 'table_plan') {
             console.log('TablePlanData:', TablePlanData['sections']);
             let mockData = builder.build(TablePlanData['sections']);
@@ -126,7 +127,8 @@ class MockAlphaApiGate {
             console.log('mockData: ', mockData);
             return mockData
         }
-
+        */
+       
         let resultData = {};
 
         let params = {
