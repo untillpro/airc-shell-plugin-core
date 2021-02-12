@@ -19,8 +19,9 @@ class TablePlan extends PureComponent {
         this.handleAddAction = this.handleAddAction.bind(this);
         this.handleViewTypeChange = this.handleViewTypeChange.bind(this);
         this.handleEditAction = this.handleEditAction.bind(this);
-        this.handleHideAction = this.handleHideAction.bind(this);
+        this.handleReduceAction = this.handleReduceAction.bind(this);
         this.handleDeleteAction = this.handleDeleteAction.bind(this);
+        this.handleShowDeletedChange = this.handleShowDeletedChange.bind(this);
     }
 
     _getViewType() {
@@ -29,6 +30,18 @@ class TablePlan extends PureComponent {
         let type = localStorage.getItem(key);
         
         return type === VIEW_TYPE_LIST ? type : VIEW_TYPE_GRID
+    }
+
+    handleShowDeletedChange(value) {
+        const { onShowDeletedChanged } = this.props;
+
+        let val = !!value;
+
+        this.setState({ showDeleted: !!val });
+
+        if (onShowDeletedChanged && typeof onShowDeletedChanged === 'function') {
+            onShowDeletedChanged(val);
+        }
     }
 
     handleAddAction() {
@@ -60,11 +73,11 @@ class TablePlan extends PureComponent {
         }
     }
 
-    handleHideAction(entity) {
-        const { onHide } = this.props;
+    handleReduceAction(entity) {
+        const { onReduce } = this.props;
 
-        if (_.isFunction(onHide)) {
-            onHide(entity);
+        if (_.isFunction(onReduce)) {
+            onReduce(entity);
         }
     }
 
@@ -78,7 +91,7 @@ class TablePlan extends PureComponent {
 
     render() {
         const { type } = this.state;
-        const { name, data, location } = this.props;
+        const { name, data, location, showDeleted } = this.props;
 
         const props = {
             location,
@@ -86,7 +99,7 @@ class TablePlan extends PureComponent {
             onEdit: this.handleEditAction,
             onAdd: this.handleAddAction,
             onDelete: this.handleDeleteAction,
-            onHide: this.handleHideAction
+            onReduce: this.handleReduceAction
         };
 
         return (
@@ -97,7 +110,9 @@ class TablePlan extends PureComponent {
                         key={`table_plan_header_${location}`}
                         name={name} 
                         view={type}
+                        showDeleted={showDeleted}
                         onViewChange={this.handleViewTypeChange}
+                        onDeletedChange={this.handleShowDeletedChange}
                         onAdd={this.handleAddAction}
                     />
                     {type === VIEW_TYPE_LIST ? <List {...props} /> : <Grid {...props} />}
@@ -112,7 +127,7 @@ TablePlan.propTypes = {
     data: PropTypes.object,
     onAdd: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
-    onHide: PropTypes.func.isRequired
+    onReduce: PropTypes.func.isRequired
 };
 
 export default TablePlan;

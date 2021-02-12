@@ -4,19 +4,28 @@ import PropTypes from 'prop-types';
 import { Button, Empty, translate as t } from 'airc-shell-core';
 import TablePlanRow from './TablePlanRow';
 
+import EmptyImage from '../../../assets/images/empty/no-free-tables.png';
+
 class TablePlanList extends PureComponent {
     render() {
-        const { data, onEdit, onDelete, onHide, onAdd } = this.props;
+        const { data, onEdit, onDelete, onReduce, onAdd } = this.props;
 
         if (_.isEmpty(data)) {
             return (
-                <Empty description={t("No tables available")} >
+                <Empty
+                    className="empty-block-gray"
+                    image={EmptyImage}
+                    imageStyle={{
+                        height: 60,
+                    }}
+                    description={t("No tables available")}
+                >
                     <Button onClick={onAdd} type="primary">{t("Add new table", "list")}</Button>
                 </Empty>
             );
         }
 
-        const ops = { onEdit, onDelete, onHide };
+        const ops = { onEdit, onDelete, onReduce };
 
         return (
             <div className="table-plan-list">
@@ -31,7 +40,7 @@ TablePlanList.propTypes = {
     onAdd: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
-    onHide: PropTypes.func.isRequired
+    onReduce: PropTypes.func.isRequired
 };
 
 

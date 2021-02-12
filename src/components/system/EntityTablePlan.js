@@ -15,6 +15,7 @@ import {
     sendNeedUnifyFormMessage,
     sendNeedRemoveMessage,
     sendNeedReduceMessage,
+    setListShowDeleted
 } from '../../actions/';
 
 class EntityTablePlan extends Component {
@@ -22,30 +23,46 @@ class EntityTablePlan extends Component {
         super();
 
         this.state = {
-            data: null
+            data: null,
+            props: {}
         };
 
         this.handleAddAction = this.handleAddAction.bind(this);
         this.handleEditAction = this.handleEditAction.bind(this);
         this.handleDeleteAction = this.handleDeleteAction.bind(this);
-        this.handleHideAction = this.handleHideAction.bind(this);
+        this.handleReduceAction = this.handleReduceAction.bind(this);
         this.handleBackClick = this.handleBackClick.bind(this);
+        this.handleShowDeletedChanged = this.handleShowDeletedChanged.bind(this);
     }
 
     componentDidMount() {
         const { data } = this.props;
 
-        this.setState({ data: this._buildData(data) });
+        const props = this._prepareProps(); 
+
+        this.setState({ data: this._buildData(data), props });
+
     }
 
     componentDidUpdate(oldProps) {
         const { data } = this.props;
 
+        console.log("EntityTablePlan.componentDidUpdate()");
+
         if (!isEqual(oldProps.data, data)) {
+
+            console.log("Data is not equal! Building new data: ", oldProps.data, data);
+
             this.setState({
                 data: this._buildData(data)
             });
         }
+    }
+
+    _prepareProps() {
+        const { entity } = this.props;
+
+        console.log("table props entity!!!", entity);
     }
 
     _buildData(data) {
@@ -78,14 +95,20 @@ class EntityTablePlan extends Component {
         }
     }
 
+    handleReduceAction(entity) {
+        if (_.isPlainObject(entity)) {
+            this.props.sendNeedReduceMessage([entity]);
+        }
+    }
+
     handleDeleteAction(entity) {
         if (_.isPlainObject(entity)) {
             this.props.sendNeedRemoveMessage([entity]);
         }
     }
 
-    handleHideAction(entity) {
-        console.error('TODO: implement handleHideAction() method')
+    handleShowDeletedChanged(value) {
+        this.props.setListShowDeleted(!!value);
     }
 
     renderHeader() {
@@ -95,11 +118,11 @@ class EntityTablePlan extends Component {
             return funcOrString(contributions.getPointContributionValue('entities', entity, 'name'));
         }
 
-        return '<Noname>'; //todo default name.
+        return t("Table plan", 'list');
     }
 
     renderPlans() {
-        const { locations, locationsOptions } = this.props;
+        const { locations, locationsOptions, showDeleted } = this.props;
         const { data } = this.state;
 
         console.log('EntityTablePlan.renderPlans(): ', data);
@@ -108,18 +131,20 @@ class EntityTablePlan extends Component {
             return <Empty description={t("No locations selected", "tableplan")} />;
         }
 
-        return _.map([1,2,3], (locId) => {
-            return <TablePlan
-                key={`table_plan_${locId}`}
-                location={locId}
-                name={locationsOptions[locId]}
-                data={data ? data[locId] : null}
-                onAdd={this.handleAddAction}
-                onEdit={this.handleEditAction}
-                onDelete={this.handleDeleteAction}
-                onHide={this.handleHideAction}
-            />;
-        })
+        return _.map(locations, (locId) => {
+            return  <TablePlan
+                        key={`table_plan_${locId}`}
+                        location={locId}
+                        name={locationsOptions[locId]}
+                        data={data ? data[locId] : null}
+                        showDeleted={showDeleted}
+                        onAdd={this.handleAddAction}
+                        onEdit={this.handleEditAction}
+                        onDelete={this.handleDeleteAction}
+                        onReduce={this.handleReduceAction}
+                        onShowDeletedChanged={this.handleShowDeletedChanged}
+                    />;
+        });
     }
 
     render() {
@@ -152,14 +177,15 @@ const mapStateToProps = (state) => {
     const { contributions, api } = state.context;
     const { list } = state.plugin;
     const { locations, locationsOptions } = state.locations;
-    const { initialData: data } = list;
+    const { initialData: data, showDeleted } = list;
 
     return {
         api,
         contributions,
         data,
         locations,
-        locationsOptions
+        locationsOptions,
+        showDeleted
     };
 };
 
@@ -170,4 +196,5 @@ export default connect(mapStateToProps, {
     sendNeedUnifyFormMessage,
     sendNeedRemoveMessage,
     sendNeedReduceMessage,
+    setListShowDeleted,
 })(withStackEvents(EntityTablePlan));

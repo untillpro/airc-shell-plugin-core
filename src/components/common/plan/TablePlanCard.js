@@ -2,15 +2,8 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import { Icon, IconButton, NoImage, getBlobPath} from 'airc-shell-core';
+import { translate as t, Icon, IconButton, NoImage, getBlobPath} from 'airc-shell-core';
 import * as Icons from 'airc-shell-core/const/Icons';
-
-import {
-    ICON_EDIT,
-    ICON_VISIBLE,
-    ICON_INVISIBLE,
-    ICON_TRASH
-} from '../../../const/Icons';
 
 class TablePlanCard extends PureComponent {
     constructor(props) {
@@ -18,7 +11,14 @@ class TablePlanCard extends PureComponent {
 
         this.handleEditAction = this.handleEditAction.bind(this);
         this.handleHideAction = this.handleHideAction.bind(this);
-        this.handleDeleteAction = this.handleDeleteAction.bind(this);
+        this.handleToggleAction = this.handleToggleAction.bind(this);
+    }
+
+    _tablesCount() {
+        const { data, field } = this.props;
+        const tables = data["air_table_plan_item"];
+
+        return tables ? _.size(tables) : 0;
     }
 
     handleEditAction() {
@@ -43,25 +43,39 @@ class TablePlanCard extends PureComponent {
         }
     }
 
-    handleDeleteAction() {
-        const { onDelete } = this.props;
-        const { _entry } = this.props?.data;
+    handleToggleAction() {
+        const { onDelete, onReduce } = this.props;
+        const { _entry, state } = this.props?.data;
 
-        if (_.isFunction(onDelete) && _.isPlainObject(_entry)) {
-            onDelete(_entry);
+        if (!_.isPlainObject(_entry)) {
+            throw new Error('TablePlanCard data wrong "_entry" specified: ', _entry); 
+        }
+
+        if (state === 1) {
+            if (_.isFunction(onDelete)) {
+                console.log('Hiding table: ', this.props.id);
+                onDelete(_entry);
+            } else {
+                throw new Error('onDelete callback not specified');
+            }
         } else {
-            throw new Error('onDelete handler not implemented');
+            if (_.isFunction(onReduce)) {
+                console.log('Showing table: ', this.props.id);
+                onReduce(_entry);
+            } else {
+                throw new Error('onReduce callback not specified');
+            }
         }
     }
 
     renderInfo() { 
-        const { name, table, hide } = this.props.data;
-        const tablesCount = table ? _.size(table) : 0;
+        const { name, state } = this.props.data;
+        const tablesCount = this._tablesCount();
 
         return (
             <div className="info">
                 <div className="tables">
-                    {tablesCount} tables
+                    {t("{{count}} tables", "form", { count: tablesCount})}
                 </div>
 
                 <div className="title">
@@ -70,12 +84,7 @@ class TablePlanCard extends PureComponent {
 
                 <div className="buttons">
                     <IconButton 
-                        icon={<Icon icon={hide === 1 ? Icons.ICON_EYE_SOLID : Icons.ICON_HIDE} />} 
-                        size="small" 
-                        ghost 
-                    />
-
-                    <IconButton 
+                        onClick={this.handleEditAction}
                         icon={<Icon icon={Icons.ICON_EDIT} />} 
                         size="small" 
                         ghost 
@@ -84,10 +93,21 @@ class TablePlanCard extends PureComponent {
                     <div className="grow" />
 
                     <IconButton 
-                        icon={<Icon icon={Icons.ICON_DELETE_SOLID} />} 
+                        onClick={this.handleToggleAction}
+                        icon={<Icon icon={state !== 1 ? Icons.ICON_EYE_SOLID : Icons.ICON_HIDE} />} 
                         size="small" 
                         ghost 
                     />
+
+                    {/*
+                        <IconButton 
+                            onClick={this.handleToggleAction}
+                            icon={<Icon icon={Icons.ICON_DELETE_SOLID} />} 
+                            size="small" 
+                            ghost 
+                        />
+                    */}
+                    
                 </div>
             </div>
         );
@@ -117,10 +137,10 @@ class TablePlanCard extends PureComponent {
 
         console.log("TablePlanCard.render(): ", this.props.data);
 
-        const { hide } = this.props.data;
+        const { state } = this.props.data;
 
         return (
-            <div className={cn("table-plan-card", {"hide": hide === 1})}>
+            <div className={cn("table-plan-card", {"not-active": state !== 1})}>
                 {this.renderImage()}
                 {this.renderInfo()}
             </div>
@@ -131,7 +151,7 @@ class TablePlanCard extends PureComponent {
 TablePlanCard.propTypes = {
     data: PropTypes.object.isRequired,
     onEdit: PropTypes.func.isRequired,
-    onHide: PropTypes.func.isRequired,
+    onReduce: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
 };
 

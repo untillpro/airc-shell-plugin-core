@@ -17,6 +17,7 @@ $bradius_item: 4px;
 
     .title {
       font-size: 16pt;
+      margin-right: 20px;
     }
 
     .buttons > * {
@@ -31,6 +32,7 @@ $bradius_item: 4px;
   &-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-column-gap: 20px;
   }
 
   &-card {
@@ -40,6 +42,16 @@ $bradius_item: 4px;
     border-radius: $bradius_item;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+
+    transition: opacity 0.5;
+
+    &.not-active {
+      opacity: 0.7;
+
+      .image {
+        filter: grayscale(100%);
+      }
+    }
 
     .image {
       background-color: #efefef;

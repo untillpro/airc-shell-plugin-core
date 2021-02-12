@@ -151,8 +151,8 @@ class TablePlanEditor extends PureComponent {
         if (_.isArray(tables)) {
             tables.forEach(t => {
                 if (_.isPlainObject(t)) {
-                    const twidth = t.left + t.width + 20;
-                    const theight = t.top + t.height + 20;
+                    const twidth = t.left_c + t.width + 20;
+                    const theight = t.top_c + t.height + 20;
 
                     if (twidth && twidth > minWidth) minWidth = twidth;
                     if (theight && theight > minHeight) minHeight = theight;
@@ -361,6 +361,8 @@ class TablePlanEditor extends PureComponent {
             (t, k) =>
                 <Table
                     {...t}
+
+
                     context={context}
                     key={`table_${k}`}
                     current={k === currentTable}
@@ -393,6 +395,7 @@ class TablePlanEditor extends PureComponent {
                 visible
                 onCancel={this.handleCancel}
                 footer={null}
+                size="small"
             >
                 {
                     <EMEditForm

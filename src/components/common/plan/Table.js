@@ -14,8 +14,8 @@ class Table extends PureComponent {
         this.state = {
             width: 0,
             height: 0,
-            top: 0,
-            left: 0,
+            top_c: 0,
+            left_c: 0,
             angle: 0,
             info: '',
             showInfo: false,
@@ -41,21 +41,19 @@ class Table extends PureComponent {
     }
 
     componentDidMount() {
-        const { width, height, top, left, angle, chair_image, table_image, context  } = this.props;
+        const { width, height, top_c, left_c, angle, chair_type, table_type, context  } = this.props;
         const { contributions } = context;
 
         const res = {
-            width, height, top, left, angle
+            width, height, top_c, left_c, angle
         };
 
-        
-
-        if (_.isString(chair_image)) {
-            res.chairImage = contributions.getSetValue('chair', chair_image);
+        if (_.isString(chair_type)) {
+            res.chairImage = contributions.getSetValue('chair', chair_type);
         } 
 
-        if (_.isString(table_image)) {
-            res.tableImage = contributions.getSetValue('table', table_image);
+        if (_.isString(table_type)) {
+            res.tableImage = contributions.getSetValue('table', table_type);
         } 
 
         console.log("render table", res);
@@ -64,7 +62,7 @@ class Table extends PureComponent {
     }
 
     componentDidUpdate(prevProps) {
-        const { width, height, top, left, angle } = this.props;
+        const { width, height, top_c, left_c, angle } = this.props;
         const newStae = {};
 
         if (width !== prevProps.width) {
@@ -75,12 +73,12 @@ class Table extends PureComponent {
             newStae.height = height;
         }
 
-        if (top !== prevProps.top) {
-            newStae.top = top;
+        if (top_c !== prevProps.top_c) {
+            newStae.top_c = top_c;
         }
 
-        if (left !== prevProps.left) {
-            newStae.left = left;
+        if (left_c !== prevProps.left_c) {
+            newStae.left_c = left_c;
         }
 
         if (angle !== prevProps.angle) {
@@ -101,10 +99,10 @@ class Table extends PureComponent {
     handleResize(style, isShiftKey, type) {
         const { bounds } = this.props;
         const { margin } = this;
-        let { top, left, width, height, rotateAngle: angle } = style;
+        let { top: top_c, left: left_c, width, height, rotateAngle: angle } = style;
 
-        top = Math.round(top);
-        left = Math.round(left);
+        top_c = Math.round(top_c);
+        left_c = Math.round(left_c);
         width = Math.round(width);
         height = Math.round(height);
 
@@ -113,14 +111,14 @@ class Table extends PureComponent {
 
             let [bx, by] = getRotatedSizes(width + margin, height + margin, angle);
 
-            if (bx + left > right || by + top > bottom) {
+            if (bx + left_c > right || by + top_c > bottom) {
                 return false;
             }
         }
 
         this.setState({
-            top,
-            left,
+            top_c,
+            left_c,
             width,
             height,
             info: `${width}:${height}`
@@ -129,12 +127,12 @@ class Table extends PureComponent {
 
     handleResizeEnd() {
         const { onChange, index, } = this.props;
-        const { width, height, top, left } = this.state;
+        const { width, height, top_c, left_c } = this.state;
 
         if (_.isFunction(onChange)) {
             onChange({
-                top,
-                left,
+                top_c,
+                left_c,
                 width,
                 height
             }, index);
@@ -173,16 +171,16 @@ class Table extends PureComponent {
     handleDrag(deltaX, deltaY) {
         const { margin } = this;
         const { bounds } = this.props;
-        const { top, left, width, height, angle } = this.state;
+        const { top_c, left_c, width, height, angle } = this.state;
 
-        let x = left + deltaX;
-        let y = top + deltaY;
+        let x = left_c + deltaX;
+        let y = top_c + deltaY;
 
         const [resX, resY] = getBoundPosition(x, y, width + margin, height + margin, angle, bounds);
 
         const data = {
-            left: resX,
-            top: resY,
+            left_c: resX,
+            top_c: resY,
             info: `X: ${resX}; Y: ${resY}`
         };
 
@@ -191,10 +189,10 @@ class Table extends PureComponent {
 
     handleDragEnd() {
         const { onChange, index } = this.props;
-        const { top, left } = this.state;
+        const { top_c, left_c } = this.state;
 
         if (_.isFunction(onChange)) {
-            onChange({ top, left }, index);
+            onChange({ top_c, left_c }, index);
         }
 
         this.setState({ showInfo: false })
@@ -244,17 +242,17 @@ class Table extends PureComponent {
     }
 
     getPosition() {
-        const { top, left } = this.props;
+        const { top_c, left_c } = this.props;
         const pos = { x: 0, y: 0 };
 
-        if (_.isNumber(left) && left >= 0) {
-            pos.x = left;
+        if (_.isNumber(left_c) && left_c >= 0) {
+            pos.x = left_c;
         } else {
             pos.x = 0;
         }
 
-        if (_.isNumber(top) && top >= 0) {
-            pos.y = top;
+        if (_.isNumber(top_c) && top_c >= 0) {
+            pos.y = top_c;
         } else {
             pos.y = 0;
         }
@@ -428,7 +426,7 @@ class Table extends PureComponent {
     render() {
         let styles = {};
         const { margin } = this;
-        const { width, height, left, top, angle } = this.state;
+        const { width, height, left_c, top_c, angle } = this.state;
         const { current, } = this.props;
 
         this.getSize(styles);
@@ -438,8 +436,8 @@ class Table extends PureComponent {
         return (
             <ResizableRect
                 className={current ? 'selected' : null}
-                left={left}
-                top={top}
+                left={left_c}
+                top={top_c}
                 width={width + margin}
                 height={height + margin}
                 rotateAngle={angle}
@@ -480,8 +478,8 @@ Table.propTypes = {
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
     form: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-    top: PropTypes.number.isRequired,
-    left: PropTypes.number.isRequired,
+    top_c: PropTypes.number.isRequired,
+    left_c: PropTypes.number.isRequired,
     angle: PropTypes.number.isRequired,
 };
 

@@ -8,7 +8,7 @@ import EmptyImage from '../../../assets/images/empty/no-free-tables.png';
 
 class TablePlanGrid extends PureComponent {
     render() {
-        const { data, onEdit, onDelete, onHide, onAdd } = this.props;
+        const { data, onEdit, onDelete, onReduce, onAdd } = this.props;
 
         if (_.isEmpty(data)) {
             return (
@@ -25,11 +25,11 @@ class TablePlanGrid extends PureComponent {
             );
         }
 
-        const ops = { onEdit, onDelete, onHide };
+        const ops = { onEdit, onDelete, onReduce };
 
         return (
             <div className="table-plan-grid">
-                {_.map(data, (d, index) => <TablePlanCard key={`table_card_${d.id || index}`} data={d} {...ops} />)}
+                {_.map(data, (d, index) => <TablePlanCard key={`table_card_${d.id || index}_${d.state}`} data={d} {...ops} />)}
             </div>
         );
     }
@@ -40,7 +40,7 @@ TablePlanGrid.propTypes = {
     onAdd: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
-    onHide: PropTypes.func.isRequired
+    onReduce: PropTypes.func.isRequired
 };
 
 export default TablePlanGrid;

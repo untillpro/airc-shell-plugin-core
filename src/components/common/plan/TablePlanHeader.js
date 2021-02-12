@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
-import { Button } from 'airc-shell-core';
+import { translate as t, Toggler, Button } from 'airc-shell-core';
 
 import {
     PlusOutlined,
@@ -9,6 +9,20 @@ import {
   } from '@ant-design/icons';
 
 class TablePlanHeader extends PureComponent {
+    constructor(props) {
+        super(props);
+
+        this.handleShowDeletedChange = this.handleShowDeletedChange.bind(this);
+    }
+
+    handleShowDeletedChange(value) {
+        const { onDeletedChange } = this.props;
+
+        if (onDeletedChange && typeof onDeletedChange === "function") {
+            onDeletedChange(value);
+        }
+    }
+
     renderButtons() {
         const { onViewChange, onAdd, view, location } = this.props;
         const buttons = [];
@@ -25,11 +39,18 @@ class TablePlanHeader extends PureComponent {
     }
 
     render() {
-        const { name } = this.props;
+        const { name, showDeleted } = this.props;
         
         return (
             <div className="table-plan-header">
                 <div className="title">{name}</div>
+
+                <Toggler
+                    label={t("Show deleted", "list")}
+                    left
+                    onChange={this.handleShowDeletedChange}
+                    checked={showDeleted}
+                />
 
                 <div className="grow" />
                 <div className="buttons">
