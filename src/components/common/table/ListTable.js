@@ -74,7 +74,6 @@ class ListTable extends PureComponent {
             selectedRows: [],
             selectedFlatRows: {},
             showPositionColumn: true,
-            showDeleted: false,
             columnsVisibility: DefaultVisibleColumns,
             properties: {
                 'showPagination': true,
@@ -274,8 +273,6 @@ class ListTable extends PureComponent {
         const { onShowDeletedChanged } = this.props;
 
         let val = !!value;
-
-        this.setState({ showDeleted: !!val });
 
         if (onShowDeletedChanged && typeof onShowDeletedChanged === 'function') {
             onShowDeletedChanged(val);
@@ -824,8 +821,8 @@ class ListTable extends PureComponent {
     render() {
         Logger.l('%c Render Table List', 'color: green; font-size: 120%');
 
-        const { data, pages, page, pageSize, manual, order, filter, total, headerActions, search, loading } = this.props;
-        const { selectedRows, selectedFlatRows, properties, component, showDeleted, expanded } = this.state;
+        const { data, pages, page, pageSize, manual, order, filter, total, headerActions, search, loading, showDeleted } = this.props;
+        const { selectedRows, selectedFlatRows, properties, component, expanded } = this.state;
 
 
         const tableConfig = {
