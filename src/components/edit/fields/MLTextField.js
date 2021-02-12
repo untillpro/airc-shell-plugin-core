@@ -195,12 +195,15 @@ class MLTextField extends Component {
     }
 
     renderAddonButton() {
+        const { disabled } = this.props;
+
         return (
             <Button
                 onClick={this.handleAddonPress}
                 type="text"
                 size="medium"
                 icon={<EllipsisOutlined />}
+                disabled={disabled}
             />
         );
     }
