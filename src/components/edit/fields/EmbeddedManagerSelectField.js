@@ -15,7 +15,7 @@ class EmbeddedManagerSelectField extends EmbeddedManagerField {
     initData() {
         this.setState({headerActions: this.prepareHeaderActions()});
         
-        this.fetchListData().then((data) => this.setState({ data: this.buildData(data) }));
+        this.fetchListData().then((data) => this.setState({ ...this.buildData(data) }));
     }
 
     handleRowDoubleClick(e ,row) {
