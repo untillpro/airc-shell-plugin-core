@@ -7,6 +7,7 @@ import blacklist from 'blacklist';
 import { Logger } from 'airc-shell-core';
 
 import ForeignKeys from '../../const/ForeignKeys';
+import EmbeddeTypes from '../../const/EmbeddeTypes';
 
 import { reduce } from './';
 
@@ -32,6 +33,12 @@ export const isValidEntity = (context, entity) => {
 
     return true;
 }
+
+export const isEmbeddedType = (type) => {
+    if (_.indexOf(EmbeddeTypes, String(type).toLocaleLowerCase()) >= 0) return true;
+
+    return false;
+};
 
 export const getCollection = async (context, resource, wsid, props) => {
     const { api } = context;
@@ -339,7 +346,7 @@ export const getOperation = (data, entityId, entity, parentId, parentType, docId
 
             if (!accessor || data[accessor] === undefined) return;
 
-            if (ftype === 'embedded' && data[accessor]) {
+            if (isEmbeddedType(ftype) && data[accessor]) {
                 _.each(data[accessor], (d) => {
                     if (!d) return;
 
