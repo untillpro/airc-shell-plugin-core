@@ -22,7 +22,7 @@ class ImageSetSelector extends PureComponent {
     }
 
     componentDidMount() {
-        const { context, field } = this.props;
+        const { context, field, value } = this.props;
         const { contributions } = context;
         const { set, accessor } = field;
 
@@ -37,13 +37,10 @@ class ImageSetSelector extends PureComponent {
 
             console.log(res);
 
-            this.setState({ set: res })
+            this.setState({ set: res, value })
         } else {
             throw new Error(` field "${accessor}" should has "set" property specified.`)
         }
-
-        // проинициализировать сет
-        // записать текущее значение в state
     }
 
     getLabel() {
@@ -166,7 +163,7 @@ class ImageSetSelector extends PureComponent {
                         cancelText={t("Cancel", "common")}
                         onOk={this.handleOk}
                         onCancel={this.handleCancel}
-                        size="small"
+                        size="tiny"
                     >
                         {this.renderSet()}
                     </Modal>
