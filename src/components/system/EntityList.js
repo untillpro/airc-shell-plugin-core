@@ -361,7 +361,7 @@ class EMList extends Component {
     }
 
     render() {
-        const { entity, data, classifiers, pages, page, pageSize, manual, order, total } = this.props;
+        const { entity, data, classifiers, pages, page, pageSize, manual, order, total, showDeleted } = this.props;
         const { rowActions, headerActions, search, selectedRows, selectedFlatRows  /*,  searchBy */ } = this.state;
 
         return (
@@ -393,6 +393,7 @@ class EMList extends Component {
                     manual={manual}
                     order={order}
                     total={total}
+                    showDeleted={showDeleted}
                     selectedRows={selectedRows || []}
                     selectedFlatRows={selectedFlatRows || {}}
                     onPageChange={this.handlePageChange}
