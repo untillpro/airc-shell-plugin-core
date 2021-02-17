@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import { translate as t, Icon, IconButton, NoImage, getBlobPath} from 'airc-shell-core';
+import { translate as t, Icon, IconButton, NoImage, getBlobPath } from 'airc-shell-core';
 import * as Icons from 'airc-shell-core/const/Icons';
 
 class TablePlanCard extends PureComponent {
@@ -48,7 +48,7 @@ class TablePlanCard extends PureComponent {
         const { _entry, state } = this.props?.data;
 
         if (!_.isPlainObject(_entry)) {
-            throw new Error('TablePlanCard data wrong "_entry" specified: ', _entry); 
+            throw new Error('TablePlanCard data wrong "_entry" specified: ', _entry);
         }
 
         if (state === 1) {
@@ -68,14 +68,14 @@ class TablePlanCard extends PureComponent {
         }
     }
 
-    renderInfo() { 
+    renderInfo() {
         const { name, state } = this.props.data;
         const tablesCount = this._tablesCount();
 
         return (
             <div className="info">
                 <div className="tables">
-                    {t("{{count}} tables", "form", { count: tablesCount})}
+                    {t("{{count}} tables", "form", { count: tablesCount })}
                 </div>
 
                 <div className="title">
@@ -83,20 +83,20 @@ class TablePlanCard extends PureComponent {
                 </div>
 
                 <div className="buttons">
-                    <IconButton 
+                    <IconButton
                         onClick={this.handleEditAction}
-                        icon={<Icon icon={Icons.ICON_EDIT} />} 
-                        size="small" 
-                        ghost 
+                        icon={<Icon icon={Icons.ICON_EDIT} />}
+                        size="small"
+                        ghost
                     />
 
                     <div className="grow" />
 
-                    <IconButton 
+                    <IconButton
                         onClick={this.handleToggleAction}
-                        icon={<Icon icon={state !== 1 ? Icons.ICON_EYE_SOLID : Icons.ICON_HIDE} />} 
-                        size="small" 
-                        ghost 
+                        icon={<Icon icon={state !== 1 ? Icons.ICON_EYE_SOLID : Icons.ICON_HIDE} />}
+                        size="small"
+                        ghost
                     />
 
                     {/*
@@ -107,7 +107,7 @@ class TablePlanCard extends PureComponent {
                             ghost 
                         />
                     */}
-                    
+
                 </div>
             </div>
         );
@@ -118,16 +118,22 @@ class TablePlanCard extends PureComponent {
 
         if (_.isNumber(image)) {
             const url = getBlobPath(image);
-            const styles = { backgroundImage: `url(${url})`};
+            const styles = { backgroundImage: `url(${url})` };
 
             return (
-                <div className="image" style={styles}/>
+                <div 
+                    className="image" 
+                    style={styles} 
+                    onClick={this.handleEditAction} 
+                />
             );
         }
 
-        return <div className="image">
-            <NoImage />
-        </div>;
+        return (
+            <div className="image" onClick={this.handleEditAction} >
+                <NoImage />
+            </div>
+        );
     }
 
     render() {
@@ -140,7 +146,7 @@ class TablePlanCard extends PureComponent {
         const { state } = this.props.data;
 
         return (
-            <div className={cn("table-plan-card", {"not-active": state !== 1})}>
+            <div className={cn("table-plan-card", { "not-active": state !== 1 })}>
                 {this.renderImage()}
                 {this.renderInfo()}
             </div>

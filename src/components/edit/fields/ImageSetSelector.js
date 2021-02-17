@@ -79,6 +79,17 @@ class ImageSetSelector extends PureComponent {
         });
     }
 
+    handleItemDBClick(value) {
+        const { onChange, field } = this.props;
+        const { accessor } = field;
+
+        if (onChange && typeof onChange === 'function') {
+            onChange({ [accessor]: value });
+        }
+
+        this.setState({ value, opened: false });
+    }
+
     selectElement(key) {
         if (key !== undefined) {
             this.setState({ value: key });
@@ -103,6 +114,7 @@ class ImageSetSelector extends PureComponent {
                                 key={`element_${key}`} 
                                 className={cn('grid-element', { "current": key === value, contain, cover })} 
                                 onClick={this.selectElement.bind(this, key)}
+                                onDoubleClick={this.handleItemDBClick.bind(this, key)}
                                 style={{backgroundImage: `url(${src})`}}
                             />
                         );

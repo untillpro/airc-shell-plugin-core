@@ -13,6 +13,13 @@ class TableArea extends PureComponent {
 
 
     _onImageLoad(event) {
+        if (_.isNumber(this.props.width) && 
+            _.isNumber(this.props.height) && 
+            this.props.width > 0 && this.props.height > 0
+        ) {
+            return;
+        }
+
         const { naturalWidth: width, naturalHeight: height } = event.target;
 
         const { onSizeChange } = this.props;
@@ -22,7 +29,7 @@ class TableArea extends PureComponent {
         }
     }
 
-    renderImage() {
+    setImage(styles) {
         const { image, width, height } = this.props;
 
         let url = null;
@@ -34,27 +41,19 @@ class TableArea extends PureComponent {
         }
 
         if (url) {
-            return (
-                <img
-                    onLoad={this._onImageLoad}
-                    src={url}
-                    width={width}
-                    height={height}
-                    draggable={false}
-                />
-            );
+            styles.backgroundImage = `url(${url})`;
         }
-
-        return null;
     }
 
     render() {
         const { width, height, onClick } = this.props;
 
-        const styles = {
+        let styles = {
             width,
             height
         };
+
+        this.setImage(styles)
 
         return (
             <div
@@ -64,7 +63,6 @@ class TableArea extends PureComponent {
                 <div className="table-area-plan-container">
                     <div className="cc">
                         <div className="table-area-plan" style={styles}>
-                            {this.renderImage()}
                             {this.props.children}
                         </div>
                     </div>
