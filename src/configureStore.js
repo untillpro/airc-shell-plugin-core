@@ -31,7 +31,6 @@ export default (persistConfig, initState = {}) => {
 
     if (process.env.NODE_ENV !== 'production') {
         middleware.push(loggerMiddleware);
-        middleware.push(actionLogger);
     }
     
     const store = createStore(

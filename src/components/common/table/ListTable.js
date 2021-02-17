@@ -144,19 +144,29 @@ class ListTable extends PureComponent {
         }
     }
 
-    getCellRenderer(d, opts) {
-        const { type, value_accessor, editable, entity, dynamic } = opts;
+    getCellRenderer(d, opts, isDynamic) {
+        const { defaultCurrency } = this.props;
+        const { type, value_accessor, currency_accessor, editable, entity } = opts;
+        const props = { cell: d, entity, editable, prop: value_accessor, dynamic: isDynamic, defaultCurrency };
     
-        const props = { cell: d, entity, editable, prop: value_accessor, dynamic: !!dynamic };
-    
-        if (dynamic === true) {
+        if (isDynamic === true) {
             props.value = _.get(d.value, [ value_accessor ]);
             props.id = _.get(d.value, [ "id" ]);
             props.index = _.get(d.value, [ "_index" ]);
+
+            if (type === "price" && _.isString(currency_accessor)) {
+                //console.log('trololo: ', d.value, currency_accessor);
+                props.currency = _.get(d.value, [ currency_accessor ]);
+            }
         } else {
             props.value = d.value;
             props.id = _.get(d.original, [ "id" ]);
             props.index = null;
+
+            if (type === "price" && _.isString(currency_accessor)) {
+                //console.log('trololo: ', d.original, currency_accessor);
+                props.currency = _.get(d.original, [ currency_accessor ]);
+            }
         }
     
         props.onSave = this.handleCellSave;
@@ -480,7 +490,7 @@ class ListTable extends PureComponent {
                             "type": type || null,
                             "linked": [],
                             "width": width,
-                            "Cell": (d) => this.getCellRenderer(d, { entity, value_accessor, type, editable, dynamic: true })
+                            "Cell": (d) => this.getCellRenderer(d, columnProps, true)
                         };
                     }
 
@@ -560,7 +570,7 @@ class ListTable extends PureComponent {
             column.editable = editable;
         }
 
-        column.Cell = (d) => this.getCellRenderer(d, { type, entity, value_accessor: propName || id || accessor, editable });
+        column.Cell = (d) => this.getCellRenderer(d, { ...columnProps, value_accessor: propName || id || accessor }, false);
 
         if (width) {
             column.width = width;
@@ -904,7 +914,7 @@ class ListTable extends PureComponent {
 ListTable.propTypes = {
     contributions: PropTypes.object.isRequired,
     entity: PropTypes.string.isRequired,
-    data: PropTypes.array.isRequired,
+    data: PropTypes.array,
     classifiers: PropTypes.object,
     pages: PropTypes.number,
     page: PropTypes.number,
@@ -930,10 +940,13 @@ ListTable.propTypes = {
 
 const mapStateToProps = (state) => {
     const { contributions, api } = state.context;
+    const { defaultCurrency } = state.options;
+    
 
     return {
         contributions,
-        api
+        api,
+        defaultCurrency
     };
 };
 

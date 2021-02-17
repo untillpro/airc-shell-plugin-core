@@ -158,11 +158,18 @@ export const formatPriceValue = (value, currency) => {
     if (currency && _.isPlainObject(currency)) {
         const { sym_alignment, symbol, round } = currency;
 
-        if (sym_alignment === 1) {
-            return (symbol ? symbol : '') + Number(value).toFixed(round || 2).toString();
+        let formatedValue = Number(value).toFixed(round || 2).toString();
+
+        if (_.isString(symbol)) {
+
+            if (sym_alignment) {
+                return `${formatedValue}${symbol}`;
+            }
+
+            return `${symbol}${formatedValue}`;
         }
 
-        return Number(value).toFixed(round || 2).toString() + (symbol ? symbol : '');
+        return formatedValue;
     }
 
     return value;

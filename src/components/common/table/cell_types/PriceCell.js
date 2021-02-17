@@ -4,7 +4,6 @@
 
 import EditableCell from './EditableCell';
 import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
 import { formatPriceValue } from '../../../../classes/helpers';
 
 class PriceCell extends PureComponent {
@@ -41,10 +40,4 @@ class PriceCell extends PureComponent {
     }
 }
 
-const mapStateToProps = (state) => {
-    const { currency, defaultCurrency } = state.options;
-    
-    return { currency, defaultCurrency };
-}
-
-export default connect(mapStateToProps, null)(PriceCell)
+export default PriceCell;

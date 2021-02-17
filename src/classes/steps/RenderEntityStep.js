@@ -308,12 +308,12 @@ class RenderEntityStep extends StateMachineStep {
         try {
             return getCollection(context, resource, wsid, doProps)
                 .then((response) => {
-                    console.log("getCollection response: ", response);
                     const { data, resolvedData, Data } = response;
 
+                    this.resolvedData = this.data = this.classifiers = undefined;
+                    
                     this.resolvedData = resolvedData || {};
                     this.data = data || {};
-                    this.classifiers = null;
 
                     if (Data && typeof Data === "object") {
                         this.classifiers = _.get(Data, "classifiers");
