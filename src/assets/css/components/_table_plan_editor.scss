@@ -177,6 +177,10 @@ $resizerColor: #176ddd;
         background-size: cover;
 
         position: relative;
+
+        img {
+            opacity: 0 !important;
+        }
     }
 
     &-plan-container {
