@@ -52,7 +52,10 @@ class TableAreaList extends PureComponent {
             return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
         }
 
-        return _.map(tables, (tableData, index) =>
+        const tablesSorted = _.sortBy(tables, (o) => o.number);
+        //let tablesSorted = tables;
+
+        return _.map(tablesSorted, (tableData, index) =>
             <TableAreaListRow
                 key={`table_${tableData.id || index}`}
                 index={index}
