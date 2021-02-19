@@ -6,6 +6,8 @@ import { Button, Empty } from 'antd';
 import cn from 'classnames';
 import { funcOrString } from '../../../classes/helpers';
 
+import Element from './ImageSetSelectorElement';
+
 class ImageSetSelector extends PureComponent {
     constructor(props) {
         super(props);
@@ -33,7 +35,7 @@ class ImageSetSelector extends PureComponent {
 
             images.map().forEach((v, k) => {
                 res[k] = v;
-            }); 
+            });
 
             console.log(res);
 
@@ -108,17 +110,17 @@ class ImageSetSelector extends PureComponent {
         if (_.isPlainObject(set) && _.size(set) > 0) {
             return (
                 <div className={cn("image-set-selector-grid", size || "")}>
-                    {_.map(set, (src, key) => {
-                        return (
-                            <div 
-                                key={`element_${key}`} 
-                                className={cn('grid-element', { "current": key === value, contain, cover })} 
-                                onClick={this.selectElement.bind(this, key)}
-                                onDoubleClick={this.handleItemDBClick.bind(this, key)}
-                                style={{backgroundImage: `url(${src})`}}
-                            />
-                        );
-                    })}
+                    {
+                        _.map(set, (src, key) => <Element
+                            src={src}
+                            key={`element_${key}`}
+                            current={key === value}
+                            onClick={this.selectElement.bind(this, key)}
+                            onDoubleClick={this.handleItemDBClick.bind(this, key)}
+                            contain={contain}
+                            cover={cover}
+                        />)
+                    }
                 </div>
             );
         }

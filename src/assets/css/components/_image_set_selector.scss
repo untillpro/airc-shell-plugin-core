@@ -4,7 +4,7 @@
     flex-direction: row;
 
     align-items: flex-end;
-    
+
     .preview {
         cursor: pointer;
 
@@ -29,7 +29,6 @@
             background-size: contain;
         }
     }
-    
 
     .label {
         margin-bottom: 5px;
@@ -55,22 +54,33 @@
 
         justify-content: center;
         align-items: center;
-        padding:  4px;
+        padding: 4px;
 
         box-sizing: border-box;
 
         cursor: pointer;
-
-        background-position: center;
-        background-repeat: no-repeat;
-
         box-sizing: border-box;
 
-        &.cover {
+        .image {
+            display: block;
+            width: 100%;
+            height: 100%;
+
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #fff;
+
+            img {
+                display: none;
+            }
+        }
+
+        &.cover .image {
             background-size: cover;
         }
 
-        &.contain {
+        &.contain .image {
             background-size: contain;
         }
 
@@ -92,7 +102,7 @@
 
     &.big {
         .grid-element {
-            width:200px;
+            width: 200px;
             height: 200px;
         }
     }
