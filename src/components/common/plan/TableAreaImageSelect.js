@@ -37,7 +37,7 @@ class TableAreaImageSelect extends PureComponent {
             return text;
         }
     }
-    
+
     handleChange(info) {
         const { setImage } = this.props;
 
@@ -52,8 +52,18 @@ class TableAreaImageSelect extends PureComponent {
 
             message.success(`${info.file.name} file uploaded successfully`);
         } else if (info.file.status === 'error') {
-            message.error(`${info.file.name} file upload failed.`);
+            let errMessage;
+
+            if (info.file.response) {
+                errMessage = info.file.response
+            } else {
+                errMessage = `${info.file.name} upload error;`;
+            }
+
+            message.error(`${errMessage}`);
         }
+
+        console.log("info: ", info);
     }
 
     customRequest(option) {
@@ -145,6 +155,7 @@ class TableAreaImageSelect extends PureComponent {
             customRequest: this.customRequest,
             name: 'file',
             multiple: false,
+            fileList: [],
         };
 
         return (<div className="table-area-image-selector">

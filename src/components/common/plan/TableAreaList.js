@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import { Button, Empty } from 'airc-shell-core';
+import { translate as t, Button, Empty } from 'airc-shell-core';
 
 import TableAreaListRow from './TableAreaListRow';
 
@@ -77,7 +77,7 @@ class TableAreaList extends PureComponent {
                     type="primary"
                     block
                 >
-                    Add table
+                    {t("Add table", "form")}
                 </Button>
             </div>
         );
