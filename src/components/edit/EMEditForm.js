@@ -407,8 +407,7 @@ class EMEditForm extends Component {
 
     loadingOverlay() {
         const { loading } = this.props;
-        console.log("LOADING STATE IS: ", loading);
-
+        
         return <LoadingOverlay show={loading} text="Loading..."/>;
     }
 

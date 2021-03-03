@@ -39,6 +39,7 @@ import {
     SEND_CANCEL_MESSAGE,
     SET_PLUGIN_LANGUAGE,
     SEND_DO_GENERATE_REPORT_MESSAGE,
+    ENTITY_LIST_SET_SHOW_DELETED,
 } from '../actions/Types';
 
 import {
@@ -48,6 +49,7 @@ import {
     SAGA_FETCH_ENTITY_DATA,
     SAGA_PROCESS_ENTITY_DATA,
     SAGA_SET_PLUGIN_LANGUAGE,
+    SAGA_SET_LIST_SHOW_DELETED,
 } from './Types';
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
@@ -202,8 +204,8 @@ function* _fetchReport(action) {
         payload: {
             locations: locations.locations,
             report,
-            from, 
-            to, 
+            from,
+            to,
             filterBy,
             props,
         }
@@ -212,7 +214,7 @@ function* _fetchReport(action) {
 
 function* _setPluginLanguage(action) {
     const langCode = action.payload;
-    console.log("_setPluginLanguage: ", action);
+
     if (_.isString(langCode)) {
         const lang = lc.langByHex(langCode);
         const lex = lang.lex();
@@ -243,6 +245,24 @@ function* _setPluginLanguage(action) {
     }
 }
 
+function* _setListShowDeleted(action) {
+    const entity = yield select(Selectors.entity);
+    const contributions = yield select(Selectors.contributions);
+
+    const manual = !!contributions.getPointContributionValue(TYPE_LIST, entity, 'manual');
+
+    yield put({
+        type: ENTITY_LIST_SET_SHOW_DELETED,
+        payload: !!action.payload
+    });
+
+    if (manual) {
+        yield put({
+            type: SAGA_FETCH_LIST_DATA,
+            payload: entity
+        });
+    }
+}
 
 function* rootSaga() {
     yield takeLatest(SAGA_FETCH_LIST_DATA, _fetchListData);
@@ -251,6 +271,7 @@ function* rootSaga() {
     yield takeLatest(SAGA_FETCH_ENTITY_DATA, _fetchEntityData);
     yield takeLatest(SAGA_PROCESS_ENTITY_DATA, _processEntityData);
     yield takeLatest(SAGA_SET_PLUGIN_LANGUAGE, _setPluginLanguage);
+    yield takeLatest(SAGA_SET_LIST_SHOW_DELETED, _setListShowDeleted);
 }
 
 export default rootSaga;

@@ -21,6 +21,12 @@ export const LIST_DATA_FETCH_SUCCEEDED = 'collection_fetch_succeeded';
 export const PROCESS_DATA_FETCH_SUCCEEDED = 'process_data_fetch_succeeded';
 export const FLUSH_LIST_DATA = 'FLUSH_LIST_DATA';
 
+export const ENTITY_LIST_SET_SHOW_DELETED = 'list_set_show_deleted';
+export const ENTITY_LIST_SET_FILTER = 'list_set_filter';
+export const ENTITY_LIST_SET_ORDER = 'list_set_order';
+export const ENTITY_LIST_SET_PAGE = 'list_set_page';
+export const ENTITY_LIST_SET_PAGE_SIZE = 'list_set_page_size';
+
 /* Entity edit actions */
 
 export const SET_ENTITY_LOADING = 'set_entity_loading';
@@ -50,13 +56,6 @@ export const SEND_NEED_REMOVE_ITEM_MESSAGE = 'message_remove_items';
 export const SEND_NEED_REDUCE_ITEM_MESSAGE = 'message_reduce_items';
 export const SEND_NEED_PROCCESS_DATA_MESSAGE = 'message_proccess_data';
 export const SEND_NEED_VALIDATE_DATA_MESSAGE = 'message_validate_data';
-
-export const ENTITY_LIST_SET_SHOW_DELTED = 'message_list_set_show_deleted';
-export const ENTITY_LIST_SET_FILTER = 'message_list_set_filter';
-export const ENTITY_LIST_SET_ORDER = 'message_list_set_order';
-export const ENTITY_LIST_SET_PAGE = 'message_list_set_page';
-export const ENTITY_LIST_SET_PAGE_SIZE = 'message_list_set_page_size';
-
 export const SEND_FORM_NEED_NAVIGATION = 'message_edit_form_need_navigation';
 
 export const SEND_ERROR_MESSAGE = 'send_error_api_message';
