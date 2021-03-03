@@ -24,7 +24,9 @@ import {
     C_LAYOUTS_TEMPLATE
 } from "../../../classes/contributions/Types";
 
-const Buffer = require('buffer').Buffer;
+import buffer from 'buffer';
+
+const Buffer = buffer.Buffer;
 
 class TicketLayoutField extends Component {
     constructor() {

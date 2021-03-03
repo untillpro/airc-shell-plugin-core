@@ -1,9 +1,8 @@
 /*
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
-
-var _ = require('lodash');
-var v = require('voca');
+import _ from 'lodash';
+import v from 'voca';
 
 export const filterString = (source, search, ignoreCase = true) => {
     if (ignoreCase) {
