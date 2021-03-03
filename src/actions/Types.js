@@ -16,6 +16,17 @@ export const SET_ENTITY = 'set_entity';
 
 export const SET_LIST_COLUMNS_VISIBILITY = 'set_list_columns_visibility';
 export const TOGGLE_DELETED_ROWS_VIEW = 'toggle_deleted_rows_view';
+export const SET_COLLECTION_LOADING = 'set_collection_loading';
+export const LIST_DATA_FETCH_SUCCEEDED = 'collection_fetch_succeeded';
+export const PROCESS_DATA_FETCH_SUCCEEDED = 'process_data_fetch_succeeded';
+export const FLUSH_LIST_DATA = 'FLUSH_LIST_DATA';
+
+/* Entity edit actions */
+
+export const SET_ENTITY_LOADING = 'set_entity_loading';
+export const SET_ENTITY_DATA_PROCESSING = 'set_entity_data_processing';
+export const FLUSH_ENTITY_DATA = 'flush_entity_data';
+export const ENTITY_DATA_FETCH_SUCCEEDED = 'entity_data_fetch_succeeded';
 
 /* State machine actions */
 
@@ -71,4 +82,3 @@ export const INIT_CONTEXT_LANG = "init_context_lang";
 
 export const SET_PLUGIN_LANGUAGE = "set_plugin_language";
 export const ADD_AVAILABLE_LANGUAGE = "add_available_language";
-

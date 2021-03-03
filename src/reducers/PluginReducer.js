@@ -11,18 +11,8 @@ const INITIAL_STATE = {
     step: null,
     entityData: null,
     fetchingData: false,
-    list: {
-        data: [],
-        classifiers: null,
-        manual: false,
-        showDeleted: false,
-        page: 0,
-        pages: -1,
-        pageSize: 20
-    },
     isNew: false,
     isCopy: false,
-    columnsVisibility: {"ID": false, "id": false, "Id": false}
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -41,12 +31,6 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 entity: action.payload
-            };
-
-        case Types.SET_LIST_COLUMNS_VISIBILITY: 
-            return {
-                ...state,
-                columnsVisibility: action.payload
             };
 
         case Types.SEND_DO_GENERATE_REPORT_MESSAGE:  

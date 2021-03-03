@@ -24,6 +24,22 @@ import {
     bufferToLangMap
 } from './';
 
+
+export const checkResponse = (response) => {
+    console.log("checkResponse: ", response);
+    if (_.isPlainObject(response)) {
+        const { status, errorDescription, error} = response;
+
+        if (status && status !== 200) {
+            throw new Error(errorDescription || error);
+        }
+
+        return true;
+    }
+
+    throw new Error(response);
+}
+
 export const isValidEntity = (context, entity) => {
     // TODO: implement more complex checks here
 
@@ -40,7 +56,9 @@ export const isEmbeddedType = (type) => {
     return false;
 };
 
-export const getCollection = async (context, resource, wsid, props) => {
+export const getCollection = async (context, ops, applyMl = true) => {
+    console.log('getCollection: ', context, ops);
+    const { resource, wsid, props } = ops;
     const { api } = context;
 
     const result = {};
@@ -56,8 +74,10 @@ export const getCollection = async (context, resource, wsid, props) => {
 
 
                     if (result.data) {
-                        applyML(context, result.data, resource);
-
+                        if (applyMl) {
+                            applyML(context, result.data, resource);
+                        }
+                        
                         result.resolvedData = resolveData(result.data);
                     }
                 }
@@ -65,7 +85,6 @@ export const getCollection = async (context, resource, wsid, props) => {
                 return result;
             })
             .catch((e) => {
-                console.error(e);
                 throw new Error(e);
             });
     } else {
@@ -264,7 +283,7 @@ export const getFilterByString = (context, entity) => {
 // DATA PROCESSING
 
 
-export const processData = async (context, entity, data, entries) => {
+export const processEntityData = async (context, entity, data, entries) => {
     if (!data || typeof data !== 'object') {
         throw new Error('Wrong data specified to .', data);
     }
@@ -428,6 +447,37 @@ export const prepareCopyData = (data) => {
     }
 
     return {};
+}
+
+export const checkForEmbededTypes = (context, entity, data) => {
+    const { contributions } = context;
+
+    if (!contributions || !entity) return data;
+
+    const Data = { ...data };
+
+    const pointContributions = contributions.getPointContributions(TYPE_FORMS, entity);
+    const embedded_types = pointContributions ? pointContributions.embeddedTypes : null;
+
+    if (embedded_types && embedded_types.length > 0) {
+        _.each(embedded_types, (type) => {
+            if (Data[type] && Data[type] instanceof Object && Data[type].length > 0) {
+                Data[type] = Data[type][0];
+            }
+        });
+    }
+
+    return Data;
+}
+
+export const buildRequestEntires = (entries) => {
+    const resultEntries = [];
+
+    for (let i = 0; i < entries.length; i++) {
+        resultEntries.push({ ID: entries[i].id, WSID: entries[i].wsid });
+    }
+
+    return resultEntries;
 }
 
 //*************/

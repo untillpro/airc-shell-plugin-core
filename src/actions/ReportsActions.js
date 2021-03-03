@@ -4,10 +4,13 @@
 
 import {
     SELECT_REPORT_TYPE_MESSAGE,
-    SEND_DO_GENERATE_REPORT_MESSAGE,
     SELECT_DATETIME_FILTER_PERIOD,
     SET_REPORTS_DATETIME_FILTER
 } from './Types';
+
+import {
+    SAGA_FETCH_REPORT
+} from '../sagas/Types';
 
 export const selectReportType = (code) => {
     return {
@@ -16,23 +19,12 @@ export const selectReportType = (code) => {
     };
 };
 
+//TODO - implment with saga
 export const sendDoGenerateReport = (report, from, to, filterBy, props) => {
-    return (dispatch, getState) => {
-        const { locations } = getState();
-
-        dispatch({
-            type: SEND_DO_GENERATE_REPORT_MESSAGE,
-            payload: {
-                locations: locations.locations,
-                report,
-                from, 
-                to, 
-                filterBy,
-                props,
-            }
-        });
+    return {
+        type: SAGA_FETCH_REPORT,
+        payload: { report, from, to, filterBy, props }
     };
-    
 };
 
 export const selectFilterPeriod = (periodCode) => {

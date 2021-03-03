@@ -67,11 +67,7 @@ class MainController extends Component {
     renderProdComponents() {
         if (!isProd.isDevelopment()) return null;
         
-        return (
-            <>
-                <TestLangSelector />
-            </>
-        );
+        return (<TestLangSelector />);
     }
 
     render() {

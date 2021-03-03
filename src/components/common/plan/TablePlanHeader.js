@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import { translate as t, Toggler, Button } from 'airc-shell-core';

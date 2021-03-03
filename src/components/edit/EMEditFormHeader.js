@@ -16,15 +16,6 @@ import {
 import { Button, Toggler, translate as t } from 'airc-shell-core';
 import { HeaderBackButton } from '../common';
 
-import {
-    sendCancelMessage,
-    sendNeedRemoveMessage,
-    sendNeedReduceMessage,
-    sendNeedEditFormMessage,
-    sendNeedCopyFormMessage,
-    sendNeedUnifyFormMessage
-} from '../../actions/';
-
 import { TYPE_TEXT } from '../../classes/contributions/Types';
 
 
@@ -272,11 +263,4 @@ const mapStateToProps = (state) => {
 }
 
 
-export default connect(mapStateToProps, {
-    sendCancelMessage,
-    sendNeedRemoveMessage,
-    sendNeedReduceMessage,
-    sendNeedEditFormMessage,
-    sendNeedCopyFormMessage,
-    sendNeedUnifyFormMessage
-})(EMEditFormHeader);
+export default connect(mapStateToProps, {})(EMEditFormHeader);

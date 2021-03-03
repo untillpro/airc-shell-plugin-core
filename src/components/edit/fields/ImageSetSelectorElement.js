@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import React, { PureComponent } from 'react';
 import cn from 'classnames';
 
@@ -32,7 +36,7 @@ class ImageSetSelectorElement extends PureComponent {
                         backgroundImage: 'url(' + src + ')' 
                     }}
                 >
-                    <img src={src} onLoad={this._onLoad} />
+                    <img src={src} onLoad={this._onLoad} alt="" />
                 </div>
             </div>
         );

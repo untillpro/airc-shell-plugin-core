@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import _ from 'lodash';
 import isEqual from 'react-fast-compare';
 
@@ -51,3 +55,29 @@ export const tablePlanMutateCheck = (newData, oldData, field) => {
 
     return res;
 };
+
+
+
+
+export const mlTextMutateCheck = (newData, oldData, field) => {
+    const { accessor, ml_accessor } = field;
+
+    if (_.get(newData, accessor) !== _.get(oldData, accessor)) {
+        return true;
+    }
+
+    if (ml_accessor) {
+        let ml_base64Str;
+        let ml_base64Str_old;
+
+        if (_.isString(ml_accessor)) {
+            ml_base64Str = _.get(newData, ml_accessor);
+            ml_base64Str_old = _.get(oldData, ml_accessor);
+        } else if (_.isFunction(ml_accessor)) {
+            ml_base64Str = ml_accessor(newData);
+            ml_base64Str_old = ml_accessor(oldData);
+        }
+
+        return ml_base64Str !== ml_base64Str_old;
+    }
+}

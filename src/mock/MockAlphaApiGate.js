@@ -7,7 +7,7 @@ import Axios from 'axios';
 import { message } from 'antd';
 
 import { SProtBuilder } from 'airc-shell-core';
-import TablePlanData from './data/table_plan.json';
+//import TablePlanData from './data/table_plan.json';
 
 const operationKeys = ['ID', 'Type', 'ParentID', 'ParentType', /*'PartID', 'PartType',*/ 'DocID', 'DocType', 'Data'];
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjI1NTM2LCJEZXZpY2VJRCI6MSwiZXhwIjoxNTc3NTE5MDQzfQ.dXnbwFUtjcue8_LXNpir3lltj0qoDUarbZ1BDkj5Zno';
@@ -53,7 +53,13 @@ class MockAlphaApiGate {
                     } else {
                         throw new Error(e.data.Data);
                     }
-                });
+                }).catch((e) => {
+                    if (e.response) {
+                        throw new Error(e.response.data);
+                    }
+                   
+                    throw e;
+                }) ;
             }
         }
 
@@ -147,8 +153,14 @@ class MockAlphaApiGate {
         return this.do("airs-bp", `${_.isArray(wsids) ? wsids[0] : wsids}/collection`, params, "post").then((response) => {
             console.log('+++ api.collection result', response);
 
-            if (response && response["sections"] && _.isArray(response["sections"])) {
-                resultData = builder.build(response["sections"]);
+            const { status, sections, errorDescription, error } = response;
+
+            if (status && status !== 200) {
+                throw new Error(errorDescription || error);
+            }
+            
+            if (sections && _.isArray(sections)) {
+                resultData = builder.build(sections);
             }
 
             console.log('+++ resultData', resultData);

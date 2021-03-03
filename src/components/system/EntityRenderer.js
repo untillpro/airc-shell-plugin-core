@@ -19,7 +19,6 @@ import {
 
 class EntityRenderer extends Component {
     render() {
-        // TODO different type of entity_edit_step
         const { contributions, entity } = this.props;
 
         const entityType = contributions.getPointContributionValue(TYPE_ENTITIES, entity, C_ENTITY_TYPE);

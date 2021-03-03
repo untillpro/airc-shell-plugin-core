@@ -23,11 +23,14 @@ const DEFAULT_LANG_CODE = '0000';
 const DEFAULT_NS = 'translation';
 
 class LangProvider extends PureComponent {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            init: false
+        };
+    }
     componentDidMount() {
-        const { currentLanguage } = this.props;
-
-        console.log("LangProvider.componentDidMount: current language: " + currentLanguage);
-
         this.init();
     }
 
@@ -58,7 +61,6 @@ class LangProvider extends PureComponent {
         }
 
         if (languages && _.size(languages) > 0) {
-            
             i18next.init({
                 debug: true,
                 fallbackLng: _.keys(languages),
@@ -72,7 +74,9 @@ class LangProvider extends PureComponent {
                 if(!err) {
                     this._initEntitiesI18n()
                     moment.locale(lng);
-                    this.props.initContextLang(lng, code)
+                    this.props.initContextLang(lng, code);
+
+                    this.setState({ init: true });
                 } else {
                     console.log(err);
                     throw new Error(err);
@@ -106,6 +110,10 @@ class LangProvider extends PureComponent {
 
     render() {
         const { currentLanguage } = this.props;
+
+        if (!this.state.init) {
+            return null;
+        }
 
         return (
             <div className="lang-provider-container" key={`lang_${currentLanguage}`}>

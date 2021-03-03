@@ -11,6 +11,8 @@ import AppOptions from './AppOptions';
 import ReportsReducer from './ReportsReducer';
 import ContextReducer from './ContextReducer';
 import LocationsReducer from './LocationsReducer';
+import ListReducer from './ListReducer';
+import EntityReducer from './EntityReducer';
 
 export default combineReducers({
     context: ContextReducer,
@@ -19,5 +21,7 @@ export default combineReducers({
     messages: MessagesReducer,
     options: AppOptions,
     reports: ReportsReducer,
-    locations: LocationsReducer
+    locations: LocationsReducer,
+    list: ListReducer,
+    entity: EntityReducer
 });

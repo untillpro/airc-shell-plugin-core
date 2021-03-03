@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import TablePlan from './TablePlan';
 import Table from './Table';
 import TableArea from './TableArea';

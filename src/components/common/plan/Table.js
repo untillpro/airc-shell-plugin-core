@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
@@ -139,7 +143,6 @@ class Table extends PureComponent {
     }
 
     handleResizeEnd() {
-        const { margin } = this;
         const { onChange, index, } = this.props;
         const { width, height, top, left } = this.state;
 
@@ -202,7 +205,6 @@ class Table extends PureComponent {
     }
 
     handleDragEnd() {
-        const { margin } = this;
         const { onChange, index } = this.props;
         const { top, left } = this.state;
 
@@ -372,6 +374,7 @@ class Table extends PureComponent {
         let xd = Math.floor(width / (wc + 1));
         let yd = Math.floor(height / (hc + 1));
 
+        // eslint-disable-next-line
         let count = 0;
 
         if (width >= height) {

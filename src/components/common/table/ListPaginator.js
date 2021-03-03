@@ -4,7 +4,6 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux'
 
 import ListPaginatorPages from './ListPaginatorPages';
 import ListPaginatorSize from './ListPaginatorSize';
@@ -72,17 +71,10 @@ ListPaginator.propTypes = {
     pageSize: PropTypes.number,
     pageSizeOptions: PropTypes.array,
     onPageChange: PropTypes.func,
-    onPageSizeChange: PropTypes.func
+    onPageSizeChange: PropTypes.func,
+    manual: PropTypes.bool,
+    total: PropTypes.number
 };
 
-const mapStateToProps = (state) => {
-    const { list } = state.plugin;
-    const { manual, total } = list;
 
-    return { 
-        total,
-        manual: manual || false
-    }; 
-}; 
-
-export default connect(mapStateToProps, null)(ListPaginator);
+export default ListPaginator;

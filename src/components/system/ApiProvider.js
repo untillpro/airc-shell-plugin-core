@@ -79,7 +79,9 @@ class ApiProvider extends Component {
     }
 
     _selectView(view) {
-        this.props.sendSelectViewMessage(view); 
+        const { locations } = this.props;
+        
+        this.props.sendSelectViewMessage(view, locations); 
     }
 
     render() {
@@ -90,8 +92,9 @@ class ApiProvider extends Component {
 const mapStateToProps = (state) => {
     const { api } = state.context;
     const { info, error, warning, success } = state.messages;
+    const { locations } = state.locations;
 
-    return { api, info, error, warning, success };
+    return { api, info, error, warning, success, locations };
 };
 
 export default connect(mapStateToProps, { 

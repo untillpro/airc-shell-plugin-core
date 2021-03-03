@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
@@ -15,7 +19,7 @@ class TablePlanCard extends PureComponent {
     }
 
     _tablesCount() {
-        const { data, field } = this.props;
+        const { data } = this.props;
         const tables = data["air_table_plan_item"];
 
         return tables ? _.size(tables) : 0;

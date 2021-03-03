@@ -8,7 +8,7 @@ import EmbeddedManagerField from './EmbeddedManagerField';
 
 import {
     getCollection,
-    processData
+    processEntityData
 } from '../../../classes/helpers';
 
 class EmbeddedManagerSelectField extends EmbeddedManagerField {
@@ -62,7 +62,7 @@ class EmbeddedManagerSelectField extends EmbeddedManagerField {
                 return { id, wsid };
             });
 
-            processData(context, entity, newData, entries)
+            processEntityData(context, entity, newData, entries)
                 .then(() => {
                     return this.fetchListData()
                 })
@@ -82,7 +82,7 @@ class EmbeddedManagerSelectField extends EmbeddedManagerField {
     }
 
     doSelect() {
-        const { onRowSelect, field } = this.props;
+        const { onRowSelect } = this.props;
         const { selectedRows, data } = this.state;
 
         if (onRowSelect && typeof onRowSelect === 'function') {
@@ -98,7 +98,6 @@ class EmbeddedManagerSelectField extends EmbeddedManagerField {
                 }
             } 
         } else {
-            console.error('EmbeddedManagerSelectField.doSelect() exception: "onRowSelect" prop not specified or wrong given', field);
             throw new Error('EmbeddedManagerSelectField.doSelect() exception: "onRowSelect" prop not specified or wrong given');
         }
     }
@@ -109,9 +108,18 @@ class EmbeddedManagerSelectField extends EmbeddedManagerField {
 
         if (!entity) return;
 
-        return getCollection(context, entity, locations, {}).then(({ resolvedData }) => {
-            return resolvedData;
-        });
+        this.startLoading();
+
+        return getCollection(context, { resource: entity, wsid: locations, props: {}})
+            .then(({ resolvedData }) => {
+                this.stopLoading();
+
+                return resolvedData;
+            })
+            .catch((e) => {
+                this.stopLoading();
+                throw new Error(e);
+            });
     }
 }
 

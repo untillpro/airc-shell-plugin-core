@@ -22,35 +22,13 @@ import {
     SEND_LANGUAGE_CHANGED_MESSAGE
 } from './Types';
 
-import {
-    MessageProcessItemData
-} from '../classes/messages';
-
-export const doProccess = (entries, data) => {
-    return (dispatch, getState) => {
-        const { context } = getState();
-        const { api, sm } = context;
-
-        const msg = new MessageProcessItemData({ entries, data });
-
-        return sm.sendMessage(msg, context)
-            .then((data) => {
-                dispatch(sendStateMachineResult(
-                    sm.getCurrenStepName(),
-                    data
-                ));
-
-                // if response has errors will send error to shell
-                if (data.error) {
-                    api.sendError(data.error);
-                }
-            })
-            .catch((e) => {
-                // if request crashed will send error to shell
-                api.sendError(e);
-            });
+export const dispatch = (action) => {
+    if (action && typeof action === 'object') {
+        return action;
     }
-}
+
+    return { type: "NOA_ACTION" };
+};
 
 export const sendStateMachineResult = (step, data) => {
     return {
@@ -69,32 +47,18 @@ export const sendCancelMessage = (data = {}) => {
     };
 };
 
-export const sendSelectViewMessage = (view) => {
-    return (dispatch, getState) => {
-        const { locations } = getState();
-
-        dispatch({
-            type: SEND_SELECT_VIEW_MESSAGE,
-            payload: {
-                view,
-                locations: locations.locations
-            }
-        })
-    };
+export const sendSelectViewMessage = (view, locations) => {
+    return {
+        type: SEND_SELECT_VIEW_MESSAGE,
+        payload: { view, locations }
+    }
 };
 
-export const sendSelectEntityMessage = (entity) => {
-    return (dispatch, getState) => {
-        const { locations } = getState();
-
-        dispatch({
-            type: SEND_SELECT_ENTITY_MESSAGE,
-            payload: {
-                entity,
-                locations: locations.locations
-            }
-        })
-    };
+export const sendSelectEntityMessage = (entity, locations) => {
+    return {
+        type: SEND_SELECT_ENTITY_MESSAGE,
+        payload: { entity, locations }
+    }
 };
 
 export const sendNeedFetchListDataMessage = (props) => {
@@ -111,64 +75,33 @@ export const sendNeedRefreshListDataMessage = () => {
     };
 }
 
-export const sendNeedEditFormMessage = (entries = []) => {
-    return (dispatch, getState) => {
-        const { locations, plugin } = getState();
-
-        dispatch({
-            type: SEND_NEED_EDIT_FORM_MESSAGE,
-            payload: {
-                entries,
-                entity: plugin.entity,
-                locations: locations.locations
-            }
-        })
+export const sendNeedEditFormMessage = (entries = [], locations, entity) => {
+    return {
+        type: SEND_NEED_EDIT_FORM_MESSAGE,
+        payload: { entries, locations, entity }
     };
 };
 
-export const sendNeedMassEditFormMessage = (entries = []) => {
-    return (dispatch, getState) => {
-        const { locations, plugin } = getState();
-
-        dispatch({
-            type: SEND_NEED_MASSEDIT_FORM_MESSAGE,
-            payload: {
-                entries,
-                entity: plugin.entity,
-                locations: locations.locations
-            }
-        })
+export const sendNeedMassEditFormMessage = (entries = [], locations, entity) => {
+    return {
+        type: SEND_NEED_MASSEDIT_FORM_MESSAGE,
+        payload: { entries, locations, entity }
     };
 };
 
-export const sendNeedCopyFormMessage = (entries = []) => {
-    return (dispatch, getState) => {
-        const { locations, plugin } = getState();
-
-        dispatch({
-            type: SEND_NEED_DUPLICATE_ITEM_MESSAGE,
-            payload: {
-                entries,
-                entity: plugin.entity,
-                locations: locations.locations,
-                copy: true
-            }
-        })
+export const sendNeedCopyFormMessage = (entries = [], locations, entity) => {
+    return {
+        type: SEND_NEED_DUPLICATE_ITEM_MESSAGE,
+        payload: {
+            entries, locations, entity, copy: true
+        }
     };
 };
 
-export const sendNeedUnifyFormMessage = (entries = []) => {
-    return (dispatch, getState) => {
-        const { locations, plugin } = getState();
-
-        dispatch({
-            type: SEND_NEED_UNIFY_ITEM_MESSAGE,
-            payload: {
-                entries,
-                entity: plugin.entity,
-                locations: locations.locations
-            }
-        })
+export const sendNeedUnifyFormMessage = (entries = [], locations, entity) => {
+    return {
+        type: SEND_NEED_UNIFY_ITEM_MESSAGE,
+        payload: { entries, locations, entity }
     };
 };
 

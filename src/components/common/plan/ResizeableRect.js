@@ -1,11 +1,13 @@
-'use strict';
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
 
 function _interopDefault(ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
 var PropTypes = _interopDefault(require('prop-types'));
 var React = require('react');
 var React__default = _interopDefault(React);
-var styled = _interopDefault(require('styled-components'));
+//var styled = _interopDefault(require('styled-components'));
 
 function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -50,11 +52,13 @@ function _objectSpread(target) {
         var ownKeys = Object.keys(source);
 
         if (typeof Object.getOwnPropertySymbols === 'function') {
+            // eslint-disable-next-line
             ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
                 return Object.getOwnPropertyDescriptor(source, sym).enumerable;
             }));
         }
 
+        // eslint-disable-next-line
         ownKeys.forEach(function (key) {
             _defineProperty(target, key, source[key]);
         });
@@ -78,8 +82,9 @@ function _inherits(subClass, superClass) {
     if (superClass) _setPrototypeOf(subClass, superClass);
 }
 
+/*
 function _getPrototypeOf(o) {
-    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+    f = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
         return o.__proto__ || Object.getPrototypeOf(o);
     };
     return _getPrototypeOf(o);
@@ -92,6 +97,25 @@ function _setPrototypeOf(o, p) {
     };
 
     return _setPrototypeOf(o, p);
+}
+*/
+
+
+function _getPrototypeOf(o) {
+    let f = Object.setPrototypeOf ? Object.getPrototypeOf : (o) => {
+        return o.__proto__ || Object.getPrototypeOf(o);
+    };
+
+    return f(o);
+}
+
+function _setPrototypeOf(o, p) {
+    let f = Object.setPrototypeOf ? Object.setPrototypeOf : (o, p) => {
+        o.__proto__ = p;
+        return o;
+    };
+
+    return f(o, p);
 }
 
 function _assertThisInitialized(self) {
@@ -361,6 +385,7 @@ var getNewStyle = function getNewStyle(type, rect, deltaW, deltaH, ratio, minWid
 
                 break;
             }
+        default: break;
     }
 
     return {
