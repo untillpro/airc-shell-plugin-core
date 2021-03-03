@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
@@ -30,7 +34,7 @@ class TableArea extends PureComponent {
     }
 
     setImage(styles) {
-        const { image, width, height } = this.props;
+        const { image } = this.props;
 
         let url = null;
 
@@ -64,6 +68,7 @@ class TableArea extends PureComponent {
                     width={width}
                     height={height}
                     draggable={false}
+                    alt=""
                 />
             );
         }

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { translate as t, Empty } from 'airc-shell-core';
@@ -11,8 +15,6 @@ import isEqual from 'react-fast-compare';
 import {
     sendCancelMessage,
     sendNeedEditFormMessage,
-    sendNeedCopyFormMessage,
-    sendNeedUnifyFormMessage,
     sendNeedRemoveMessage,
     sendNeedReduceMessage,
     setListShowDeleted
@@ -86,12 +88,16 @@ class EntityTablePlan extends Component {
     }
 
     handleAddAction() {
-        this.props.sendNeedEditFormMessage(null);
+        const { locations } = this.props;
+
+        this.props.sendNeedEditFormMessage(null, locations);
     }
 
     handleEditAction(entity) {
+        const { locations } = this.props;
+        
         if (_.isPlainObject(entity)) {
-            this.props.sendNeedEditFormMessage([entity]);
+            this.props.sendNeedEditFormMessage([entity], locations);
         }
     }
 
@@ -192,8 +198,6 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
     sendCancelMessage,
     sendNeedEditFormMessage,
-    sendNeedCopyFormMessage,
-    sendNeedUnifyFormMessage,
     sendNeedRemoveMessage,
     sendNeedReduceMessage,
     setListShowDeleted,

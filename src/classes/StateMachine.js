@@ -3,9 +3,10 @@
  */
 
 export default class StateMachine {
-    constructor() {
+    constructor(dispatch) {
         this.stack = [];
         this.lastDetouchedBlas = null;
+        this.dispatch = dispatch; // dispatcher function
     }
 
     add(blas) {
@@ -52,7 +53,7 @@ export default class StateMachine {
         return false;
     }
 
-    async sendMessage(msg, context) {
+    sendMessage(msg, context) {
         try {
             return this.sendMessageInternal(msg, context);
         } catch (e) {
@@ -61,7 +62,7 @@ export default class StateMachine {
         
     }
 
-    async sendMessageInternal(msg, context) {
+    sendMessageInternal(msg, context) {
         let blas;
 
         const { stack } = this;
@@ -78,7 +79,7 @@ export default class StateMachine {
         return false;
     }
 
-    async processMessage(blas, msg, context) {
+    processMessage(blas, msg, context) {
         let changedData = {
             error: null
         };
@@ -87,9 +88,17 @@ export default class StateMachine {
         let mesData = null;
 
         try {
-            const res = await blas[msg.getName()](msg, context);
+            const res = blas[msg.getName()](msg, context);
+
+            console.log("processMessage result: ", res);
 
             if (res) {
+                
+                if (res.action && typeof res.action === 'object' && typeof this.dispatch === 'function') {
+                    console.log("action: ", res.action);
+                    this.dispatch(res.action);
+                }
+                
                 if (res.pop) {
                     detouchData = this.delete(this.getCurrentStep());
                 }
@@ -99,7 +108,7 @@ export default class StateMachine {
                 }
 
                 if (res.message) {
-                    mesData = await this.sendMessage(res.message, context);
+                    mesData = this.sendMessage(res.message, context);
                 }
 
                 if (res.changedData) {

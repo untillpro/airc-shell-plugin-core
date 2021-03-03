@@ -6,6 +6,7 @@ import _ from 'lodash';
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { confirmAlert } from 'react-confirm-alert';
+import cn from 'classnames';
 import { withStackEvents } from 'stack-events';
 import {
     KEY_RETURN,
@@ -41,7 +42,10 @@ import {
     sendError
 } from '../../actions/';
 
+import LoadingOverlay from '../common/LoadingOverlay';
+
 import log from '../../classes/Log';
+
 
 class EMEditForm extends Component {
     constructor() {
@@ -89,7 +93,7 @@ class EMEditForm extends Component {
         }
 
         this.setState(result);
-       this.props.pushEvents({ 'keydown': this.hadleKeyPress });
+        this.props.pushEvents({ 'keydown': this.hadleKeyPress });
     }
 
     componentWillUnmount() {
@@ -107,9 +111,11 @@ class EMEditForm extends Component {
     }
 
     handleNavClick(id) {
+        const { locations } = this.props;
+
         if (id) {
             this.performWithCheckChanges(() => {
-                this.props.sendNeedEditFormMessage(id);
+                this.props.sendNeedEditFormMessage(id, locations);
             });
         };
     }
@@ -119,18 +125,21 @@ class EMEditForm extends Component {
     }
 
     handleAddAction() {
+        const { locations } = this.props;
+
         this.performWithCheckChanges(() => {
-            this.props.sendNeedEditFormMessage(null);
+            this.props.sendNeedEditFormMessage(null, locations);
         });
     }
 
     handleCopyAction() {
+        const { locations } = this.props;
         const { _entry } = this.props.data;
 
         if (!_entry || !_.isObject(_entry)) return;
 
         this.performWithCheckChanges(() => {
-            this.props.sendNeedCopyFormMessage([_entry]);
+            this.props.sendNeedCopyFormMessage([_entry], locations);
         });
     }
 
@@ -286,7 +295,7 @@ class EMEditForm extends Component {
         const validator = makeValidator();
 
         let validated = true;
-        
+
         sections.forEach((section, index) => {
             if (section && section.fields && section.fields.length > 0) {
                 section.fields.forEach((field) => {
@@ -396,6 +405,13 @@ class EMEditForm extends Component {
         this.setState({ changedData: newChangedData });
     }
 
+    loadingOverlay() {
+        const { loading } = this.props;
+        console.log("LOADING STATE IS: ", loading);
+
+        return <LoadingOverlay show={loading} text="Loading..."/>;
+    }
+
     buildSections() {
         const { sections, section, component, sectionsErrors } = this.state;
 
@@ -466,9 +482,10 @@ class EMEditForm extends Component {
         const { component } = this.state;
 
         return (
-            <div className={`page-section ${component.vertical ? 'vertical' : ''}`}>
+            <div className={cn('page-section', { 'vertical': component.vertical })}>
                 {this.buildSections()}
                 {this.buildSectionContent()}
+                {this.loadingOverlay()}
             </div>
         );
     }
@@ -538,9 +555,10 @@ class EMEditForm extends Component {
 }
 
 const mapStateToProps = (state) => {
+    const { locations } = state.locations;
     const { contributions } = state.context;
 
-    return { contributions };
+    return { locations, contributions };
 }
 
 const mapDispatchToProps = {

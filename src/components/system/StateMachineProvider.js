@@ -10,16 +10,17 @@ import StateMachine from '../../classes/StateMachine';
 import { RootStep } from '../../classes/steps/';
 
 import {
+    dispatch,
     setContext,
     sendStateMachineResult
 } from '../../actions/';
 
 class StateMachineProvider extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         //state machine initializing
-        this.stateMachine = new StateMachine();
+        this.stateMachine = new StateMachine(props.dispatch);
 
         // root state of state machine is added manually
         this.stateMachine.add(new RootStep());
@@ -44,30 +45,24 @@ class StateMachineProvider extends Component {
          */
 
         if (message) {
-            let promise = null;
+            let method = null;
 
             if (isGlobal) {
-                promise = this.stateMachine.sendGlobalMessage(message, context, shouldPop);
+                method = this.stateMachine.sendGlobalMessage.bind(this.stateMachine);
             } else {
-                promise = this.stateMachine.sendMessage(message, context);
+                method = this.stateMachine.sendMessage.bind(this.stateMachine);
             }
 
-            promise
-                .then((data) => {
-                    this.props.sendStateMachineResult(
-                        this.stateMachine.getCurrenStepName(),
-                        data
-                    );
+            let data = method(message, context, shouldPop);
 
-                    // if response has errors will send error to shell
-                    if (data.error) {
-                        api.sendError(data.error);
-                    }
-                })
-                .catch((e) => {
-                    // if request crashed will send error to shell
-                    api.sendError(e);
-                });
+            this.props.sendStateMachineResult(
+                this.stateMachine.getCurrenStepName(),
+                data
+            );
+
+            if (data.error) {
+                api.sendError(data.error);
+            }
         }
 
         return this.props.children;
@@ -87,7 +82,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
     setContext,
-    sendStateMachineResult
+    sendStateMachineResult,
+    dispatch
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(StateMachineProvider);

@@ -11,6 +11,7 @@ import isEqual from 'react-fast-compare';
 import {
     simpleMutateCheck,
     tablePlanMutateCheck,
+    mlTextMutateCheck,
 } from './classes/Utils';
 
 import {
@@ -60,6 +61,7 @@ class EMEditFormField extends Component {
 
         switch (type) {
             case 'table_plan_editor': return tablePlanMutateCheck(nextProps.data, this.props.data, field, embedded_type);
+            case 'ml_text': return mlTextMutateCheck(nextProps.data, this.props.data, field, embedded_type);
             default: return simpleMutateCheck(nextProps.data, this.props.data, field, embedded_type)
         }
     }

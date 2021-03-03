@@ -134,14 +134,22 @@ class ListTable extends PureComponent {
     }
 
     componentDidUpdate(oldProps) {
-        const { selectedRows, selectedFlatRows } = this.props;
+        const { component } = this.state;
+        const { selectedRows, selectedFlatRows, classifiers } = this.props;
+        let newState = {};
 
         if (!isEqual(selectedRows, oldProps.selectedRows) || !isEqual(selectedFlatRows, oldProps.selectedFlatRows)) {
-            this.setState({
+            newState = {
                 selectedRows: selectedRows || [],
                 selectedFlatRows: selectedFlatRows || {},
-            })
+            };
         }
+
+        if (classifiers !== oldProps.classifiers) {
+            newState.columns = this.getColumns(component);
+        }
+
+        this.setState(newState);
     }
 
     getCellRenderer(d, opts, isDynamic) {
@@ -449,7 +457,6 @@ class ListTable extends PureComponent {
             accessor,
             entity,
             type,
-            editable,
             defaultValue,
             width
         } = columnProps;
@@ -503,8 +510,6 @@ class ListTable extends PureComponent {
     }
 
     prepareColumn(columnProps, component) {
-        const { /* onValueSave, onError, */ entity } = this.props;
-
         const {
             accessor,
             header,

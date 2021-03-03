@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import EMEditForm from '../EMEditForm';
 import { Modal, translate as t } from 'airc-shell-core';
 
-import { reduce, immutableArrayMerge } from '../../../classes/helpers';
+import { reduce } from '../../../classes/helpers';
 
 import { ListTable } from '../../common';
 import isEqual from 'react-fast-compare'
@@ -26,6 +26,7 @@ class EmbeddedManagerField extends PureComponent {
         super();
 
         this.state = {
+            loading: false,
             current: null,
             data: [],
             dataLength: null,
@@ -403,6 +404,14 @@ class EmbeddedManagerField extends PureComponent {
         });
     }
 
+    startLoading() {
+        this.setState({loading: true});
+    }
+
+    stopLoading() {
+        this.setState({loading: false});
+    }
+
     renderEditModal() {
         const { locations } = this.props;
         const { edit, copy, entityData, current } = this.state;
@@ -440,7 +449,7 @@ class EmbeddedManagerField extends PureComponent {
 
     render() {
         const { disabled, classifiers } = this.props;
-        const { properties, rowActions, headerActions, showDeleted, selectedRows } = this.state;
+        const { loading, properties, rowActions, headerActions, showDeleted, selectedRows } = this.state;
 
         if (!this.entity) return null;
 
@@ -454,6 +463,7 @@ class EmbeddedManagerField extends PureComponent {
         return (
             <div className="embedded-manager-field">
                 <ListTable
+                    loading={loading}
                     entity={this.entity}
                     data={this.getData()}
                     classifiers={classifiers}

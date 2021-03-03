@@ -22,13 +22,13 @@ import {
     sendCancelMessage,
     sendNeedFetchListDataMessage,
 
+    listProccessData,
     setListPage,
     setListPageSize,
     setListFilter,
     setListOrder,
     setListShowDeleted,
-    
-    doProccess,
+
     sendNeedProcessMessage,
     sendNeedEditFormMessage,
     sendNeedCopyFormMessage,
@@ -37,6 +37,10 @@ import {
     sendNeedReduceMessage,
     sendNeedRefreshListDataMessage
 } from '../../actions/';
+
+import {
+    selectListData
+} from '../../selectors';
 
 class EMList extends Component {
     constructor(props) {
@@ -48,7 +52,7 @@ class EMList extends Component {
             selectedRows: [],
             selectedFlatRows: {},
             search: "",
-            searchBy: [ "name", "hq_id" ]
+            searchBy: ["name", "hq_id"]
         };
 
         this.handleBackClick = this.handleBackClick.bind(this);
@@ -174,7 +178,7 @@ class EMList extends Component {
                     buttonType: "simple",
                     type: 'primary',
                     key: 'header-action-massedit',
-                    text:  t("Mass edit", "list"),
+                    text: t("Mass edit", "list"),
                     hidden: (rows) => (!rows || rows.length <= 0),
                     disabled: (rows) => rows.length <= 1,
                     onClick: (rows) => this.handleHeaderAction(actionType, rows)
@@ -186,7 +190,7 @@ class EMList extends Component {
 
     handleKeyPress(event) {
         const { keyCode } = event;
-        
+
         switch (keyCode) {
             case KEY_ESCAPE: this.handleBackClick(); return;
             case KEY_RETURN: this.handleEnterPress(); return;
@@ -199,9 +203,10 @@ class EMList extends Component {
     }
 
     handleEnterPress() {
+        const { locations, entity } = this.props;
         const { selected } = this.state;
 
-        this.props.sendNeedEditFormMessage(selected);
+        this.props.sendNeedEditFormMessage(selected, locations, entity);
     }
 
     handleShowDeletedChanged(value) {
@@ -209,29 +214,28 @@ class EMList extends Component {
     }
 
     handleHeaderAction(action) {
+        const { locations, entity } = this.props;
         const { selected } = this.state;
-
-        console.log("EntityList.handleHeaderAction: ", action, selected);
 
         switch (action) {
             case 'add':
-                this.props.sendNeedEditFormMessage(null);
+                this.props.sendNeedEditFormMessage(null, locations, entity);
                 break;
             case 'edit':
-                this.props.sendNeedEditFormMessage(selected);
+                this.props.sendNeedEditFormMessage(selected, locations, entity);
                 break;
             case 'refresh':
                 this.props.sendNeedRefreshListDataMessage();
                 break;
             case 'massedit':
-                this.props.sendNeedMassEditFormMessage(selected);
+                this.props.sendNeedMassEditFormMessage(selected, locations, entity);
                 break;
             case 'remove':
                 if (selected && selected.length > 0) {
                     this.props.sendNeedRemoveMessage(selected);
                 }
 
-                this.setState({selected: [], selectedRows: [], selectedFlatRows: {}});
+                this.setState({ selected: [], selectedRows: [], selectedFlatRows: {} });
 
                 break;
             default: break;
@@ -239,25 +243,26 @@ class EMList extends Component {
     }
 
     handleAction(row, type) {
+        const { locations, entity } = this.props;
         if (!row || !row.original) return;
 
         const { _entry: e, state } = row.original;
-        
+
         if (!e) {
             throw new Error("no _entry record provided for row ", row)
         }
 
         switch (type) {
             case 'edit':
-                this.props.sendNeedEditFormMessage([e]);
+                this.props.sendNeedEditFormMessage([e], locations, entity);
                 break;
 
             case 'copy':
-                this.props.sendNeedCopyFormMessage([e]);
+                this.props.sendNeedCopyFormMessage([e], locations, entity);
                 break;
 
             case 'unify':
-                this.props.sendNeedUnifyFormMessage([e]);
+                this.props.sendNeedUnifyFormMessage([e], locations, entity);
                 break;
 
             case 'remove':
@@ -280,6 +285,7 @@ class EMList extends Component {
     }
 
     handleRowDoubleClick(event, row) {
+        const { locations, entity } = this.props;
         event.stopPropagation();
 
         let entry = null;
@@ -287,7 +293,7 @@ class EMList extends Component {
 
         if (original && original._entry) entry = original._entry;
 
-        if (_.isPlainObject(entry)) this.props.sendNeedEditFormMessage([ entry ]);
+        if (_.isPlainObject(entry)) this.props.sendNeedEditFormMessage([entry], locations, entity);
     }
 
     handleSelectedRowsChange(selectedRows, selectedFlatRows) {
@@ -296,7 +302,7 @@ class EMList extends Component {
         if (selectedRows.length > 0) {
             _.forEach(selectedFlatRows, (row) => row._entry ? selected.push(row._entry) : null);
         }
-        
+
         this.setState({ selected, selectedRows, selectedFlatRows });
     }
 
@@ -333,21 +339,18 @@ class EMList extends Component {
     }
 
     async handleSave(entity, data, entry) {
-        //const { entity } = this.props;
-        console.log("handle save: ", data, entry, entity);
-
-        return this.props.doProccess([ entry ], data);
+        return this.props.listProccessData(entity, [entry], data); // TODO change to saga
     }
 
     handleError(error) {
         const { api } = this.props;
         if (error && api && _.isFunction(api.sendError)) {
-             api.sendError(error);
+            api.sendError(error);
         }
     }
 
     handleSearchChange(value) {
-        this.setState({ search: value || ""});
+        this.setState({ search: value || "" });
     }
 
     renderHeader() {
@@ -361,8 +364,28 @@ class EMList extends Component {
     }
 
     render() {
-        const { entity, data, classifiers, pages, page, pageSize, manual, order, total, showDeleted } = this.props;
-        const { rowActions, headerActions, search, selectedRows, selectedFlatRows  /*,  searchBy */ } = this.state;
+        const {
+            loading,
+            entity,
+            data,
+            classifiers,
+            pages,
+            page,
+            pageSize,
+            manual,
+            order,
+            total,
+            showDeleted
+        } = this.props;
+
+        const {
+            rowActions,
+            headerActions,
+            search,
+            selectedRows,
+            selectedFlatRows,
+            //searchBy 
+        } = this.state;
 
         return (
             <div className='content-container'>
@@ -376,7 +399,7 @@ class EMList extends Component {
                         </div>
 
                         <div className="cell align-right">
-                            <Search 
+                            <Search
                                 onChange={this.handleSearchChange}
                             />
                         </div>
@@ -384,6 +407,7 @@ class EMList extends Component {
                 </div>
 
                 <ListTable
+                    loading={loading}
                     entity={entity}
                     data={data}
                     classifiers={classifiers}
@@ -416,17 +440,33 @@ class EMList extends Component {
 }
 
 const mapStateToProps = (state) => {
+    const { entity } = state.plugin;
+    const { locations } = state.locations;
     const { contributions, api } = state.context;
-    const { list, columnsVisibility } = state.plugin;
-    const { data, classifiers, showDeleted, pages, page, manual, pageSize, order, total } = list;
+
+    const {
+        loading,
+        classifiers,
+        showDeleted,
+        pages,
+        page,
+        manual,
+        pageSize,
+        order,
+        total,
+        columnsVisibility
+    } = state.list;
 
     return {
         api,
+        entity,
+        locations,
         classifiers,
         contributions,
+        loading,
         total,
+        data: selectListData(state),
         order: order || [],
-        data: data || [],
         pages: pages || -1,
         page: page || 0,
         pageSize: pageSize || 20,
@@ -446,7 +486,7 @@ export default connect(mapStateToProps, {
     setListFilter,
     setListOrder,
     setListShowDeleted,
-    doProccess,
+    listProccessData,
     sendNeedProcessMessage,
     sendNeedCopyFormMessage,
     sendNeedUnifyFormMessage,

@@ -29,49 +29,53 @@ class MLTextField extends Component {
 
         this.state = {
             opened: false,
-            value: null,
             newLang: false,
-            ml: {},
-            mlTemp: {},
+            mlData: null
         };
 
         this.handleAddonPress = this.handleAddonPress.bind(this);
-        this.handleChange = this.handleChange.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleModalClose = this.handleModalClose.bind(this);
-        this.handleMLFormConfirm = this.handleMLFormConfirm.bind(this);
+        this.handleMLChange = this.handleMLChange.bind(this);
         this.handleAddLanguage = this.handleAddLanguage.bind(this);
         this.langFormOnChange = this.langFormOnChange.bind(this);
         this.langFormOnCancel = this.langFormOnCancel.bind(this);
     }
 
-    componentDidMount() {
-        const { data, field, isNew, value, lang, defaultLang } = this.props;
+    componentDidUpdate(oldProps) {
+        const { data, field } = this.props;
         const { ml_accessor } = field;
+
+        let ml_base64Str;
+        let ml_base64Str_old;
+
+        if (_.isString(ml_accessor)) {
+            ml_base64Str = _.get(data, ml_accessor);
+            ml_base64Str_old = _.get(oldProps.data, ml_accessor);
+        } else if (_.isFunction(ml_accessor)) {
+            ml_base64Str = ml_accessor(data);
+            ml_base64Str_old = ml_accessor(oldProps.data);
+        }
+
+        if (ml_base64Str !== ml_base64Str_old) {
+            this.setState({ mlData: ml_base64Str });
+        }
+    }
+
+    _getMlArray() {
+        const { isNew, value, lang, defaultLang } = this.props;
+        const { mlData } = this.state;
 
         let langMap = {};
 
-        if (isNew && value) {
+        if (isNew && value && !mlData) {
             langMap[lang] = value;
             langMap[defaultLang] = value;
-        } else if (ml_accessor && (_.isString(ml_accessor) || _.isFunction(ml_accessor))) {
-            let ml_base64Str
-
-            if (_.isString(ml_accessor)) {
-                ml_base64Str = _.get(data, ml_accessor);
-            } else if (_.isFunction(ml_accessor)) {
-                ml_base64Str = ml_accessor(data);
-            }
-
-            if (ml_base64Str) {
-                langMap = bufferToLangMap(ml_base64Str);
-            }
+        } else if (_.isString(mlData)) {
+            langMap = bufferToLangMap(mlData);
         }
 
-        this.setState({
-            ml: langMap,
-            value
-        });
+        return langMap;
     }
 
     getComponentProps() {
@@ -102,58 +106,44 @@ class MLTextField extends Component {
         return props;
     }
 
-    handleChange(value, ml, opt = {}) {
+    handleMLChange(formValues) {
         const { onChange, field } = this.props;
-        const { accessor, ml_accessor } = field;
-
-        if (_.isFunction(onChange)) {
-            let buf = langMapToBuffer(ml || {});
-
-            onChange({
-                [accessor]: value ? String(value) : '',
-                [ml_accessor]: buf
-            });
-        }
-
-        this.setState({ ...opt, value, ml });
-    }
-
-    handleAddonPress() {
-        const { ml } = this.state;
-
-        this.setState({ opened: true, ml_temp: ml });
-    }
-
-    handleModalClose() {
-        this.setState({ opened: false, ml_temp: {} });
-    }
-
-    handleInputChange(event) {
-        const { lang, defaultLang, isNew } = this.props;
-        const { ml } = this.state;
-
-        const { value } = event.target;
-
-        const mlNew = { ...ml };
-
-        mlNew[lang] = value;
-
-        if (isNew === true) {
-            mlNew[defaultLang] = value;
-        }
-
-        this.handleChange(value, mlNew);
-    }
-
-    handleMLFormConfirm(formValues) {
-        const { value } = this.state;
+        const { ml_accessor } = field;
 
         if (_.isPlainObject(formValues) && _.size(formValues) > 0) {
             let values = {}
 
             _.forEach(formValues, (v, k) => values[k] = v || "");
 
-            this.handleChange(value, values, { opened: false });
+            if (_.isFunction(onChange)) {
+                let buf = langMapToBuffer(values || {});
+
+                onChange({
+                    [ml_accessor]: buf
+                });
+            }
+        }
+
+        this.setState({opened: false});
+    }
+
+    handleAddonPress() {
+        this.setState({ opened: true });
+    }
+
+    handleModalClose() {
+        this.setState({ opened: false });
+    }
+
+    handleInputChange(event) {
+        const { value } = event.target;
+        const { onChange, field } = this.props;
+        const { accessor } = field;
+
+        if (_.isFunction(onChange)) {
+            onChange({
+                [accessor]: value ? String(value) : '',
+            });
         }
     }
 
@@ -210,9 +200,11 @@ class MLTextField extends Component {
 
     renderML() {
         const { availableLanguages } = this.props;
-        const { opened, ml_temp } = this.state;
+        const { opened } = this.state;
 
         if (opened !== true) return null;
+
+        const initialValues = this._getMlArray();
 
         return (
             <Modal
@@ -228,8 +220,8 @@ class MLTextField extends Component {
                         {...layout}
                         ref={this.formRef}
                         name="ml-form"
-                        onFinish={this.handleMLFormConfirm}
-                        initialValues={ml_temp}
+                        onFinish={this.handleMLChange}
+                        initialValues={initialValues}
                     >
                         {
                             _.map(availableLanguages, (l) => {
@@ -245,9 +237,7 @@ class MLTextField extends Component {
                             })
                         }
 
-                        {
-                            this.renderNewLang()
-                        }
+                        {this.renderNewLang()}
 
                         <Form.Item {...tailLayout}>
                             <Button type="primary" htmlType="submit">
@@ -261,8 +251,7 @@ class MLTextField extends Component {
     }
 
     render() {
-        const { value } = this.state;
-        const { errors, field, disabled } = this.props;
+        const { value, errors, field, disabled } = this.props;
 
         if (!field) return null;
 

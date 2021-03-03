@@ -8,6 +8,10 @@ import RenderEntityStep from './RenderEntityStep';
 import ReportViewStep from './ReportViewStep'; 
 import { MessageInit, MessageNotify } from '../messages';
 
+import {
+    SET_ENTITY
+} from '../../actions/Types';
+
 class RenderViewStep extends StateMachineStep {
     getName() {
         return 'RenderViewStep';
@@ -33,8 +37,9 @@ class RenderViewStep extends StateMachineStep {
             return {
                 newStep: new RenderEntityStep(),
                 message: new MessageInit(msg),
-                changedData: {
-                    entity
+                action: {
+                    type: SET_ENTITY,
+                    payload: entity
                 }
             };
         }

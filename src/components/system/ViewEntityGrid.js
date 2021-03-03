@@ -47,8 +47,7 @@ class ViewEntityGrid extends Component {
 
         this.state = {
             entities: [],
-            selected: null,
-            selectedEntity: null
+            selected: null
         }
 
         this.handleKeyPress = this.handleKeyPress.bind(this);
@@ -142,14 +141,14 @@ class ViewEntityGrid extends Component {
     }
 
     selectEntity(index) {
+        const { locations } = this.props;
         const { entities } = this.state;
 
         if (entities && _.size(entities) > 0 && index >= 0) {
             const e = entities[index];
 
             if (e && isValidEntity({}, e.code)) {
-                this.setState({ selectedEntity: e.code });
-                this.props.sendSelectEntityMessage(e.code);
+                this.props.sendSelectEntityMessage(e.code, locations);
             }
         }
     }
@@ -173,7 +172,7 @@ class ViewEntityGrid extends Component {
     }
 
     renderEntitiesGrid() {
-        const { entities, selected, selectedEntity } = this.state;
+        const { entities, selected } = this.state;
 
 
         return (
@@ -189,7 +188,6 @@ class ViewEntityGrid extends Component {
                             return (
                                 <Card
                                     selected={index === selected}
-                                    loading={e.code === selectedEntity}
                                     type='small'
                                     align='center'
                                     valign='center'
@@ -225,10 +223,11 @@ class ViewEntityGrid extends Component {
 }
 
 const mapStateToProps = (state) => {
+    const { locations } = state.locations;
     const { contributions } = state.context;
     const { view } = state.plugin;
 
-    return { view, contributions };
+    return { locations, view, contributions };
 };
 
 export default connect(mapStateToProps, {

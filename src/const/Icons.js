@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
-import React from 'react';
 
 const ICON_EDIT = require('../base/images/icons/minicon/edit.svg');
 const ICON_DUPLICATE = require('../base/images/icons/minicon/duplicate.svg');

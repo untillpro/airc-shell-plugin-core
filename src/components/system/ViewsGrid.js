@@ -69,13 +69,14 @@ class ViewsGrid extends Component {
     }
 
     selectView(index) {
+        const { locations } = this.props;
         const { views } = this.state;
 
         if (views && _.size(views) > 0 && index >= 0) {
             const o = views[index];
 
             if (o && o.code && _.isString(o.code)) {
-                this.props.sendSelectViewMessage(o.code);
+                this.props.sendSelectViewMessage(o.code, locations);
             }
         }
     }
@@ -192,10 +193,11 @@ class ViewsGrid extends Component {
 }
 
 const mapStateToProps = (state) => {
+    const { locations } = state.locations;
     const { showLocationSelector } = state.options;
     const { contributions } = state.context;
 
-    return { contributions, showLocationSelector };
+    return { locations, contributions, showLocationSelector };
 };
 
 export default connect(mapStateToProps, { sendSelectViewMessage })(withStackEvents(ViewsGrid));

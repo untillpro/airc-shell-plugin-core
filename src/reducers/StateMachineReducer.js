@@ -78,26 +78,6 @@ export default (state = INITIAL_STATE, action) => {
             }
             break;
 
-        case Types.ENTITY_LIST_SET_SHOW_DELTED: 
-            message = new Messages.MessageSetShowDeleted({ showDeleted: action.payload  });
-            break;
-
-        case Types.ENTITY_LIST_SET_PAGE: 
-            message = new Messages.MessageSetPage({ page: action.payload });
-            break;
-
-        case Types.ENTITY_LIST_SET_PAGE_SIZE: 
-            message = new Messages.MessageSetPageSize({ pageSize: action.payload });
-            break;
-
-        case Types.ENTITY_LIST_SET_FILTER: 
-            message = new Messages.MessageSetFilter({ filter: action.payload });
-            break;
-
-        case Types.ENTITY_LIST_SET_ORDER: 
-            message = new Messages.MessageSetOrder({ order: action.payload });
-            break;
-
         case Types.SEND_FORM_NEED_NAVIGATION:
             message = new Messages.MessageNeedNavigation({id: action.payload});
             isGlobal = true;

@@ -9,21 +9,23 @@ import { Logger } from 'airc-shell-core';
 import { MessageInit, MessageNotify } from '../messages';
 
 import {
-    prepareCopyData,
     isValidLocations,
     isValidEntity,
-    getCollection,
-    processData,
-    checkEntries
 } from '../helpers';
 
 import {
-    TYPE_FORMS,
     TYPE_COLLECTION,
     C_COLLECTION_ENTITY,
-    C_COLLECTION_REQUIRED_CLASSIFIERS
 } from '../contributions/Types';
 
+import { 
+    FLUSH_ENTITY_DATA,
+} from '../../actions/Types';
+
+import { 
+    SAGA_FETCH_ENTITY_DATA,
+    SAGA_PROCESS_ENTITY_DATA,
+} from '../../sagas/Types';
 
 class EntityEditStep extends StateMachineStep {
     constructor(...args) {
@@ -51,7 +53,8 @@ class EntityEditStep extends StateMachineStep {
         };
     }
 
-    async MessageInit(msg, context) {
+    MessageInit(msg, context) {
+        const { contributions } = context;
         const { entries, copy, entity, locations } = msg;
 
         if (!isValidEntity(context, entity)) {
@@ -62,32 +65,27 @@ class EntityEditStep extends StateMachineStep {
             this.error(this.getName() + '.MessageInit() exception: locations not specified or wrong given: ' + locations.toString());
         }
 
+        Logger.log("EntityEditStep.MessageInit(): ", entries);
+
         this.entity = entity;
         this.locations = locations;
+        this.entries = entries;
 
-        this.entries = checkEntries(entries);
-        let isNotNew = this.entries && this.entries.length > 0;
-
-        if (isNotNew) {
-            await this.fetchEntityData(this.entries, context);
-            Logger.log(this.data, 'EntityEditStep.MessageInit() fetched data:', "EntityEditStep.MessageInit");
-
-            if (copy === true && this.data) { // if operation is copy
-                this.entries = null;
-                this.data = prepareCopyData(this.data);
-            }
-        }
+        let resource = contributions.getPointContributionValue(TYPE_COLLECTION, entity, C_COLLECTION_ENTITY) || entity;
 
         return {
-            changedData: {
-                isCopy: copy === true,
-                isNew: !isNotNew,
-                entityData: this._data()
+            action: {
+                type: SAGA_FETCH_ENTITY_DATA,
+                payload: {
+                    resource,
+                    isCopy: !!copy,
+                    entries
+                }
             }
         };
     }
 
-    async MessageNeedEdit(msg) {
+    MessageNeedEdit(msg) {
         return {
             pop: true,
             message: new MessageInit(msg),
@@ -95,16 +93,23 @@ class EntityEditStep extends StateMachineStep {
         };
     }
 
-    async MessageCancel() {
+    MessageCancel(msg) {
+        const { refresh } = msg;
+
         return {
             pop: true,
-            message: new MessageNotify()
+            message: new MessageNotify({ refresh: !!refresh }),
+            action: {
+                type: FLUSH_ENTITY_DATA
+            }
         };
     }
 
-    async MessageProceed(msg, context) {
+    MessageProceed(msg, context) {
         let { entries, entity, locations } = this;
         const { data } = msg;
+
+        Logger.log(entries, "=================================== MessageProceed: Entries: ");
 
         if (msg.entity && typeof msg.entity === 'string') {
             entity = msg.entity
@@ -127,99 +132,26 @@ class EntityEditStep extends StateMachineStep {
                 this.error('Proceed data error: locations are not specefied');
             }
         }
-        
-        return processData(context, entity, data, entries).then((res) => {
-            return {
-                pop: true,
-                message: new MessageNotify({ refresh: true }),
-                changedData: {
-                    ...res
+
+        return {
+            action: {
+                type: SAGA_PROCESS_ENTITY_DATA,
+                payload: {
+                    entity, data, entries
                 }
-            };
-        }).catch((e) => {
-            this.error(e.toString());
-        });
-    }
-
-    async MessageValidate(msg, context) {
-        return null;
-    }
-
-    async fetchEntityData(items, context) {
-        const { api, contributions } = context;
-        const { entity, locations } = this;
-
-        let wsid = null;
-
-        if (!api || !contributions || !entity) {
-            this.error('Cant fetch entity item data.', api, contributions, entity);
-        }
-
-        if (isValidLocations(locations)) {
-            wsid = locations[0];
-        } else {
-            this.error('No location selected.', api, contributions, entity);
-        }
-
-        let entries = this.buildRequestEntires(items);
-
-        const doProps = {
-            entries,
-            required_classifiers: contributions.getPointContributionValues(TYPE_COLLECTION, entity, C_COLLECTION_REQUIRED_CLASSIFIERS),
-            show_deleted: true
+            }
         };
-
-        let resource = contributions.getPointContributionValue(TYPE_COLLECTION, entity, C_COLLECTION_ENTITY) || entity;
-
-        return getCollection(context, resource, wsid, doProps)
-            .then(({ Data, resolvedData }) => {
-                if (resolvedData && resolvedData.length > 0) {
-                    this.classifiers = _.get(Data, "classifiers");
-                    this.data = this.checkForEmbededTypes(resolvedData[0], context);
-                } else {
-                    this.classifiers = null;
-                    this.data = [];
-                }
-            });
     }
 
-    checkForEmbededTypes(data, context) {
-        const { contributions } = context;
-        const { entity } = this;
-
-        if (!contributions || !entity) return data;
-
-        const Data = { ...data };
-
-        const pointContributions = contributions.getPointContributions(TYPE_FORMS, entity);
-        const embedded_types = pointContributions ? pointContributions.embeddedTypes : null;
-
-        if (embedded_types && embedded_types.length > 0) {
-            _.each(embedded_types, (type) => {
-                if (Data[type] && Data[type] instanceof Object && Data[type].length > 0) {
-                    Data[type] = Data[type][0];
-                }
-            });
-        }
-
-        return Data;
-    }
-
-    buildRequestEntires(entries) {
-        const resultEntries = [];
-
-        for (let i = 0; i < entries.length; i++) {
-            resultEntries.push({ ID: entries[i].id, WSID: entries[i].wsid });
-        }
-
-        return resultEntries;
+    MessageValidate(msg, context) {
+        return null;
     }
 
     detouch() {
         return {
-            isNew: false,
-            isCopy: false,
-            entityData: null
+            action: {
+                type: FLUSH_ENTITY_DATA
+            }
         };
     }
 }

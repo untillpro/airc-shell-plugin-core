@@ -7,8 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Tabs, Logger } from 'airc-shell-core';
 
-import { 
-    immutableArrayMerge,
+import {
     funcOrString 
 } from '../../classes/helpers';
 
