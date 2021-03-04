@@ -16,8 +16,7 @@ const INITIAL_STATE = {
     info: null
 };
 
-export default (state = INITIAL_STATE, action) => {
-
+const reducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case SEND_ERROR_MESSAGE: 
             return {
@@ -45,3 +44,5 @@ export default (state = INITIAL_STATE, action) => {
         default: return state;
     }
 };
+
+export default reducer;

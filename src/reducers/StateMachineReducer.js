@@ -11,7 +11,7 @@ const INITIAL_STATE = {
     shouldPop: false
 };
 
-export default (state = INITIAL_STATE, action) => {
+const reducer = (state = INITIAL_STATE, action) => {
     let message = null;
     let isGlobal = false;
     let shouldPop = false;
@@ -105,3 +105,5 @@ export default (state = INITIAL_STATE, action) => {
 
     return state;
 };
+
+export default reducer;

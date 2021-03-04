@@ -16,6 +16,8 @@ import {
     buildRequestEntires,
     checkForEmbededTypes,
     prepareCopyData,
+    prepareReportFilter,
+    prepareReportData
 } from '../classes/helpers';
 
 import * as Selectors from './Selectors';
@@ -23,9 +25,12 @@ import * as Selectors from './Selectors';
 import {
     TYPE_LIST,
     TYPE_COLLECTION,
+    TYPE_REPORTS,
     C_COLLECTION_REQUIRED_FIELDS,
     C_COLLECTION_REQUIRED_CLASSIFIERS,
-    C_COLLECTION_ENTITY
+    C_COLLECTION_ENTITY,
+    C_REPORT_EVENT_TYPE,
+    C_REPORT_REQUIRED_CLASSIFIERS
 } from '../classes/contributions/Types';
 
 import {
@@ -38,8 +43,9 @@ import {
     ENTITY_DATA_FETCH_SUCCEEDED,
     SEND_CANCEL_MESSAGE,
     SET_PLUGIN_LANGUAGE,
-    SEND_DO_GENERATE_REPORT_MESSAGE,
+    SET_REPORT_DATA_FETCHING,
     ENTITY_LIST_SET_SHOW_DELETED,
+    REPORT_DATA_FETCHING_SUCCESS,
 } from '../actions/Types';
 
 import {
@@ -197,19 +203,46 @@ function* _processEntityData(action) {
 //TODO - continue with REPORTS
 function* _fetchReport(action) {
     const locations = yield select(Selectors.locations);
+    const context = yield select(Selectors.context);
+    const { contributions, api } = context;
     const { report, from, to, filterBy, props } = action.payload;
 
-    yield put({
-        type: SEND_DO_GENERATE_REPORT_MESSAGE,
-        payload: {
-            locations: locations.locations,
-            report,
-            from,
-            to,
-            filterBy,
-            props,
+    let event_type = contributions.getPointContributionValues(TYPE_REPORTS, report, C_REPORT_EVENT_TYPE);
+
+    let doProps = {
+        type: event_type,
+        from,
+        to,
+        show: true,
+        from_offset: 0, // mock
+        to_offset: 1000000,// mock
+        required_classifiers: contributions.getPointContributionValues(TYPE_REPORTS, report, C_REPORT_REQUIRED_CLASSIFIERS)
+    };
+
+    if (_.isPlainObject(props)) {
+        doProps = { ...doProps, ...props };
+    }
+
+    if (filterBy && _.isPlainObject(filterBy)) {
+        const filterProps = prepareReportFilter(context, report, filterBy);
+
+        if (filterProps && _.size(filterProps) > 0) {
+            doProps["filterBy"] = filterProps;
         }
-    });
+    }
+
+    yield put({ type: SET_REPORT_DATA_FETCHING, payload: true });
+
+    try {
+        const result = yield call(api.log.bind(api), locations, doProps);
+        const mockResult = prepareReportData(locations, result);
+
+        yield put({ type: REPORT_DATA_FETCHING_SUCCESS, payload: mockResult });
+    } catch (e) {
+        yield put({ type: SET_REPORT_DATA_FETCHING, payload: false });
+        yield put({ type: SEND_ERROR_MESSAGE, payload: { text: e.message, description: e.message } });
+    }
+
 }
 
 function* _setPluginLanguage(action) {

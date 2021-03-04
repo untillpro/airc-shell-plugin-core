@@ -8,9 +8,7 @@ import { MessageInit, MessageNotify } from '../messages';
 import EntityEditStep from './EntityEditStep';
 
 import {
-    TYPE_LIST,
-    TYPE_COLLECTION,
-    C_COLLECTION_ENTITY
+    TYPE_LIST
 } from '../contributions/Types';
 
 import {

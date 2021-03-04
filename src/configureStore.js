@@ -14,12 +14,12 @@ import rootSaga from './sagas/Root'
 const persistConfigDefauult = {
     key: 'plugin',
     storage,
-    blacklist: ['plugin', 'list', 'machine', 'context', 'collection', 'entity']
+    blacklist: ['plugin', 'list', 'machine', 'context', 'collection', 'entity', 'report']
 };
 
 const loggerMiddleware = createLogger()
 
-export default (persistConfig, initState = {}) => {
+const configureStore = (persistConfig, initState = {}) => {
     let config = persistConfigDefauult;
 
     if (persistConfig && typeof persistConfig === 'object') {
@@ -46,3 +46,5 @@ export default (persistConfig, initState = {}) => {
 
     return { store, persistor };
 };
+
+export default configureStore;

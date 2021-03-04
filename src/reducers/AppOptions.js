@@ -37,7 +37,7 @@ const INITIAL_STATE = {
     availableLanguages: ["0000", "0406", "0413", "040C", "0407", "0419"]
 };
 
-export default (state = INITIAL_STATE, action) => {
+const reducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case INIT_PLUGIN:
             const { options } = action.payload;
@@ -92,3 +92,5 @@ export default (state = INITIAL_STATE, action) => {
         default: return state;
     }
 };
+
+export default reducer;

@@ -5,7 +5,7 @@
 import _ from 'lodash';
 import Manager from './Manager';
 
-export default (managers) => {
+const Factory = (managers) => {
     const manager = new Manager();
 
     _.each(managers, (entity) => {
@@ -21,3 +21,5 @@ export default (managers) => {
 
     return manager;
 };
+
+export default Factory;

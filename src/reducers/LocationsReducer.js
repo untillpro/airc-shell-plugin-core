@@ -16,7 +16,7 @@ const INITIAL_STATE = {
     },
 }
 
-export default (state = INITIAL_STATE, action) => {
+const reducer = (state = INITIAL_STATE, action) => {
 
     switch (action.type) {
         case SET_LOCAIOTNS:
@@ -29,3 +29,5 @@ export default (state = INITIAL_STATE, action) => {
         default: return state;
     }
 };
+
+export default reducer;

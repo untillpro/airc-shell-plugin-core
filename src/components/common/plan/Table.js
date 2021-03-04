@@ -64,7 +64,7 @@ class Table extends PureComponent {
             res.tableImage = contributions.getSetValue('table', table_type);
         } 
 
-        console.log("render table", res);
+        console.log('render table', res);
 
         this.setState(res);
     }
@@ -240,8 +240,8 @@ class Table extends PureComponent {
         const { form } = this.props;
 
         switch (form) {
-            case 3: styles["borderRadius"] = `${width}px/${height}px`; return;
-            case 2: styles["borderRadius"] = round; return;
+            case 3: styles['borderRadius'] = `${width}px/${height}px`; return;
+            case 2: styles['borderRadius'] = round; return;
             default: return;
         }
     }
@@ -250,11 +250,11 @@ class Table extends PureComponent {
         const { width, height } = this.state;
 
         if (_.isNumber(width) && width >= 0) {
-            styles["width"] = width;
+            styles['width'] = width;
         }
 
         if (_.isNumber(height) && height >= 0) {
-            styles["height"] = height;
+            styles['height'] = height;
         }
     }
 
@@ -281,7 +281,7 @@ class Table extends PureComponent {
         const { tableImage } = this.state;
 
         if (_.isString(tableImage)) {
-            styles["backgroundImage"] = `url(${tableImage})`;
+            styles['backgroundImage'] = `url(${tableImage})`;
         }
     }
 
@@ -290,7 +290,7 @@ class Table extends PureComponent {
         const { angle } = this.state;
         const styles = { transform: `rotate(${-angle}deg)` };
 
-        return (<span className="num" style={styles}>{number}</span>);
+        return (<span className='num' style={styles}>{number}</span>);
     }
 
     renderInfo() {
@@ -298,7 +298,7 @@ class Table extends PureComponent {
 
         if (!showInfo) return null;
 
-        return <div className="info">{info}</div>;
+        return <div className='info'>{info}</div>;
     }
 
     renderCirclePlaces(places, width, height) {
@@ -320,7 +320,7 @@ class Table extends PureComponent {
 
             result.push(
                 <div 
-                    className="place" 
+                    className='place' 
                     style={{ 
                         left: x, 
                         top: y, 
@@ -374,7 +374,6 @@ class Table extends PureComponent {
         let xd = Math.floor(width / (wc + 1));
         let yd = Math.floor(height / (hc + 1));
 
-        // eslint-disable-next-line
         let count = 0;
 
         if (width >= height) {
@@ -382,7 +381,7 @@ class Table extends PureComponent {
             count = this.generateSide(width, 0, 0, yd, 90, hc, count, places, result);
         } else {
             count = this.generateSide(width, 0, 0, yd, 90, hc, count, places, result);
-            count = this.generateSide(0, height, xd, 0, 180, wc, count, places, result);
+            this.generateSide(0, height, xd, 0, 180, wc, count, places, result);
         }
 
         return result;
@@ -403,7 +402,7 @@ class Table extends PureComponent {
                 result.push(
                     <div 
                         key={`place_${index}_${count}`} 
-                        className="place" 
+                        className='place' 
                         style={{ 
                             left: x, 
                             top: y, 

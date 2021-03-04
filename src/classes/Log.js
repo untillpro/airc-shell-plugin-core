@@ -4,7 +4,9 @@
 
 import isProd from 'is-prod';
 
-export default (...args) => {
+const Log = (...args) => {
     if (isProd.isDevelopment()) 
         console.log(...args);
 };
+
+export default Log;

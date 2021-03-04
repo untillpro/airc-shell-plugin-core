@@ -38,7 +38,7 @@ const INITIAL_STATE = {
     columnsVisibility: {"ID": false, "id": false, "Id": false}
 };
 
-export default (state = INITIAL_STATE, action) => {
+const reducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case LIST_DATA_FETCH_SUCCEEDED: 
             let newState = mergeExisting(state, action.payload);
@@ -116,3 +116,5 @@ export default (state = INITIAL_STATE, action) => {
     }
 
 }
+
+export default reducer;

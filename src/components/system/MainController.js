@@ -12,8 +12,7 @@ import RootRenderer from './RootRenderer';
 import ViewRenderer from './ViewRenderer';
 import EntityRenderer from './EntityRenderer';
 import EntityEditor from './EntityEditor';
-
-import ReportView from '../report/ReportView';
+import ReportView from './ReportView';
 
 import log from '../../classes/Log';
 import { toggleLocationSelector } from '../../actions/';

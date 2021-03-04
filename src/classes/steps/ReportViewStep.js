@@ -5,20 +5,17 @@
 import _ from 'lodash';
 import StateMachineStep from '../StateMachineStep';
 
-import { isValidReport, isValidLocations, prepareReportFilter } from '../helpers';
-import { 
-    TYPE_REPORTS, 
-    C_REPORT_REQUIRED_CLASSIFIERS,
-    C_REPORT_EVENT_TYPE 
-} from '../contributions/Types';
+import { isValidReport } from '../helpers';
+import { MessageNotify } from '../messages';
 
-import { MessageNotify } from '../messages'; 
+import { 
+    SAGA_FETCH_REPORT
+} from '../../sagas/Types';
 
 class ReportViewStep extends StateMachineStep {
     constructor(...args) {
         super(args);
 
-        this.locations = [];
         this.reportType = null;
         this.fromDateTime = null;
         this.toDateTime = null;
@@ -30,18 +27,14 @@ class ReportViewStep extends StateMachineStep {
         return 'ReportViewStep';
     }
 
-    async MessageInit(msg, context) {
-        const { report, locations, filterBy, props, from, to } = msg;
+    MessageInit(msg, context) {
+        console.log("+++ ReportViewStep.MessageInit", msg);
+        const { report, filterBy, props, from, to } = msg;
 
         if (!isValidReport(context, report)) {
             this.error(this.getName() + '.MessageInit() exception: report not specified or wrong given: ' + report);
         }
 
-        if (!isValidLocations(locations)) {
-            this.error(this.getName() + '.MessageInit() exception: locations not specified or wrong given: ' + locations.toString())
-        }
-
-        this.locations = locations;
         this.reportType = report;
 
         if (filterBy && _.isPlainObject(filterBy)) {
@@ -64,15 +57,10 @@ class ReportViewStep extends StateMachineStep {
             this.toDateTime = to;
         }
 
-        return {
-            changedData: {
-                fetchingData: true,
-                reportData: null
-            }
-        };
+        return this.fetchReportData();
     }
 
-    async MessageGenerateReport(msg, context) {
+    MessageGenerateReport(msg, context) {
         //const { contributions } = context;
         const { report, filterBy, props, from, to } = msg;
 
@@ -95,62 +83,26 @@ class ReportViewStep extends StateMachineStep {
             this.toDateTime = to;
         }
 
-        //const { fromDateTime, toDateTime } = this;
-
-        const Data = await this.fetchReportData(context);
-        
-        return {
-            changedData: {
-                reportData: Data || {}, 
-                fetchingData: false
-            }
-        };
+        return this.fetchReportData();
     }
 
-    async MessageDateFilterChanged(msg, context) {
+    MessageDateFilterChanged(msg, context) {
         // TODO 
     }
 
-    async fetchReportData(context) {
-        const { locations } = this;
-        const { contributions, api } = context;
-
-        const { 
-            reportType: type, 
-            fromDateTime: from, 
-            toDateTime: to, 
-            filterBy,
-        } = this;
-
-        let event_type = contributions.getPointContributionValues(TYPE_REPORTS, type, C_REPORT_EVENT_TYPE);
-
-        const props = { 
-            type: event_type, 
-            from, 
-            to, 
-            show: true,
-            from_offset: 0, // mock
-            to_offset: 1000000,// mock
-            required_classifiers: contributions.getPointContributionValues(TYPE_REPORTS, type, C_REPORT_REQUIRED_CLASSIFIERS)
-        };
-
-        if (filterBy && _.isPlainObject(filterBy)) {
-            const filterProps = prepareReportFilter(context, type, filterBy);
-
-            if (filterProps && _.size(filterProps) > 0) {
-                props["filterBy"] = filterProps;
+    fetchReportData(context) {
+        return {
+            action: {
+                type: SAGA_FETCH_REPORT,
+                payload: {
+                    report: this.reportType,
+                    from: this.fromDateTime,
+                    to: this.toDateTime,
+                    filterBy: this.filterBy || {},
+                    props: this.props || {}
+                }
             }
-        }
-
-        return api.log(locations, props)
-            .then((res) => { 
-                // mock result due to absent of ../report/ function        // TODO remove in isProduction
-                const mockResult = this._mock(locations, res);
-                // dont forget to remove this after real ../report/ func become available
-
-                return mockResult;
-            })
-            .catch((err) => this.error(err.toString()));
+        };
     }
 
     MessageCancel() {
@@ -158,29 +110,6 @@ class ReportViewStep extends StateMachineStep {
             pop: true,
             message: new MessageNotify()
         };
-    }
-
-    _mock(locations, Data) {
-        const { classifiers = {}, events = {} } = Data;
-        const result = {};
-
-        console.log("_mock data: ", Data);
-
-        if (locations && _.isArray(locations)) {
-            _.forEach(locations, (loc) => {
-                result[loc] = {
-                    events,
-                    classifiers: classifiers[loc] || {}
-                }
-            })
-        } else if (locations && _.isNumber(locations)) {
-            result[locations] = {
-                events,
-                classifiers: classifiers[locations] || {}
-            }
-        }
-
-        return result;
     }
 }
 

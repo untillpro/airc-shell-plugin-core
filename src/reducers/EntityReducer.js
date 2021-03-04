@@ -19,7 +19,7 @@ const INITIAL_STATE = {
     loading: false,
 };
 
-export default (state = INITIAL_STATE, action) => {
+const reducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case FLUSH_ENTITY_DATA: 
             return INITIAL_STATE;
@@ -38,3 +38,5 @@ export default (state = INITIAL_STATE, action) => {
     }
 
 }
+
+export default reducer;

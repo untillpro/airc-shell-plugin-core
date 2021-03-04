@@ -17,6 +17,7 @@ import {
 
 import 'moment/locale/nl';
 import 'moment/locale/nl-be';
+import 'moment/locale/ru';
 
 const DEFAULT_LANG = 'en';
 const DEFAULT_LANG_CODE = '0000';
@@ -73,7 +74,7 @@ class LangProvider extends PureComponent {
             }, (err, t) => {
                 if(!err) {
                     this._initEntitiesI18n()
-                    moment.locale(lng);
+                    //moment.locale(lng);
                     this.props.initContextLang(lng, code);
 
                     this.setState({ init: true });

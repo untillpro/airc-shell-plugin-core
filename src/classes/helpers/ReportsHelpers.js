@@ -192,3 +192,24 @@ export const getBokkpAccaunt = (item) => {
 
     return "";
 };
+
+export const prepareReportData = (locations, Data) => {
+    const { classifiers = {}, events = {} } = Data;
+    const result = {};
+
+    if (locations && _.isArray(locations)) {
+        _.forEach(locations, (loc) => {
+            result[loc] = {
+                events,
+                classifiers: classifiers[loc] || {}
+            }
+        })
+    } else if (locations && _.isNumber(locations)) {
+        result[locations] = {
+            events,
+            classifiers: classifiers[locations] || {}
+        }
+    }
+
+    return result;
+}

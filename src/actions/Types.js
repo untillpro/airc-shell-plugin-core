@@ -71,6 +71,8 @@ export const SELECT_REPORT_TYPE_MESSAGE = "select_report_type_message";
 export const SEND_DO_GENERATE_REPORT_MESSAGE = "do_generate_report_message";
 export const SELECT_DATETIME_FILTER_PERIOD = "select_datetime_filter_period";
 export const SET_REPORTS_DATETIME_FILTER = "set_reports_datetime_filter"; 
+export const SET_REPORT_DATA_FETCHING = "set_report_data_fetching"; 
+export const REPORT_DATA_FETCHING_SUCCESS = "report_data_fetching_success"; 
 
 /* CONTEXT ACTIONS */
 
