@@ -40,21 +40,29 @@ const INITIAL_STATE = {
 const reducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case INIT_PLUGIN:
+            console.log("case INIT_PLUGIN: ", action);
+            console.log("case INIT_PLUGIN old state: ", state);
+            
             const { options } = action.payload;
 
             if (options) {
                 const { currentLanguage, defaultLanguage } = options;
                 const newState = { ...state };
 
-                if (_.isPlainObject(currentLanguage) && currentLanguage.code) {
-                    newState.langCode = currentLanguage.code;
-                    newState.currentLanguage = currentLanguage.locale;
+                if (_.isPlainObject(currentLanguage) && currentLanguage.hex) {
+                    let clang = lc.langByHex(currentLanguage.hex);
+
+                    newState.langCode = clang.hex();
+                    newState.currentLanguage = clang.lex();
                 }
 
-                if (_.isPlainObject(defaultLanguage) && defaultLanguage.code) {
-                    newState.defaultLangCode = defaultLanguage.code;
-                    newState.defaultLanguage = defaultLanguage.locale;
+                if (_.isPlainObject(defaultLanguage) && defaultLanguage.hex) {
+                    let dlang = lc.langByHex(defaultLanguage.hex);
+                    newState.defaultLangCode = dlang.hex();
+                    newState.defaultLanguage = dlang.lex();
                 }
+
+                console.log("case INIT_PLUGIN new state: ", newState);
 
                 return newState;
             }

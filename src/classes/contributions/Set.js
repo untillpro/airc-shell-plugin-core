@@ -7,9 +7,6 @@ import _ from 'lodash';
 class ContributionSet {
     constructor(name, data) {
         if (!name) throw new Error('ContributionSet should have name');
-
-        console.log(`creatin set ${name} with data:`, data);
-
         this.name = name;
 
         if (_.isPlainObject(data)) {
