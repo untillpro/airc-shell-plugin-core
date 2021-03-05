@@ -46,6 +46,7 @@ import {
     SET_REPORT_DATA_FETCHING,
     ENTITY_LIST_SET_SHOW_DELETED,
     REPORT_DATA_FETCHING_SUCCESS,
+    SEND_LANGUAGE_CHANGED_MESSAGE,
 } from '../actions/Types';
 
 import {
@@ -257,6 +258,10 @@ function* _setPluginLanguage(action) {
                 yield call(i18next.changeLanguage.bind(i18next), lex);
                 yield put({
                     type: SET_PLUGIN_LANGUAGE,
+                    payload: langCode
+                });
+                yield put({ 
+                    type: SEND_LANGUAGE_CHANGED_MESSAGE, 
                     payload: langCode
                 });
             } else {
