@@ -49,7 +49,6 @@ class SelectLanguageForm extends PureComponent {
     }
 
     handleChange(value) {
-        console.log("lang selected: ", value);
         this.setState({ value })
     }
 

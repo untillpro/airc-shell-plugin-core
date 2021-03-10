@@ -20,10 +20,7 @@ import {
 class EntityRenderer extends Component {
     render() {
         const { contributions, entity } = this.props;
-
         const entityType = contributions.getPointContributionValue(TYPE_ENTITIES, entity, C_ENTITY_TYPE);
-
-        console.log("Entity type: ", entityType);
 
         try {
             switch (entityType) {

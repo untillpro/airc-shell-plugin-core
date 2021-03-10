@@ -14,7 +14,7 @@ import rootSaga from './sagas/Root'
 const persistConfigDefauult = {
     key: 'plugin',
     storage,
-    blacklist: ['plugin', 'list', 'machine', 'context', 'collection', 'entity', 'report']
+    blacklist: ['plugin', 'list', 'machine', 'context', 'collection', 'entity', 'report', 'options']
 };
 
 const loggerMiddleware = createLogger()

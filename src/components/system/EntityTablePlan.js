@@ -40,9 +40,7 @@ class EntityTablePlan extends Component {
     componentDidMount() {
         const { data } = this.props;
 
-        const props = this._prepareProps(); 
-
-        this.setState({ data: this._buildData(data), props });
+        this.setState({ data: this._buildData(data) });
 
     }
 
@@ -57,9 +55,8 @@ class EntityTablePlan extends Component {
     }
 
     _prepareProps() {
-        const { entity } = this.props;
-
-        console.log("table props entity!!!", entity);
+        //TODO
+        return {};
     }
 
     _buildData(data) {

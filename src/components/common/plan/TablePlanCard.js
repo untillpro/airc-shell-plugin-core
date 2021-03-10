@@ -57,14 +57,12 @@ class TablePlanCard extends PureComponent {
 
         if (state === 1) {
             if (_.isFunction(onDelete)) {
-                console.log('Hiding table: ', this.props.id);
                 onDelete(_entry);
             } else {
                 throw new Error('onDelete callback not specified');
             }
         } else {
             if (_.isFunction(onReduce)) {
-                console.log('Showing table: ', this.props.id);
                 onReduce(_entry);
             } else {
                 throw new Error('onReduce callback not specified');
@@ -144,8 +142,6 @@ class TablePlanCard extends PureComponent {
         if (!_.isPlainObject(this.props.data) || _.isEmpty(this.props.data)) {
             console.error('No data was passed to TablePlanCard component')
         }
-
-        console.log("TablePlanCard.render(): ", this.props.data);
 
         const { state } = this.props.data;
 

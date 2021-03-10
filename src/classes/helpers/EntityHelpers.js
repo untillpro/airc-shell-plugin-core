@@ -26,7 +26,6 @@ import {
 
 
 export const checkResponse = (response) => {
-    console.log("checkResponse: ", response);
     if (_.isPlainObject(response)) {
         const { status, errorDescription, error} = response;
 
@@ -57,7 +56,6 @@ export const isEmbeddedType = (type) => {
 };
 
 export const getCollection = async (context, ops, applyMl = true) => {
-    console.log('getCollection: ', context, ops);
     const { resource, wsid, props } = ops;
     const { api } = context;
 

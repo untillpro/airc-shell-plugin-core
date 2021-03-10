@@ -35,8 +35,6 @@ class RListTable extends Component {
     buildData() {
         const { data, contributions, report, reportProps } = this.props;
 
-        console.log("Building report table data: ", data);
-
         let reportData = null;
         let generator = null;
 

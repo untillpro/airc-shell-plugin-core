@@ -163,7 +163,6 @@ class ListTable extends PureComponent {
             props.index = _.get(d.value, [ "_index" ]);
 
             if (type === "price" && _.isString(currency_accessor)) {
-                //console.log('trololo: ', d.value, currency_accessor);
                 props.currency = _.get(d.value, [ currency_accessor ]);
             }
         } else {
@@ -172,7 +171,6 @@ class ListTable extends PureComponent {
             props.index = null;
 
             if (type === "price" && _.isString(currency_accessor)) {
-                //console.log('trololo: ', d.original, currency_accessor);
                 props.currency = _.get(d.original, [ currency_accessor ]);
             }
         }

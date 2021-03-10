@@ -34,15 +34,12 @@ const INITIAL_STATE = {
         symbol: "€"
     },
     currency: null,
-    availableLanguages: ["0000", "0406", "0413", "040C", "0407", "0419"]
+    systemLanguages: ["0000", "0406", "0413", "040C", "0407", "0419"]
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case INIT_PLUGIN:
-            console.log("case INIT_PLUGIN: ", action);
-            console.log("case INIT_PLUGIN old state: ", state);
-            
             const { options } = action.payload;
 
             if (options) {
@@ -61,8 +58,6 @@ const reducer = (state = INITIAL_STATE, action) => {
                     newState.defaultLangCode = dlang.hex();
                     newState.defaultLanguage = dlang.lex();
                 }
-
-                console.log("case INIT_PLUGIN new state: ", newState);
 
                 return newState;
             }
@@ -94,7 +89,7 @@ const reducer = (state = INITIAL_STATE, action) => {
 
             return {
                 ...state,
-                availableLanguages: _.uniq([...state.availableLanguages, action.payload])
+                systemLanguages: _.uniq([...state.systemLanguages, action.payload])
             };
 
         default: return state;

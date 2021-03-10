@@ -114,7 +114,6 @@ class EmbeddedManagerField extends PureComponent {
 
     actionEdit(rowIndex = null) {
         const { selectedRows, data } = this.state;
-        console.log("actionEdit");
         let index = parseInt(rowIndex);
         
         if (_.isNaN(index) && selectedRows && selectedRows.length > 0) {

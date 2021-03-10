@@ -66,8 +66,6 @@ class TableAreaImageSelect extends PureComponent {
 
             message.error(`${errMessage}`);
         }
-
-        console.log("info: ", info);
     }
 
     customRequest(option) {

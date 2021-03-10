@@ -62,9 +62,7 @@ class Table extends PureComponent {
 
         if (_.isString(table_type)) {
             res.tableImage = contributions.getSetValue('table', table_type);
-        } 
-
-        console.log('render table', res);
+        }
 
         this.setState(res);
     }

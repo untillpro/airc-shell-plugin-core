@@ -34,15 +34,10 @@ class LangProvider extends PureComponent {
         };
     }
     componentDidMount() {
-        const { currentLanguage } = this.props;
-
-        console.log("+++++++++++ LangProvider did mount:", currentLanguage);
         this.init();
     }
 
     componentDidUpdate(oldProps) {
-        console.log("LangProvider did update: ", this.props, oldProps);
-
         if (this.props.langCode !== oldProps.langCode) {
             this.props.setLanguage(this.props.langCode);
         }
@@ -69,8 +64,6 @@ class LangProvider extends PureComponent {
 
         let lang = lc.langByHex(hex);
 
-        console.log("LangProvider init: ", hex, lang);
-
         if (lang) {
             lng = lang.lex();
             locale = lang.locale();
@@ -78,8 +71,6 @@ class LangProvider extends PureComponent {
             lng = DEFAULT_LANG;
             locale = DEFAULT_LOCALE;
         }
-
-        console.log(lng, locale); 
 
         if (languages && _.size(languages) > 0) {
             i18next.init({
