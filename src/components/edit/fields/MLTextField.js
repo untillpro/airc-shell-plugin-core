@@ -42,6 +42,15 @@ class MLTextField extends Component {
         this.langFormOnCancel = this.langFormOnCancel.bind(this);
     }
 
+    componentDidMount() {
+        const { data, field } = this.props;
+        const { ml_accessor } = field;
+
+        let ml_base64Str = _.get(data, ml_accessor);
+
+        this.setState({ mlData: ml_base64Str || '' });
+    }
+
     componentDidUpdate(oldProps) {
         const { data, field } = this.props;
         const { ml_accessor } = field;
