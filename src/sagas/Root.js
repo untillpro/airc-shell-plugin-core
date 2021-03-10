@@ -155,7 +155,7 @@ function* _fetchEntityData(action) {
                 show_deleted: true
             };
 
-            const result = yield call(getCollection, context, { resource, wsid, props: doProps }, false);
+            const result = yield call(getCollection, context, { resource, wsid, props: doProps }, true);
 
             Logger.log(result, 'SAGA.fetchEntityData() fetched data:', "rootSaga.fetchEntityData");
 
