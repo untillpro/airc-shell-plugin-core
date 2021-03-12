@@ -197,9 +197,11 @@ export const processClassifier = (item, classifiers = {}, entity, wsid, maxLevel
                 let foreignEntity = ForeignKeys[entity][key];
 
                 if (_.isNumber(value) && classifiers[foreignEntity] && classifiers[foreignEntity][value]) {
-                    item[key] = classifiers[foreignEntity][value];
+                    item[key] = { ...classifiers[foreignEntity][value] };
 
                     processClassifier(item[key], classifiers, foreignEntity, wsid, maxLevel, level + 1);
+                } else if (_.isPlainObject(value)) {
+                    item[key] = { ...value };
                 } else {
                     item[key] = value;
                 }
