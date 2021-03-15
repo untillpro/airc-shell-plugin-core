@@ -16,6 +16,8 @@ class TableAreaImageSelect extends PureComponent {
 
         this.handleChange = this.handleChange.bind(this);
         this.customRequest = this.customRequest.bind(this);
+
+        this.state = { fileList: [] };
     }
 
     _getError(option, xhr) {
@@ -65,6 +67,11 @@ class TableAreaImageSelect extends PureComponent {
             }
 
             message.error(`${errMessage}`);
+        } else {
+            let fileList = [...info.fileList];
+            fileList = fileList.slice(-1);
+
+            this.setState({ fileList });
         }
     }
 
@@ -157,7 +164,7 @@ class TableAreaImageSelect extends PureComponent {
             customRequest: this.customRequest,
             name: 'file',
             multiple: false,
-            fileList: [],
+            fileList: this.state.fileList,
         };
 
         return (<div className="table-area-image-selector">
