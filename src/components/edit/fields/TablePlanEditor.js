@@ -80,39 +80,8 @@ class TablePlanEditor extends PureComponent {
     }
 
     componentDidUpdate(oldProps) {
-        const { data, field } = this.props;
-        const { width_accessor, height_accessor, image_accessor } = field;
-
-        const newState = {};
-
-        let width, height, image;
-
-        if (_.isString(width_accessor)) {
-            width = data[width_accessor];
-        }
-
-        if (_.isString(height_accessor)) {
-            height = data[height_accessor];
-        }
-
-        if (_.isString(image_accessor)) {
-            image = data[image_accessor];
-        }
-
-        if (image && image !== this.state.image) {
-            newState.image = image;
-        }
-
-        if (width && width !== this.state.width) {
-            newState.width = width;
-        }
-
-        if (height && height !== this.state.height) {
-            newState.height = height;
-        }
-
-        if (_.size(newState) > 0) {
-            this.setState(newState);
+        if (this.props.data !== oldProps.data) {
+            this._initData();
         }
     }
 

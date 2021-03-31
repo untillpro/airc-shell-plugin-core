@@ -54,7 +54,6 @@ class EntityEditStep extends StateMachineStep {
     }
 
     MessageInit(msg, context) {
-        const { contributions } = context;
         const { entries, copy, entity, locations } = msg;
 
         if (!isValidEntity(context, entity)) {
@@ -70,19 +69,9 @@ class EntityEditStep extends StateMachineStep {
         this.entity = entity;
         this.locations = locations;
         this.entries = entries;
+        this.copy = !!copy;
 
-        let resource = contributions.getPointContributionValue(TYPE_COLLECTION, entity, C_COLLECTION_ENTITY) || entity;
-
-        return {
-            action: {
-                type: SAGA_FETCH_ENTITY_DATA,
-                payload: {
-                    resource,
-                    isCopy: !!copy,
-                    entries
-                }
-            }
-        };
+        return this.fetchData(context);
     }
 
     MessageNeedEdit(msg) {
@@ -143,8 +132,28 @@ class EntityEditStep extends StateMachineStep {
         };
     }
 
+    MessageLanguageChanged(msg, context) {
+        return this.fetchData(context);
+    }
+
     MessageValidate(msg, context) {
         return null;
+    }
+
+    fetchData(context) {
+        const { contributions } = context;
+        let resource = contributions.getPointContributionValue(TYPE_COLLECTION, this.entity, C_COLLECTION_ENTITY) || this.entity;
+
+        return {
+            action: {
+                type: SAGA_FETCH_ENTITY_DATA,
+                payload: {
+                    resource,
+                    isCopy: this.copy,
+                    entries: this.entries
+                }
+            }
+        };
     }
 
     detouch() {

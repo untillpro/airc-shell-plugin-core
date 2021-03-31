@@ -115,8 +115,6 @@ class TablePlanRow extends PureComponent {
             console.error('No data was passed to TablePlanRow component')
         }
 
-        console.log("TablePlanRow.render(): ", this.props.data);
-
         const { hide } = this.props.data;
 
         return (

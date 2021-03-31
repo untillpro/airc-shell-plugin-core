@@ -6,19 +6,22 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import lc from 'langcode-info';
 import moment from 'moment';
 import i18next from 'i18next';
 
 import { 
     initContextLang, 
-    sendLanguageChanged 
+    sendLanguageChanged,
+    setLanguage
 } from '../../actions';
 
 import 'moment/locale/nl';
 import 'moment/locale/nl-be';
+import 'moment/locale/ru';
 
-const DEFAULT_LANG = 'en';
+const DEFAULT_LOCALE = 'en';
+const DEFAULT_LANG = 'enEN';
 const DEFAULT_LANG_CODE = '0000';
 const DEFAULT_NS = 'translation';
 
@@ -35,8 +38,8 @@ class LangProvider extends PureComponent {
     }
 
     componentDidUpdate(oldProps) {
-        if (this.props.currentLanguage !== oldProps.currentLanguage) {
-            this.props.sendLanguageChanged(this.props.currentLanguage);
+        if (this.props.langCode !== oldProps.langCode) {
+            this.props.setLanguage(this.props.langCode);
         }
     }
 
@@ -49,15 +52,24 @@ class LangProvider extends PureComponent {
             defaultLangCode
         } = this.props;
 
-        let lng = DEFAULT_LANG;
-        let code = DEFAULT_LANG_CODE;
+        let hex = DEFAULT_LANG_CODE;
+        let lng = null;
+        let locale = null;
 
         if (currentLanguage && _.isString(currentLanguage)) {
-            lng = currentLanguage;
-            code = langCode; 
+            hex = langCode; 
         } else if (defaultLanguage && _.isString(defaultLanguage)) {
-            lng = defaultLanguage;
-            code = defaultLangCode;
+            hex = defaultLangCode;
+        }
+
+        let lang = lc.langByHex(hex);
+
+        if (lang) {
+            lng = lang.lex();
+            locale = lang.locale();
+        } else {
+            lng = DEFAULT_LANG;
+            locale = DEFAULT_LOCALE;
         }
 
         if (languages && _.size(languages) > 0) {
@@ -73,8 +85,8 @@ class LangProvider extends PureComponent {
             }, (err, t) => {
                 if(!err) {
                     this._initEntitiesI18n()
-                    moment.locale(lng);
-                    this.props.initContextLang(lng, code);
+                    moment.locale(locale);
+                    this.props.initContextLang(lng, hex);
 
                     this.setState({ init: true });
                 } else {
@@ -83,7 +95,7 @@ class LangProvider extends PureComponent {
                 }
             });
         } else {
-            moment.locale(DEFAULT_LANG);
+            moment.locale(DEFAULT_LOCALE);
         }
     }
 
@@ -148,6 +160,7 @@ LangProvider.propTypes = {
 
 export default connect(mapStateToProps, { 
     initContextLang,
-    sendLanguageChanged 
+    sendLanguageChanged,
+    setLanguage
 })(LangProvider);
 

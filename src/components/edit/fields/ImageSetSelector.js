@@ -40,9 +40,7 @@ class ImageSetSelector extends PureComponent {
             images.map().forEach((v, k) => {
                 res[k] = v;
             });
-
-            console.log(res);
-
+            
             this.setState({ set: res, value })
         } else {
             throw new Error(` field "${accessor}" should has "set" property specified.`)

@@ -5,10 +5,10 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import RListHeader from './RListHeader';
-import RListTable from './RListTable';
+import RListHeader from '../report/RListHeader';
+import RListTable from '../report/RListTable';
 
-import { HeaderBackButton } from '../common/';
+import { HeaderBackButton } from '../common';
 
 //import { Search } from 'airc-shell-core';
 
@@ -131,8 +131,7 @@ class ReportView extends Component {
 }
 
 const mapStateToProps = (state) => {
-    const { fetchingData: loading } = state.plugin;
-    const { reportType: report, reportData: data, props: reportProps } = state.reports;
+    const { loading, reportType: report, reportData: data, props: reportProps } = state.reports;
     const { contributions } = state.context;
 
     return {

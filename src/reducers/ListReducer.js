@@ -12,7 +12,7 @@ import {
     SET_COLLECTION_LOADING,
     FLUSH_LIST_DATA,
 
-    ENTITY_LIST_SET_SHOW_DELTED,
+    ENTITY_LIST_SET_SHOW_DELETED,
     ENTITY_LIST_SET_PAGE,
     ENTITY_LIST_SET_PAGE_SIZE,
     ENTITY_LIST_SET_FILTER,
@@ -38,7 +38,7 @@ const INITIAL_STATE = {
     columnsVisibility: {"ID": false, "id": false, "Id": false}
 };
 
-export default (state = INITIAL_STATE, action) => {
+const reducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case LIST_DATA_FETCH_SUCCEEDED: 
             let newState = mergeExisting(state, action.payload);
@@ -97,7 +97,7 @@ export default (state = INITIAL_STATE, action) => {
                 classifiers: null,
             };
 
-        case ENTITY_LIST_SET_SHOW_DELTED: 
+        case ENTITY_LIST_SET_SHOW_DELETED: 
             return { ...state, showDeleted: action.payload };
 
         case ENTITY_LIST_SET_PAGE: 
@@ -116,3 +116,5 @@ export default (state = INITIAL_STATE, action) => {
     }
 
 }
+
+export default reducer;

@@ -42,6 +42,15 @@ class MLTextField extends Component {
         this.langFormOnCancel = this.langFormOnCancel.bind(this);
     }
 
+    componentDidMount() {
+        const { data, field } = this.props;
+        const { ml_accessor } = field;
+
+        let ml_base64Str = _.get(data, ml_accessor);
+
+        this.setState({ mlData: ml_base64Str || '' });
+    }
+
     componentDidUpdate(oldProps) {
         const { data, field } = this.props;
         const { ml_accessor } = field;
@@ -160,14 +169,14 @@ class MLTextField extends Component {
     }
 
     renderNewLang() {
-        const { availableLanguages } = this.props;
+        const { systemLanguages } = this.props;
         const { newLang } = this.state;
 
         if (newLang) {
             return (
                 <Form.Item {...tailLayout}>
                     <SelectLanguageForm 
-                        languages={availableLanguages} 
+                        languages={systemLanguages} 
                         onChange={this.langFormOnChange}
                         onCancel={this.langFormOnCancel}
                     />
@@ -199,7 +208,7 @@ class MLTextField extends Component {
     }
 
     renderML() {
-        const { availableLanguages } = this.props;
+        const { systemLanguages } = this.props;
         const { opened } = this.state;
 
         if (opened !== true) return null;
@@ -224,7 +233,7 @@ class MLTextField extends Component {
                         initialValues={initialValues}
                     >
                         {
-                            _.map(availableLanguages, (l) => {
+                            _.map(systemLanguages, (l) => {
                                 const lang = LANGUAGES[l];
 
                                 if (_.isPlainObject(lang)) {
@@ -280,10 +289,10 @@ class MLTextField extends Component {
 }
 
 const mapStateToProps = (state) => {
-    const { availableLanguages, langCode, defaultLangCode } = state.options;
-
+    const { systemLanguages, langCode, defaultLangCode } = state.options;
+    
     return {
-        availableLanguages,
+        systemLanguages,
         lang: langCode,
         defaultLang: defaultLangCode
     };

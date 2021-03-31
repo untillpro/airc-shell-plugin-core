@@ -16,6 +16,8 @@ import {
     buildRequestEntires,
     checkForEmbededTypes,
     prepareCopyData,
+    prepareReportFilter,
+    prepareReportData
 } from '../classes/helpers';
 
 import * as Selectors from './Selectors';
@@ -23,9 +25,12 @@ import * as Selectors from './Selectors';
 import {
     TYPE_LIST,
     TYPE_COLLECTION,
+    TYPE_REPORTS,
     C_COLLECTION_REQUIRED_FIELDS,
     C_COLLECTION_REQUIRED_CLASSIFIERS,
-    C_COLLECTION_ENTITY
+    C_COLLECTION_ENTITY,
+    C_REPORT_EVENT_TYPE,
+    C_REPORT_REQUIRED_CLASSIFIERS
 } from '../classes/contributions/Types';
 
 import {
@@ -38,7 +43,10 @@ import {
     ENTITY_DATA_FETCH_SUCCEEDED,
     SEND_CANCEL_MESSAGE,
     SET_PLUGIN_LANGUAGE,
-    SEND_DO_GENERATE_REPORT_MESSAGE,
+    SET_REPORT_DATA_FETCHING,
+    ENTITY_LIST_SET_SHOW_DELETED,
+    REPORT_DATA_FETCHING_SUCCESS,
+    SEND_LANGUAGE_CHANGED_MESSAGE,
 } from '../actions/Types';
 
 import {
@@ -48,6 +56,7 @@ import {
     SAGA_FETCH_ENTITY_DATA,
     SAGA_PROCESS_ENTITY_DATA,
     SAGA_SET_PLUGIN_LANGUAGE,
+    SAGA_SET_LIST_SHOW_DELETED,
 } from './Types';
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
@@ -146,7 +155,7 @@ function* _fetchEntityData(action) {
                 show_deleted: true
             };
 
-            const result = yield call(getCollection, context, { resource, wsid, props: doProps }, false);
+            const result = yield call(getCollection, context, { resource, wsid, props: doProps }, true);
 
             Logger.log(result, 'SAGA.fetchEntityData() fetched data:', "rootSaga.fetchEntityData");
 
@@ -195,24 +204,51 @@ function* _processEntityData(action) {
 //TODO - continue with REPORTS
 function* _fetchReport(action) {
     const locations = yield select(Selectors.locations);
+    const context = yield select(Selectors.context);
+    const { contributions, api } = context;
     const { report, from, to, filterBy, props } = action.payload;
 
-    yield put({
-        type: SEND_DO_GENERATE_REPORT_MESSAGE,
-        payload: {
-            locations: locations.locations,
-            report,
-            from, 
-            to, 
-            filterBy,
-            props,
+    let event_type = contributions.getPointContributionValues(TYPE_REPORTS, report, C_REPORT_EVENT_TYPE);
+
+    let doProps = {
+        type: event_type,
+        from,
+        to,
+        show: true,
+        from_offset: 0, // mock
+        to_offset: 1000000,// mock
+        required_classifiers: contributions.getPointContributionValues(TYPE_REPORTS, report, C_REPORT_REQUIRED_CLASSIFIERS)
+    };
+
+    if (_.isPlainObject(props)) {
+        doProps = { ...doProps, ...props };
+    }
+
+    if (filterBy && _.isPlainObject(filterBy)) {
+        const filterProps = prepareReportFilter(context, report, filterBy);
+
+        if (filterProps && _.size(filterProps) > 0) {
+            doProps["filterBy"] = filterProps;
         }
-    });
+    }
+
+    yield put({ type: SET_REPORT_DATA_FETCHING, payload: true });
+
+    try {
+        const result = yield call(api.log.bind(api), locations, doProps);
+        const mockResult = prepareReportData(locations, result);
+
+        yield put({ type: REPORT_DATA_FETCHING_SUCCESS, payload: mockResult });
+    } catch (e) {
+        yield put({ type: SET_REPORT_DATA_FETCHING, payload: false });
+        yield put({ type: SEND_ERROR_MESSAGE, payload: { text: e.message, description: e.message } });
+    }
+
 }
 
 function* _setPluginLanguage(action) {
     const langCode = action.payload;
-    console.log("_setPluginLanguage: ", action);
+
     if (_.isString(langCode)) {
         const lang = lc.langByHex(langCode);
         const lex = lang.lex();
@@ -222,6 +258,10 @@ function* _setPluginLanguage(action) {
                 yield call(i18next.changeLanguage.bind(i18next), lex);
                 yield put({
                     type: SET_PLUGIN_LANGUAGE,
+                    payload: langCode
+                });
+                yield put({ 
+                    type: SEND_LANGUAGE_CHANGED_MESSAGE, 
                     payload: langCode
                 });
             } else {
@@ -243,6 +283,24 @@ function* _setPluginLanguage(action) {
     }
 }
 
+function* _setListShowDeleted(action) {
+    const entity = yield select(Selectors.entity);
+    const contributions = yield select(Selectors.contributions);
+
+    const manual = !!contributions.getPointContributionValue(TYPE_LIST, entity, 'manual');
+
+    yield put({
+        type: ENTITY_LIST_SET_SHOW_DELETED,
+        payload: !!action.payload
+    });
+
+    if (manual) {
+        yield put({
+            type: SAGA_FETCH_LIST_DATA,
+            payload: entity
+        });
+    }
+}
 
 function* rootSaga() {
     yield takeLatest(SAGA_FETCH_LIST_DATA, _fetchListData);
@@ -251,6 +309,7 @@ function* rootSaga() {
     yield takeLatest(SAGA_FETCH_ENTITY_DATA, _fetchEntityData);
     yield takeLatest(SAGA_PROCESS_ENTITY_DATA, _processEntityData);
     yield takeLatest(SAGA_SET_PLUGIN_LANGUAGE, _setPluginLanguage);
+    yield takeLatest(SAGA_SET_LIST_SHOW_DELETED, _setListShowDeleted);
 }
 
 export default rootSaga;

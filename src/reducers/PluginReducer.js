@@ -9,13 +9,9 @@ const INITIAL_STATE = {
     view: null,
     entity: null,
     step: null,
-    entityData: null,
-    fetchingData: false,
-    isNew: false,
-    isCopy: false,
 };
 
-export default (state = INITIAL_STATE, action) => {
+const reducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case Types.SEND_STATE_MACHINE_DATA: 
             return mergeExisting(state, action.payload);
@@ -33,13 +29,9 @@ export default (state = INITIAL_STATE, action) => {
                 entity: action.payload
             };
 
-        case Types.SEND_DO_GENERATE_REPORT_MESSAGE:  
-            return {
-                ...state,
-                fetchingData: true
-            };
-
         default: 
             return state;
     }
 };
+
+export default reducer;

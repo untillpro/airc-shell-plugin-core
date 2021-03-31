@@ -3,10 +3,9 @@
  */
 
 import React from 'react';
-
 import { Tip } from 'airc-shell-core';
 
-export default (props) => {
+const TipField = (props) => {
     const { field } = props;
 
     if (!field) return null;
@@ -18,3 +17,5 @@ export default (props) => {
 
     return <Tip text={text} opened={opened} />;
 }
+
+export default TipField;

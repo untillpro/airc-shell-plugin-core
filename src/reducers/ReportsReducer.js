@@ -5,14 +5,13 @@ import _ from 'lodash';
 import moment from 'moment';
 
 import {
-    SEND_STATE_MACHINE_DATA,
     SELECT_REPORT_TYPE_MESSAGE,
     SELECT_DATETIME_FILTER_PERIOD,
     SET_REPORTS_DATETIME_FILTER,
-    SEND_DO_GENERATE_REPORT_MESSAGE
+    SEND_DO_GENERATE_REPORT_MESSAGE,
+    SET_REPORT_DATA_FETCHING,
+    REPORT_DATA_FETCHING_SUCCESS,
 } from '../actions/Types';
-
-import { mergeExisting } from '../classes/helpers';
 
 const whfrominit = moment("2000-01-01 05:00");
 const whtoinit = moment("2000-01-01 05:00");
@@ -28,14 +27,17 @@ const INITIAL_STATE = {
     mostUsedPeriods: {},
     cashedFilterBy: {},
     cashedProps: {},
-    reportData: []
+    reportData: [],
+    loading: false
 };
 
-export default (state = INITIAL_STATE, action) => {
+const reducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case SEND_STATE_MACHINE_DATA:
-            let t = mergeExisting(state, action.payload);
-            return t;
+        case SET_REPORT_DATA_FETCHING: 
+            return { ...state, loading: !!action.payload };
+            
+        case REPORT_DATA_FETCHING_SUCCESS: 
+            return { ...state, reportData: action.payload, loading: false };
 
         case SELECT_REPORT_TYPE_MESSAGE:
             if (action.payload && typeof action.payload === 'string') {
@@ -151,3 +153,5 @@ export default (state = INITIAL_STATE, action) => {
         default: return state;
     }
 }
+
+export default reducer;

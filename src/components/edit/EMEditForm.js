@@ -185,7 +185,7 @@ class EMEditForm extends Component {
     }
 
     performWithCheckChanges(toPerform) {
-        const { changedData } = this.props;
+        const { changedData } = this.state;
 
         if (_.size(changedData) > 0) {
             this.confirmFormClose(toPerform);
@@ -198,8 +198,8 @@ class EMEditForm extends Component {
         confirmAlert({
             customUI: ({ onClose }) => <ConfirmModal
                 onClose={onClose}
-                header={t("header", "form.confirm_modal")}
-                text={t("text", "form.confirm_modal")}
+                header={t("Confirm form close", "form.confirm_modal")}
+                text={t("Leaving this page will cause all unsaved changes to be lost", "form.confirm_modal")}
                 confirmText={t("Discard changes and leave", "form.confirm_modal")}
                 onConfirm={() => {
                     if (onConfirm && typeof onConfirm === 'function') {
@@ -208,7 +208,7 @@ class EMEditForm extends Component {
 
                     onClose();
                 }}
-                rejectText={t("reject_text", "form.confirm_modal")}
+                rejectText={t("Return to editing", "form.confirm_modal")}
                 onReject={onClose}
             />
         });
@@ -407,8 +407,7 @@ class EMEditForm extends Component {
 
     loadingOverlay() {
         const { loading } = this.props;
-        console.log("LOADING STATE IS: ", loading);
-
+        
         return <LoadingOverlay show={loading} text="Loading..."/>;
     }
 

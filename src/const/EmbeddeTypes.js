@@ -2,7 +2,9 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-export default [
+const EmbeddedTypes = [
     "embedded",
     "table_plan_editor"
 ];
+
+export default EmbeddedTypes;

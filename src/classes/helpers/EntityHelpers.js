@@ -26,7 +26,6 @@ import {
 
 
 export const checkResponse = (response) => {
-    console.log("checkResponse: ", response);
     if (_.isPlainObject(response)) {
         const { status, errorDescription, error} = response;
 
@@ -57,7 +56,6 @@ export const isEmbeddedType = (type) => {
 };
 
 export const getCollection = async (context, ops, applyMl = true) => {
-    console.log('getCollection: ', context, ops);
     const { resource, wsid, props } = ops;
     const { api } = context;
 
@@ -199,9 +197,11 @@ export const processClassifier = (item, classifiers = {}, entity, wsid, maxLevel
                 let foreignEntity = ForeignKeys[entity][key];
 
                 if (_.isNumber(value) && classifiers[foreignEntity] && classifiers[foreignEntity][value]) {
-                    item[key] = classifiers[foreignEntity][value];
+                    item[key] = { ...classifiers[foreignEntity][value] };
 
                     processClassifier(item[key], classifiers, foreignEntity, wsid, maxLevel, level + 1);
+                } else if (_.isPlainObject(value)) {
+                    item[key] = { ...value };
                 } else {
                     item[key] = value;
                 }

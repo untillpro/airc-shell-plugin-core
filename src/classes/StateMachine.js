@@ -89,13 +89,9 @@ export default class StateMachine {
 
         try {
             const res = blas[msg.getName()](msg, context);
-
-            console.log("processMessage result: ", res);
-
             if (res) {
                 
                 if (res.action && typeof res.action === 'object' && typeof this.dispatch === 'function') {
-                    console.log("action: ", res.action);
                     this.dispatch(res.action);
                 }
                 

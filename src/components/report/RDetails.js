@@ -25,7 +25,7 @@ class ReportDetails extends Component {
             reportFields: [],
             propsFields: [],
             fieldsErrors: [],
-            periods: {},
+            periods: [],
             maxMostUsed: 10,
             reportFilter: {},
             reportProps: {}
@@ -226,7 +226,6 @@ class ReportDetails extends Component {
     renderRenderReportParams() {
         const { locations } = this.props;
         const { propsFields, reportProps } = this.state;
-        // тут будут выводиться некие общие фильтры, возможно даже и не фильтры вовсе, а параметры, которые будут передаваться в функцию генерации
 
         if (propsFields && propsFields.length > 0) {
             return (
@@ -254,12 +253,33 @@ class ReportDetails extends Component {
         );
     }
 
+    renderDebugInfo() {
+        const { debug, fromDateTime, toDateTime, workingHoursFrom, workingHoursTo } = this.props;
+
+        if (debug !== true) return null;
+
+        console.group('renderDateTimeFilter');
+        console.log('fromDateTime: ', fromDateTime);
+        console.log('toDateTime: ', toDateTime);
+        console.log('workingHoursFrom: ', workingHoursFrom);
+        console.log('workingHoursTo: ', workingHoursTo);
+        console.groupEnd('renderDateTimeFilter');
+
+        return <div className="page-section-content debug-section">
+            From date: {fromDateTime} <br />
+            To date: {toDateTime} <br />
+            WH from: {workingHoursFrom} <br />
+            WH to: {workingHoursTo} <br />
+        </div>;
+    }
+
     render() {
         return (
-            <div className="page-section-content ">
+            <div className="page-section-content">
                 {this.renderDateTimeFilter()}
                 {this.renderReportFilters()}
                 {this.renderRenderReportParams()}
+                {this.renderDebugInfo()}
                 {this.renderButtons()}
             </div>
         );

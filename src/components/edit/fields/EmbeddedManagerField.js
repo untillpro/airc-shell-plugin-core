@@ -114,7 +114,6 @@ class EmbeddedManagerField extends PureComponent {
 
     actionEdit(rowIndex = null) {
         const { selectedRows, data } = this.state;
-        console.log("actionEdit");
         let index = parseInt(rowIndex);
         
         if (_.isNaN(index) && selectedRows && selectedRows.length > 0) {
@@ -364,6 +363,7 @@ class EmbeddedManagerField extends PureComponent {
     }
 
     onEditFormProceed(index = null, newData) {
+        const { value } = this.props;
         const { data, dataLength } = this.state;
 
         const newState = {
@@ -386,7 +386,7 @@ class EmbeddedManagerField extends PureComponent {
 
         if (newData && _.size(newData) > 0) {
             if (!_.isNil(i) && i >= 0) {
-                resultData[i] = { id: data[i].id, ...newData };
+                resultData[i] = { id: value[i].id, ...newData };
             } else {
                 resultData[dataLength] = { ...newData };
             }

@@ -5,12 +5,10 @@
 import {
     SELECT_REPORT_TYPE_MESSAGE,
     SELECT_DATETIME_FILTER_PERIOD,
-    SET_REPORTS_DATETIME_FILTER
+    SET_REPORTS_DATETIME_FILTER,
+    SET_REPORT_DATA_FETCHING,
+    SEND_DO_GENERATE_REPORT_MESSAGE
 } from './Types';
-
-import {
-    SAGA_FETCH_REPORT
-} from '../sagas/Types';
 
 export const selectReportType = (code) => {
     return {
@@ -22,7 +20,7 @@ export const selectReportType = (code) => {
 //TODO - implment with saga
 export const sendDoGenerateReport = (report, from, to, filterBy, props) => {
     return {
-        type: SAGA_FETCH_REPORT,
+        type: SEND_DO_GENERATE_REPORT_MESSAGE,
         payload: { report, from, to, filterBy, props }
     };
 };
@@ -38,5 +36,12 @@ export const setDatetimeFilter = (values) => {
     return {
         type: SET_REPORTS_DATETIME_FILTER,
         payload: values
+    };
+}
+
+export const setReportDataFetching = (val) => {
+    return {
+        type: SET_REPORT_DATA_FETCHING,
+        payload: val
     };
 }

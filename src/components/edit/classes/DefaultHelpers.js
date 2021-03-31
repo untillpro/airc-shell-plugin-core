@@ -27,8 +27,10 @@ function value(prop, dflt = null) {
     return '';
 };
 
-export default {
+const DefaultHelpers = {
     condition,
     attribute,
     value
 };
+
+export default DefaultHelpers;

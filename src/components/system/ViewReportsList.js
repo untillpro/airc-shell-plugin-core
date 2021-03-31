@@ -176,6 +176,7 @@ class ViewReportsList extends Component {
         if (report) {
             return (
                 <ReportDetails 
+                    debug={false}
                     report={report} 
                     group={view}
                 />

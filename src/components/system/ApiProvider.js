@@ -65,16 +65,10 @@ class ApiProvider extends Component {
     }
 
     _init(payload) {
-        console.group("Init method in airc-shell-bo: ");
-        console.log("payload: ", payload);
-        console.groupEnd()
-
         this.props.initPlugin(payload);
     }
 
     _setLanguage(lang) {
-        console.log("Language selected in airc-shell-bo: ", lang);
-
         this.props.setLanguage(lang)
     }
 

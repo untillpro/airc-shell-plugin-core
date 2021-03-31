@@ -3,7 +3,7 @@
  */
 
 import React, { Component } from 'react';
-import PluginCore from "./PluginCore";
+import PluginCore from './PluginCore';
 
 class App extends Component {
     render() {

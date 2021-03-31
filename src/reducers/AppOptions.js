@@ -34,10 +34,10 @@ const INITIAL_STATE = {
         symbol: "€"
     },
     currency: null,
-    availableLanguages: ["0000", "0406", "0413", "040C", "0407", "0419"]
+    systemLanguages: ["0000", "0406", "0413", "040C", "0407", "0419"]
 };
 
-export default (state = INITIAL_STATE, action) => {
+const reducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case INIT_PLUGIN:
             const { options } = action.payload;
@@ -46,14 +46,17 @@ export default (state = INITIAL_STATE, action) => {
                 const { currentLanguage, defaultLanguage } = options;
                 const newState = { ...state };
 
-                if (_.isPlainObject(currentLanguage) && currentLanguage.code) {
-                    newState.langCode = currentLanguage.code;
-                    newState.currentLanguage = currentLanguage.locale;
+                if (_.isPlainObject(currentLanguage) && currentLanguage.hex) {
+                    let clang = lc.langByHex(currentLanguage.hex);
+
+                    newState.langCode = clang.hex();
+                    newState.currentLanguage = clang.lex();
                 }
 
-                if (_.isPlainObject(defaultLanguage) && defaultLanguage.code) {
-                    newState.defaultLangCode = defaultLanguage.code;
-                    newState.defaultLanguage = defaultLanguage.locale;
+                if (_.isPlainObject(defaultLanguage) && defaultLanguage.hex) {
+                    let dlang = lc.langByHex(defaultLanguage.hex);
+                    newState.defaultLangCode = dlang.hex();
+                    newState.defaultLanguage = dlang.lex();
                 }
 
                 return newState;
@@ -86,9 +89,11 @@ export default (state = INITIAL_STATE, action) => {
 
             return {
                 ...state,
-                availableLanguages: _.uniq([...state.availableLanguages, action.payload])
+                systemLanguages: _.uniq([...state.systemLanguages, action.payload])
             };
 
         default: return state;
     }
 };
+
+export default reducer;

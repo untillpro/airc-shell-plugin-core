@@ -8,7 +8,7 @@ import { translate as t, Empty } from 'airc-shell-core';
 import { connect } from 'react-redux';
 import { withStackEvents } from 'stack-events';
 import { Search } from 'airc-shell-core';
-import { HeaderBackButton, TablePlan } from '../common/';
+import { HeaderBackButton, TablePlan, LoadingOverlay } from '../common/';
 import { funcOrString } from '../../classes/helpers';
 import isEqual from 'react-fast-compare';
 
@@ -40,21 +40,14 @@ class EntityTablePlan extends Component {
     componentDidMount() {
         const { data } = this.props;
 
-        const props = this._prepareProps(); 
-
-        this.setState({ data: this._buildData(data), props });
+        this.setState({ data: this._buildData(data) });
 
     }
 
     componentDidUpdate(oldProps) {
         const { data } = this.props;
 
-        console.log("EntityTablePlan.componentDidUpdate()");
-
         if (!isEqual(oldProps.data, data)) {
-
-            console.log("Data is not equal! Building new data: ", oldProps.data, data);
-
             this.setState({
                 data: this._buildData(data)
             });
@@ -62,9 +55,8 @@ class EntityTablePlan extends Component {
     }
 
     _prepareProps() {
-        const { entity } = this.props;
-
-        console.log("table props entity!!!", entity);
+        //TODO
+        return {};
     }
 
     _buildData(data) {
@@ -88,28 +80,28 @@ class EntityTablePlan extends Component {
     }
 
     handleAddAction() {
-        const { locations } = this.props;
+        const { locations, entity } = this.props;
 
-        this.props.sendNeedEditFormMessage(null, locations);
+        this.props.sendNeedEditFormMessage(null, locations, entity);
     }
 
-    handleEditAction(entity) {
-        const { locations } = this.props;
+    handleEditAction(entry) {
+        const { locations, entity } = this.props;
         
-        if (_.isPlainObject(entity)) {
-            this.props.sendNeedEditFormMessage([entity], locations);
+        if (_.isPlainObject(entry)) {
+            this.props.sendNeedEditFormMessage([entry], locations, entity);
         }
     }
 
-    handleReduceAction(entity) {
-        if (_.isPlainObject(entity)) {
-            this.props.sendNeedReduceMessage([entity]);
+    handleReduceAction(entry) {
+        if (_.isPlainObject(entry)) {
+            this.props.sendNeedReduceMessage([entry]);
         }
     }
 
-    handleDeleteAction(entity) {
-        if (_.isPlainObject(entity)) {
-            this.props.sendNeedRemoveMessage([entity]);
+    handleDeleteAction(entry) {
+        if (_.isPlainObject(entry)) {
+            this.props.sendNeedRemoveMessage([entry]);
         }
     }
 
@@ -131,8 +123,6 @@ class EntityTablePlan extends Component {
         const { locations, locationsOptions, showDeleted } = this.props;
         const { data } = this.state;
 
-        console.log('EntityTablePlan.renderPlans(): ', data);
-
         if (_.isEmpty(locations)) {
             return <Empty description={t("No locations selected", "tableplan")} />;
         }
@@ -151,6 +141,12 @@ class EntityTablePlan extends Component {
                         onShowDeletedChanged={this.handleShowDeletedChanged}
                     />;
         });
+    }
+
+    renderLoading() {
+        const { loading } = this.props;
+        
+        return <LoadingOverlay show={loading} text="Loading..."/>;
     }
 
     render() {
@@ -173,7 +169,10 @@ class EntityTablePlan extends Component {
                     </div>
                 </div>
 
-                {this.renderPlans()}
+                <div className="_relative">
+                    {this.renderPlans()}
+                    {this.renderLoading()}
+                </div>
             </div>
         );
     }
@@ -181,17 +180,17 @@ class EntityTablePlan extends Component {
 
 const mapStateToProps = (state) => {
     const { contributions, api } = state.context;
-    const { list } = state.plugin;
     const { locations, locationsOptions } = state.locations;
-    const { initialData: data, showDeleted } = list;
+    const { data, loading, showDeleted } = state.list;
 
     return {
         api,
+        showDeleted,
+        loading,
         contributions,
-        data,
+        data: data,
         locations,
-        locationsOptions,
-        showDeleted
+        locationsOptions
     };
 };
 
