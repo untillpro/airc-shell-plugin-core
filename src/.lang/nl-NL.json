@@ -141,7 +141,7 @@
             "String length should be more than {{value}}": "",
             "max_length_wrong_value_error": "",
             "String length should be less than {{value}}": "",
-            "Unvalid regexp declared": "",
+            "Invalid regexp declared": "",
             "Not a valid value": "Geen geldige input",
             "views_not_specified": "Er is geen layout gespecificeerd voor deze plugin",
             "Selected layout not presented in available ticket layouts": "Geselecteerde layout is niet aanwezig in de beschikbare ticket layouts",

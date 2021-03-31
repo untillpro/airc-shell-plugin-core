@@ -155,7 +155,7 @@
             "String length should be more than {{value}}": "Длина строки должна быть больше чем {{value}}",
             "max_length_wrong_value_error": "Ошибка декларации: неверное значение максимальной длины",
             "String length should be less than {{value}}": "Длина строки должна быть меньше {{value}}",
-            "Unvalid regexp declared": "Ошибка декларации: объявлено недействительное регулярное выражение",
+            "Invalid regexp declared": "Ошибка декларации: объявлено недействительное регулярное выражение",
             "Not a valid value": "Недействительное значение",
             "views_not_specified": "Для этого плагина нет специальных представлений",
             "Selected layout not presented in available ticket layouts": "Выбранный макет не представлен в доступных макетах билетов",

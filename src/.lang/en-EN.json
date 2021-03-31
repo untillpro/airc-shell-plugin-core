@@ -155,7 +155,7 @@
             "String length should be more than {{value}}": "String length should be more than {{value}}",
             "max_length_wrong_value_error": "Incorect max length value declared",
             "String length should be less than {{value}}": "String length should be less than {{value}}",
-            "Unvalid regexp declared": "Unvalid regexp declared",
+            "Invalid regexp declared": "Invalid regexp declared",
             "Not a valid value": "Not a valid value",
             "views_not_specified": "There is no pcesified views for this plugin",
             "Selected layout not presented in available ticket layouts": "Selected layout not presented in available ticket layouts",
