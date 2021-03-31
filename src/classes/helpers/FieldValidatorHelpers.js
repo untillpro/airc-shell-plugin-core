@@ -30,7 +30,7 @@ class FieldValidator {
 
             if (req) this.validateRequired(value, errors);
 
-            if (value) {
+            if (!_.isNil(value)) {
                 if (type === 'number') this.validateNumber(value, errors);
                 if (type === 'email') this.validateEmail(value, errors);
                 if (!isNaN(Number(min))) this.validateMinValue(value, min, errors);
