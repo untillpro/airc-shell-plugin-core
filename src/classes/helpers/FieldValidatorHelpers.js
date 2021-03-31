@@ -35,8 +35,8 @@ class FieldValidator {
                 if (type === 'email') this.validateEmail(value, errors);
                 if (!isNaN(Number(min))) this.validateMinValue(value, min, errors);
                 if (!isNaN(Number(max))) this.validateMaxValue(value, max, errors);
-                if (Number(minLength) >= 0) this.validateMinLengthValue(minLength, value, errors);
-                if (Number(maxLength) >= 1) this.validateMaxLengthValue(maxLength, value, errors);
+                if (_.isNumber(minLength)) this.validateMinLengthValue(minLength, value, errors);
+                if (_.isNumber(maxLength)) this.validateMaxLengthValue(maxLength, value, errors);
                 if (regexp) this.validateRegexp(value, regexp, errors);
             }
         }
@@ -48,7 +48,7 @@ class FieldValidator {
         const minVal = Number(min);
         const curVal = Number(value);
 
-        if (!curVal) {
+        if (!_.isNumber(curVal)) {
             errors.push(t("Enter valid number", "errors"));
         } else if (curVal < minVal) {
             errors.push(t("Value should be more than {{value}}", "errors", { value: minVal}));
@@ -59,7 +59,7 @@ class FieldValidator {
         const maxVal = Number(max);
         const curVal = Number(value);
 
-        if (!curVal) {
+        if (!_.isNumber(curVal)) {
             errors.push(t("Enter valid number", "errors"));
         } else if (curVal > maxVal) {
             errors.push(t("Value should be less than {{value}}", "errors", { value: maxVal}));
@@ -86,7 +86,7 @@ class FieldValidator {
 
     validateNumber(value, errors) {
         const curVal = Number(value);
-        if (!curVal) {
+        if (!_.isNumber(curVal)) {
             errors.push(t("Value must be a number", "errors"));
         }
     }
@@ -104,8 +104,8 @@ class FieldValidator {
         const re = new RegExp(regexp);
         const curVal = String(value);
 
-        if (!re) {//
-            errors.push(t("Unvalid regexp declared", "errors"));
+        if (!re) {
+            errors.push(t("Invalid regexp declared", "errors"));
         } else if (!re.test(curVal)) {
             errors.push(t("Not a valid value", "errors"))
         }

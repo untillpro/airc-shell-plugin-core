@@ -18,7 +18,7 @@ const MIN_LENGTH_WRONG_VALUE_ERROR = 'Incorect min length value declared';
 const MIN_LENGTH_ERROR = 'String length should be more than {{value}}';
 const MAX_LENGTH_WRONG_VALUE_ERROR = 'Incorect max length value declared';
 const MAX_LENGTH_ERROR = 'String length should be less than {{value}}';
-const WRONG_REGEXP_ERROR = 'Unvalid regexp declared';
+const WRONG_REGEXP_ERROR = 'Invalid regexp declared';
 const NOT_VALID_VALUE_ERROR = 'Not a valid value';
 
 const validator = makeValidator()
