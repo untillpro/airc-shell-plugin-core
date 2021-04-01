@@ -31,7 +31,7 @@ export const contributionTranslate = (entity, code, section, options) => {
         path += `.${section}`;
     }
 
-    return t(code, path, options);;
+    return t(code, path, options);
 };
 
 //funcOrString
