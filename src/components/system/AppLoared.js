@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react';
 import { Spin } from 'airc-shell-core';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
+import { CSSTransition } from 'react-transition-group';
 
 class AppLoared extends Component {
     constructor() {
@@ -23,22 +23,21 @@ class AppLoared extends Component {
                 loaded: true
             });
         }, 1000);
-        
+
         return (
-            <ReactCSSTransitionGroup
-                transitionName="example"
-                transitionEnterTimeout={500}
-                transitionLeaveTimeout={500}>
-                    {!loaded ? (
-                        <div    
-                            key="appLoader"
-                            style={containerStyle}
-                        >
-                            <Spin />
-                        </div>
-                    ) : null}
-                    
-            </ReactCSSTransitionGroup>  
+            <CSSTransition
+                in={!loaded}
+                timeout={300}
+                classNames="example">
+                {!loaded ? (
+                    <div
+                        key="appLoader"
+                        style={containerStyle}
+                    >
+                        <Spin />
+                    </div>
+                ) : null}
+            </CSSTransition>
         );
     }
 }
