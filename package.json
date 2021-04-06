@@ -1,6 +1,6 @@
 {
   "name": "airc-shell-plugin-core",
-  "version": "0.4.7",
+  "version": "0.4.8",
   "private": true,
   "homepage": ".",
   "dependencies": {
@@ -47,5 +47,11 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/plugin-transform-react-jsx": "^7.12.17",
+    "@babel/preset-env": "^7.9.5",
+    "babel-eslint": "^10.0.1"
+  }
 }
