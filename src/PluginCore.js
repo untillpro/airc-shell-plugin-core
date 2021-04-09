@@ -46,7 +46,7 @@ class PluginCore extends Component {
                     loading={null}
                     persistor={persistor}
                 >
-                    <StackEvents events={["keydown"]}>
+                    <StackEvents events={["keydown", "keyup"]}>
                         <CoreProvider>
                             <ApiProvider>
                                 <StateMachineProvider>

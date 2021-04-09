@@ -66,11 +66,11 @@ class EMEditFormField extends Component {
         }
     }
 
-    handleChange(value, mlValue) {
+    handleChange(value) {
         const { field, onChange } = this.props;
 
         if (onChange && typeof onChange === 'function') {
-            onChange(field, value, mlValue)
+            onChange(field, value)
         }
     }
 

@@ -6,7 +6,7 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import { translate as t, Button, Empty } from 'airc-shell-core';
+import { translate as t, Button, Empty, Toggler } from 'airc-shell-core';
 
 import TableAreaListRow from './TableAreaListRow';
 
@@ -19,10 +19,12 @@ class TableAreaList extends PureComponent {
         super(props);
 
         this.state = {
-            closed: this._isClosed()
+            closed: this._isClosed(),
+            showHidden: false
         };
 
         this.handleListToggle = this.handleListToggle.bind(this);
+        this.handleHiddenChage = this.handleHiddenChage.bind(this);
     }
 
     _isClosed() {
@@ -34,6 +36,12 @@ class TableAreaList extends PureComponent {
 
         this.setState({ closed: !closed });
         localStorage.setItem('table_list_closed', !closed);
+    }
+
+    handleHiddenChage() {
+        const { showHidden } = this.state;
+
+        this.setState({ showHidden: !showHidden });
     }
 
     renderToggler() {
@@ -49,24 +57,54 @@ class TableAreaList extends PureComponent {
         );
     }
 
+    renderHeader() {
+        const { showHidden } = this.state;
+        const { tables } = this.props;
+
+        const totalCount = showHidden ? tables.length || 0 : _.reduce(tables, (count, t) => count += t && t.state === 1 ? 1 : 0, 0)
+
+        return (
+            <div className="table-area-list-header">
+                <Toggler
+                    label={t("Show removed", "form")}
+                    left
+                    onChange={this.handleHiddenChage}
+                    checked={showHidden}
+                />
+
+                <div className="total">Tables: {totalCount}</div>
+            </div>
+        );
+    }
+
     renderList() {
-        const { tables, onEdit, onDelete } = this.props;
+        const { showHidden } = this.state;
+        const { tables, onEdit, onCopy, onDelete, onPress, currentTable } = this.props;
 
         if (!_.isArray(tables) || _.size(tables) === 0) {
             return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
         }
 
-        const tablesSorted = _.sortBy(tables, (o) => o.number);
-        //let tablesSorted = tables;
+        //const tablesSorted = _.sortBy(tables, (o) => o.number);
+        let tablesSorted = tables;
 
-        return _.map(tablesSorted, (tableData, index) =>
-            <TableAreaListRow
-                key={`table_${tableData.id || index}`}
+        return _.map(tablesSorted, (table, index) => {
+
+            if (_.isNil(table) || (!showHidden && table.state !== 1)) return null;
+
+            return <TableAreaListRow
+                key={`table_${index}_${table.number}_${table.id}_${table.state}`}
+                current={currentTable === index}
+                {...table}
                 index={index}
-                data={tableData}
                 onEdit={onEdit}
+                onCopy={onCopy}
                 onDelete={onDelete}
-            />
+                onPress={onPress}
+            />;
+        }
+        
+            
         );
     }
 
@@ -95,11 +133,13 @@ class TableAreaList extends PureComponent {
         return (
             <div className={cn("table-area-list", { "__is_hidden": closed && toggleable })}>
                 {this.renderToggler()}
+                {this.renderHeader()}
 
                 <div className="table-area-list-container">
                     {this.renderList()}
-                    {this.renderAddButton()}
                 </div>
+
+                {this.renderAddButton()}
             </div>
         );
     }
@@ -109,7 +149,9 @@ TableAreaList.propTypes = {
     tables: PropTypes.arrayOf(PropTypes.object),
     onAdd: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
+    onCopy: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
+    onPress: PropTypes.func.isRequired,
 };
 
 export default TableAreaList;

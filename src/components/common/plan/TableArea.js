@@ -8,13 +8,67 @@ import PropTypes from 'prop-types';
 
 import { getBlobPath } from 'airc-shell-core';
 
+import TableAreaGrid from './TableAreaGrid';
+
 class TableArea extends PureComponent {
     constructor(props) {
         super(props);
 
         this._onImageLoad = this._onImageLoad.bind(this);
+        this._onScroll = this._onScroll.bind(this);
+        this._initRef = this._initRef.bind(this);
+
+        this._constraints = [0, 0];
+        this._container = null;
     }
 
+    scrollTo(constraints, insta = false) {
+        const [ x, y, X, Y ] = this._constraints;
+        const [ x0, y0, x1, y1 ] = constraints;
+        const delta = insta ? 0 : 20;
+
+        let top = y;
+        let left = x;
+
+        if (top > y0) {
+            top = y0 - delta;
+        }
+
+        if (left > x0) {
+            left = x0 - delta;
+        }
+
+        if (y1 > Y) {
+            top = y + (y1 - Y) + delta;
+        }
+
+        if (x1 > X) {
+            left = x + (x1 - X) + delta;
+        }
+
+        if (this._container) {
+            this._container.scrollTo({
+                top: top,
+                left: left,
+                behavior: insta ? 'auto' : 'smooth'
+              });
+        }
+    }
+
+    _initRef(ref) {
+        if (ref) {
+            const { clientWidth, clientHeight } = ref;
+
+            this._constraints = [0, 0, clientWidth, clientHeight];
+            this._container = ref;
+        }
+    }
+
+    _onScroll(event) {
+        const { scrollLeft: x, scrollTop: y, clientWidth: w, clientHeight: h } = event.target;
+
+        this._constraints = [x , y, x+w, y+h ];
+    }
 
     _onImageLoad(event) {
         if (_.isNumber(this.props.width) &&
@@ -76,6 +130,12 @@ class TableArea extends PureComponent {
         return null;
     }
 
+    renderGrid() {
+        const { grid, width, height, gridSize } = this.props;
+
+        return grid ? <TableAreaGrid width={width} height={height} size={gridSize} /> : null;
+    }
+
     render() {
         const { width, height, onClick } = this.props;
 
@@ -91,11 +151,15 @@ class TableArea extends PureComponent {
                 className="table-area"
                 onClick={onClick}
             >
-                <div className="table-area-plan-container">
+                <div className="table-area-plan-container" onScroll={this._onScroll} ref={this._initRef} >
                     <div className="cc">
-                        <div className="table-area-plan" style={styles}>
+                        <div className="table-area-plan" 
+                            style={styles} 
+                        >
                             {this.renderImage()}
                             {this.props.children}
+
+                            {this.renderGrid()}
                         </div>
                     </div>
                 </div>
@@ -108,7 +172,9 @@ TableArea.propTypes = {
     children: PropTypes.node,
     width: PropTypes.number,
     height: PropTypes.number,
-    image: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired
+    image: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    grid: PropTypes.bool,
+    gridSize: PropTypes.number,
 };
 
 export default TableArea;

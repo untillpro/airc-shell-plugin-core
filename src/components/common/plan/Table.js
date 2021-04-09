@@ -185,7 +185,7 @@ class Table extends PureComponent {
 
     handleDrag(deltaX, deltaY) {
         const { margin } = this;
-        const { bounds } = this.props;
+        const { bounds, onMove } = this.props;
         const { top, left, width, height, angle } = this.state;
 
         let x = left + deltaX;
@@ -198,6 +198,10 @@ class Table extends PureComponent {
             top: resY,
             info: `X: ${resX}; Y: ${resY}`
         };
+
+        if (_.isFunction(onMove)) {
+            onMove(resX, resY, width, height);
+        }
 
         this.setState(data);
     }

@@ -8,16 +8,33 @@ import PropTypes from 'prop-types';
 import { Popconfirm } from 'antd';
 import { Icon, translate as t } from 'airc-shell-core';
 import * as Icons from 'airc-shell-core/const/Icons';
+import cn from 'classnames';
 
 class TableAreaListRow extends PureComponent {
     constructor(props) {
         super(props);
 
         this.handleEdit = this.handleEdit.bind(this);
+        this.handleCopy = this.handleCopy.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
-    handleEdit() {
+    handleClick(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+
+        const { onPress, index } = this.props;
+
+        if (_.isFunction(onPress)) {
+            onPress(index);
+        }
+    }
+
+    handleEdit(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+
         const { onEdit, index } = this.props;
 
         if (_.isFunction(onEdit)) {
@@ -25,7 +42,21 @@ class TableAreaListRow extends PureComponent {
         }
     }
 
-    handleDelete() {
+    handleCopy(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+
+        const { onCopy, index } = this.props;
+
+        if (_.isFunction(onCopy)) {
+            onCopy(index);
+        }
+    }
+
+    handleDelete(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+        
         const { onDelete, index} = this.props;
 
         if (_.isFunction(onDelete)) {
@@ -34,7 +65,7 @@ class TableAreaListRow extends PureComponent {
     }
 
     renderIcon() {
-        const { form } = this.props.data;
+        const { form } = this.props;
 
         return (
             <div className="form-ico">
@@ -44,39 +75,53 @@ class TableAreaListRow extends PureComponent {
     }
 
     renderLabel() {
-        const { number } = this.props.data;
+        const { number } = this.props;
 
         return <div className="label">{t("Table #{{number}}", "form", { number })}</div>
     }
 
-    renderActions() {
+    renderActions(isNew, isHidden) {
         return (
             <div className="actions">
                 <div className="action" onClick={this.handleEdit}>
                     <Icon icon={Icons.ICON_EDIT} />
                 </div>
 
-                <Popconfirm
-                    title={t("Are you sure to delete this table?","form")}
-                    onConfirm={this.handleDelete}
-                    okText={t("Yes", "common")}
-                    cancelText={t("No", "common")}
-                >
-                    <div className="action">
-                        <Icon icon={Icons.ICON_DELETE_SOLID} />
+                <div className="action" onClick={this.handleCopy}>
+                    <Icon icon={Icons.ICON_COPY} />
+                </div>
+
+                {isNew ? (
+                    <Popconfirm
+                        title={t("Are you sure to delete this table?","form")}
+                        onConfirm={this.handleDelete}
+                        okText={t("Yes", "common")}
+                        cancelText={t("No", "common")}
+                    >
+                        <div className="action">
+                            <Icon icon={Icons.ICON_DELETE_SOLID} />
+                        </div>
+                    </Popconfirm>
+                ) : (
+                    <div className="action" onClick={this.handleDelete}>
+                        <Icon icon={!isHidden ? Icons.ICON_HIDE : Icons.ICON_EYE_SOLID} />
                     </div>
-                </Popconfirm>
-                
+                )}
             </div>
         );
     }
 
     render() {
+        const { id, state, current } = this.props;
+
+        let isNew = !(_.isNumber(id) && id > 0);
+        let isHidden = state !== 1;
+
         return (
-            <div className="table-area-list-row" onClick={this.handleClick}>
+            <div className={cn("table-area-list-row", {'is-new': isNew, 'is-hidden': isHidden, 'is-current': current})} onClick={this.handleClick}>
                 {this.renderIcon()}
                 {this.renderLabel()}
-                {this.renderActions()}
+                {this.renderActions(isNew, isHidden)}
             </div>
         );
     }
@@ -84,8 +129,9 @@ class TableAreaListRow extends PureComponent {
 
 TableAreaListRow.propTypes = {
     index: PropTypes.number.isRequired,
-    data: PropTypes.object.isRequired,
+    //data: PropTypes.object.isRequired,
     onEdit: PropTypes.func.isRequired,
+    onCopy: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
 };
 
