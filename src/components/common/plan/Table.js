@@ -185,7 +185,7 @@ class Table extends PureComponent {
 
     handleDrag(deltaX, deltaY) {
         const { margin } = this;
-        const { bounds } = this.props;
+        const { bounds, onMove } = this.props;
         const { top, left, width, height, angle } = this.state;
 
         let x = left + deltaX;
@@ -198,6 +198,10 @@ class Table extends PureComponent {
             top: resY,
             info: `X: ${resX}; Y: ${resY}`
         };
+
+        if (_.isFunction(onMove)) {
+            onMove(resX, resY, width, height);
+        }
 
         this.setState(data);
     }
@@ -314,7 +318,7 @@ class Table extends PureComponent {
             let y = (height / 2 + (height / 2) * Math.sin(fi));
 
             let k = width >= height ? (height / width) : (width / height);
-            let rotateAngle = (angle - 90);
+            let rotateAngle = (angle + 90);
 
             result.push(
                 <div 
@@ -375,11 +379,11 @@ class Table extends PureComponent {
         let count = 0;
 
         if (width >= height) {
-            count = this.generateSide(0, height, xd, 0, 180, wc, count, places, result);
-            count = this.generateSide(width, 0, 0, yd, 90, hc, count, places, result);
+            count = this.generateSide(0, height, xd, 0, 0, wc, count, places, result);
+            count = this.generateSide(width, 0, 0, yd, -90, hc, count, places, result);
         } else {
-            count = this.generateSide(width, 0, 0, yd, 90, hc, count, places, result);
-            this.generateSide(0, height, xd, 0, 180, wc, count, places, result);
+            count = this.generateSide(width, 0, 0, yd, -90, hc, count, places, result);
+            this.generateSide(0, height, xd, 0, 0, wc, count, places, result);
         }
 
         return result;

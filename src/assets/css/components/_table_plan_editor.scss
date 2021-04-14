@@ -76,10 +76,13 @@ $resizerColor: #176ddd;
     background-color: #efefef;
     position: relative;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
 
     &-container {
         overflow: hidden;
         width: 100%;
+        overflow-y: auto;
     }
 
     &.__is_hidden {
@@ -99,9 +102,31 @@ $resizerColor: #176ddd;
         cursor: pointer;
     }
 
+    &-header {
+        display: flex;
+        flex-direction: row;
+        padding: 10px 10px;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 10px;
+        background-color: #fff;
+        margin: 0px;
+        box-sizing: border-box;
+
+        .total {
+            font-size: 12px;
+            opacity: 0.5;
+        }
+
+        .toggler label {
+            font-size: 12px;
+        }
+    }
+
     &-button {
         padding: 0px 10px;
-        margin-top: 20px;
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
 
     &-row {
@@ -116,6 +141,21 @@ $resizerColor: #176ddd;
         box-sizing: border-box;
         padding: 10px 10px;
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        transition: 0.3s;
+
+        &:hover {
+            background-color: var(--color-brand-300);
+            cursor: pointer;
+        }
+        //&.is-new {}
+
+        &.is-hidden {
+            opacity: 0.7;
+        }
+
+        &.is-current {
+            background-color: var(--color-brand-300);
+        }
 
         .form-ico {
             width: 20px;
@@ -170,6 +210,14 @@ $resizerColor: #176ddd;
     overflow: hidden;
     position: relative;
     
+    &-grid {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+
+        z-index: 10;
+        pointer-events: none;
+    }
 
     &-plan {
         background-position: center;
@@ -252,12 +300,14 @@ $resizerColor: #176ddd;
 
         .num {
             background-color: #fff;
-            width: 20px;
+            min-width: 20px;
             height: 20px;
             line-height: 20px;
             text-align: center;
 
             border-radius: 10px;
+
+            padding: 0px 3px;
 
             box-shadow: var(--box-shadow-z-3);
         }

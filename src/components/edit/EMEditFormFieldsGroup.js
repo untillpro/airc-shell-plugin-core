@@ -8,7 +8,8 @@ import { connect } from 'react-redux';
 import { Tabs, Logger } from 'airc-shell-core';
 
 import {
-    funcOrString 
+    funcOrString,
+    mergeDeep
 } from '../../classes/helpers';
 
 import {
@@ -67,6 +68,8 @@ class EMEditFormFieldsGroup extends Component {
     }
 
     handleFieldChanged(field, value) {
+        console.log("EMEditFormFieldsGroup.handleFieldChanged", field, value);
+        
         const { changedData, embedded: embedded_type, onDataChanged, data: Data } = this.props;
 
         Logger.log({
@@ -83,7 +86,15 @@ class EMEditFormFieldsGroup extends Component {
 
         if (_.isPlainObject(changedData)) data = { ...changedData };
 
-        data = _.merge(data, value);
+        data = mergeDeep(data, value);
+        /*
+        data = _.mergeWith(data, value, (objValue, srcValue) => {
+            if (_.isArray(objValue)) {
+              console.log("objValue: ", objValue);
+              console.log("srcValue: ", srcValue);
+            }
+          });
+        */
 
         if (onDataChanged && typeof onDataChanged === 'function') {
             onDataChanged(data)

@@ -152,9 +152,10 @@ class EMEditForm extends Component {
     }
 
     setDefaultValues(sections) {
-        const { contributions, entity } = this.props;
+        const { contributions, entity, data } = this.props;
         let changedData = { state: 1 };
 
+        console.log("setDefaultValues: ", data);
         const defaultValues = contributions.getPointContributionValue(TYPE_FORMS, entity, C_FORMS_DEFAULT);
 
         if (_.isPlainObject(defaultValues)) {
@@ -179,6 +180,14 @@ class EMEditForm extends Component {
                     });
                 }
             });
+        }
+
+        if (_.isPlainObject(data) && _.size(data) > 0) {
+            for (const key in data) {
+                if (!_.isNil(data[key])) {
+                    changedData[key] = data[key];
+                }
+            }
         }
 
         return changedData;

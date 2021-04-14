@@ -87,7 +87,15 @@ export const mergeDeep = (target, ...sources) => {
                 if (!target[key]) Object.assign(target, { [key]: {} });
                 mergeDeep(target[key], source[key]);
             } else if (_.isArray(source[key]) && _.isArray(target[key])) {
-                Object.assign(target, { [key]: _.merge([], target[key], source[key]) });
+                let newArray = [];
+                
+                source[key].forEach((elem, index) => {
+                    if (!_.isNil(elem)) {
+                        newArray.push(_.merge([], target[key][index], elem));
+                    }
+                });
+
+                Object.assign(target, { [key]: newArray });
             } else {
                 Object.assign(target, { [key]: source[key] });
             }
@@ -253,7 +261,7 @@ export const langMapToBuffer = (langMap) => {
 
         let bytes = s.bytes();
         let res = Base64.fromUint8Array(new Uint8Array(bytes));
-        
+
         return res;
     } catch (e) {
         console.error(e);
@@ -268,9 +276,9 @@ export const immutableArrayMerge = (...arrays) => {
         arrays.forEach(array => {
             if (array && array.length > 0) {
                 for (let i = 0; i < array.length; i++) {
-                    if ( array[i] !== undefined) {
+                    if (array[i] !== undefined) {
                         resultArray[i] = array[i];
-                    } 
+                    }
                 }
             }
         });
@@ -281,11 +289,11 @@ export const immutableArrayMerge = (...arrays) => {
 
 export const valueFromClassifierField = (value, accessor, defaultValue) => {
     let resultValue = defaultValue !== undefined ? defaultValue : value;
-    
+
     try {
         if (_.isPlainObject(value)) {
             let tempValue = _.get(value, accessor);
-    
+
             if (tempValue !== undefined) {
                 resultValue = tempValue;
             }
