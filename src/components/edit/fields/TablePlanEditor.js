@@ -20,9 +20,10 @@ import {
 import {
     Table,
     TableArea,
-    TableAreaImageSelect,
     TableAreaList
 } from '../../common/plan/';
+
+import TableAreaImageSelect from '../../common/plan/TableAreaImageSelect_2';
 
 import {
     PlusOutlined,
@@ -58,6 +59,8 @@ class TablePlanEditor extends PureComponent {
             step: 10
         };
 
+        this.area = null; //TableArea ref
+
         this.changeTables = this.changeTables.bind(this);
 
         this.addTable = this.addTable.bind(this);
@@ -82,10 +85,14 @@ class TablePlanEditor extends PureComponent {
 
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleKeyUp = this.handleKeyUp.bind(this);
+
+        //reducer 
+
+        this.onBeforeSubmit = this.onBeforeSubmit.bind(this);
     }
 
     componentDidMount() {
-        const { field } = this.props;
+        const { field, formContext } = this.props;
 
         if (!field) throw new Error('EmbeddedManagerField exception: "field" prop not specified', field);
 
@@ -103,6 +110,10 @@ class TablePlanEditor extends PureComponent {
             'keydown': this.handleKeyDown, 
             'keyup': this.handleKeyUp 
         });
+
+        if (formContext && _.isObject(formContext)) {
+            formContext.pushValue("submitReducer", this.onBeforeSubmit);
+        } 
     }
 
     componentWillUnmount() {
@@ -112,6 +123,43 @@ class TablePlanEditor extends PureComponent {
     componentDidUpdate(oldProps) {
         if (this.props.data !== oldProps.data) {
             this._initData();
+        }
+    }
+
+    async onBeforeSubmit() {
+        const { field } = this.props;
+        const { preview_accessor } = field;
+
+        if (this.area && _.isString(preview_accessor)) {
+            return new Promise((resolve, reject) => {
+                return this.area.generatePreview().then((data) => {
+                    return this.savePreviewImage(data).then(() => resolve());
+                }).catch((e) => {
+                    console.error(e);
+                    reject(e);
+                });
+            });
+        }
+     
+        return null;
+    }
+
+    async savePreviewImage(data) {
+        const { context, field, onChange } = this.props;
+        const { api } = context;
+        const { preview_accessor } = field;
+        
+        if ("blob" in api) {
+            return api.blob({
+                filename: "file",
+                file: data,
+            }).then((res) => {
+                const { status, response } = res;
+
+                if (status === 200 && _.isFunction(onChange)) {
+                    onChange({ [preview_accessor]: response.id });
+                }
+            }).catch(e => console.error(e));
         }
     }
 
@@ -150,7 +198,6 @@ class TablePlanEditor extends PureComponent {
                 }
             }
         }
-        
     }
 
     _initData() {
@@ -253,6 +300,8 @@ class TablePlanEditor extends PureComponent {
         const { accessor } = field;
 
         this.setState({ tables, ...ops });
+
+        console.log(".changeTables() newTables: ", tables);
 
         if (_.isString(accessor) && _.isFunction(onChange)) {
             onChange({ [accessor]: tables });
@@ -409,7 +458,6 @@ class TablePlanEditor extends PureComponent {
 
     onTableChange(tableData, index, ops = {}) {
         const { tables } = this.state;
-
         const newTables = [...tables];
 
         if (index >= 0 && tables[index]) {
@@ -421,7 +469,6 @@ class TablePlanEditor extends PureComponent {
         }
 
         this.setState({ tables: newTables, ...ops });
-
         this.changeTables(newTables, ops);
     }
 
@@ -501,20 +548,25 @@ class TablePlanEditor extends PureComponent {
         const bounds = this._getBounds();
 
         return _.map(tables,
-            (t, k) =>
-                <Table
-                    {...t}
-
-                    context={context}
-                    key={`table_${k}`}
-                    current={k === currentTable}
-                    index={k}
-                    onClick={this.onTableClick}
-                    onDoubleClick={this.onTableDoubleClick}
-                    onChange={this.onTableChange}
-                    onMove={this.onTableMove}
-                    bounds={bounds}
-                />
+            (t, k) => {
+                if (_.isPlainObject(t) && t.state === 1) {
+                    return (
+                        <Table
+                            {...t}
+                            context={context}
+                            key={`table_${k}`}
+                            current={k === currentTable}
+                            index={k}
+                            onClick={this.onTableClick}
+                            onDoubleClick={this.onTableDoubleClick}
+                            onChange={this.onTableChange}
+                            onMove={this.onTableMove}
+                            bounds={bounds}
+                        />
+                    );
+                }
+                return null;
+            }
         );
     }
 
@@ -648,7 +700,7 @@ class TablePlanEditor extends PureComponent {
 
     render() {
         const { context } = this.props;
-        const { tables, currentTable, width, height, image, showGrid, step } = this.state;
+        const { currentTable, width, height, image, showGrid, step, tables } = this.state;
 
         const canBeEdited = this._isEditable();
 

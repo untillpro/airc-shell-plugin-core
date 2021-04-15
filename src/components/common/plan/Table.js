@@ -408,12 +408,13 @@ class Table extends PureComponent {
                         style={{ 
                             left: x, 
                             top: y, 
-                            transform: `rotate(${rotateAngle}deg)`,
-                            backgroundImage: chairImage ? `url(${chairImage})` : null 
+                            transform: `rotate(${rotateAngle}deg)`
                         }} 
                         num={i} 
                         k={k} 
-                    />
+                    >
+                        {chairImage ? <img src={chairImage} crossOrigin="" /> : null}
+                    </div>
                 );
                 x += xd;
                 y += yd;

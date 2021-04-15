@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { confirmAlert } from 'react-confirm-alert';
 import cn from 'classnames';
@@ -17,6 +18,7 @@ import EMEditFormHeader from './EMEditFormHeader';
 import EMEditFormFieldsBuilder from './EMEditFormFieldsBuilder';
 
 import {
+    Context,
     Button,
     Sections,
     SectionItem,
@@ -38,14 +40,12 @@ import {
 import {
     sendNeedEditFormMessage,
     sendNeedCopyFormMessage,
-    sendCancelMessage,
     sendError
 } from '../../actions/';
 
 import LoadingOverlay from '../common/LoadingOverlay';
 
 import log from '../../classes/Log';
-
 
 class EMEditForm extends Component {
     constructor() {
@@ -57,7 +57,8 @@ class EMEditForm extends Component {
             sections: [],
             sectionsErrors: {},
             fieldsErrors: {},
-            component: {}
+            component: {},
+            proccessing: false
         };
 
         this.doProceed = this.doProceed.bind(this);
@@ -71,10 +72,12 @@ class EMEditForm extends Component {
         this.handleAddAction = this.handleAddAction.bind(this);
         this.handleCopyAction = this.handleCopyAction.bind(this);
         this.handleUnifyAction = this.handleUnifyAction.bind(this);
+
+        this.formContext = new Context();
     }
 
     componentDidMount() {
-        const { isNew, entity } = this.props;
+        const { isNew, entity, onCancel } = this.props;
         let result = this.prepareProps();
 
         const sections = this.getSections(entity)
@@ -83,7 +86,10 @@ class EMEditForm extends Component {
             result.sections = sections;
         } else {
             this.props.sendError(`No available sections declared for '${entity}' entity.`);
-            this.props.sendCancelMessage();
+
+            if (onCancel && typeof onCancel === 'function') {
+                onCancel(null);
+            }
 
             return null;
         }
@@ -121,7 +127,11 @@ class EMEditForm extends Component {
     }
 
     handleBackClick() {
-        this.performWithCheckChanges(() => this.props.sendCancelMessage());
+        const { onCancel } = this.props;
+
+        if (onCancel && typeof onCancel === 'function') {
+            this.performWithCheckChanges(() => onCancel());
+        }
     }
 
     handleAddAction() {
@@ -239,21 +249,50 @@ class EMEditForm extends Component {
     }
 
     doProceed() {
-        const { onProceed } = this.props;
+        const { onProceed, onCancel } = this.props;
+        const { changedData } = this.state;
 
-        if (onProceed && typeof onProceed === 'function') {
-            if (this.validateFields()) {
-                const resultData = this.getProceedData();
+        if (_.size(changedData) > 0) {
+            if (onProceed && typeof onProceed === 'function') {
+                if (this.validateFields()) {
+                    const submitReducers = this.formContext.getValue("submitReducer");
+                    
+                    if (_.isArray(submitReducers)) {
+                        this.setState({ proccessing: true });
 
-                log("%c doProceed: result data: ", "color: red; font-size: 30px;");
-                log(resultData);
+                        const promises = [];
+                        submitReducers.forEach(f => promises.push(f()));
 
-                onProceed(resultData);
+                        Promise.all(promises).then(() => {
+                            const resultData = this.getProceedData();
+
+                            log("%c doProceed: result data: ", "color: red; font-size: 30px;");
+                            log(resultData);
+
+                            onProceed(resultData);
+                        }).catch((err) => {
+                            this.props.sendError(err);
+                            this.setState({ proccessing: false });
+                        });
+                    } else {
+                        const resultData = this.getProceedData();
+
+                        log("%c doProceed: result data: ", "color: red; font-size: 30px;");
+                        log(resultData);
+
+                        onProceed(resultData);
+                    }
+                }
+            } else {
+                throw new Error(`"onProceed" handler not specified`);
             }
         } else {
-            throw new Error(`"onProceed" handler not specified`);
+            if (onCancel && typeof onCancel === 'function') {
+                onCancel(null);
+            } else {
+                throw new Error(`"onCancel" handler not specified`);
+            }
         }
-
     }
 
     getProceedData() {
@@ -416,8 +455,8 @@ class EMEditForm extends Component {
 
     loadingOverlay() {
         const { loading } = this.props;
-        
-        return <LoadingOverlay show={loading} text="Loading..."/>;
+
+        return <LoadingOverlay show={loading} text="Loading..." />;
     }
 
     buildSections() {
@@ -460,6 +499,8 @@ class EMEditForm extends Component {
             return sections.map((sec, i) => {
                 return (
                     <EMEditFormFieldsBuilder
+                        formContext={this.formContext}
+
                         key={`${entity}_section_${i}`}
                         hasErrors={sectionsErrors[section]}
                         fields={sec.fields}
@@ -500,6 +541,7 @@ class EMEditForm extends Component {
 
     renderButtons() {
         const { hideButtons } = this.props;
+        const { proccessing } = this.state;
         const { allowValidate } = this.state.component;
 
         if (hideButtons) return null;
@@ -515,6 +557,7 @@ class EMEditForm extends Component {
                 ) : null}
 
                 <Button
+                    loading={proccessing}
                     type="primary"
                     onClick={this.doProceed}
                 >
@@ -528,8 +571,6 @@ class EMEditForm extends Component {
         const { changedData, component } = this.state;
         const { data, showHeader, isCopy, isNew, entity } = this.props;
         const { showActiveToggler, showNavigation, showLocationSelector, actions } = component;
-
-        //log('EMEditForm this.props', this.props);
 
         return (
             <Fragment>
@@ -562,6 +603,12 @@ class EMEditForm extends Component {
     }
 }
 
+EMEditForm.propTypes = {
+    sendNeedEditFormMessage,
+    sendNeedCopyFormMessage,
+    sendError
+};
+
 const mapStateToProps = (state) => {
     const { locations } = state.locations;
     const { contributions } = state.context;
@@ -572,7 +619,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
     sendNeedEditFormMessage,
     sendNeedCopyFormMessage,
-    sendCancelMessage,
     sendError
 }
 export default connect(mapStateToProps, mapDispatchToProps)(withStackEvents(EMEditForm));

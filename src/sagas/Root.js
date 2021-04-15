@@ -171,6 +171,7 @@ function* _fetchEntityData(action) {
 
             if (isCopy) {
                 data = prepareCopyData(data);
+                console.log("prepareCopyData: ", data);
             }
 
             yield put({ type: ENTITY_DATA_FETCH_SUCCEEDED, payload: { data, classifiers, isNew, isCopy } });

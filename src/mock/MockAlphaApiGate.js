@@ -12,7 +12,7 @@ import { SProtBuilder } from 'airc-shell-core';
 const operationKeys = ['ID', 'Type', 'ParentID', 'ParentType', /*'PartID', 'PartType',*/ 'DocID', 'DocType', 'Data'];
 const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjI1NTM2LCJEZXZpY2VJRCI6MSwiZXhwIjoxNTc3NTE5MDQzfQ.dXnbwFUtjcue8_LXNpir3lltj0qoDUarbZ1BDkj5Zno';
 
-const uploadFileAction = "https://badrequest.ru/tests/uploader/write.php"; //TODO: mock
+const uploadFileAction = "https://badrequest.ru/tests/uploader/write.php";
 
 class MockAlphaApiGate {
     constructor() {
@@ -57,9 +57,9 @@ class MockAlphaApiGate {
                     if (e.response) {
                         throw new Error(e.response.data);
                     }
-                   
+
                     throw e;
-                }) ;
+                });
             }
         }
 
@@ -134,7 +134,7 @@ class MockAlphaApiGate {
             return mockData
         }
         */
-       
+
         let resultData = {};
 
         let params = {
@@ -158,7 +158,7 @@ class MockAlphaApiGate {
             if (status && status !== 200) {
                 throw new Error(errorDescription || error);
             }
-            
+
             if (sections && _.isArray(sections)) {
                 resultData = builder.build(sections);
             }
@@ -257,9 +257,9 @@ class MockAlphaApiGate {
     }
 
     async blob(option) {
-        // eslint-disable-next-line no-undef
-        const xhr = new XMLHttpRequest();
-
+        const method = 'post';
+        const options = { ...option, method, action: uploadFileAction};
+        /*
         if (option.onProgress && xhr.upload) {
             xhr.upload.onprogress = function progress(e) {
                 if (e.total > 0) {
@@ -268,73 +268,59 @@ class MockAlphaApiGate {
                 option.onProgress(e);
             };
         }
+        */
 
-        // eslint-disable-next-line no-undef
         const formData = new FormData();
 
-        if (option.data) {
-            Object.keys(option.data).forEach(key => {
-                const value = option.data[key];
-                if (Array.isArray(value)) {
-                    value.forEach(item => {
-                        formData.append(`${key}[]`, item);
-                    });
-                    return;
-                }
-
-                formData.append(key, option.data[key]);
-            });
-        }
-
-        // eslint-disable-next-line no-undef
-        if (option.file instanceof Blob) {
-            formData.append(option.filename, option.file, option.file.name);
+        if (options.file instanceof Blob) {
+            formData.append(options.filename, options.file, options.file.name);
         } else {
-            formData.append(option.filename, option.file);
+            formData.append(options.filename, options.file);
         }
 
-        xhr.onerror = function error(e) {
-            option.onError(e);
-        };
+        const that = this;
 
-        xhr.onload = () => {
-            // allow success when 2xx status
-            // see https://github.com/react-component/upload/issues/34
-            if (xhr.status < 200 || xhr.status >= 300) {
-                return option.onError(this._getError(option, xhr), this._getBody(xhr));
+        return new Promise(function (resolve, reject) {
+            var xhr = new XMLHttpRequest();
+
+            xhr.open(method, options.action, true);
+
+            if (options.withCredentials && 'withCredentials' in xhr) {
+                xhr.withCredentials = true;
             }
-
-            return option.onSuccess(this._getBody(xhr), xhr);
-        };
-
-        xhr.open(option.method, uploadFileAction, true);
-
-        // Has to be after `.open()`. See https://github.com/enyo/dropzone/issues/179
-        if (option.withCredentials && 'withCredentials' in xhr) {
-            xhr.withCredentials = true;
-        }
-
-        const headers = option.headers || {};
-
-        // when set headers['X-Requested-With'] = null , can close default XHR header
-        // see https://github.com/react-component/upload/issues/33
-        if (headers['X-Requested-With'] !== null) {
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        }
-
-        Object.keys(headers).forEach(h => {
-            if (headers[h] !== null) {
-                xhr.setRequestHeader(h, headers[h]);
+    
+            const headers = options.headers || {};
+    
+            if (headers['X-Requested-With'] !== null) {
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             }
+    
+            Object.keys(headers).forEach(h => {
+                if (headers[h] !== null) {
+                    xhr.setRequestHeader(h, headers[h]);
+                }
+            });
+
+            xhr.onload = function () {
+                const data = {
+                    response: that._getBody(xhr),
+                    status: this.status,
+                    statusText: xhr.statusText,
+                };
+
+                if (this.status >= 200 && this.status < 300) {
+                    resolve(data);
+                } else {
+                    reject(that._getError(options, xhr));
+                }
+            };
+
+            xhr.onerror = function () {
+                reject(that._getError(options, xhr));
+            };
+
+            xhr.send(formData);
         });
-
-        xhr.send(formData);
-
-        return {
-            abort() {
-                xhr.abort();
-            },
-        };
     }
 
     // ----- private methods -----
@@ -347,7 +333,14 @@ class MockAlphaApiGate {
         err.method = option.method;
         err.url = option.action;
 
-        return err;
+        return {
+            response: this._getBody(xhr),
+            status: xhr.status,
+            statusText: xhr.statusText,
+            message: msg,
+            method: option.method,
+            url: option.action,
+        };
     }
 
     _getBody(xhr) {

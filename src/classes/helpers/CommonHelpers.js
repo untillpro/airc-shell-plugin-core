@@ -91,7 +91,7 @@ export const mergeDeep = (target, ...sources) => {
                 
                 source[key].forEach((elem, index) => {
                     if (!_.isNil(elem)) {
-                        newArray.push(_.merge([], target[key][index], elem));
+                        newArray.push(_.merge({}, target[key][index], elem));
                     }
                 });
 

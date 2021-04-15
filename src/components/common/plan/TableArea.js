@@ -5,8 +5,7 @@
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-
-import { getBlobPath } from 'airc-shell-core';
+import { getBlobPath, nodeToPicture } from 'airc-shell-core';
 
 import TableAreaGrid from './TableAreaGrid';
 
@@ -14,17 +13,35 @@ class TableArea extends PureComponent {
     constructor(props) {
         super(props);
 
+        this.area = null;
+
         this._onImageLoad = this._onImageLoad.bind(this);
         this._onScroll = this._onScroll.bind(this);
         this._initRef = this._initRef.bind(this);
 
         this._constraints = [0, 0];
         this._container = null;
+
+        this.areaRef = null;
+    }
+
+    async generatePreview() {
+        const maxSize = 300;
+
+        if (this.areaRef) {
+            this.areaRef.classList.add("hide-controlls");
+
+            return nodeToPicture(this.areaRef, maxSize, maxSize).catch(() => {
+                this.areaRef.classList.remove("hide-controlls");
+            });
+        }
+
+        return null;
     }
 
     scrollTo(constraints, insta = false) {
-        const [ x, y, X, Y ] = this._constraints;
-        const [ x0, y0, x1, y1 ] = constraints;
+        const [x, y, X, Y] = this._constraints;
+        const [x0, y0, x1, y1] = constraints;
         const delta = insta ? 0 : 20;
 
         let top = y;
@@ -51,7 +68,7 @@ class TableArea extends PureComponent {
                 top: top,
                 left: left,
                 behavior: insta ? 'auto' : 'smooth'
-              });
+            });
         }
     }
 
@@ -67,7 +84,7 @@ class TableArea extends PureComponent {
     _onScroll(event) {
         const { scrollLeft: x, scrollTop: y, clientWidth: w, clientHeight: h } = event.target;
 
-        this._constraints = [x , y, x+w, y+h ];
+        this._constraints = [x, y, x + w, y + h];
     }
 
     _onImageLoad(event) {
@@ -84,22 +101,6 @@ class TableArea extends PureComponent {
 
         if (_.isFunction(onSizeChange)) {
             onSizeChange({ width, height });
-        }
-    }
-
-    setImage(styles) {
-        const { image } = this.props;
-
-        let url = null;
-
-        if (_.isString(image)) {
-            url = image;
-        } else if (_.isNumber(image)) {
-            url = getBlobPath(image);
-        }
-
-        if (url) {
-            styles.backgroundImage = `url(${url})`;
         }
     }
 
@@ -123,6 +124,7 @@ class TableArea extends PureComponent {
                     height={height}
                     draggable={false}
                     alt=""
+                    crossorigin={"anonymous"}
                 />
             );
         }
@@ -144,8 +146,6 @@ class TableArea extends PureComponent {
             height
         };
 
-        this.setImage(styles)
-
         return (
             <div
                 className="table-area"
@@ -153,12 +153,12 @@ class TableArea extends PureComponent {
             >
                 <div className="table-area-plan-container" onScroll={this._onScroll} ref={this._initRef} >
                     <div className="cc">
-                        <div className="table-area-plan" 
-                            style={styles} 
+                        <div className="table-area-plan"
+                            style={styles}
+                            ref={ref => this.areaRef = ref}
                         >
                             {this.renderImage()}
                             {this.props.children}
-
                             {this.renderGrid()}
                         </div>
                     </div>

@@ -11,6 +11,7 @@ import {
 } from '../../components';
 
 import {
+    sendCancelMessage,
     sendNeedProccessMessage,
     sendNeedValidateMessage,
     sendNeedFormNavigation
@@ -61,6 +62,7 @@ class EntityEditor extends Component {
 
                         onValidate={() => this.props.sendNeedValidateMessage(data)}
                         onProceed={(data) => this.props.sendNeedProccessMessage(data)}
+                        onCancel={(data) => this.props.sendCancelMessage(data)}
                     />
                 )}
             </div>
@@ -86,7 +88,8 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
+    sendCancelMessage,
     sendNeedProccessMessage,
     sendNeedValidateMessage,
-    sendNeedFormNavigation
+    sendNeedFormNavigation,
 })(EntityEditor);

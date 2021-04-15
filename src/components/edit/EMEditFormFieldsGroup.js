@@ -86,7 +86,7 @@ class EMEditFormFieldsGroup extends Component {
 
         if (_.isPlainObject(changedData)) data = { ...changedData };
 
-        data = mergeDeep(data, value);
+        data = _.merge(data, value);
         /*
         data = _.mergeWith(data, value, (objValue, srcValue) => {
             if (_.isArray(objValue)) {
@@ -155,6 +155,7 @@ class EMEditFormFieldsGroup extends Component {
 
     render() {
         const {
+            formContext,
             group,
             data,
             classifiers,
@@ -177,6 +178,7 @@ class EMEditFormFieldsGroup extends Component {
             
             if (field && field.accessor) {
                 const fieldComponent = <EMEditFormField
+                    formContext={formContext}
                     embedded_type={embedded}
                     errors={fieldsErrors ? fieldsErrors[field.accessor] : null}
                     key={`${field.accessor}_form_field_${index}`}

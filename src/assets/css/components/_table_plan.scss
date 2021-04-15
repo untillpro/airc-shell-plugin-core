@@ -58,7 +58,7 @@ $bradius_item: 4px;
       width: 100%;
       height: 150px;
 
-      background-size: cover;
+      background-size: contain;
       background-position: center center;
       background-repeat: no-repeat;
 
@@ -141,7 +141,7 @@ $bradius_item: 4px;
       height: 40px;
       margin-right: 20px;
 
-      background-size: cover;
+      background-size: contain;
       background-position: center center;
       background-repeat: no-repeat;
     }

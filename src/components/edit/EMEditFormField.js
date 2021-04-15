@@ -111,7 +111,8 @@ class EMEditFormField extends Component {
             entity,
             classifiers,
             isNew,
-            isCopy
+            isCopy,
+            formContext
         } = this.props;
 
         let FieldComponent;
@@ -167,6 +168,7 @@ class EMEditFormField extends Component {
                         
 
                         <FieldComponent 
+                            formContext={formContext}
                             locations={locations}
                             autoFocus 
                             entity={entity}

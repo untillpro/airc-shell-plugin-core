@@ -116,10 +116,10 @@ class TablePlanCard extends PureComponent {
     }
 
     renderImage() {
-        const { image } = this.props?.data;
+        const { image, preview } = this.props?.data;
 
         if (_.isNumber(image)) {
-            const url = getBlobPath(image);
+            const url = getBlobPath(preview || image);
             const styles = { backgroundImage: `url(${url})` };
 
             return (
