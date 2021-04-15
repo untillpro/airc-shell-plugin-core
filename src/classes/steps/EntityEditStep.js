@@ -112,6 +112,10 @@ class EntityEditStep extends StateMachineStep {
             entries = msg.entries;
         }
 
+        if (this.copy) {
+            entries = null;
+        }
+
         if (!entries || entries.length <= 0) {
             if (locations && locations.length > 0) {
                 entries = locations.map((wsid) => {
@@ -121,6 +125,8 @@ class EntityEditStep extends StateMachineStep {
                 this.error('Proceed data error: locations are not specefied');
             }
         }
+
+
 
         return {
             action: {
