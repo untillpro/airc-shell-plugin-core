@@ -42,7 +42,7 @@ export const toggleDeletedRowsView = () => {
 export const setLocation = (locations) => {
     //TODO right
     return {
-        type: Types.SET_LOCAIOTNS,
+        type: Types.SET_LOCATIONS,
         payload: locations
     };
 };

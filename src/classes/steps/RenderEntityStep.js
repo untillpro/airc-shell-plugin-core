@@ -108,6 +108,10 @@ class RenderEntityStep extends StateMachineStep {
         return this.fetchListData(context);
     }
 
+    MessageSetLocations(msg, context) {
+        return this.fetchListData(context);
+    }
+
     MessageProcessItemData(msg, context) {
         let { entries, data } = msg;
         const { entity } = this;

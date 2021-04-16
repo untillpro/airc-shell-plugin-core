@@ -90,6 +90,10 @@ const reducer = (state = INITIAL_STATE, action) => {
         case Types.SEND_LANGUAGE_CHANGED_MESSAGE:   
             message = new Messages.MessageLanguageChanged(action.payload);
             break;  
+        
+        case Types.SET_LOCATIONS: 
+            message = new Messages.MessageSetLocations(action.payload);
+            break;  
 
         default: break;
     }

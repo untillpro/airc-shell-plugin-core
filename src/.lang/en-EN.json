@@ -5,6 +5,7 @@
             "Edit item": "Edit item: {{name}}",
             "Copy item": "Copy item: {{name}}",
             "Location": "Location",
+            "Locations": "Locations",
             "Language": "Language",
             "Ok": "Ok",
             "Submit": "Submit",
@@ -13,7 +14,9 @@
             "Proceed": "Proceed",
             "Save": "Save",
             "Yes": "Yes",
-            "No": "No"
+            "No": "No",
+            "Change": "Change",
+            "Not selected": "Not selected"
         },
         "list": {
             "{{from}} - {{to}} out of {{total}} items": "{{from}} - {{to}} out of {{total}} items",

@@ -33,7 +33,8 @@ import {
 } from '../../classes/contributions/Types';
 
 import {
-    HeaderBackButton
+    HeaderBackButton,
+    LocationSelector,
 } from '../common/';
 
 import {
@@ -160,11 +161,15 @@ class ViewEntityGrid extends Component {
 
         return (
             <div className="content-header">
-                <div className="grid clo-2 row-1">
+                <div className="grid col-1 row-2">
                     <div className="cell">
                         <HeaderBackButton onClick={this.handleBackClick} />
 
                         <h1>{header}</h1>
+                    </div>
+
+                    <div className="cell">
+                        <LocationSelector />
                     </div>
                 </div>
             </div>

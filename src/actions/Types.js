@@ -5,7 +5,7 @@
 
 
 export const INIT_PLUGIN = 'init_plugin';
-export const SET_LOCAIOTNS = 'set_locations';
+export const SET_LOCATIONS = 'set_locations';
 export const TOGGLE_LOCATIONS_SELECTOR = 'toggle_locations_selector';
 
 export const SET_VIEW = 'set_view';

@@ -14,7 +14,7 @@ import {
 } from 'keycode-js';
 
 import { Search } from 'airc-shell-core';
-import { HeaderBackButton, ListTable } from '../common/';
+import { HeaderBackButton, ListTable, LocationSelector } from '../common/';
 import { funcOrString } from '../../classes/helpers';
 
 import {
@@ -390,7 +390,7 @@ class EMList extends Component {
         return (
             <div className='content-container'>
                 <div className="content-header">
-                    <div className="grid clo-2 row-1">
+                    <div className="grid col-2 row-2">
                         <div className="cell">
                             <HeaderBackButton
                                 onClick={this.handleBackClick}
@@ -402,6 +402,10 @@ class EMList extends Component {
                             <Search
                                 onChange={this.handleSearchChange}
                             />
+                        </div>
+
+                        <div className="cell">
+                            <LocationSelector />
                         </div>
                     </div>
                 </div>

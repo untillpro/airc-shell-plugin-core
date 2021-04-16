@@ -3,7 +3,7 @@
  */
 
 import { 
-    SET_LOCAIOTNS 
+    SET_LOCATIONS 
 } from '../actions/Types';
 
 const INITIAL_STATE = {
@@ -19,7 +19,7 @@ const INITIAL_STATE = {
 const reducer = (state = INITIAL_STATE, action) => {
 
     switch (action.type) {
-        case SET_LOCAIOTNS:
+        case SET_LOCATIONS:
             if (action.payload.length <= 0) return state;
 
             return {

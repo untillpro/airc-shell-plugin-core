@@ -113,7 +113,7 @@ class ViewReportsList extends Component {
         
         return (
             <div className="content-header">
-                <div className="grid clo-2 row-1">
+                <div className="grid col-2 row-1">
                     <div className="cell">
                         <HeaderBackButton 
                             onClick={() => this.props.sendCancelMessage()}

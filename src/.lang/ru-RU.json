@@ -5,6 +5,7 @@
             "Edit item": "Редактирование: {{name}}",
             "Copy item": "Копирование: {{name}}",
             "Location": "Локация",
+            "Locations": "Локации",
             "Language": "Язык",
             "Ok": "Ok",
             "Submit": "Подтвердить",
@@ -13,7 +14,9 @@
             "Proceed": "Продолжить",
             "Save": "Сохранить",
             "Yes": "Да",
-            "No": "Нет"
+            "No": "Нет",
+            "Change": "Изменить",
+            "Not selected": "Не выбрано"
         },
         "list": {
             "{{from}} - {{to}} out of {{total}} items": "{{from}} - {{to}} из {{total}} записей",

@@ -142,3 +142,9 @@ export class MessageLanguageChanged extends StateMachineMessage {
         return 'MessageLanguageChanged';
     }
 }
+
+export class MessageSetLocations extends StateMachineMessage {
+    getName() {
+        return 'MessageSetLocations';
+    }
+}

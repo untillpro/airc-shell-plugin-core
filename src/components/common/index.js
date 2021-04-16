@@ -5,6 +5,7 @@ import HeaderBackButton from './HeaderBackButton';
 import GridLocationSelector from './GridLocationSelector';
 import SelectLanguageForm from './SelectLanguageForm';
 import LoadingOverlay from './LoadingOverlay';
+import LocationSelector from './LocationSelector';
 
 import {
     ListTable,
@@ -32,5 +33,6 @@ export {
     DateTimeCell,
     SelectLanguageForm,
     TablePlan,
-    LoadingOverlay
+    LoadingOverlay,
+    LocationSelector
 }
