@@ -14,7 +14,6 @@
     "react-confirm-alert": "^2.4.1",
     "react-dom": "^16.8.6",
     "react-fast-compare": "^3.2.0",
-    "react-image-crop": "^8.6.2",
     "react-keydown": "^1.9.8",
     "react-keypress": "^0.1.5",
     "react-redux": "^7.2.1",
