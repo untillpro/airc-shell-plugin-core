@@ -14,7 +14,8 @@ import {
 } from 'airc-shell-core';
 
 import {
-    HeaderBackButton
+    HeaderBackButton,
+    LocationSelector
 } from '../common/';
 
 import {
@@ -113,7 +114,7 @@ class ViewReportsList extends Component {
         
         return (
             <div className="content-header">
-                <div className="grid col-2 row-1">
+                <div className="grid col-2 row-2">
                     <div className="cell">
                         <HeaderBackButton 
                             onClick={() => this.props.sendCancelMessage()}
@@ -127,6 +128,9 @@ class ViewReportsList extends Component {
                             defaultValue={searchStr}
                             onChange={this.onSearchChange}
                         />
+                    </div>
+                    <div className="cell">
+                        <LocationSelector />
                     </div>
                 </div>
             </div>
