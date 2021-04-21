@@ -110,6 +110,24 @@ class ReportViewStep extends StateMachineStep {
             message: new MessageNotify()
         };
     }
+
+    MessageBreadcrumbSelected(msg) {
+        const { uid } = msg;
+
+        if (uid !== this.uid) {
+            return {
+                pop: true,
+                message: msg,
+            };
+        }
+    }
+
+    breadcrumb() {
+        return {
+            "text": this.reportType,
+            "uid": this.uid
+        };
+    }
 }
 
 export default ReportViewStep;

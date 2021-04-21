@@ -15,6 +15,7 @@ import {
 
 import {
     TYPE_COLLECTION,
+    TYPE_TEXT,
     C_COLLECTION_ENTITY,
 } from '../contributions/Types';
 
@@ -146,6 +147,17 @@ class EntityEditStep extends StateMachineStep {
         return null;
     }
 
+    MessageBreadcrumbSelected(msg) {
+        const { uid } = msg;
+
+        if (uid !== this.uid) {
+            return {
+                pop: true,
+                message: msg,
+            };
+        }
+    }
+
     fetchData(context) {
         const { contributions } = context;
         let resource = contributions.getPointContributionValue(TYPE_COLLECTION, this.entity, C_COLLECTION_ENTITY) || this.entity;
@@ -162,6 +174,36 @@ class EntityEditStep extends StateMachineStep {
         };
     }
 
+    breadcrumb(context) {
+        let text = "Edit item";
+        let evtType = 'new_entity';
+
+        if (this.copy) {
+            evtType = 'copy_entity';
+        } else if (_.size(this.entity) > 0) {
+            evtType = 'edit_entity';
+        }
+
+        if (this.entity) {
+            const { contributions } = context;
+
+            if (contributions) {
+                let name = contributions.getPointContributionValue(TYPE_TEXT, this.entity, evtType);
+
+                if (name && typeof name === 'function') {
+                    text = name();
+                } else {
+                    text = name;
+                }
+            }
+        }
+
+        return {
+            "text": text,
+            "uid": this.uid
+        };
+    }
+
     detouch() {
         return {
             action: {
@@ -169,6 +211,7 @@ class EntityEditStep extends StateMachineStep {
             }
         };
     }
+
 }
 
 export default EntityEditStep; 

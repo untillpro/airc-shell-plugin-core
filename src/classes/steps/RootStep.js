@@ -3,9 +3,7 @@
  */
 
 import StateMachineStep from '../StateMachineStep';
-
 import SelectViewStep from './SelectViewStep'; 
-
 import { MessageInit } from '../messages';
 
 class RootStep extends StateMachineStep {

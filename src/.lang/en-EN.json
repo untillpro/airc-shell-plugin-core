@@ -2,8 +2,8 @@
     "translation": {
         "common": {
             "New item": "New item",
-            "Edit item": "Edit item: {{name}}",
-            "Copy item": "Copy item: {{name}}",
+            "Edit item": "Edit item {{name}}",
+            "Copy item": "Copy item {{name}}",
             "Location": "Location",
             "Locations": "Locations",
             "Language": "Language",
@@ -36,8 +36,8 @@
             "Previous": "Previous",
             "Next": "Next",
             "new_header": "New item",
-            "edit_header": "Editing: {{name}}",
-            "copy_header": "Copy: {{name}}",
+            "edit_header": "Editing {{name}}",
+            "copy_header": "Copy {{name}}",
             "Add language": "Add language",
             "Internationalization": "Internationalization",
             "Language": "Language",

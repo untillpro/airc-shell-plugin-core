@@ -2,8 +2,8 @@
     "translation": {
         "common": {
             "New item": "Nieuw",
-            "Edit item": "Bewerk: {{name}}",
-            "Copy item": "Dupliceer: {{name}}",
+            "Edit item": "Bewerk {{name}}",
+            "Copy item": "Dupliceer {{name}}",
             "Location": "Loactie",
             "Language": "Taal",
             "Ok": "Ok",
@@ -27,8 +27,8 @@
             "Previous": "Vorige",
             "Next": "Volgende",
             "new_header": "Nieuw",
-            "edit_header": "Bewerk: {{name}}",
-            "copy_header": "Dupliceer: {{name}}",
+            "edit_header": "Bewerk {{name}}",
+            "copy_header": "Dupliceer {{name}}",
             "Add language": "Taal toevoegen",
             "Internationalization": "Internationalisering",
             "Language": "Taal",

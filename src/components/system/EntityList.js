@@ -14,7 +14,7 @@ import {
 } from 'keycode-js';
 
 import { Search } from 'airc-shell-core';
-import { HeaderBackButton, ListTable, LocationSelector } from '../common/';
+import { HeaderBackButton, ListTable, LocationSelector, Breadcrumbs } from '../common/';
 import { funcOrString } from '../../classes/helpers';
 
 import {
@@ -409,7 +409,7 @@ class EMList extends Component {
                         </div>
                     </div>
                 </div>
-
+                <Breadcrumbs />
                 <ListTable
                     loading={loading}
                     entity={entity}

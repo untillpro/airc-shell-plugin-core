@@ -42,6 +42,7 @@ export const SEND_INIT_MESSAGE = 'message_init';
 export const SEND_CANCEL_MESSAGE = 'message_cancel';
 export const SEND_SELECT_VIEW_MESSAGE = 'message_select_view';
 export const SEND_SELECT_ENTITY_MESSAGE = 'message_select_entity';
+export const SEND_BREADCRUM_SELECTED = 'send_breadcrum_selected';
 
 export const SEND_NEED_FETCH_LIST_DATA = 'message_need_fetch_list_data';
 export const SEND_NEED_LIST_DATA_REFRESH = 'message_need_list_data_refresh';

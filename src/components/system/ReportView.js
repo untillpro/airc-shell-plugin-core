@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import RListHeader from '../report/RListHeader';
 import RListTable from '../report/RListTable';
 
-import { HeaderBackButton } from '../common';
+import { HeaderBackButton, Breadcrumbs } from '../common';
 
 //import { Search } from 'airc-shell-core';
 
@@ -106,6 +106,8 @@ class ReportView extends Component {
                         </div>
                     </div>
                 </div>
+                
+                <Breadcrumbs />
 
                 <div className='content-container'>
                     <RListHeader />

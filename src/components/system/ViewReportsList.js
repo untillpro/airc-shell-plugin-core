@@ -15,7 +15,8 @@ import {
 
 import {
     HeaderBackButton,
-    LocationSelector
+    LocationSelector,
+    Breadcrumbs,
 } from '../common/';
 
 import {
@@ -209,6 +210,9 @@ class ViewReportsList extends Component {
         return (
             <div className='content-container'>
                 {this.renderHeader()}
+
+                <Breadcrumbs />
+                
                 {this.renderBody()}
             </div>
         );

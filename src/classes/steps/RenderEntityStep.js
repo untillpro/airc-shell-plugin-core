@@ -20,6 +20,10 @@ import {
     SAGA_PROCESS_DATA,
 } from '../../sagas/Types';
 
+import { 
+    TYPE_ENTITIES, C_ENTITY_NAME
+} from '../contributions/Types';
+
 import {
     checkEntries,
     isValidLocations,
@@ -233,6 +237,17 @@ class RenderEntityStep extends StateMachineStep {
         };
     }
 
+    MessageBreadcrumbSelected(msg) {
+        const { uid } = msg;
+
+        if (uid !== this.uid) {
+            return {
+                pop: true,
+                message: msg,
+            };
+        }
+    }
+
     fetchListData(context) {
         const { entity } = this;
 
@@ -241,6 +256,26 @@ class RenderEntityStep extends StateMachineStep {
                 type: SAGA_FETCH_LIST_DATA,
                 payload: entity
             }
+        };
+    }
+
+    breadcrumb(context) {
+        const { contributions } = context;
+        let text = this.entity;
+
+        if (contributions) {
+            let name = contributions.getPointContributionValue(TYPE_ENTITIES, text, C_ENTITY_NAME);
+
+            if (name && typeof name === 'function') {
+                text = name();
+            } else {
+                text = name;
+            }
+        }
+
+        return {
+            "text": text,
+            "uid": this.uid
         };
     }
 

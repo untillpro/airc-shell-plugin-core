@@ -52,6 +52,7 @@ class EntityEditor extends Component {
                     <EMEditForm 
                         loading={loading}
                         showHeader 
+                        showBreadcrumbs
                         data={data}
                         classifiers={classifiers}
                         entity={entity}

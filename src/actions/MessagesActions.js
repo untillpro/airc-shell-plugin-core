@@ -6,7 +6,8 @@ import {
     SEND_ERROR_MESSAGE,
     SEND_INFO_MESSAGE,
     SEND_SUCCESS_MESSAGE,
-    SEND_WARNING_MESSAGE
+    SEND_WARNING_MESSAGE,
+    SEND_BREADCRUM_SELECTED
 } from './Types'
 
 export const sendError = (text = null, description = null) => {
@@ -48,3 +49,10 @@ export const sendInfo = (text = null, description = null) => {
         }
     };
 };
+
+export const sendBreadcrumbSelected = (uid = null) => {
+    return {
+        type: SEND_BREADCRUM_SELECTED,
+        payload: uid
+    };
+}

@@ -6,6 +6,7 @@ import GridLocationSelector from './GridLocationSelector';
 import SelectLanguageForm from './SelectLanguageForm';
 import LoadingOverlay from './LoadingOverlay';
 import LocationSelector from './LocationSelector';
+import Breadcrumbs from './Breadcrumbs';
 
 import {
     ListTable,
@@ -34,5 +35,6 @@ export {
     SelectLanguageForm,
     TablePlan,
     LoadingOverlay,
-    LocationSelector
+    LocationSelector,
+    Breadcrumbs
 }

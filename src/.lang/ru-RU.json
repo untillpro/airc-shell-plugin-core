@@ -2,8 +2,8 @@
     "translation": {
         "common": {
             "New item": "Новый элемент",
-            "Edit item": "Редактирование: {{name}}",
-            "Copy item": "Копирование: {{name}}",
+            "Edit item": "Редактирование {{name}}",
+            "Copy item": "Копирование {{name}}",
             "Location": "Локация",
             "Locations": "Локации",
             "Language": "Язык",
@@ -50,8 +50,8 @@
             "now": "сейчас",
             "Custom": "Пользовательская",
             "new_header": "Новый элемент",
-            "edit_header": "Редактирование: {{name}}",
-            "copy_header": "Копия: {{name}}",
+            "edit_header": "Редактирование {{name}}",
+            "copy_header": "Копия {{name}}",
             "Language": "Язык",
             "Table #{{number}}": "Столик №{{number}}",
             "Add table": "Добавить столик",

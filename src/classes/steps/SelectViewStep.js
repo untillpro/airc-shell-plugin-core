@@ -13,12 +13,12 @@ class SelectViewStep extends StateMachineStep {
         return 'SelectViewStep';
     }
 
-    MessageInit(msg, context) {
+    MessageInit(_, context) {
         const { view } = context;
 
         if (view) {
             return {
-                newStep: new RenderViewStep(),
+                newStep: new RenderViewStep(view),
                 message: new MessageInit()
             };
         }
@@ -31,12 +31,19 @@ class SelectViewStep extends StateMachineStep {
 
         if (view && typeof view === 'string') {
             return {
-                newStep: new RenderViewStep(),
+                newStep: new RenderViewStep(view),
                 changedData: {
                     view
                 }
             };
         }
+    }
+
+    breadcrumb() {
+        return {
+            "text": "Main",
+            "uid": this.uid
+        };
     }
 }
 

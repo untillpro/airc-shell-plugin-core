@@ -43,7 +43,7 @@ import {
     sendError
 } from '../../actions/';
 
-import LoadingOverlay from '../common/LoadingOverlay';
+import { LoadingOverlay, Breadcrumbs }  from '../common/';
 
 import log from '../../classes/Log';
 
@@ -569,7 +569,7 @@ class EMEditForm extends Component {
 
     render() {
         const { changedData, component } = this.state;
-        const { data, showHeader, isCopy, isNew, entity } = this.props;
+        const { data, showHeader, showBreadcrumbs, isCopy, isNew, entity } = this.props;
         const { showActiveToggler, showNavigation, showLocationSelector, actions } = component;
 
         return (
@@ -594,6 +594,8 @@ class EMEditForm extends Component {
                         onUnify={this.handleAddAction}
                     />
                 ) : null}
+
+                {showBreadcrumbs === true ? (<Breadcrumbs />): null} 
 
                 <div className='paper nopad'>
                     {this.buildForm()}

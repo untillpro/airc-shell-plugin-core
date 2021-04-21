@@ -8,7 +8,7 @@ import { translate as t, Empty } from 'airc-shell-core';
 import { connect } from 'react-redux';
 import { withStackEvents } from 'stack-events';
 import { Search } from 'airc-shell-core';
-import { HeaderBackButton, TablePlan, LoadingOverlay, LocationSelector } from '../common/';
+import { HeaderBackButton, TablePlan, LoadingOverlay, LocationSelector, Breadcrumbs } from '../common/';
 import { funcOrString } from '../../classes/helpers';
 import isEqual from 'react-fast-compare';
 
@@ -172,6 +172,8 @@ class EntityTablePlan extends Component {
                         </div>
                     </div>
                 </div>
+
+                <Breadcrumbs />
 
                 <div className="_relative">
                     {this.renderPlans()}

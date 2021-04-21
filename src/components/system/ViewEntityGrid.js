@@ -35,6 +35,7 @@ import {
 import {
     HeaderBackButton,
     LocationSelector,
+    Breadcrumbs
 } from '../common/';
 
 import {
@@ -184,6 +185,8 @@ class ViewEntityGrid extends Component {
             <div className='content-container'>
                 {this.renderHeader()}
 
+                <Breadcrumbs />
+                
                 <Grid
                     cols={4}
                     gap={24}

@@ -3,12 +3,15 @@
  */
 
 import { MessageDrop } from './messages';
+import { v4 as uuidv4 } from 'uuid';
 
 export default class StatemachineStep {
     constructor(parent = null, childs = [], result = null) {
         this.parent = parent; 
         this.childs = childs; 
         this.result = result; 
+
+        this.uid = uuidv4();
     }
 
     async MessageDrop(msg) {
@@ -57,5 +60,9 @@ export default class StatemachineStep {
     error(message, ...args) {
         console.error(`${this.getName()} error occured. ${message} `, args);
         throw new Error(`${message}. View logs for more details.`);
+    }
+
+    breadcrumb() {
+        return null;
     }
 }

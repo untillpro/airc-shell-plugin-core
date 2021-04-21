@@ -95,6 +95,10 @@ const reducer = (state = INITIAL_STATE, action) => {
             message = new Messages.MessageSetLocations(action.payload);
             break;  
 
+        case Types.SEND_BREADCRUM_SELECTED: 
+            message = new Messages.MessageBreadcrumbSelected({uid: action.payload});
+            break;  
+
         default: break;
     }
 

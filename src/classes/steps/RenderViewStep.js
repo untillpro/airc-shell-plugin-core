@@ -12,7 +12,17 @@ import {
     SET_ENTITY
 } from '../../actions/Types';
 
+import { 
+    TYPE_VIEWS, C_VIEW_NAME
+} from '../contributions/Types';
+
 class RenderViewStep extends StateMachineStep {
+    constructor(view) {
+        super(view);
+
+        this.view = view;
+    }
+
     getName() {
         return 'RenderViewStep';
     }
@@ -56,6 +66,37 @@ class RenderViewStep extends StateMachineStep {
         return {
             pop: true,
             message: new MessageNotify()
+        };
+    }
+
+    MessageBreadcrumbSelected(msg) {
+        const { uid } = msg;
+
+        if (uid !== this.uid) {
+            return {
+                pop: true,
+                message: msg,
+            };
+        }
+    }
+
+    breadcrumb(context) {
+        const { contributions } = context;
+        let text = this.view;
+
+        if (contributions) {
+            let name = contributions.getPointContributionValue(TYPE_VIEWS, text, C_VIEW_NAME);
+
+            if (name && typeof name === 'function') {
+                text = name();
+            } else {
+                text = name;
+            }
+        }
+
+        return {
+            "text": text,
+            "uid": this.uid
         };
     }
 }

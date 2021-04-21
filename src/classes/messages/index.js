@@ -148,3 +148,9 @@ export class MessageSetLocations extends StateMachineMessage {
         return 'MessageSetLocations';
     }
 }
+
+export class MessageBreadcrumbSelected extends StateMachineMessage {
+    getName() {
+        return 'MessageBreadcrumbSelected';
+    }
+}

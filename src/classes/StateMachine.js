@@ -205,6 +205,10 @@ export default class StateMachine {
     }
 
     getStack() {
+        return this.stack;
+    }
+
+    getNames() {
         return this.stack.map((step) => {
             return step.getName();
         });
