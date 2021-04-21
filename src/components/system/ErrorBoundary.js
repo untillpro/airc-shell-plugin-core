@@ -24,7 +24,7 @@ class ErrorBoundary extends Component {
             errorStep: null
         };
 
-        this.dropError = this.dropError.bind();
+        this.dropError = this.dropError.bind(this);
     }
 
     setError(error, info) {
