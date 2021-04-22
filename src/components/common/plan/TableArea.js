@@ -159,8 +159,9 @@ class TableArea extends PureComponent {
                         >
                             {this.renderImage()}
                             {this.props.children}
-                            {this.renderGrid()}
                         </div>
+                        
+                        {this.renderGrid()}
                     </div>
                 </div>
             </div>

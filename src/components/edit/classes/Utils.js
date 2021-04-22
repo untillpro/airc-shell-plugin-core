@@ -56,9 +56,6 @@ export const tablePlanMutateCheck = (newData, oldData, field) => {
     return res;
 };
 
-
-
-
 export const mlTextMutateCheck = (newData, oldData, field) => {
     const { accessor, ml_accessor } = field;
 
