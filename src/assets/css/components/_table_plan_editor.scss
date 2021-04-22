@@ -66,6 +66,24 @@ $resizerColor: #176ddd;
     .upload-button {
         margin-top: 20px;
     }
+
+    .upload-picture-button {
+        margin-top: 20px;
+        display: inline-block;
+        padding: 10px 20px;
+        color: #fff;
+        background-color: var(--color-button-primary);
+        cursor: pointer;
+        transition: all 0.5s;
+
+        &:hover {
+            background-color: var(--color-brand-400);
+        }
+
+        input {
+            display: none;
+        }
+    }
 }
 
 .table-plan-editor-container {

@@ -34,10 +34,6 @@ const saveFile = async (context, file, onSuccess, onError) => {
     }
 };
 
-const saveBlob = async (context, blob, onSuccess, onError) => {
-
-};
-
 class TableAreaImageSelect extends PureComponent {
     constructor(props) {
         super(props);
@@ -82,7 +78,7 @@ class TableAreaImageSelect extends PureComponent {
         return (<div className="table-area-image-selector">
             <Empty description="Please select a plan image" />
 
-            <label>
+            <label className="upload-picture-button">
                 <input type="file" name="bg" required onChange={this.handleFileChange} />
                 Select image
             </label>
