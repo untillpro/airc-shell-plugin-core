@@ -207,8 +207,7 @@ class TablePlanEditor extends PureComponent {
         const newState = {};
 
         if (_.isArray(value) && _.size(value) > 0) {
-            console.log("_initData new value assgin: ", value);
-            newState.tables = value;
+            newState.tables = _.sortBy(value, (o) => o.number);
         }
 
         if (_.isString(width_accessor) && _.isNumber(data[width_accessor]) && data[width_accessor] > 0) {
@@ -262,7 +261,8 @@ class TablePlanEditor extends PureComponent {
         return false;
     }
 
-    _getNextFreeNumber() {
+    _getNextFreeNumber(tableData) {
+        const { number } = tableData;
         const { tables } = this.state;
 
         if (_.isArray(tables)) {
@@ -275,14 +275,20 @@ class TablePlanEditor extends PureComponent {
                 return 0;
             });
 
-            let expected = 1;
+            let expected = number;
 
             for (let i = 0; i <= tableNumbers.length; i++) {
-                if (tableNumbers[i] !== expected) {
+                if (tableNumbers[i] < expected) {
+                    continue;
+                }
+
+                if (tableNumbers[i] > expected) {
                     return expected;
                 }
 
-                expected++;
+                if (tableNumbers[i] === expected) {
+                    expected++;
+                }
             }
 
             return expected;
@@ -346,7 +352,7 @@ class TablePlanEditor extends PureComponent {
             tableIndex < tables.length
         ) {
             let tableData = { ...tables[tableIndex] };
-            tableData.number = this._getNextFreeNumber();
+            tableData.number = this._getNextFreeNumber(tableData);
             tableData.left_c = tableData.left_c + 10;
             tableData.top_c = tableData.top_c + 10;
 

@@ -48,6 +48,11 @@ $resizerColor: #176ddd;
 
         display: flex;
         flex-direction: column;
+
+        .cc {
+            display: inline-block;
+            position: relative;
+        }
     }
 }
 
