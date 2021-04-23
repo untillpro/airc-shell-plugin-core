@@ -262,8 +262,13 @@ class TablePlanEditor extends PureComponent {
     }
 
     _getNextFreeNumber(tableData) {
-        const { number } = tableData;
         const { tables } = this.state;
+
+        let expected = 1;
+
+        if (_.isPlainObject(tableData) && "number" in tableData) {
+            expected = parseInt(tableData.number, 10);
+        }
 
         if (_.isArray(tables)) {
             let tableNumbers = _.map(tables,(item) => item.number);
@@ -274,8 +279,6 @@ class TablePlanEditor extends PureComponent {
 
                 return 0;
             });
-
-            let expected = number;
 
             for (let i = 0; i <= tableNumbers.length; i++) {
                 if (tableNumbers[i] < expected) {

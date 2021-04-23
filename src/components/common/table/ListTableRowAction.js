@@ -51,13 +51,14 @@ class ListTableRowAction extends PureComponent {
 
     getTitle() {
         const { type, data } = this.props;
+        const { state } = data.original;
 
         switch (type) {
             case 'edit': return 'Edit';
             case 'copy': return 'Duplicate';
             case 'unify': return 'Unify';
             case 'remove':
-                if (data.state === 1) return 'Remove';
+                if (state === 1) return 'Remove';
                 return 'Restore';
 
             default: return null;
