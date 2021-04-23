@@ -7,7 +7,6 @@ import React, { PureComponent } from 'react';
 import { translate as t } from 'airc-shell-core';
 import { connect } from 'react-redux';
 import { Button, DateTimeFilterModal } from 'airc-shell-core';
-
 import {
     ReloadOutlined
 } from '@ant-design/icons';
@@ -69,9 +68,8 @@ class RListHeader extends PureComponent {
                     onChange={this.handleDateFilterChange}
 
                     customTitle={t("Custom", "form")}
-
                     nowLabel={t("now", "form")}
-                    
+
                     fromLabel={t("From", "form")}
                     toLabel={t("To", "form")}
 
@@ -83,9 +81,12 @@ class RListHeader extends PureComponent {
     }
 
     renderActions() {
+        const { loading } = this.props;
+
         return (
             <div className='untill-base-table-header-actions'>
                 <Button
+                    disabled={loading}
                     icon={<ReloadOutlined />}
                     key='header-action-add'
                     onClick={this.handleRefreshPressed}
@@ -117,12 +118,10 @@ const mapStateToProps = (state) => {
 
     return {
         contributions,
-
         fromDateTime,
         toDateTime,
         workingHoursFrom,
         workingHoursTo,
-
         mostUsedPeriods
     };
 };

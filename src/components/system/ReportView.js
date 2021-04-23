@@ -10,8 +10,6 @@ import RListTable from '../report/RListTable';
 
 import { HeaderBackButton, Breadcrumbs } from '../common';
 
-//import { Search } from 'airc-shell-core';
-
 import {
     sendCancelMessage,
     sendDoGenerateReport
@@ -37,6 +35,7 @@ class ReportView extends Component {
             props: {},
             isComplex: false,
             reportTypes: [],
+            reportData: {}
         };
 
         this.handleCancelClick = this.handleCancelClick.bind(this);
@@ -46,22 +45,26 @@ class ReportView extends Component {
         const { report, contributions } = this.props;
 
         const isComplex = contributions.getPointContributionValue(TYPE_REPORTS, report, C_REPORT_COMPLEX);
+        
+        let newState = {};
 
         if (isComplex) {
             const types = contributions.getPointContributionValues(TYPE_REPORTS, report, C_REPORT_COMPLEX_TYPE);
 
-            this.setState({
+            newState = {
                 isComplex: true,
                 reportTypes: types
-            });
+            };
         } else {
-            this.setState({
+            newState = {
                 reportTypes: [report]
-            })
+            };
         }
 
-        this.props.sendDoGenerateReport();
+        this.setState(newState);
+        //this.props.sendDoGenerateReport();
     }
+    
 
     handleCancelClick() {
         this.props.sendCancelMessage()
@@ -95,22 +98,15 @@ class ReportView extends Component {
                                 />
                                 <h1>{this.renderEntityName()}</h1>
                             </div>
-
-                            {
-                                /*
-                                    <div className="cell align-right">
-                                        <Search defaultValue={searchStr}/>
-                                    </div>
-                                */
-                            }
                         </div>
                     </div>
+
+                    <Breadcrumbs />
                 </div>
                 
-                <Breadcrumbs />
-
                 <div className='content-container'>
-                    <RListHeader />
+                    <RListHeader loading={loading} />
+
                     {_.map(reportTypes, (report) => {
                         return (
                             <>

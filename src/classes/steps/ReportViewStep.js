@@ -12,6 +12,10 @@ import {
     SAGA_FETCH_REPORT
 } from '../../sagas/Types';
 
+import { 
+    TYPE_REPORTS, C_REPORT_NAME
+} from '../contributions/Types';
+
 class ReportViewStep extends StateMachineStep {
     constructor(...args) {
         super(args);
@@ -122,9 +126,22 @@ class ReportViewStep extends StateMachineStep {
         }
     }
 
-    breadcrumb() {
+    breadcrumb(context) {
+        const { contributions } = context;
+        let text = this.reportType;
+
+        if (contributions) {
+            let name = contributions.getPointContributionValue(TYPE_REPORTS, text, C_REPORT_NAME);
+
+            if (name && typeof name === 'function') {
+                text = name();
+            } else {
+                text = name;
+            }
+        }
+
         return {
-            "text": this.reportType,
+            "text": text,
             "uid": this.uid
         };
     }

@@ -837,6 +837,7 @@ class ListTable extends PureComponent {
         const { data, pages, page, pageSize, manual, order, filter, total, headerActions, search, loading, showDeleted } = this.props;
         const { selectedRows, selectedFlatRows, properties, component, expanded } = this.state;
 
+        const exportFileName = `${this.props.entity}_export`;
 
         const tableConfig = {
             loading,
@@ -857,6 +858,8 @@ class ListTable extends PureComponent {
         }
 
         const cols = this.getVisibleColumns();
+
+        console.log("ListTable component props: ", component);
 
         return (
             <div className='untill-base-table'>
@@ -898,6 +901,11 @@ class ListTable extends PureComponent {
                                     flatRows={selectedFlatRows || {}}
                                     component={component}
                                     buttons={headerActions}
+
+                                    showExport={component.showExport}
+                                    exportData={data}
+                                    exportFileName={exportFileName}
+                                    
                                     onVisibleChange={this.handleVisibleChange}
                                     onDeletedChange={this.handleShowDeletedChange}
                                 />

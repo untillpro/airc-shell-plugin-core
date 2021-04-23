@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
-
+import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { translate as t } from 'airc-shell-core';
-import { Toggler, Button } from 'airc-shell-core';
+import { translate as t, Toggler, Button } from 'airc-shell-core';
+import { Menu, Dropdown } from 'antd';
+import moment from 'moment';
 
 import {
     PlusOutlined,
@@ -15,7 +16,8 @@ import {
 } from '@ant-design/icons';
 
 import ListColumnsToggler from './ListColumnsToggler';
-
+import ListExportCsvLink from './ListExportCsvLink';
+import ListExportXlsxLink from './ListExportXlsxLink';
 
 class ListTableHeader extends Component {
     constructor(props) {
@@ -55,43 +57,83 @@ class ListTableHeader extends Component {
         return null;
     }
 
+    renderExport() {
+        const { exportData, exportFileName, loading, showExport } = this.props;
+
+        if (showExport !== true) return null;
+
+        const fileName = `${exportFileName}_${moment().format('YYYYMMDD-Hms')}`;
+        
+        const menu = (
+            <Menu>
+                <Menu.Item>
+                    <ListExportXlsxLink
+                        text={t('Export XLSX', 'form')}
+                        data={exportData}
+                        filename={fileName}
+                    />
+                </Menu.Item>
+                <Menu.Item>
+                    <ListExportCsvLink
+                        text={t('Export CSV', 'form')}
+                        data={exportData}
+                        filename={fileName}
+                    />
+                </Menu.Item>
+            </Menu>
+        );
+
+        return (
+            <Dropdown overlay={menu} placement="bottomRight" disabled={loading}>
+                <Button>Export</Button>
+            </Dropdown>
+        );
+    }
+
     renderHeaderButtons() {
-        const { component: { showHeaderButtons } } = this.props;
+        const { component: { showHeaderButtons }, exportFileName } = this.props;
         const { rows, buttons } = this.props;
 
-        if (!showHeaderButtons || !buttons || !buttons.length) return null;
+        if (showHeaderButtons === false) return null;
 
         const result = [];
 
-        buttons.forEach((btn) => {
-            const { buttonType, icon, type, key, text, disabled, onClick, title } = btn;
+        if (_.isArray(buttons)) {
+            buttons.forEach((btn) => {
+                const { buttonType, icon, type, key, text, disabled, onClick, title } = btn;
+    
+                switch (buttonType) {
+                    case "icon":
+                        result.push(
+                            <Button
+                                title={title}
+                                icon={this._getIcon(icon || 'none')}
+                                key={key}
+                                disabled={typeof disabled === "function" ? disabled(rows) : disabled}
+                                onClick={() => onClick(rows)}
+                            />
+                        );
+                        break;
+                    default:
+                        result.push(
+                            <Button
+                                title={title}
+                                type={type || 'primary'}
+                                key={key}
+                                text={text}
+                                disabled={typeof disabled === "function" ? disabled(rows) : disabled}
+                                onClick={() => onClick(rows)}
+                            > {text} </Button>
+                        );
+                }
+    
+            });
+        }
+        
 
-            switch (buttonType) {
-                case "icon":
-                    result.push(
-                        <Button
-                            title={title}
-                            icon={this._getIcon(icon || 'none')}
-                            key={key}
-                            disabled={typeof disabled === "function" ? disabled(rows) : disabled}
-                            onClick={() => onClick(rows)}
-                        />
-                    );
-                    break;
-                default:
-                    result.push(
-                        <Button
-                            title={title}
-                            type={type || 'primary'}
-                            key={key}
-                            text={text}
-                            disabled={typeof disabled === "function" ? disabled(rows) : disabled}
-                            onClick={() => onClick(rows)}
-                        > {text} </Button>
-                    );
-            }
-
-        });
+        if (exportFileName) {
+            result.push(this.renderExport());
+        }
 
         return (
             <div className='untill-base-table-header-actions'>
