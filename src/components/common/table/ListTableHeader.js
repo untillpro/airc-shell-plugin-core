@@ -58,7 +58,7 @@ class ListTableHeader extends Component {
     }
 
     renderExport() {
-        const { exportData, exportFileName, loading, showExport } = this.props;
+        const { columns, data, exportFileName, loading, showExport } = this.props;
 
         if (showExport !== true) return null;
 
@@ -69,14 +69,16 @@ class ListTableHeader extends Component {
                 <Menu.Item>
                     <ListExportXlsxLink
                         text={t('Export XLSX', 'form')}
-                        data={exportData}
+                        data={data}
+                        columns={columns}
                         filename={fileName}
                     />
                 </Menu.Item>
                 <Menu.Item>
                     <ListExportCsvLink
                         text={t('Export CSV', 'form')}
-                        data={exportData}
+                        data={data}
+                        columns={columns}
                         filename={fileName}
                     />
                 </Menu.Item>

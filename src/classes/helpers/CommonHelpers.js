@@ -364,3 +364,46 @@ export const getOrderButtonTypesOptions = () => {
 
     return options;
 }
+
+export const getDynamicValue = (cell, key, props, isExport) => {
+    let val = null;
+    const { accessor, classifier_link, value_accessor, /*, defaultValue */ } = props;
+
+    // TODO: ПОменять названия переменных. Сейчас как-то топорно. Заполнить README
+
+    if (cell[accessor]) {
+        _.forEach(cell[accessor], (row, index) => {
+            if (_.get(row, classifier_link) === key) {
+                val = row;
+                val._index = index;
+            }
+        });
+    }
+
+    if (isExport && value_accessor) {
+        return _.get(val, value_accessor);
+    }
+
+    return val;
+};
+
+export const buildExportData = (data, columns, type) => {
+    const result = [];
+    const restrictedIds = ["row-selector", "actions"]
+
+    if (_.isObject(data) && _.size(data) > 0 && _.isArray(columns) && _.size(columns) > 0) {
+        _.forEach(data, (v, k) => {
+            const row = {};
+
+            columns.forEach(column => {
+                if (!_.isNil(column.id) && _.indexOf(restrictedIds, column.id) === -1) {
+                    row[column.Header] = column.accessor(v, true);
+                }
+            });
+
+            result.push(row);
+        });
+    }
+
+    return result;
+};

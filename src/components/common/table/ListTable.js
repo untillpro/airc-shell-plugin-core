@@ -31,7 +31,8 @@ import StringCell from './cell_types/StringCell';
 import DateTimeCell from './cell_types/DateTimeCell';
 
 import { 
-    funcOrString
+    funcOrString,
+    getDynamicValue
 } from '../../../classes/helpers';
 
 import {
@@ -41,24 +42,6 @@ import {
 } from './helpers';
 
 const DefaultVisibleColumns = { "ID": false, "id": false, "Id": false };
-
-const getDynamicValue = (cell, key, props) => {
-    let val = null;
-    const { accessor, classifier_link /*, defaultValue */ } = props;
-
-    // TODO: ПОменять названия переменных. Сейчас как-то топорно. Заполнить README
-
-    if (cell[accessor]) {
-        _.forEach(cell[accessor], (row, index) => {
-            if (_.get(row, classifier_link) === key) {
-                val = row;
-                val._index = index;
-            }
-        });
-    }
-
-    return val;
-};
 
 class ListTable extends PureComponent {
     constructor(props) {
@@ -491,7 +474,7 @@ class ListTable extends PureComponent {
                         columns[key] = {
                             "id": key,
                             "Header": key,
-                            "accessor": (d) => getDynamicValue(d, key, props),
+                            "accessor": (d, isExport) => getDynamicValue(d, key, props, isExport),
                             "type": type || null,
                             "linked": [],
                             "width": width,
@@ -859,8 +842,6 @@ class ListTable extends PureComponent {
 
         const cols = this.getVisibleColumns();
 
-        console.log("ListTable component props: ", component);
-
         return (
             <div className='untill-base-table'>
                 <Table
@@ -889,7 +870,6 @@ class ListTable extends PureComponent {
                 >
                     {(state, makeTable) => {
                         const { allDecoratedColumns, pageRows } = state;
-
                         this.pageRows = pageRows;
 
                         return (
@@ -897,13 +877,13 @@ class ListTable extends PureComponent {
                                 <ListTableHeader
                                     showDeleted={showDeleted}
                                     columns={allDecoratedColumns}
+                                    data={state.data}
                                     rows={selectedRows || []}
                                     flatRows={selectedFlatRows || {}}
                                     component={component}
                                     buttons={headerActions}
 
                                     showExport={component.showExport}
-                                    exportData={data}
                                     exportFileName={exportFileName}
                                     
                                     onVisibleChange={this.handleVisibleChange}
