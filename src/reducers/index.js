@@ -13,6 +13,7 @@ import ContextReducer from './ContextReducer';
 import LocationsReducer from './LocationsReducer';
 import ListReducer from './ListReducer';
 import EntityReducer from './EntityReducer';
+import DashboardsReducer from './DashboardsReducer';
 
 export default combineReducers({
     context: ContextReducer,
@@ -22,6 +23,7 @@ export default combineReducers({
     options: AppOptions,
     reports: ReportsReducer,
     locations: LocationsReducer,
+    dashboards: DashboardsReducer,
     list: ListReducer,
     entity: EntityReducer
 });

@@ -7,23 +7,18 @@ import { connect } from 'react-redux';
 import isProd from 'is-prod';
 
 import TestLangSelector from '../common/TestLangSelector';
-
-import RootRenderer from './RootRenderer';
+import ViewsGrid from './ViewsGrid';
 import ViewRenderer from './ViewRenderer';
 import EntityRenderer from './EntityRenderer';
 import EntityEditor from './EntityEditor';
 import ReportView from './ReportView';
+import Dashboards from './Dashboards';
 
-import log from '../../classes/Log';
 import { toggleLocationSelector } from '../../actions/';
 
-// import { ViewsGrid } from 'components';
-
-// import * as EntityManagers from 'contributors/entityManagers';
-// import * as Views from 'contributors/applicationViews';
+import log from '../../classes/Log';
 
 class MainController extends Component {
-
     constructor(props) {
         super(props);
 
@@ -55,8 +50,11 @@ class MainController extends Component {
                 case 'ReportViewStep': 
                     // when generate a report
                     return <ReportView />;
+                case 'DashboardsStep':
+                    // when generate a report
+                    return <Dashboards />;
                 default: 
-                    return <RootRenderer />;
+                    return <ViewsGrid />;
             }
         }
         

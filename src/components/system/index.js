@@ -9,7 +9,6 @@ import EntityList from './EntityList';
 import EntityRenderer from './EntityRenderer';
 import ErrorBoundary from './ErrorBoundary';
 import MainController from './MainController';
-import RootRenderer from './RootRenderer';
 import StateMachineProvider from './StateMachineProvider';
 import ViewEntityGrid from './ViewEntityGrid';
 import ViewRenderer from './ViewRenderer';
@@ -25,7 +24,6 @@ export {
     EntityRenderer,
     ErrorBoundary,
     MainController,
-    RootRenderer,
     StateMachineProvider,
     ViewEntityGrid,
     ViewRenderer,
