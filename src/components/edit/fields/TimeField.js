@@ -17,7 +17,7 @@ class TimeField extends Component {
 
         if (onChange && typeof onChange === 'function' ) {
             let val = date ? date.valueOf() : null;
-            onChange({[val]: accessor});
+            onChange({[accessor]: val});
         }
     }
 
