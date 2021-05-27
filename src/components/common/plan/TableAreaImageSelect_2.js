@@ -2,7 +2,6 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Empty, message } from 'antd';

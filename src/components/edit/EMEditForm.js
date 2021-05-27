@@ -606,9 +606,24 @@ class EMEditForm extends Component {
 }
 
 EMEditForm.propTypes = {
-    sendNeedEditFormMessage,
-    sendNeedCopyFormMessage,
-    sendError
+    entity: PropTypes.string.isRequired,
+    locations: PropTypes.arrayOf(PropTypes.number).isRequired,
+    contributions: PropTypes.object.isRequired,
+    sendNeedEditFormMessage: PropTypes.func.isRequired,
+    sendNeedCopyFormMessage: PropTypes.func.isRequired,
+    sendError: PropTypes.func.isRequired,
+    onProceed: PropTypes.func,
+    onCancel: PropTypes.func,
+    onValidate: PropTypes.func,
+
+    data: PropTypes.array,
+    classifiers: PropTypes.object,
+
+    loading: PropTypes.bool,
+    isCopy: PropTypes.bool,
+    isNew: PropTypes.bool,
+    showHeader: PropTypes.bool,
+    showBreadcrumbs: PropTypes.bool,
 };
 
 const mapStateToProps = (state) => {

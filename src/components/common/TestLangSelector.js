@@ -4,11 +4,10 @@
 
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import lc from 'langcode-info';
-
 import { Select } from 'antd';
-
 import { setLanguage } from '../../actions/';
 
 const { Option } = Select;
@@ -26,13 +25,7 @@ class TestLangSelector extends PureComponent {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    componentDidUpdate() {
-        console.log("TestLangSelector.componentDidUpdate: ", this.props);
-    }
-
     handleChange(code) {
-        console.log("Test lang selector changed: ", code);
-
         if (MOCK_LANG[code]) {
             this.props.setLanguage(MOCK_LANG[code]);
         }
@@ -60,6 +53,11 @@ class TestLangSelector extends PureComponent {
         );
     }
 }
+
+TestLangSelector.propTypes = {
+    currentLanguage: PropTypes.string,
+    setLanguage: PropTypes.func.isRequired
+};
 
 const mapStateToPtops = (state) => {
     const { currentLanguage } = state.options;

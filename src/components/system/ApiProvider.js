@@ -40,11 +40,8 @@ class ApiProvider extends Component {
         const { info, error, warning, success } = this.props;
 
         if (info !== oldProps.info) this.sendMessage(oldProps.info, 'info');
-        
         if (success !== oldProps.success) this.sendMessage(oldProps.success, 'success');
-
         if (error !== oldProps.error) this.sendMessage(oldProps.error, 'error');
-
         if (warning !== oldProps.warning) this.sendMessage(oldProps.warning, 'warning');
     }
 

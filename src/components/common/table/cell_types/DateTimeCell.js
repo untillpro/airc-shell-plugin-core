@@ -3,6 +3,7 @@
  */
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import EditableCell from './EditableCell';
 import { DatePicker } from 'airc-shell-core';
@@ -70,5 +71,10 @@ class DateTimeCell extends PureComponent {
         />;
     }
 }
+
+DateTimeCell.propTypes = {
+    format: PropTypes.string,
+    editable: PropTypes.bool,
+};
 
 export default DateTimeCell

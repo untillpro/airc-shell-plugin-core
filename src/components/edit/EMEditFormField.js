@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Label, FieldError, Tip } from 'airc-shell-core';
 import isEqual from 'react-fast-compare';
@@ -178,7 +179,7 @@ class EMEditFormField extends Component {
                             showError={showError}
                             errors={errors}
                             onChange={this.handleChange}
-                            changeFieldValue={this.changeFieldValue}
+                            //changeFieldValue={this.changeFieldValue}
                             value={fieldValue}
                             data={data}
                             classifiers={classifiers}
@@ -198,6 +199,22 @@ class EMEditFormField extends Component {
         throw new Error(`Field has wrong "accessor" param declared: ${accessor}`, field);
     }
 }
+
+EMEditFormField.propTypes = {
+    context: PropTypes.object.isRequired,
+    formContext: PropTypes.object.isRequired,
+    embedded_type: PropTypes.string,
+    errors: PropTypes.string,
+    key: PropTypes.string,
+    data: PropTypes.object,
+    classifiers: PropTypes.object,
+    field: PropTypes.object.isRequired,
+    locations: PropTypes.arrayOf(PropTypes.number),
+    onChange: PropTypes.func.isRequired,
+    showError: PropTypes.bool,
+    isNew: PropTypes.bool,
+    isCopy: PropTypes.bool
+};
 
 const mapStateToProps = (state) => {
     const context = state.context;

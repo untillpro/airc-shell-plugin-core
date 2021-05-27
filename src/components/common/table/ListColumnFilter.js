@@ -3,7 +3,7 @@
  */
 
 import React, { PureComponent } from 'react';
-
+import PropTypes from 'prop-types';
 import {
     //NumberFilter,
     //RangeFilter,
@@ -13,12 +13,6 @@ import {
     //DateTimeFilter,
     LocationFilter
 } from './filter_types';
-
-/**
- * Component represents filte mechanics for EMList columns
- * 
- * TODO
- */
 
 class ColumnFilter extends PureComponent {
     constructor(props) {
@@ -68,5 +62,10 @@ class ColumnFilter extends PureComponent {
         );
     }
 }
+
+ColumnFilter.propTypes = {
+    column: PropTypes.object,
+    onChange: PropTypes.func.isRequired
+};
 
 export default ColumnFilter;

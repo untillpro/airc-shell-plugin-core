@@ -2,8 +2,10 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-import EditableCell from './EditableCell';
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
+import EditableCell from './EditableCell';
+
 import { formatPriceValue } from '../../../../classes/helpers';
 
 class PriceCell extends PureComponent {
@@ -39,5 +41,11 @@ class PriceCell extends PureComponent {
         );
     }
 }
+
+PriceCell.propTypes = {
+    value: PropTypes.number,
+    currency: PropTypes.object, 
+    defaultCurrency: PropTypes.object
+};
 
 export default PriceCell;

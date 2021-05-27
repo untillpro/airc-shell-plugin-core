@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import * as FileSaver from 'file-saver';
 import jsonexport from 'jsonexport';
 import { buildExportData } from '../../../classes/helpers';
@@ -19,10 +20,17 @@ const ListExportXslxLink = ({ data, columns, filename, text }) => {
     }
 
     return (
-        <a onClick={(e) => doExport(data, columns, filename)}>
+        <a onClick={(_) => doExport(data, columns, filename)} href="#exportcsv">
             {text ? text : 'Export XLSX'}
         </a>
     );
 }
+
+ListExportXslxLink.propTypes = {
+    data: PropTypes.object, 
+    columns: PropTypes.array, 
+    filename: PropTypes.string, 
+    text: PropTypes.string
+};
 
 export default ListExportXslxLink;

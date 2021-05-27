@@ -123,10 +123,10 @@ class TablePlanCard extends PureComponent {
             const styles = { backgroundImage: `url(${url})` };
 
             return (
-                <div 
-                    className="image" 
-                    style={styles} 
-                    onClick={this.handleEditAction} 
+                <div
+                    className="image"
+                    style={styles}
+                    onClick={this.handleEditAction}
                 />
             );
         }

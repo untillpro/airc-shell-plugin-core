@@ -4,7 +4,6 @@
 
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-
 import { IconButton } from 'airc-shell-core';
 
 import {
@@ -14,7 +13,6 @@ import {
     ICON_DUPLICATE,
     ICON_DEACTIVATE
 } from '../../../const/Icons';
-
 
 class ListTableRowAction extends PureComponent {
     handleAction(event) {

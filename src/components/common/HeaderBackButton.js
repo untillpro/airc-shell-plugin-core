@@ -3,6 +3,7 @@
  */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class HeaderBackButton extends Component {
     handleClick() {
@@ -24,5 +25,9 @@ class HeaderBackButton extends Component {
         );
     }
 }
+
+HeaderBackButton.propTypes = {
+    onClick: PropTypes.func.isRequired,
+};
 
 export default HeaderBackButton;

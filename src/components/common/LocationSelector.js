@@ -146,6 +146,8 @@ class LocationSelector extends Component {
 LocationSelector.propTypes = {
     locations: PropTypes.array,
     locationsOptions: PropTypes.object,
+    locationsGroups: PropTypes.array,
+    setLocation: PropTypes.func.isRequired,
 }; 
 
 const mapStateToProps = (state) => {
