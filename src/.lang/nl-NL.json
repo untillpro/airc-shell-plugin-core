@@ -109,7 +109,9 @@
             "reverse_split": "Splitsen ongedaan maken",
             "add_tips": "Fooi toevoegen",
             "add_payer": "Betalende klant toevoegen",
-            "add_client": "Klant toevoegen"
+            "add_client": "Klant toevoegen",
+            "info": "Info",
+            "allergens": "Allergens"
         },
         "period_value_types": {
             "weekly": "Wekelijks",

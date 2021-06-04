@@ -86,7 +86,7 @@ class EMEditFormFieldsGroup extends Component {
 
         if (_.isPlainObject(changedData)) data = { ...changedData };
 
-        data = _.merge(data, value);
+        //data = _.merge(data, value);
         /*
         data = _.mergeWith(data, value, (objValue, srcValue) => {
             if (_.isArray(objValue)) {
@@ -95,6 +95,8 @@ class EMEditFormFieldsGroup extends Component {
             }
           });
         */
+
+        data = mergeDeep(data, value);
 
         if (onDataChanged && typeof onDataChanged === 'function') {
             onDataChanged(data)
