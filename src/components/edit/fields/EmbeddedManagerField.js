@@ -200,7 +200,7 @@ class EmbeddedManagerField extends PureComponent {
     handleChange(value) {
         const { onChange, field } = this.props;
         const { accessor } = field;
-
+        
         if (onChange && typeof onChange === 'function') {
             onChange({ [accessor]: value });
         }
@@ -239,10 +239,14 @@ class EmbeddedManagerField extends PureComponent {
     async handleValueSave(entity, data, entry, rowIndex) {
         const { data: Data } = this.state;
 
+
         let res = [];
-        res[rowIndex] = { id: Data[rowIndex].id, ...data };
 
-
+        res[rowIndex] = { 
+            id: Data[rowIndex] ? Data[rowIndex].id : null, 
+            ...data 
+        };
+        
         this.handleChange(res);
     }
 
@@ -432,6 +436,7 @@ class EmbeddedManagerField extends PureComponent {
                         isNew={isNew}
                         data={entityData}
                         onProceed={(newData) => this.onEditFormProceed(!copy ? current : null, newData)}
+                        onCancel={this.onEditFormCancel.bind(this)}
                         locations={locations}
                     />
                 </Modal>
