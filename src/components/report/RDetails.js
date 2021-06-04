@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { translate as t } from 'airc-shell-core';
 import EMEditFormFieldsBuilder from '../edit/EMEditFormFieldsBuilder';
@@ -258,12 +259,12 @@ class ReportDetails extends Component {
 
         if (debug !== true) return null;
 
-        console.group('renderDateTimeFilter');
-        console.log('fromDateTime: ', fromDateTime);
-        console.log('toDateTime: ', toDateTime);
-        console.log('workingHoursFrom: ', workingHoursFrom);
-        console.log('workingHoursTo: ', workingHoursTo);
-        console.groupEnd('renderDateTimeFilter');
+        //console.group('renderDateTimeFilter');
+        //console.log('fromDateTime: ', fromDateTime);
+        //console.log('toDateTime: ', toDateTime);
+        //console.log('workingHoursFrom: ', workingHoursFrom);
+        //console.log('workingHoursTo: ', workingHoursTo);
+        //console.groupEnd('renderDateTimeFilter');
 
         return <div className="page-section-content debug-section">
             From date: {fromDateTime} <br />
@@ -285,6 +286,21 @@ class ReportDetails extends Component {
         );
     }
 }
+
+ReportDetails.propTypes = {
+    locations: PropTypes.array,
+    contributions: PropTypes.object,
+    fromDateTime: PropTypes.object,
+    toDateTime: PropTypes.object,
+    workingHoursFrom: PropTypes.object,
+    workingHoursTo: PropTypes.object,
+    filterBy: PropTypes.object,
+    reportProps: PropTypes.object,
+    mostUsedPeriods: PropTypes.array,
+    debug: PropTypes.bool,
+    report: PropTypes.object,
+    group: PropTypes.string.isRequired,
+}; 
 
 const mapStateToProps = (state) => {
     const { contributions } = state.context;

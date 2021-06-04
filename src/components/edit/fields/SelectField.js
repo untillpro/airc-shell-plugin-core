@@ -4,7 +4,7 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { isNull, isUndefined } from 'util';
+import PropTypes from 'prop-types';
 import { Select } from 'airc-shell-core';
 
 import {
@@ -226,7 +226,7 @@ class SelectField extends Component {
 
         let val = '';
 
-        if (!isNull(value) && !isUndefined(value)) {
+        if (!_.isNil(value)) {
             if (_.isObject(value) && value_accessor) {
                 val = _.get(value, value_accessor);
             } else {
@@ -250,5 +250,23 @@ class SelectField extends Component {
         );
     }
 }
+
+SelectField.propTypes = {
+    formContext: PropTypes.object,
+    locations: PropTypes.arrayOf(PropTypes.number),
+    autoFocus: PropTypes.bool,
+    entity: PropTypes.string,
+    context: PropTypes.object,
+    field: PropTypes.object.isRequired,
+    disabled: PropTypes.bool,
+    showError: PropTypes.bool,
+    errors: PropTypes.array,
+    onChange: PropTypes.func.isRequired,
+    value: PropTypes.any,
+    data: PropTypes.object,
+    classifiers: PropTypes.object,
+    isNew: PropTypes.bool,
+    isCopy: PropTypes.bool,
+};
 
 export default SelectField;

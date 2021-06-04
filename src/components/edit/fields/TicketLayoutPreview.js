@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Handlebars from 'handlebars';
 import { translate as t } from 'airc-shell-core';
@@ -112,5 +113,23 @@ class TicketLayoutPreview extends Component {
         );
     }
 }
+
+TicketLayoutPreview.propTypes = {
+    formContext: PropTypes.object,
+    locations: PropTypes.arrayOf(PropTypes.number),
+    autoFocus: PropTypes.bool,
+    entity: PropTypes.string,
+    context: PropTypes.object,
+    field: PropTypes.object.isRequired,
+    disabled: PropTypes.bool,
+    showError: PropTypes.bool,
+    errors: PropTypes.array,
+    onChange: PropTypes.func.isRequired,
+    value: PropTypes.any,
+    data: PropTypes.object,
+    classifiers: PropTypes.object,
+    isNew: PropTypes.bool,
+    isCopy: PropTypes.bool,
+};
 
 export default connect(null, { sendError })(TicketLayoutPreview);

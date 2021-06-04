@@ -4,7 +4,7 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
 import { ListTable } from '../common/';
 
 import {
@@ -91,5 +91,15 @@ class RListTable extends Component {
         )
     }
 }
+
+RListTable.propTypes = {
+    showTitle: PropTypes.bool,
+    showTotal: PropTypes.bool,
+    loading: PropTypes.bool,
+    reportProps: PropTypes.object,
+    contributions: PropTypes.object.isRequired,
+    report: PropTypes.string.isRequired,
+    data: PropTypes.array,
+};
 
 export default RListTable;

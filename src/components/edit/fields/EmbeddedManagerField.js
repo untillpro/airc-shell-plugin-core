@@ -115,7 +115,7 @@ class EmbeddedManagerField extends PureComponent {
     actionEdit(rowIndex = null) {
         const { selectedRows, data } = this.state;
         let index = parseInt(rowIndex);
-        
+
         if (_.isNaN(index) && selectedRows && selectedRows.length > 0) {
             index = parseInt(selectedRows[0]);
         }
@@ -184,7 +184,7 @@ class EmbeddedManagerField extends PureComponent {
                 this.onEditFormProceed(index, { state: 0 });
             }
 
-            this.setState({selectedRows: []});
+            this.setState({ selectedRows: [] });
         }
     }
 
@@ -200,9 +200,9 @@ class EmbeddedManagerField extends PureComponent {
     handleChange(value) {
         const { onChange, field } = this.props;
         const { accessor } = field;
-
+        
         if (onChange && typeof onChange === 'function') {
-            onChange({[accessor]: value});
+            onChange({ [accessor]: value });
         }
     }
 
@@ -239,10 +239,14 @@ class EmbeddedManagerField extends PureComponent {
     async handleValueSave(entity, data, entry, rowIndex) {
         const { data: Data } = this.state;
 
+
         let res = [];
-        res[rowIndex] = { id: Data[rowIndex].id, ...data };
 
-
+        res[rowIndex] = { 
+            id: Data[rowIndex] ? Data[rowIndex].id : null, 
+            ...data 
+        };
+        
         this.handleChange(res);
     }
 
@@ -405,11 +409,11 @@ class EmbeddedManagerField extends PureComponent {
     }
 
     startLoading() {
-        this.setState({loading: true});
+        this.setState({ loading: true });
     }
 
     stopLoading() {
-        this.setState({loading: false});
+        this.setState({ loading: false });
     }
 
     renderEditModal() {
@@ -432,6 +436,7 @@ class EmbeddedManagerField extends PureComponent {
                         isNew={isNew}
                         data={entityData}
                         onProceed={(newData) => this.onEditFormProceed(!copy ? current : null, newData)}
+                        onCancel={this.onEditFormCancel.bind(this)}
                         locations={locations}
                     />
                 </Modal>
@@ -489,8 +494,21 @@ class EmbeddedManagerField extends PureComponent {
 }
 
 EmbeddedManagerField.propTypes = {
-    rowActions: PropTypes.arrayOf(PropTypes.object),
-    headerActions: PropTypes.arrayOf(PropTypes.object),
-}
+    formContext: PropTypes.object,
+    locations: PropTypes.arrayOf(PropTypes.number),
+    autoFocus: PropTypes.bool,
+    entity: PropTypes.string,
+    context: PropTypes.object,
+    field: PropTypes.object.isRequired,
+    disabled: PropTypes.bool,
+    showError: PropTypes.bool,
+    errors: PropTypes.array,
+    onChange: PropTypes.func.isRequired,
+    value: PropTypes.any,
+    data: PropTypes.object,
+    classifiers: PropTypes.object,
+    isNew: PropTypes.bool,
+    isCopy: PropTypes.bool,
+};
 
 export default EmbeddedManagerField;

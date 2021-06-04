@@ -4,16 +4,14 @@
 
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { translate as t } from 'airc-shell-core';
-
 import { Logger, Radio, Checkbox } from 'airc-shell-core';
 
 import {
     setLocation
 } from '../../actions';
-
 
 class GridLocationSelector extends PureComponent {
     constructor(props) {
@@ -149,13 +147,18 @@ class GridLocationSelector extends PureComponent {
 }
 
 GridLocationSelector.propTypes = {
-    onChange: PropTypes.func
-}
+    onChange: PropTypes.func,
+    currentLanguage: PropTypes.string,
+    showLocationSelector: PropTypes.bool,
+    allowMultyLocations: PropTypes.bool,
+    locations: PropTypes.array.isRequired,
+    locationGroups: PropTypes.array,
+    locationsOptions: PropTypes.object,
+};
 
 const mapStateToProps = (state) => {
     const { showLocationSelector, allowMultyLocations, currentLanguage } = state.options;
     const { locations, locationGroups, locationsOptions } = state.locations;
-
 
     return {
         currentLanguage,

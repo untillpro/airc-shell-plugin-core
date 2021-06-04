@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { translate as t } from 'airc-shell-core';
 import { connect } from 'react-redux';
 import { Button, DateTimeFilterModal } from 'airc-shell-core';
@@ -104,6 +105,15 @@ class RListHeader extends PureComponent {
         );
     }
 }
+
+RListHeader.propTypes = {
+    contributions: PropTypes.object.isRequired,
+    fromDateTime: PropTypes.object,
+    toDateTime: PropTypes.object,
+    workingHoursFrom: PropTypes.object,
+    workingHoursTo: PropTypes.object,
+    mostUsedPeriods: PropTypes.array,
+};
 
 const mapStateToProps = (state) => {
     const { contributions } = state.context;

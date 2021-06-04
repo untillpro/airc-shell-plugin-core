@@ -129,7 +129,6 @@ class TableAreaListRow extends PureComponent {
 
 TableAreaListRow.propTypes = {
     index: PropTypes.number.isRequired,
-    //data: PropTypes.object.isRequired,
     onEdit: PropTypes.func.isRequired,
     onCopy: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,

@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
     DoubleLeftOutlined,
@@ -93,10 +94,10 @@ class EMEditFormHeader extends Component {
         if (_.isString(title)) {
             return `${title} ${data && data.name ? `: ${data.name}` : ''}`;
         } else if (_.isFunction(title)) {
-            return title({name: data ? data.name : ''});
+            return title({ name: data ? data.name : '' });
         }
 
-        return t('edit_header', 'common', {name: data ? data.name : ''});
+        return t('edit_header', 'common', { name: data ? data.name : '' });
     }
 
     _getCopyTitle() {
@@ -107,10 +108,10 @@ class EMEditFormHeader extends Component {
         if (_.isString(title)) {
             return `${title} ${data && data.name ? `: ${data.name}` : ''}`;
         } else if (_.isFunction(title)) {
-            return title({name: data ? data.name : ''});
+            return title({ name: data ? data.name : '' });
         }
 
-        return t("copy_header", 'common', {name: data ? data.name : ''});
+        return t("copy_header", 'common', { name: data ? data.name : '' });
     }
 
     getFormTitle() {
@@ -142,7 +143,7 @@ class EMEditFormHeader extends Component {
 
                     {next ? (
                         <Button onClick={() => this.handleNavClick(next)}>
-                             {t("Next", "form")}
+                            {t("Next", "form")}
                             <DoubleRightOutlined />
                         </Button>
                     ) : null}
@@ -256,11 +257,29 @@ class EMEditFormHeader extends Component {
     }
 }
 
+EMEditFormHeader.propTypes = {
+    entity: PropTypes.string.isRequired,
+    showActiveToggler: PropTypes.bool,
+    showNavigation: PropTypes.bool,
+    showLocationSelector: PropTypes.bool,
+    actions: PropTypes.array,
+    data: PropTypes.object,
+    isNew: PropTypes.bool,
+    isCopy: PropTypes.bool,
+    changedData: PropTypes.object,
+    onStateChanged: PropTypes.func,
+    onBackClick: PropTypes.func,
+    onPrevClick: PropTypes.func,
+    onNextClick: PropTypes.func,
+    onAdd: PropTypes.func,
+    onCopy: PropTypes.func,
+    onUnify: PropTypes.func,
+};
+
 const mapStateToProps = (state) => {
     const { contributions } = state.context;
 
     return { contributions };
 }
-
 
 export default connect(mapStateToProps, {})(EMEditFormHeader);
