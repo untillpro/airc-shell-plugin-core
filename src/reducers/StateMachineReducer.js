@@ -35,8 +35,8 @@ const reducer = (state = INITIAL_STATE, action) => {
             message = new Messages.MessageSelectEntity(action.payload);
             break;
 
-        case Types.SEND_NEED_LIST_DATA_REFRESH: 
-            message = new Messages.MessageRefreshListData();
+        case Types.SEND_NEED_DATA_REFRESH: 
+            message = new Messages.MessageRefreshData();
             break;
 
         case Types.SEND_NEED_EDIT_FORM_MESSAGE:

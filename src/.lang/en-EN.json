@@ -160,7 +160,7 @@
             "String length should be less than {{value}}": "String length should be less than {{value}}",
             "Invalid regexp declared": "Invalid regexp declared",
             "Not a valid value": "Not a valid value",
-            "views_not_specified": "There is no pcesified views for this plugin",
+            "views_not_specified": "There is no specified views for this plugin",
             "Selected layout not presented in available ticket layouts": "Selected layout not presented in available ticket layouts",
             "Layout's template not specified or wrong given": "Layout's template not specified or wrong given",
             "Please select datetime range": "Please select datetime range",

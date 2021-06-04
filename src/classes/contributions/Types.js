@@ -24,6 +24,7 @@ export const TYPE_SECTIONS = "sections";
 export const TYPE_COLLECTION = "collection";
 export const TYPE_LAYOUTS = "layouts";
 export const TYPE_HELPERS = "helpers";
+export const TYPE_CHARTS = "charts";
 
 // ## POINTS CONTRIBUTIONS
 
@@ -111,4 +112,14 @@ export const C_COLLECTION_FILTER_BY = "filter_by";
 
 export const C_LAYOUTS_NAME = "name";
 export const C_LAYOUTS_TEMPLATE = "template";
+
+// ### CHARTS
+
+export const C_CHART_NAME = "name";
+export const C_CHART_CODE = "code";
+export const C_CHART_ORDER = "order";
+export const C_CHART_GROUP = "group";
+export const C_CHART_TYPE = "type";
+export const C_CHART_OPTIONS = "options";
+export const C_CHART_BUILDER = "builder";
 

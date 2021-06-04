@@ -104,7 +104,7 @@ class RenderEntityStep extends StateMachineStep {
         };
     }
 
-    MessageRefreshListData(msg, context) {
+    MessageRefreshData(msg, context) {
         return this.fetchListData(context);
     }
 

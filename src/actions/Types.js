@@ -45,7 +45,7 @@ export const SEND_SELECT_ENTITY_MESSAGE = 'message_select_entity';
 export const SEND_BREADCRUM_SELECTED = 'send_breadcrum_selected';
 
 export const SEND_NEED_FETCH_LIST_DATA = 'message_need_fetch_list_data';
-export const SEND_NEED_LIST_DATA_REFRESH = 'message_need_list_data_refresh';
+export const SEND_NEED_DATA_REFRESH = 'message_need_list_data_refresh';
 export const SEND_NEED_EDIT_FORM_MESSAGE = 'message_need_edit_form';
 export const SEND_NEED_MASSEDIT_FORM_MESSAGE = 'message_need_massedit_form';
 
@@ -84,3 +84,13 @@ export const INIT_CONTEXT_LANG = "init_context_lang";
 
 export const SET_PLUGIN_LANGUAGE = "set_plugin_language";
 export const ADD_AVAILABLE_LANGUAGE = "add_available_language";
+
+/* DASHBOARD ACTIONS */
+
+export const SET_CHART_SETTINGS = "set_chart_settings";
+export const SET_CUSTOM_CHART_ORDER = "set_custom_chart_order";
+export const SET_DASHBOARD_DATA = "set_dashboard_data";
+export const SET_DASHBOARD_SETTINGS = "set_dashboard_settings";
+export const SET_DASHBOARD_LOADING = "set_dashboard_loading";
+export const DASHBOARD_DATA_FETCHING_SUCCESS = "dashboard_data_fetching_success";
+

@@ -47,11 +47,14 @@ import {
     ENTITY_LIST_SET_SHOW_DELETED,
     REPORT_DATA_FETCHING_SUCCESS,
     SEND_LANGUAGE_CHANGED_MESSAGE,
+    DASHBOARD_DATA_FETCHING_SUCCESS,
+    SET_DASHBOARD_LOADING
 } from '../actions/Types';
 
 import {
     SAGA_FETCH_LIST_DATA,
     SAGA_FETCH_REPORT,
+    SAGA_FETCH_DASHBOARD,
     SAGA_PROCESS_DATA,
     SAGA_FETCH_ENTITY_DATA,
     SAGA_PROCESS_ENTITY_DATA,
@@ -171,7 +174,6 @@ function* _fetchEntityData(action) {
 
             if (isCopy) {
                 data = prepareCopyData(data);
-                console.log("prepareCopyData: ", data);
             }
 
             yield put({ type: ENTITY_DATA_FETCH_SUCCEEDED, payload: { data, classifiers, isNew, isCopy } });
@@ -244,7 +246,34 @@ function* _fetchReport(action) {
         yield put({ type: SET_REPORT_DATA_FETCHING, payload: false });
         yield put({ type: SEND_ERROR_MESSAGE, payload: { text: e.message, description: e.message } });
     }
+}
 
+function* _fetchDashboard() {
+    const locations = yield select(Selectors.locationsAll);
+    const api = yield select(Selectors.api);
+    const from = yield select(Selectors.dashboardFrom);
+    const to = yield select(Selectors.dashboardTo);
+
+    let doProps = {
+        type: "",
+        from,
+        to,
+        show: true,
+        from_offset: 0, // mock
+        to_offset: 1000000,// mock
+    };
+
+    yield put({ type: SET_DASHBOARD_LOADING, payload: true });
+
+    try {
+        const result = yield call(api.log.bind(api), locations, doProps);
+        const mockResult = prepareReportData(locations, result);
+
+        yield put({ type: DASHBOARD_DATA_FETCHING_SUCCESS, payload: mockResult });
+    } catch (e) {
+        yield put({ type: SET_DASHBOARD_LOADING, payload: false });
+        yield put({ type: SEND_ERROR_MESSAGE, payload: { text: e.message, description: e.message } });
+    }
 }
 
 function* _setPluginLanguage(action) {
@@ -287,7 +316,6 @@ function* _setPluginLanguage(action) {
 function* _setListShowDeleted(action) {
     const entity = yield select(Selectors.entity);
     const contributions = yield select(Selectors.contributions);
-
     const manual = !!contributions.getPointContributionValue(TYPE_LIST, entity, 'manual');
 
     yield put({
@@ -306,6 +334,7 @@ function* _setListShowDeleted(action) {
 function* rootSaga() {
     yield takeLatest(SAGA_FETCH_LIST_DATA, _fetchListData);
     yield takeLatest(SAGA_FETCH_REPORT, _fetchReport);
+    yield takeLatest(SAGA_FETCH_DASHBOARD, _fetchDashboard);
     yield takeLatest(SAGA_PROCESS_DATA, _processData);
     yield takeLatest(SAGA_FETCH_ENTITY_DATA, _fetchEntityData);
     yield takeLatest(SAGA_PROCESS_ENTITY_DATA, _processEntityData);

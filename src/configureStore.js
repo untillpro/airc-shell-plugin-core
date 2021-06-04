@@ -14,26 +14,36 @@ import rootSaga from './sagas/Root'
 const persistConfigDefauult = {
     key: 'plugin',
     storage,
-    blacklist: ['plugin', 'list', 'machine', 'context', 'collection', 'entity', 'report']
+    blacklist: [
+        'plugin',
+        'list',
+        'machine',
+        'context',
+        'collection',
+        'entity',
+        'report',
+        //'dashboards'
+    ]
 };
 
 const loggerMiddleware = createLogger()
 
 const configureStore = (persistConfig, initState = {}) => {
-    let config = persistConfigDefauult;
+    let config = { ...persistConfigDefauult };
 
     if (persistConfig && typeof persistConfig === 'object') {
-        config = { ...config, persistConfig };
+        console.log("persistConfig: ", persistConfig);
+        config = { ...config, ...persistConfig };
     }
     const sagaMiddleware = createSagaMiddleware()
     const persistedReducer = persistReducer(config, rootReducer);
 
-    let middleware = [ sagaMiddleware ];
+    let middleware = [sagaMiddleware];
 
     if (process.env.NODE_ENV !== 'production') {
         middleware.push(loggerMiddleware);
     }
-    
+
     const store = createStore(
         persistedReducer,
         initState,

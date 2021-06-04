@@ -50,7 +50,7 @@ class MainController extends Component {
                 case 'ReportViewStep': 
                     // when generate a report
                     return <ReportView />;
-                case 'DashboardsStep':
+                case 'DashboardStep':
                     // when generate a report
                     return <Dashboards />;
                 default: 
@@ -72,6 +72,7 @@ class MainController extends Component {
         const { errorCatched, error } = this.state;
 
         if (!contributions) return null;
+        
         if (typeof contributions !== 'object') {
             throw new Error('Contibution manager corrupted! Plugin core has critical problems.')
         }

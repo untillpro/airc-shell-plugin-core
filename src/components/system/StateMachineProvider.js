@@ -19,11 +19,13 @@ class StateMachineProvider extends Component {
     constructor(props) {
         super(props);
 
+        const { firstStep } = props;
+        
         //state machine initializing
         this.stateMachine = new StateMachine(props.dispatch);
 
         // root state of state machine is added manually
-        this.stateMachine.add(new RootStep());
+        this.stateMachine.add(new RootStep(firstStep));
     }
 
     componentDidMount() {

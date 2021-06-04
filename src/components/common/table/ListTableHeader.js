@@ -194,7 +194,7 @@ ListTableHeader.propTypes = {
     toggleDeletedRowsView: PropTypes.func,
     sendNeedEditFormMessage: PropTypes.func,
     sendNeedRemoveMessage: PropTypes.func,
-    sendNeedRefreshListDataMessage: PropTypes.func
+    sendNeedRefreshDataMessage: PropTypes.func
 };
 
 export default ListTableHeader;

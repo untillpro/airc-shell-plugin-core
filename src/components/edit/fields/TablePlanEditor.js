@@ -310,8 +310,6 @@ class TablePlanEditor extends PureComponent {
 
         this.setState({ tables, ...ops });
 
-        console.log(".changeTables() newTables: ", tables);
-
         if (_.isString(accessor) && _.isFunction(onChange)) {
             onChange({ [accessor]: tables });
         }
@@ -592,8 +590,6 @@ class TablePlanEditor extends PureComponent {
         } else {
             data = { number: this._getNextFreeNumber() };
         }
-
-        console.log("current table data: ", data);
 
         let isNew = !(_.isNumber(current) && current >= 0);
 

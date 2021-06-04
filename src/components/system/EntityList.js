@@ -35,7 +35,7 @@ import {
     sendNeedUnifyFormMessage,
     sendNeedRemoveMessage,
     sendNeedReduceMessage,
-    sendNeedRefreshListDataMessage
+    sendNeedRefreshDataMessage
 } from '../../actions/';
 
 import {
@@ -225,7 +225,7 @@ class EMList extends Component {
                 this.props.sendNeedEditFormMessage(selected, locations, entity);
                 break;
             case 'refresh':
-                this.props.sendNeedRefreshListDataMessage();
+                this.props.sendNeedRefreshDataMessage();
                 break;
             case 'massedit':
                 this.props.sendNeedMassEditFormMessage(selected, locations, entity);
@@ -496,5 +496,5 @@ export default connect(mapStateToProps, {
     sendNeedUnifyFormMessage,
     sendNeedRemoveMessage,
     sendNeedReduceMessage,
-    sendNeedRefreshListDataMessage
+    sendNeedRefreshDataMessage
 })(withStackEvents(EMList));

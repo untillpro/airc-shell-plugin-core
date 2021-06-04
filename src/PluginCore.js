@@ -34,7 +34,7 @@ class PluginCore extends Component {
     }
 
     render() {
-        const { contributions, persistConfig } = this.props;
+        const { contributions, persistConfig, firstStep } = this.props;
 
         let manager = ContributionFactory(contributions);
 
@@ -49,7 +49,7 @@ class PluginCore extends Component {
                     <StackEvents events={["keydown", "keyup"]}>
                         <CoreProvider>
                             <ApiProvider>
-                                <StateMachineProvider>
+                                <StateMachineProvider firstStep={firstStep}>
                                     <ErrorBoundary>
                                         <LangProvider languages={systemLanguages}>
                                             <MainController />

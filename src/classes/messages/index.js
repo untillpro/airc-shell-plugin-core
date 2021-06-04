@@ -70,9 +70,9 @@ export class MessageNeedMassEdit extends StateMachineMessage {
     }
 }
 
-export class MessageRefreshListData extends StateMachineMessage {
+export class MessageRefreshData extends StateMachineMessage {
     getName() {
-        return 'MessageRefreshListData';
+        return 'MessageRefreshData';
     }
 }
 

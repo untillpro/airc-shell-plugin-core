@@ -17,7 +17,7 @@ import {
     SEND_NEED_REDUCE_ITEM_MESSAGE,
     SEND_NEED_PROCCESS_DATA_MESSAGE,
     SEND_NEED_VALIDATE_DATA_MESSAGE,
-    SEND_NEED_LIST_DATA_REFRESH,
+    SEND_NEED_DATA_REFRESH,
     SEND_FORM_NEED_NAVIGATION,
     SEND_LANGUAGE_CHANGED_MESSAGE
 } from './Types';
@@ -69,9 +69,9 @@ export const sendNeedFetchListDataMessage = (props) => {
     };
 };
 
-export const sendNeedRefreshListDataMessage = () => {
+export const sendNeedRefreshDataMessage = () => {
     return {
-        type: SEND_NEED_LIST_DATA_REFRESH
+        type: SEND_NEED_DATA_REFRESH
     };
 }
 
