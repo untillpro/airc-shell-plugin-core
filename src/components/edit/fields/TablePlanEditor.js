@@ -611,6 +611,7 @@ class TablePlanEditor extends PureComponent {
                         isNew={isNew}
                         data={data}
                         onProceed={(newData) => this.onFormSubmit(!isNew ? current : null, newData)}
+                        onCancel={this.handleCancel}
                         locations={locations}
                     />
                 }

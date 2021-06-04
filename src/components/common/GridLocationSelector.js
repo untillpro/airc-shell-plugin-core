@@ -153,7 +153,7 @@ GridLocationSelector.propTypes = {
     allowMultyLocations: PropTypes.bool,
     locations: PropTypes.array.isRequired,
     locationGroups: PropTypes.array,
-    locationsOptions: PropTypes.array,
+    locationsOptions: PropTypes.object,
 };
 
 const mapStateToProps = (state) => {
