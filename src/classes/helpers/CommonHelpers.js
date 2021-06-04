@@ -79,6 +79,7 @@ export const isObject = (item) => {
 
 export const mergeDeep = (target, ...sources) => {
     if (!sources.length) return target;
+    
     const source = sources.shift();
 
     if (_.isPlainObject(target) && _.isPlainObject(source)) {
@@ -87,12 +88,12 @@ export const mergeDeep = (target, ...sources) => {
                 if (!target[key]) Object.assign(target, { [key]: {} });
                 mergeDeep(target[key], source[key]);
             } else if (_.isArray(source[key]) && _.isArray(target[key])) {
-                let newArray = [];
-                
+                let newArray = [ ...target[key] ];
+
                 source[key].forEach((elem, index) => {
                     if (!_.isNil(elem)) {
-                        newArray.push(_.merge({}, target[key][index], elem));
-                    }
+                        newArray[index] = _.merge({}, target[key][index], elem)
+                    } 
                 });
 
                 Object.assign(target, { [key]: newArray });

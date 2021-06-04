@@ -86,72 +86,12 @@ class EMEditFormFieldsGroup extends Component {
 
         if (_.isPlainObject(changedData)) data = { ...changedData };
 
-        data = _.merge(data, value);
-        /*
-        data = _.mergeWith(data, value, (objValue, srcValue) => {
-            if (_.isArray(objValue)) {
-              console.log("objValue: ", objValue);
-              console.log("srcValue: ", srcValue);
-            }
-          });
-        */
+        data = mergeDeep(data, value);
 
         if (onDataChanged && typeof onDataChanged === 'function') {
             onDataChanged(data)
         }
     }
-
-    
-    /*
-    handleFieldChanged(field, value) {
-        const { changedData, embedded: embedded_type, onDataChanged, data: Data } = this.props;
-        const { accessor, ml_accessor, onChange } = field;
-
-        Logger.log({
-            value,
-            changedData,
-            Data
-        }, '++++++++++ handleFieldChanged:')
-
-        let data = {};
-        let path = accessor;
-
-        if (embedded_type) {
-            value = { [accessor]: value }
-            path = `${embedded_type}`;
-        }
-
-        if (changedData !== null) data = { ...changedData };
-
-        let v = 0;
-
-        if (value !== 0) {
-            v = _.get(data, path);
-
-            if (_.isPlainObject(v)) {
-                v = _.merge({ ...v }, value);
-            } else if (_.isArray(v)) {
-                v = immutableArrayMerge(v, value);
-            } else {
-                v = value;
-            }
-        } 
-
-        _.set(data, path, v);
-
-        if (!_.isNil(mlValue) && _.isString(ml_accessor)) {
-            _.set(data, ml_accessor, mlValue);
-        }
-
-        if (onChange && typeof onChange === 'function') {
-            data = { ...data, ...onChange(value, data) };
-        }
-
-        if (onDataChanged && typeof onDataChanged === 'function') {
-            onDataChanged(data)
-        }
-    }
-    */
 
     render() {
         const {

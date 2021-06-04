@@ -4,7 +4,7 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
 import EMEditFormFieldsGroup from './EMEditFormFieldsGroup';
 
 class EMEditFormFieldsBuilder extends Component {
@@ -126,6 +126,27 @@ class EMEditFormFieldsBuilder extends Component {
             </div>
         );
     }
+}
+
+EMEditFormFieldsBuilder.propType = {
+    locations: PropTypes.arrayOf(PropTypes.number),
+    formContext: PropTypes.object.isRequired,
+    key: PropTypes.string,
+    hasErrors: PropTypes.object,
+    fields: PropTypes.array,
+    contributions: PropTypes.object.isRequired,
+    opened: PropTypes.bool,
+    footer: PropTypes.node,
+    embedded: PropTypes.string,
+    onDataChanged: PropTypes.func.isRequired,
+
+    data: PropTypes.object,
+    classifiers: PropTypes.object,
+    changedData: PropTypes.object,
+    fieldsErrors: PropTypes.object,
+
+    isNew: PropTypes.bool,
+    isCopy: PropTypes.bool,
 }
 
 export default EMEditFormFieldsBuilder;

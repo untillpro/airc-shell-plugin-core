@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { translate as t, Toggler, Button } from 'airc-shell-core';
 
 import {
@@ -64,5 +65,15 @@ class TablePlanHeader extends PureComponent {
         );
     }
 }
+
+TablePlanHeader.propTypes = {
+    name: PropTypes.string, 
+    onViewChange: PropTypes.func, 
+    onAdd: PropTypes.func, 
+    view: PropTypes.string,  
+    location: PropTypes.number,  
+    showDeleted: PropTypes.bool,  
+    onDeletedChange: PropTypes.func, 
+};
 
 export default TablePlanHeader;

@@ -3,6 +3,7 @@
  */
 
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import EditableCell from './EditableCell';
 
 import { formatNumber } from '../../../../classes/helpers';
@@ -44,5 +45,9 @@ class NumberCell extends PureComponent {
         />;
     }
 }
+
+NumberCell.propTypes = {
+    type: PropTypes.string,
+};
 
 export default NumberCell

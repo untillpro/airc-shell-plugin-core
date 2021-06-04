@@ -3,6 +3,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Tip } from 'airc-shell-core';
 
 const TipField = (props) => {
@@ -17,5 +18,9 @@ const TipField = (props) => {
 
     return <Tip text={text} opened={opened} />;
 }
+
+TipField.propTypes = {
+    field: PropTypes.object.isRequired,
+};
 
 export default TipField;

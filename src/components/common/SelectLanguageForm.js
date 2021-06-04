@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { translate as t } from 'airc-shell-core';
 import { Form, Select, Button } from 'antd';
 
@@ -111,5 +112,10 @@ class SelectLanguageForm extends PureComponent {
         );
     }
 }
+
+SelectLanguageForm.propTypes = {
+    onCancel: PropTypes.func,
+    languages: PropTypes.array
+};
 
 export default SelectLanguageForm;

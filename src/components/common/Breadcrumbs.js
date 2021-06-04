@@ -2,9 +2,7 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
 import { Breadcrumbs as CoreBreadcrumbs } from 'airc-shell-core';
-
 import { sendBreadcrumbSelected } from '../../actions';
 
 class Breadcrumbs extends PureComponent {
@@ -71,7 +69,8 @@ class Breadcrumbs extends PureComponent {
 
 Breadcrumbs.propTypes = {
     context: PropTypes.object.isRequired,
-    sendBreadcrumbSelected: PropTypes.func.isRequired
+    sendBreadcrumbSelected: PropTypes.func.isRequired,
+    items: PropTypes.array,
 };
 
 const mapStateToProps = (state) => {

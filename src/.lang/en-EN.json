@@ -126,7 +126,9 @@
             "reverse_split": "Reverse split",
             "add_tips": "Add tips",
             "add_payer": "Add payer",
-            "add_client": "Add client"
+            "add_client": "Add client",
+            "info": "Info",
+            "allergens": "Allergens"
         },
         "period_value_types": {
             "weekly": "Weekly values",

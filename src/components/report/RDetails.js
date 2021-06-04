@@ -4,6 +4,7 @@
 
 import _ from 'lodash';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { translate as t } from 'airc-shell-core';
 import EMEditFormFieldsBuilder from '../edit/EMEditFormFieldsBuilder';
@@ -287,6 +288,21 @@ class ReportDetails extends Component {
         );
     }
 }
+
+ReportDetails.propTypes = {
+    locations: PropTypes.array,
+    contributions: PropTypes.object,
+    fromDateTime: PropTypes.object,
+    toDateTime: PropTypes.object,
+    workingHoursFrom: PropTypes.object,
+    workingHoursTo: PropTypes.object,
+    filterBy: PropTypes.object,
+    reportProps: PropTypes.object,
+    mostUsedPeriods: PropTypes.array,
+    debug: PropTypes.bool,
+    report: PropTypes.object,
+    group: PropTypes.string.isRequired,
+}; 
 
 const mapStateToProps = (state) => {
     const { contributions } = state.context;

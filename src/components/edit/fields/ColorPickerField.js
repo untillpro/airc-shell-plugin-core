@@ -3,7 +3,7 @@
  */
 
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
 import { Popover, Button, ColorPicker, ColorPreview } from 'airc-shell-core';
 
 class ColorPickerField extends Component {
@@ -85,15 +85,23 @@ class ColorPickerField extends Component {
         );
     }
 }
-/**
- <TextInput 
-                    input={{
-                        addonBefore: '#',
-                        addonAfter: <ColorPreview value={this.getValue()} />,
-                        placeholder: "i am batman",
-                        width: 100
-                    }}
-                    value="test"
-                />
- */
+
+ColorPickerField.propTypes = {
+    formContext: PropTypes.object,
+    locations: PropTypes.arrayOf(PropTypes.number),
+    autoFocus: PropTypes.bool,
+    entity: PropTypes.string,
+    context: PropTypes.object,
+    field: PropTypes.object.isRequired,
+    disabled: PropTypes.bool,
+    showError: PropTypes.bool,
+    errors: PropTypes.array,
+    onChange: PropTypes.func.isRequired,
+    value: PropTypes.any,
+    data: PropTypes.object,
+    classifiers: PropTypes.object,
+    isNew: PropTypes.bool,
+    isCopy: PropTypes.bool,
+};
+
 export default ColorPickerField;

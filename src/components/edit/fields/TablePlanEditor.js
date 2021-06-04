@@ -607,6 +607,7 @@ class TablePlanEditor extends PureComponent {
                         isNew={isNew}
                         data={data}
                         onProceed={(newData) => this.onFormSubmit(!isNew ? current : null, newData)}
+                        onCancel={this.handleCancel}
                         locations={locations}
                     />
                 }
@@ -763,10 +764,21 @@ class TablePlanEditor extends PureComponent {
 }
 
 TablePlanEditor.propTypes = {
-    tables: PropTypes.arrayOf(PropTypes.object),
-    width: PropTypes.number,
-    height: PropTypes.number,
-    image: PropTypes.string,
+    formContext: PropTypes.object,
+    locations: PropTypes.arrayOf(PropTypes.number),
+    autoFocus: PropTypes.bool,
+    entity: PropTypes.string,
+    context: PropTypes.object,
+    field: PropTypes.object.isRequired,
+    disabled: PropTypes.bool,
+    showError: PropTypes.bool,
+    errors: PropTypes.array,
+    onChange: PropTypes.func.isRequired,
+    value: PropTypes.any,
+    data: PropTypes.object,
+    classifiers: PropTypes.object,
+    isNew: PropTypes.bool,
+    isCopy: PropTypes.bool,
 };
 
 export default withStackEvents(TablePlanEditor);

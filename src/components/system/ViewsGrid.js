@@ -145,7 +145,7 @@ class ViewsGrid extends Component {
         if (_.isArray(views) && _.size(views) > 0) {
             return (
                 <div className={cn("content-container", { "flex-content row": !!showLocationSelector })}>
-                    <GridLocationSelector debug />
+                    <GridLocationSelector />
 
                     <Grid
                         cols={3}

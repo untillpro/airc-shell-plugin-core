@@ -68,25 +68,25 @@ class TablePlanRow extends PureComponent {
                 </div>
 
                 <div className="buttons">
-                    <IconButton 
+                    <IconButton
                         onClick={this.handleHideAction}
-                        icon={<Icon icon={hide === 1 ? Icons.ICON_EYE_SOLID : Icons.ICON_HIDE} />} 
-                        size="small" 
-                        ghost 
+                        icon={<Icon icon={hide === 1 ? Icons.ICON_EYE_SOLID : Icons.ICON_HIDE} />}
+                        size="small"
+                        ghost
                     />
 
-                    <IconButton 
+                    <IconButton
                         onClick={this.handleEditAction}
-                        icon={<Icon icon={Icons.ICON_EDIT} />} 
-                        size="small" 
-                        ghost 
+                        icon={<Icon icon={Icons.ICON_EDIT} />}
+                        size="small"
+                        ghost
                     />
 
-                    <IconButton 
+                    <IconButton
                         onClick={this.handleDeleteAction}
-                        icon={<Icon icon={Icons.ICON_DELETE_SOLID} />} 
-                        size="small" 
-                        ghost 
+                        icon={<Icon icon={Icons.ICON_DELETE_SOLID} />}
+                        size="small"
+                        ghost
                     />
                 </div>
             </>
@@ -127,7 +127,11 @@ class TablePlanRow extends PureComponent {
 }
 
 TablePlanRow.propTypes = {
+    name: PropTypes.string,
+    table: PropTypes.object,
+    hide: PropTypes.bool,
     data: PropTypes.object.isRequired,
+    onHide: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
     onReduce: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,

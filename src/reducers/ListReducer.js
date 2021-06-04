@@ -49,12 +49,12 @@ const reducer = (state = INITIAL_STATE, action) => {
                 newState.total = _.get(action.payload.Data, "meta.total") || 0;
 
                 /*
-                if (t && t > 0 && pageSize > 0) {
-                    this.total = parseInt(t);
-                    this.pages = Math.ceil(t / pageSize);
-                } else {
-                    this.pages = 0;
-                }
+                    if (t && t > 0 && pageSize > 0) {
+                        this.total = parseInt(t);
+                        this.pages = Math.ceil(t / pageSize);
+                    } else {
+                        this.pages = 0;
+                    }
                 */
             }
 
