@@ -271,7 +271,14 @@ class TablePlanEditor extends PureComponent {
         }
 
         if (_.isArray(tables)) {
-            let tableNumbers = _.map(tables,(item) => item.number);
+            let tableNumbers = [];
+
+            _.forEach(tables,(item) => {
+                if (_.isObject(item) && "number" in item) {
+                    tableNumbers.push(parseInt(item.number, 10)); 
+                }
+            });
+
             tableNumbers = _.uniq(tableNumbers);
             tableNumbers = tableNumbers.sort((a, b) => {
                 if (a < b) return -1;
