@@ -75,7 +75,6 @@ class ChartBuilder extends React.Component {
                                     <span className="_grabber">•</span>
                                     <span className="_title" >{name}</span>
                                     <span className="_grow"></span>
-                                    <a className="_more" href="">View detailed</a>
                                 </div>
 
                                 <ChartComponent
