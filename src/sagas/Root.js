@@ -26,11 +26,13 @@ import {
     TYPE_LIST,
     TYPE_COLLECTION,
     TYPE_REPORTS,
+    TYPE_CHARTS,
     C_COLLECTION_REQUIRED_FIELDS,
     C_COLLECTION_REQUIRED_CLASSIFIERS,
     C_COLLECTION_ENTITY,
     C_REPORT_EVENT_TYPE,
-    C_REPORT_REQUIRED_CLASSIFIERS
+    C_REPORT_REQUIRED_CLASSIFIERS,
+    C_CHART_REQUIRED_CLASSIFIERS
 } from '../classes/contributions/Types';
 
 import {
@@ -249,8 +251,9 @@ function* _fetchReport(action) {
 }
 
 function* _fetchDashboard() {
-    const locations = yield select(Selectors.locationsAll);
+    const locations = yield select(Selectors.locations);
     const api = yield select(Selectors.api);
+    const contributions = yield select(Selectors.contributions);
     const from = yield select(Selectors.dashboardFrom);
     const to = yield select(Selectors.dashboardTo);
 
@@ -261,15 +264,17 @@ function* _fetchDashboard() {
         show: true,
         from_offset: 0, // mock
         to_offset: 1000000,// mock
+        type: 'pbill',
+        required_classifiers: contributions.getPointContributionValues(TYPE_CHARTS, 'all', C_CHART_REQUIRED_CLASSIFIERS)
     };
 
     yield put({ type: SET_DASHBOARD_LOADING, payload: true });
 
     try {
         const result = yield call(api.log.bind(api), locations, doProps);
-        const mockResult = prepareReportData(locations, result);
+        const resultData = prepareReportData(locations, result);
 
-        yield put({ type: DASHBOARD_DATA_FETCHING_SUCCESS, payload: mockResult });
+        yield put({ type: DASHBOARD_DATA_FETCHING_SUCCESS, payload: resultData });
     } catch (e) {
         yield put({ type: SET_DASHBOARD_LOADING, payload: false });
         yield put({ type: SEND_ERROR_MESSAGE, payload: { text: e.message, description: e.message } });

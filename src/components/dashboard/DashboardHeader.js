@@ -16,6 +16,8 @@ import {
     Form,
 } from 'antd';
 
+import LocationSelector from '../common/LocationSelector';
+
 import {
     sendNeedRefreshDataMessage,
     setDashboardSettings
@@ -143,6 +145,10 @@ class DashboardHeader extends PureComponent {
         //
         return (
             <div className="dashboard-header">
+                <div className="_location">
+                    <LocationSelector />
+                </div>
+
                 <div className="_title">
                     HOME PAGE {from.format("YYYY/MM/DD hh:mm")} - {to.format("YYYY/MM/DD hh:mm")}
                 </div>

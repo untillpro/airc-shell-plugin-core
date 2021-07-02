@@ -104,7 +104,7 @@ export const C_SECTION_FIELDS = "fields";
 // ### COLLECTION
 
 export const C_COLLECTION_ENTITY = "entity";
-export const C_COLLECTION_REQUIRED_CLASSIFIERS = "required_classifiers";
+export const C_COLLECTION_REQUIRED_CLASSIFIERS = C_REPORT_REQUIRED_CLASSIFIERS;
 export const C_COLLECTION_REQUIRED_FIELDS = "required_fields";
 export const C_COLLECTION_FILTER_BY = "filter_by";
 
@@ -122,4 +122,5 @@ export const C_CHART_GROUP = "group";
 export const C_CHART_TYPE = "type";
 export const C_CHART_OPTIONS = "options";
 export const C_CHART_BUILDER = "builder";
+export const C_CHART_REQUIRED_CLASSIFIERS = C_REPORT_REQUIRED_CLASSIFIERS;
 

@@ -39,11 +39,13 @@ class DashboardGroup extends React.Component {
     }
 
     _initChartsData() {
+        const { options } = this.props;
+
         if (_.isPlainObject(this.props.data) || _.isArray(this.state.items)) {
             const chartsData = {};
 
             _.forEach(this.state.items, (item) => {
-                chartsData[item.code] = item.builder(this.props.data);
+                chartsData[item.code] = item.builder(this.props.data, options);
             });
 
             this.setState({ chartsData });
@@ -156,4 +158,17 @@ class DashboardGroup extends React.Component {
     }
 }
 
-export default connect(null, { setChartOrder })(DashboardGroup);
+const mapStateToProps = (state) => {
+    const { locationsOptions } = state.locations;
+    const { from, to } = state.dashboards;
+
+
+
+    return {
+        options: {
+            locations: locationsOptions, from, to
+        }
+    }
+};
+
+export default connect(mapStateToProps, { setChartOrder })(DashboardGroup);

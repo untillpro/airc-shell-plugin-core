@@ -213,3 +213,15 @@ export const prepareReportData = (locations, Data) => {
 
     return result;
 }
+
+export const getBillTotal = (bill) => {
+    let total = 0;
+
+    if (_.isPlainObject(bill) && _.isArray(bill.pbill_payments)) {
+        _.forEach(bill.pbill_payments, (payment) => {
+            total += payment.price;
+        });
+    }
+
+    return total;
+};

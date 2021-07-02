@@ -9,7 +9,6 @@ import {
 } from '../../sagas/Types';
 
 class DashboardStep extends StateMachineStep {
-
     getName() {
         return 'DashboardStep';
     }
@@ -22,6 +21,10 @@ class DashboardStep extends StateMachineStep {
         console.log("need refresh message handler");
 
         return this.fetchData();
+    }
+
+    MessageSetLocations(msg, context) {
+        return this.fetchData(context);
     }
 
     fetchData() {

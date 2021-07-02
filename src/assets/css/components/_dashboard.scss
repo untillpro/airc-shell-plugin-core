@@ -16,9 +16,17 @@ body {
     background-color: #fff;
     margin-bottom: 10px;
 
+    ._location {
+        position: absolute;
+        left: 10px;
+        top: 0px;
+    }
+
     ._title {
         font-size: 24px;
         font-weight: bold;
+
+        padding: 0px 240px;
     }
 
     ._actions {
