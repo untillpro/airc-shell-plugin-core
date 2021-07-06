@@ -51,14 +51,14 @@ class MainController extends Component {
                     // when generate a report
                     return <ReportView />;
                 case 'DashboardStep':
-                    // when generate a report
+                    // when dasboard 
                     return <Dashboards />;
                 default: 
                     return <ViewsGrid />;
             }
         }
         
-        return null;
+        return <div className="no-step-specified">No state component specified for "{step}" step</div>;
     }
 
     renderProdComponents() {

@@ -124,3 +124,7 @@ export const C_CHART_OPTIONS = "options";
 export const C_CHART_BUILDER = "builder";
 export const C_CHART_REQUIRED_CLASSIFIERS = C_REPORT_REQUIRED_CLASSIFIERS;
 
+// ### CONST
+
+export const C_CHART_COMMON_TYPE = '__all';
+

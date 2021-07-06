@@ -125,8 +125,6 @@ export default class StateMachine {
                 throw e;
             }
 
-            console.error(`State machine error catch: ${e.message}`);
-
             changedData = {
                 ...changedData,
                 error: e

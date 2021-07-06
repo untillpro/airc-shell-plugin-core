@@ -27,6 +27,10 @@ class DashboardStep extends StateMachineStep {
         return this.fetchData(context);
     }
 
+    MessageSelectView(msg) {
+        return null;
+    }
+    
     fetchData() {
         return {
             action: {

@@ -32,7 +32,8 @@ import {
     C_COLLECTION_ENTITY,
     C_REPORT_EVENT_TYPE,
     C_REPORT_REQUIRED_CLASSIFIERS,
-    C_CHART_REQUIRED_CLASSIFIERS
+    C_CHART_REQUIRED_CLASSIFIERS,
+    C_CHART_COMMON_TYPE
 } from '../classes/contributions/Types';
 
 import {
@@ -258,14 +259,13 @@ function* _fetchDashboard() {
     const to = yield select(Selectors.dashboardTo);
 
     let doProps = {
-        type: "",
+        type: 'pbill',
         from,
         to,
         show: true,
         from_offset: 0, // mock
         to_offset: 1000000,// mock
-        type: 'pbill',
-        required_classifiers: contributions.getPointContributionValues(TYPE_CHARTS, 'all', C_CHART_REQUIRED_CLASSIFIERS)
+        required_classifiers: contributions.getPointContributionValues(TYPE_CHARTS, C_CHART_COMMON_TYPE, C_CHART_REQUIRED_CLASSIFIERS)
     };
 
     yield put({ type: SET_DASHBOARD_LOADING, payload: true });

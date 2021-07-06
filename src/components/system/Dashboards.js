@@ -14,7 +14,9 @@ import {
     C_CHART_GROUP,
     C_CHART_TYPE,
     C_CHART_OPTIONS,
-    C_CHART_BUILDER
+    C_CHART_BUILDER,
+
+    C_CHART_COMMON_TYPE
 } from '../../classes/contributions/Types';
 
 import { funcOrString } from '../../classes/helpers';
@@ -47,6 +49,7 @@ class Dashboards extends Component {
 
             _.forEach(chartPoints, (key) => {
                 const p = contributions.getPoint(TYPE_CHARTS, key);
+
                 if (!p) return null;
 
                 const chartItem = this.buildChartItem(p);
@@ -72,6 +75,8 @@ class Dashboards extends Component {
 
     buildChartItem(point) {
         const { customOrder } = this.props;
+
+        if (point.name === C_CHART_COMMON_TYPE) return null;
 
         let code = point.getContributuionValue(C_CHART_CODE);
         let name = point.getContributuionValue(C_CHART_NAME);
