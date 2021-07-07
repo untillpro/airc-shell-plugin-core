@@ -4,6 +4,12 @@
 
 import * as Types from './Types';
 
+export const apiInitDone = () => {
+    return {
+        type: Types.API_INITIALIZED
+    }
+};
+
 export const initPlugin = (payload) => {
     return {
         payload,

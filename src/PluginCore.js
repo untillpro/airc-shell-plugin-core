@@ -10,7 +10,6 @@ import { CoreProvider } from 'airc-shell-core';
 import {
     StateMachineProvider,
     ErrorBoundary,
-    AppLoared,
     ApiProvider,
     MainController,
     LangProvider
@@ -38,7 +37,7 @@ class PluginCore extends Component {
 
         let manager = ContributionFactory(contributions);
 
-        const { store, persistor } = configureStore(persistConfig, { "context": { "contributions": manager } });
+        const { store, persistor } = configureStore(persistConfig, { "context": { "contributions": manager }});
 
         return (
             <Provider store={store} >
@@ -56,7 +55,6 @@ class PluginCore extends Component {
                                         </LangProvider>
                                     </ErrorBoundary>
                                 </StateMachineProvider>
-                                <AppLoared />
                             </ApiProvider>
                         </CoreProvider>
                     </StackEvents>

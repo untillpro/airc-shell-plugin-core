@@ -32,6 +32,10 @@ class RootStep extends StateMachineStep {
             message: new MessageInit()
         };
     }
+
+    MessageSelectView(msg) {
+        return null;
+    }
 }
 
 export default RootStep; 

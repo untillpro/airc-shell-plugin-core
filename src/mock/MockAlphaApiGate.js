@@ -15,10 +15,14 @@ const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOjI1NTM2LCJEZXZp
 const uploadFileAction = "https://badrequest.ru/tests/uploader/write.php";
 
 class MockAlphaApiGate {
-    constructor() {
+    constructor(callback) {
         this.name = "MockAlphaApiGate";
         this.host = 'https://air-alpha.untill.ru/api';
         //this.host = 'https://air-rc.untill.ru/api';
+
+        if (callback && typeof callback === 'function') {
+            callback();
+        }
     }
 
 

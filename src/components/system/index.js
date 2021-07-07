@@ -3,7 +3,7 @@
  */
 
 import ApiProvider from './ApiProvider';
-import AppLoared from './AppLoared';
+import AppLoader from './AppLoader';
 import EntityEditor from './EntityEditor';
 import EntityList from './EntityList';
 import EntityRenderer from './EntityRenderer';
@@ -18,7 +18,7 @@ import LangProvider from './LangProvider';
 
 export {
     ApiProvider,
-    AppLoared,
+    AppLoader,
     EntityEditor,
     EntityList,
     EntityRenderer,

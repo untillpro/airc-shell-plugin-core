@@ -4,6 +4,7 @@
 
 
 
+export const API_INITIALIZED = 'api_initialized';
 export const INIT_PLUGIN = 'init_plugin';
 export const SET_LOCATIONS = 'set_locations';
 export const TOGGLE_LOCATIONS_SELECTOR = 'toggle_locations_selector';

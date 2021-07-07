@@ -9,10 +9,17 @@ const INITIAL_STATE = {
     view: null,
     entity: null,
     step: null,
+    initialized: false
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
+        case Types.API_INITIALIZED: 
+            return { 
+                ...state, 
+                initialized: true 
+            };
+
         case Types.SEND_STATE_MACHINE_DATA: 
             return mergeExisting(state, action.payload);
 

@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import isProd from 'is-prod';
 
 import {
+    apiInitDone,
     initPlugin,
     setContext,
     setLanguage,
@@ -16,6 +17,7 @@ import {
 
 import { UShellAPIGate } from 'airc-shell-core';
 import MockAlphaApiGate from '../../mock/MockAlphaApiGate';
+import AppLoader from './AppLoader';
 
 class ApiProvider extends Component {
     componentDidMount() {
@@ -28,12 +30,12 @@ class ApiProvider extends Component {
         let apiGate = null;
 
         if (isProd.isProduction()) {
-            apiGate = new UShellAPIGate(API);
+            apiGate = new UShellAPIGate(API, '', this.props.apiInitDone);
         } else {
-            apiGate = new MockAlphaApiGate();
+            apiGate = new MockAlphaApiGate(this.props.apiInitDone);
         }
 
-        this.props.setContext("api", apiGate)
+        this.props.setContext("api", apiGate);
     }
 
     componentDidUpdate(oldProps) {
@@ -76,19 +78,23 @@ class ApiProvider extends Component {
     }
 
     render() {
-        return this.props.children;
+        const { initialized } = this.props;
+
+        return initialized === true ? this.props.children : <AppLoader loading={true} />;
     }
 }
 
 const mapStateToProps = (state) => {
+    const { initialized } = state.plugin;
     const { api } = state.context;
     const { info, error, warning, success } = state.messages;
     const { locations } = state.locations;
 
-    return { api, info, error, warning, success, locations };
+    return { initialized, api, info, error, warning, success, locations };
 };
 
 export default connect(mapStateToProps, { 
+    apiInitDone,
     initPlugin,
     setLanguage,
     setContext,
