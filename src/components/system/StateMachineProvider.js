@@ -25,9 +25,7 @@ class StateMachineProvider extends Component {
         this.stateMachine = new StateMachine(props.dispatch);
 
         // root state of state machine is added manually
-        if (firstStep) {
-            this.stateMachine.add(new RootStep(firstStep));
-        }
+        this.stateMachine.add(new RootStep(firstStep));
     }
 
     componentDidMount() {
