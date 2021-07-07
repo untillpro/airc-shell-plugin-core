@@ -18,16 +18,14 @@ class DashboardStep extends StateMachineStep {
     }
 
     MessageRefreshData() {
-        console.log("need refresh message handler");
-
         return this.fetchData();
     }
 
-    MessageSetLocations(msg, context) {
-        return this.fetchData(context);
+    MessageSetLocations() {
+        return this.fetchData();
     }
 
-    MessageSelectView(msg) {
+    MessageSelectView() {
         return null;
     }
     

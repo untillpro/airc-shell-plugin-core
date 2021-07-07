@@ -17,15 +17,17 @@ import {
 
 class StateMachineProvider extends Component {
     constructor(props) {
-        super(props);
-
         const { firstStep } = props;
+
+        super(props);
         
         //state machine initializing
         this.stateMachine = new StateMachine(props.dispatch);
 
         // root state of state machine is added manually
-        this.stateMachine.add(new RootStep(firstStep));
+        if (firstStep) {
+            this.stateMachine.add(new RootStep(firstStep));
+        }
     }
 
     componentDidMount() {
@@ -39,7 +41,11 @@ class StateMachineProvider extends Component {
         return false;
     }
 
-    render() {
+    componentDidUpdate() {
+        this._sendMessage();
+    }
+
+    _sendMessage() {
         const { context, message, isGlobal, shouldPop } = this.props;
         const { api } = context;
         /**
@@ -66,7 +72,11 @@ class StateMachineProvider extends Component {
                 api.sendError(data.error);
             }
         }
+    }
 
+    render() {
+        this._sendMessage();
+        
         return this.props.children;
     }
 }

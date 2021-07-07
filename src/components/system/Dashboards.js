@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
 import {
     DashboardHeader,
     DashboardBuilder
@@ -20,6 +21,12 @@ import {
 } from '../../classes/contributions/Types';
 
 import { funcOrString } from '../../classes/helpers';
+
+import { 
+    dashboardVisibility, 
+    dashboardCustomOrder,
+} from '../../selectors';
+
 
 class Dashboards extends Component {
     constructor(props) {
@@ -142,9 +149,12 @@ class Dashboards extends Component {
 
 const mapStateToProps = (state) => {
     const { contributions } = state.context;
-    const { visibility, customOrder } = state.dashboards;
 
-    return { contributions, visibility, customOrder };
+    return { 
+        contributions, 
+        visibility: dashboardVisibility(state), 
+        customOrder: dashboardCustomOrder(state)
+    };
 };
 
 export default connect(mapStateToProps, null)(Dashboards);

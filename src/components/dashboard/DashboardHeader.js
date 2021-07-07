@@ -3,6 +3,12 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { 
+    dashboardFrom, 
+    dashboardTo, 
+    dashboardVisibility
+ } from '../../selectors';
+
 import {
     Button,
     Tooltip,
@@ -246,13 +252,13 @@ const mapStateToProps = (state) => {
     const { contributions } = state.context;
     const { from, to, visibility, autoRefresh, refreshDelay } = state.dashboards;
 
-    console.log("mapStateToProps: ", from, to);
+    console.log("mapStateToProps: ", from, to, visibility, autoRefresh, refreshDelay);
 
     return {
         contributions,
-        from,
-        to,
-        visibility,
+        from: dashboardFrom(state),
+        to: dashboardTo(state),
+        visibility: dashboardVisibility(state),
         autoRefresh,
         refreshDelay,
     };

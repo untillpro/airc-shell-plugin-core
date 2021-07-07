@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import shortid from 'shortid';
 import { DropTarget } from 'react-drag-drop-container';
 import ChartBuilder from './ChartBuilder';
-
+import { dashboardFrom, dashboardTo } from '../../selectors';
 import { setChartOrder  } from '../../actions/';
 
 class DashboardGroup extends React.Component {
@@ -101,7 +101,7 @@ class DashboardGroup extends React.Component {
         let items = this.state.items.slice();
 
         const index = items.findIndex((item) => {
-            return item.uid == uid
+            return item.uid === uid
         });
 
         if (index !== -1) {
@@ -160,13 +160,12 @@ class DashboardGroup extends React.Component {
 
 const mapStateToProps = (state) => {
     const { locationsOptions } = state.locations;
-    const { from, to } = state.dashboards;
-
-
 
     return {
         options: {
-            locations: locationsOptions, from, to
+            locations: locationsOptions, 
+            from: dashboardFrom(state), 
+            to: dashboardTo(state)
         }
     }
 };

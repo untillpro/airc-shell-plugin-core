@@ -2,6 +2,16 @@ import _ from 'lodash';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Empty } from 'antd';
+
+import { 
+    dashboardFrom, 
+    dashboardTo, 
+    dashboardVisibility, 
+    dashboardCustomOrder,
+    dashboardLoading,
+    dashboardData
+} from '../../selectors';
+
 import DashboardGroup from './DashboardGroup';
 import { LoadingOverlay } from '../common';
 
@@ -55,15 +65,13 @@ class DashboardBuilder extends PureComponent {
 }
 
 const mapStateToProps = (state) => {
-    const { loading, data, customOrder, visibility, from, to } = state.dashboards;
-
     return {
-        loading,
-        customOrder,
-        data,
-        visibility,
-        from,
-        to
+        loading: dashboardLoading(state),
+        customOrder: dashboardCustomOrder(state),
+        data: dashboardData(state),
+        visibility: dashboardVisibility(state),
+        from: dashboardFrom(state), 
+        to: dashboardTo(state)
     };
 }
 

@@ -20,7 +20,7 @@ import {
     prepareReportData
 } from '../classes/helpers';
 
-import * as Selectors from './Selectors';
+import * as Selectors from '../selectors';
 
 import {
     TYPE_LIST,
@@ -255,8 +255,8 @@ function* _fetchDashboard() {
     const locations = yield select(Selectors.locations);
     const api = yield select(Selectors.api);
     const contributions = yield select(Selectors.contributions);
-    const from = yield select(Selectors.dashboardFrom);
-    const to = yield select(Selectors.dashboardTo);
+    const from = yield select(Selectors.dashboardFromValue);
+    const to = yield select(Selectors.dashboardToValue);
 
     let doProps = {
         type: 'pbill',
@@ -271,6 +271,8 @@ function* _fetchDashboard() {
     yield put({ type: SET_DASHBOARD_LOADING, payload: true });
 
     try {
+        console.log("Saga._fetchDashboard(): ", doProps);
+        
         const result = yield call(api.log.bind(api), locations, doProps);
         const resultData = prepareReportData(locations, result);
 
