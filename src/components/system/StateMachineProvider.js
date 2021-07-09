@@ -38,11 +38,7 @@ class StateMachineProvider extends Component {
 
         return false;
     }
-
-    componentDidUpdate() {
-        this._sendMessage();
-    }
-
+    
     _sendMessage() {
         const { context, message, isGlobal, shouldPop } = this.props;
         const { api } = context;
