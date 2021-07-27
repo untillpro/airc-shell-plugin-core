@@ -88,6 +88,9 @@ class EMEditFormFieldsGroup extends Component {
 
         data = mergeDeep(data, value);
 
+        Logger.log({
+            data
+        }, '---------- handleFieldChanged:');
         if (onDataChanged && typeof onDataChanged === 'function') {
             onDataChanged(data)
         }
