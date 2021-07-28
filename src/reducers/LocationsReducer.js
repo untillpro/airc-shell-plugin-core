@@ -2,9 +2,9 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 import _ from 'lodash';
-import { 
+import {
     INIT_PLUGIN,
-    SET_LOCATIONS 
+    SET_LOCATIONS
 } from '../actions/Types';
 
 const INITIAL_STATE = {
@@ -22,18 +22,22 @@ const reducer = (state = INITIAL_STATE, action) => {
     let newState = null;
 
     switch (action.type) {
-        case INIT_PLUGIN: 
-            newState = { ...state };
+        case INIT_PLUGIN:
+            if (_.isPlainObject(payload.options)) {
+                newState = { ...state };
 
-            if (_.isArray(payload.locations)) {
-                newState.locations = payload.locations;
+                if (_.isArray(payload.options.locations)) {
+                    newState.locations = payload.options.locations;
+                }
+
+                if (_.isPlainObject(payload.options.locationsOptions)) {
+                    newState.locationsOptions = payload.options.locationsOptions;
+                }
+
+                return newState;
             }
 
-            if (_.isPlainObject(payload.locationsOptions)) {
-                newState.locationsOptions = payload.locationsOptions;
-            }
-
-            return newState;
+            return state;
 
         case SET_LOCATIONS:
             if (!_.isArray(payload) || payload.length <= 0) return state;

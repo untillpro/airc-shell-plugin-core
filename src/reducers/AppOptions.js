@@ -42,7 +42,7 @@ const reducer = (state = INITIAL_STATE, action) => {
         case INIT_PLUGIN:
             const { options } = action.payload;
 
-            if (options) {
+            if (_.isPlainObject(options)) {
                 const { currentLanguage, defaultLanguage } = options;
                 const newState = { ...state };
 
