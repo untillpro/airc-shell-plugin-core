@@ -140,7 +140,7 @@ class Dashboards extends Component {
                 <div className='content-container'>
                     <DashboardBuilder groups={this.state.chartsGroups} />
 
-                    <div className="dashborads-add-group-btn" onClick={this.addGroup}> Add Group </div>
+                    {/*<div className="dashborads-add-group-btn" onClick={this.addGroup}> Add Group </div>*/}
                 </div>
             </>
         );
