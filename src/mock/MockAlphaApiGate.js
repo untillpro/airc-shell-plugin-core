@@ -86,6 +86,10 @@ class MockAlphaApiGate {
         message.info(text.toString());
     }
 
+    async sendLocations(locations) {
+        console.log('+++ Mock call of api.sendLocations() with locations: ', locations);
+    };
+
     async conf(operations, wsids, timestamp, offset) {
         console.log('+++ Conf method call:', operations, wsids, timestamp, offset);
 

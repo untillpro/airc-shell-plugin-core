@@ -39,12 +39,13 @@ class ApiProvider extends Component {
     }
 
     componentDidUpdate(oldProps) {
-        const { info, error, warning, success } = this.props;
+        const { info, error, warning, success, locations } = this.props;
 
-        if (info !== oldProps.info) this.sendMessage(oldProps.info, 'info');
-        if (success !== oldProps.success) this.sendMessage(oldProps.success, 'success');
-        if (error !== oldProps.error) this.sendMessage(oldProps.error, 'error');
-        if (warning !== oldProps.warning) this.sendMessage(oldProps.warning, 'warning');
+        if (info !== oldProps.info) this.sendMessage(info, 'info');
+        if (success !== oldProps.success) this.sendMessage(success, 'success');
+        if (error !== oldProps.error) this.sendMessage(error, 'error');
+        if (warning !== oldProps.warning) this.sendMessage(warning, 'warning');
+        if (locations !== oldProps.locations) this.sendLocations(locations)
     }
 
     sendMessage(message, type) {
@@ -61,6 +62,12 @@ class ApiProvider extends Component {
 
             default: api.sendInfo(text, description);
         }
+    }
+
+    sendLocations(locations) {
+        const { api } = this.props;
+
+        api.sendLocations(locations);
     }
 
     _init(payload) {

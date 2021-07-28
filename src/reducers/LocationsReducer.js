@@ -1,8 +1,9 @@
 /*
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
-
+import _ from 'lodash';
 import { 
+    INIT_PLUGIN,
     SET_LOCATIONS 
 } from '../actions/Types';
 
@@ -17,15 +18,31 @@ const INITIAL_STATE = {
 }
 
 const reducer = (state = INITIAL_STATE, action) => {
+    const payload = action.payload || {};
+    let newState = null;
 
     switch (action.type) {
+        case INIT_PLUGIN: 
+            newState = { ...state };
+
+            if (_.isArray(payload.locations)) {
+                newState.locations = payload.locations;
+            }
+
+            if (_.isPlainObject(payload.locationsOptions)) {
+                newState.locationsOptions = payload.locationsOptions;
+            }
+
+            return newState;
+
         case SET_LOCATIONS:
-            if (action.payload.length <= 0) return state;
+            if (!_.isArray(payload) || payload.length <= 0) return state;
 
             return {
                 ...state,
-                locations: action.payload
+                locations: payload
             }
+
         default: return state;
     }
 };
