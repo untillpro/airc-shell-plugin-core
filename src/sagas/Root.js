@@ -259,7 +259,7 @@ function* _fetchDashboard() {
     const to = yield select(Selectors.dashboardToValue);
 
     let doProps = {
-        type: 'pbill',
+        type: [ 'pbill', 'orders'],
         from,
         to,
         show: true,
