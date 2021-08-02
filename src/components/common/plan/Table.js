@@ -413,7 +413,7 @@ class Table extends PureComponent {
                         num={i} 
                         k={k} 
                     >
-                        {chairImage ? <img src={chairImage} crossOrigin="" /> : null}
+                        {chairImage ? <img src={chairImage} crossOrigin="" alt={i}/> : null}
                     </div>
                 );
                 x += xd;

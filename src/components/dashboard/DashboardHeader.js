@@ -197,8 +197,6 @@ class DashboardHeader extends PureComponent {
                                     "period": [from, to],
                                     "auto_refresh": autoRefresh,
                                     "refresh_delay": refreshDelay,
-                                    "auto_refresh": autoRefresh,
-                                    "refresh_delay": refreshDelay,
                                     "charts": this.getVisibleCharts()
                                 }}
                             >
