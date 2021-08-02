@@ -489,9 +489,9 @@ const applyMLToItem = (context, entity, item, ml) => {
 
     _.forEach(item, (value, key) => {
         if (_.isArray(value)) {
-            _.each(value, (val) => applyMLToItem(context, key, val, ml));
+            _.each(value, (val) => applyMLToItem(context, keyToEntity(key), val, ml));
         } else if (_.isObject(value)) {
-            applyMLToItem(context, key, value, ml);
+            applyMLToItem(context, keyToEntity(key), value, ml);
         } else {
             if (ml[entity][key]) {
                 let mlField = ml[entity][key];
@@ -542,4 +542,14 @@ const getMLValue = (context, blob, dafaultValue) => {
     }
 
     return res;
+}
+
+const keyToEntity = (key) => {
+    if (!_.isString(key)) return null;
+
+    if (key.indexOf("id_") === 0) {
+        return key.slice(3); 
+    }
+
+    return key;
 }

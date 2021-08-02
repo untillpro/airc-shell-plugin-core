@@ -110,7 +110,7 @@ class EmbeddedManagerSelectField extends EmbeddedManagerField {
 
         this.startLoading();
 
-        return getCollection(context, { resource: entity, wsid: locations, props: {}})
+        return getCollection(context, { resource: entity, wsid: locations, props: {}}, true)
             .then(({ resolvedData }) => {
                 this.stopLoading();
 
