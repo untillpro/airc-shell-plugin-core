@@ -45,7 +45,6 @@ class EMEditFormField extends Component {
         super();
 
         this.handleChange = this.handleChange.bind(this);
-        this.changeFieldValue = this.changeFieldValue.bind(this);
     }
 
     shouldComponentUpdate(nextProps) {
@@ -75,13 +74,14 @@ class EMEditFormField extends Component {
         }
     }
 
+    /*
     changeFieldValue(value, field) {
         const { onChange } = this.props;
 
         if (onChange && typeof onChange === 'function') {
             onChange(field, value)
         }
-    }
+    }*/
 
     getValue() {
         const { data, field, embedded_type } = this.props;

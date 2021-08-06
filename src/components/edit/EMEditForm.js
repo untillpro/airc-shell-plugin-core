@@ -165,7 +165,6 @@ class EMEditForm extends Component {
         const { contributions, entity, data } = this.props;
         let changedData = { state: 1 };
 
-        console.log("setDefaultValues: ", data);
         const defaultValues = contributions.getPointContributionValue(TYPE_FORMS, entity, C_FORMS_DEFAULT);
 
         if (_.isPlainObject(defaultValues)) {

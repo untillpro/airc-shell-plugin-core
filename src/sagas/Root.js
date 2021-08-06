@@ -271,8 +271,6 @@ function* _fetchDashboard() {
     yield put({ type: SET_DASHBOARD_LOADING, payload: true });
 
     try {
-        console.log("Saga._fetchDashboard(): ", doProps);
-        
         const result = yield call(api.log.bind(api), locations, doProps);
         const resultData = prepareReportData(locations, result);
 

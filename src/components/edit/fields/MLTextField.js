@@ -31,7 +31,7 @@ class MLTextField extends Component {
         this.state = {
             opened: false,
             newLang: false,
-            mlData: null
+            mlData: {}
         };
 
         this.handleAddonPress = this.handleAddonPress.bind(this);
@@ -48,8 +48,9 @@ class MLTextField extends Component {
         const { ml_accessor } = field;
 
         let ml_base64Str = _.get(data, ml_accessor);
+        let mlData = this._getMlArray(ml_base64Str) || {};
 
-        this.setState({ mlData: ml_base64Str || '' });
+        this.setState({ mlData });
     }
 
     componentDidUpdate(oldProps) {
@@ -68,17 +69,15 @@ class MLTextField extends Component {
         }
 
         if (ml_base64Str !== ml_base64Str_old) {
-            this.setState({ mlData: ml_base64Str });
+            this.setState({ mlData: this._getMlArray(ml_base64Str) || {} });
         }
     }
 
-    _getMlArray() {
+    _getMlArray(mlData) {
         const { isNew, value, lang, defaultLang } = this.props;
-        const { mlData } = this.state;
-
         let langMap = {};
 
-        if (isNew && value && !mlData) {
+        if (isNew && value) {
             langMap[lang] = value;
             langMap[defaultLang] = value;
         } else if (_.isString(mlData)) {
@@ -121,16 +120,14 @@ class MLTextField extends Component {
         const { ml_accessor } = field;
 
         if (_.isPlainObject(formValues) && _.size(formValues) > 0) {
-            let values = {}
+            let mlData = {}
 
-            _.forEach(formValues, (v, k) => values[k] = v || "");
+            _.forEach(formValues, (v, k) => mlData[k] = v || "");
 
             if (_.isFunction(onChange)) {
-                let buf = langMapToBuffer(values || {});
+                let buf = langMapToBuffer(mlData);
 
-                onChange({
-                    [ml_accessor]: buf
-                });
+                onChange({ [ml_accessor]: buf });
             }
         }
 
@@ -147,12 +144,15 @@ class MLTextField extends Component {
 
     handleInputChange(event) {
         const { value } = event.target;
-        const { onChange, field } = this.props;
-        const { accessor } = field;
+        const { onChange, field, lang } = this.props;
+        const { accessor, ml_accessor } = field;
+        const { mlData } = this.state;
 
         if (_.isFunction(onChange)) {
+            mlData[lang] = value;
             onChange({
                 [accessor]: value ? String(value) : '',
+                [ml_accessor]: langMapToBuffer(mlData)
             });
         }
     }
@@ -210,11 +210,9 @@ class MLTextField extends Component {
 
     renderML() {
         const { systemLanguages } = this.props;
-        const { opened } = this.state;
+        const { opened, mlData: initialValues } = this.state;
 
         if (opened !== true) return null;
-
-        const initialValues = this._getMlArray();
 
         return (
             <Modal

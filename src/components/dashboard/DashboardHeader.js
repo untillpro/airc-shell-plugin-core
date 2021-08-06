@@ -118,8 +118,6 @@ class DashboardHeader extends PureComponent {
             refreshDelay: refresh_delay
         };
 
-        //console.log("onFinish payload: ", payload);
-
         this.props.setDashboardSettings(payload);
     }
 
@@ -144,11 +142,8 @@ class DashboardHeader extends PureComponent {
 
     render() {
         const { charts, from, to, autoRefresh, refreshDelay } = this.props;
-
         const { opened } = this.state;
 
-        console.log("from, to:", from, to,);
-        //
         return (
             <div className="dashboard-header">
                 <div className="_location">

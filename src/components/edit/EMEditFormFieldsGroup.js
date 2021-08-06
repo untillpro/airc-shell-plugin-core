@@ -68,8 +68,6 @@ class EMEditFormFieldsGroup extends Component {
     }
 
     handleFieldChanged(field, value) {
-        console.log("EMEditFormFieldsGroup.handleFieldChanged", field, value);
-        
         const { changedData, embedded: embedded_type, onDataChanged, data: Data } = this.props;
 
         Logger.log({

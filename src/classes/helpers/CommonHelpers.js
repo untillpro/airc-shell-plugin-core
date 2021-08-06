@@ -248,7 +248,7 @@ export const langMapToBuffer = (langMap) => {
     let s = new Stream([]);
 
     try {
-        let str = JSON.stringify(langMap);
+        let str = JSON.stringify(langMap) || "";
 
         s.alloc(str.length * 4);
 
@@ -258,8 +258,9 @@ export const langMapToBuffer = (langMap) => {
             s.writeBigInt(_.size(code));
             s.write(code);
 
-            s.writeBigInt(_.size(value));
-            s.write(value);
+            let v = value ? String(value) : "";
+            s.writeBigInt(_.size(v));
+            s.write(v);
         });
 
         let bytes = s.bytes();

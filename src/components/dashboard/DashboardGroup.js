@@ -55,7 +55,6 @@ class DashboardGroup extends React.Component {
     }
 
     handleDrop = (e) => {
-        console.log(`handleDrop on group ${this.props.index};`, e);
         let items = this.state.items.slice();
         items.push({
             ...e.dragData,

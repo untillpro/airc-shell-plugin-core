@@ -78,8 +78,6 @@ class TableAreaImageSelect extends PureComponent {
     customRequest(option) {
         const xhr = new XMLHttpRequest();
 
-        console.log("customRequest options: ", option);
-
         if (option.onProgress && xhr.upload) {
             xhr.upload.onprogress = function progress(e) {
                 if (e.total > 0) {

@@ -60,8 +60,6 @@ class TableAreaImageSelect extends PureComponent {
         const { setImage } = this.props;
         const { response, status } = data;
 
-        console.log("onSuccess.response", response)
-
         if (status === 200) {
             setImage(response);
         } else {

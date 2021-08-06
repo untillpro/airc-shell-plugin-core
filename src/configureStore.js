@@ -32,7 +32,6 @@ const configureStore = (persistConfig, initState = {}) => {
     let config = { ...persistConfigDefauult };
 
     if (persistConfig && typeof persistConfig === 'object') {
-        console.log("persistConfig: ", persistConfig);
         config = { ...config, ...persistConfig };
     }
     const sagaMiddleware = createSagaMiddleware()
