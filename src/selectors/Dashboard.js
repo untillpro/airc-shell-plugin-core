@@ -13,7 +13,7 @@ export const dashboardFrom = (state) => {
         return state.dashboards.from;
     }
 
-    return moment().startOf('day');
+    return moment().startOf('year');
 };
 
 export const dashboardFromValue = (state) => {
@@ -21,11 +21,9 @@ export const dashboardFromValue = (state) => {
         if (typeof state.dashboards.from === 'object') {
             return state.dashboards.from.valueOf();
         }
-
-        return state.dashboards.from;
     }
 
-    return moment().startOf('day').valueOf();
+    return moment().startOf('year').valueOf();
 };
 
 export const dashboardTo = (state) => {
@@ -33,8 +31,6 @@ export const dashboardTo = (state) => {
         if (typeof state.dashboards.to === 'object') {
             return state.dashboards.to;
         }
-
-        return state.dashboards.to;
     }
 
     return moment().endOf('day');

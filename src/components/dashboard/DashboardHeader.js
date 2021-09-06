@@ -151,7 +151,7 @@ class DashboardHeader extends PureComponent {
                 </div>
 
                 <div className="_title">
-                    HOME PAGE {from.format("YYYY/MM/DD hh:mm")} - {to.format("YYYY/MM/DD hh:mm")}
+                    HOME PAGE {from.format("YYYY/MM/DD HH:mm")} - {to.format("YYYY/MM/DD HH:mm")}
                 </div>
 
                 <div className="_actions">
@@ -243,9 +243,7 @@ DashboardHeader.propTypes = {
 
 const mapStateToProps = (state) => {
     const { contributions } = state.context;
-    const { from, to, visibility, autoRefresh, refreshDelay } = state.dashboards;
-
-    console.log("mapStateToProps: ", from, to, visibility, autoRefresh, refreshDelay);
+    const { autoRefresh, refreshDelay } = state.dashboards;
 
     return {
         contributions,

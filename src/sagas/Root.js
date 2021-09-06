@@ -260,8 +260,8 @@ function* _fetchDashboard() {
 
     let doProps = {
         type: [ 'pbill', 'orders'],
-        from,
-        to,
+        from: from,
+        to: to,
         show: true,
         from_offset: 0, // mock
         to_offset: 1000000,// mock
