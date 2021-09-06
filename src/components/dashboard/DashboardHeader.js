@@ -45,7 +45,7 @@ const rangeConfig = {
     rules: [
         {
             type: 'array',
-            required: true,
+            //required: true,
             message: 'Please select period!',
         },
     ],
@@ -112,8 +112,8 @@ class DashboardHeader extends PureComponent {
 
         const payload = {
             visibility,
-            from: period[0],
-            to: period[1],
+            from: period ? period[0] : null,
+            to: period ? period[1] : null,
             autoRefresh: !!auto_refresh,
             refreshDelay: refresh_delay
         };

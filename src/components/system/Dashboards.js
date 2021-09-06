@@ -27,6 +27,10 @@ import {
     dashboardCustomOrder,
 } from '../../selectors';
 
+import {
+    sendNeedRefreshDataMessage
+} from '../../actions';
+
 
 class Dashboards extends Component {
     constructor(props) {
@@ -34,7 +38,8 @@ class Dashboards extends Component {
 
         this.state = {
             chartsGroups: {},
-            charts: []
+            charts: [], 
+            refreshTimer: null
         };
     }
 
@@ -44,6 +49,34 @@ class Dashboards extends Component {
 
     componentDidMount() {
         this._initChartsList();
+        this._toggleAutoRefresh();
+    }
+
+    componentDidUpdate(oldProps) {
+        const { autoRefresh, refreshDelay } = this.props;
+
+        if ((autoRefresh !== oldProps.autoRefresh) || (refreshDelay !== oldProps.refreshDelay)) {
+            this._toggleAutoRefresh();
+        }
+    }
+
+    _toggleAutoRefresh() {
+        const { autoRefresh, refreshDelay } = this.props;
+        const { refreshTimer } = this.state;
+
+        if (refreshTimer) {
+            clearInterval(this.state.refreshTimer);
+        }
+
+        if (autoRefresh === true && _.isNumber(refreshDelay) && refreshDelay > 0) {
+            const timer = setInterval(() => {
+                this.props.sendNeedRefreshDataMessage();
+            }, refreshDelay * 1000);
+
+            this.setState({refreshTimer: timer});
+        } else {
+            this.setState({refreshTimer: null});
+        }
     }
 
     _initChartsList() {
@@ -149,12 +182,19 @@ class Dashboards extends Component {
 
 const mapStateToProps = (state) => {
     const { contributions } = state.context;
+    const { autoRefresh, refreshDelay } = state.dashboards;
 
     return { 
         contributions, 
         visibility: dashboardVisibility(state), 
-        customOrder: dashboardCustomOrder(state)
+        customOrder: dashboardCustomOrder(state),
+        autoRefresh, 
+        refreshDelay
     };
 };
 
-export default connect(mapStateToProps, null)(Dashboards);
+const mapDispatchToProps = {
+    sendNeedRefreshDataMessage
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboards);
