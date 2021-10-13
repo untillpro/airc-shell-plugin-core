@@ -117,7 +117,7 @@ class EMEditFormFieldsGroup extends Component {
         const content = sortedFields.map((field, index) => {
             if (field && field.hidden === true) return null;
             
-            if (field && field.accessor) {
+            if (field && _.isString(field.accessor)) {
                 const fieldComponent = <EMEditFormField
                     formContext={formContext}
                     embedded_type={embedded}

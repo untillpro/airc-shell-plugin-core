@@ -20,6 +20,7 @@ import EmbeddedManagerField from './EmbeddedManagerField';
 import EmbededSelectorField from './EmbededSelectorField'
 import EmbeddedManagerPredefinedField from './EmbeddedManagerPredefinedField'
 import TablePlanEditor from './TablePlanEditor'
+import CommandsList from './CommandsList'
 
 export {
     TextField,
@@ -39,5 +40,6 @@ export {
     EmbeddedManagerField,
     EmbededSelectorField,
     EmbeddedManagerPredefinedField,
-    TablePlanEditor
+    TablePlanEditor,
+    CommandsList
 };

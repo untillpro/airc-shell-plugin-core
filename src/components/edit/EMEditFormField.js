@@ -37,7 +37,8 @@ import {
     EmbeddedManagerField,
     EmbededSelectorField,
     EmbeddedManagerPredefinedField,
-    TablePlanEditor
+    TablePlanEditor,
+    CommandsList
 } from './fields';
 
 class EMEditFormField extends Component {
@@ -62,6 +63,8 @@ class EMEditFormField extends Component {
         switch (type) {
             case 'table_plan_editor': return tablePlanMutateCheck(nextProps.data, this.props.data, field, embedded_type);
             case 'ml_text': return mlTextMutateCheck(nextProps.data, this.props.data, field, embedded_type);
+            case 'commands_list': return nextProps.data !== this.props.data;
+
             default: return simpleMutateCheck(nextProps.data, this.props.data, field, embedded_type)
         }
     }
@@ -118,13 +121,13 @@ class EMEditFormField extends Component {
 
         let FieldComponent;
 
-        if (!field) return null;
+        if (!field || !_.isObject(field)) return null;
 
         const hasErrors = errors && errors.length > 0;
 
         const { type, accessor, label, disabled, span, tip, predefined } = field;
 
-        if (accessor && typeof accessor === 'string') {
+        if (_.isString(accessor)) {
             switch (type) {
                 case 'ml_text': FieldComponent = MLTextField; break;
                 case 'number': FieldComponent = NumberField; break;
@@ -140,6 +143,7 @@ class EMEditFormField extends Component {
                 case 'image': FieldComponent = ImageSelectorField; break;
                 case 'image_set': FieldComponent = ImageSetSelector; break;
                 case 'table_plan_editor': FieldComponent = TablePlanEditor; break;
+                case 'commands_list': FieldComponent = CommandsList; break;
                 case 'embedded':   
                     if (predefined) {
                         FieldComponent = EmbeddedManagerPredefinedField; break;
@@ -166,8 +170,6 @@ class EMEditFormField extends Component {
                         ) : null}
 
                     <div className={`form-row-field ${hasErrors ? 'error' : ''}`}>
-                        
-
                         <FieldComponent 
                             formContext={formContext}
                             locations={locations}
