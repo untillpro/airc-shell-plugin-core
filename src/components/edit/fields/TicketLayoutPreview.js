@@ -48,8 +48,6 @@ class TicketLayoutPreview extends Component {
             Helpers = { ...Helpers, ...DefaultHelpers };
         }
 
-        console.log("Helpers: ", Helpers);
-
         if (_.size(Helpers) > 0) {
             _.each(Helpers, (helper, name) => {
                 this.stubble.registerHelper(name, helper)

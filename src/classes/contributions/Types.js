@@ -22,7 +22,7 @@ export const TYPE_FORMS = "forms";
 export const TYPE_FORMSGROUPS = "formsgroups";
 export const TYPE_SECTIONS = "sections";
 export const TYPE_COLLECTION = "collection";
-export const TYPE_LAYOUTS = "layouts";
+export const TYPE_LAYOUTS = "printing_layouts";
 export const TYPE_HELPERS = "helpers";
 export const TYPE_CHARTS = "charts";
 
@@ -112,6 +112,7 @@ export const C_COLLECTION_FILTER_BY = "filter_by";
 
 export const C_LAYOUTS_NAME = "name";
 export const C_LAYOUTS_TEMPLATE = "template";
+export const C_LAYOUTS_SETTINGS = "settings";
 
 // ### CHARTS
 

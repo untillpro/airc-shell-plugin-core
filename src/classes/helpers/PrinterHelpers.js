@@ -57,7 +57,7 @@ export const encodeCommand = (str) => {
 }
 
 export const isValidCommand = (str) => {
-    let reg = /^(([0-9a-fA-F]{2}|n)(\/([0-9a-fA-F]{2}|n))*)$/;
+    let reg = /^(([0-9a-fA-F]{2}|n|l|h)(\/([0-9a-fA-F]{2}|n|l|h))*)$/;
 
     return reg.test(str);
 }
