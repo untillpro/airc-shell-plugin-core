@@ -2,22 +2,33 @@
  * Copyright (c) 2020-present unTill Pro, Ltd.
  */
 
-function condition(prop, value, options) {
+function condition(attrs, fn) {
+    let prop = attrs[0]; 
+    let value = attrs[1];
+
     if (this.settings && this.settings[prop] === value) {
-        return options.fn(this);
+        return fn(this);
     }
 
     return '';
 };
 
-function attribute(prop, name) {
-    if (this.settings && this.settings[prop])
+function attribute(attrs) {
+    let prop = attrs[0];
+    let name = attrs[1]
+    
+    if (this.settings && this.settings[prop]) {
         return `${name}="${this.settings[prop]}"`;
+    }
+        
 
     return '';
 };
 
-function value(prop, dflt = null) {
+function value(attrs) {
+    let prop = attrs[0];
+    let dflt = attrs[1] || null
+
     if (this.settings && this.settings[prop]) {
         return this.settings[prop];
     } else if (dflt && typeof dflt !== 'object') {
