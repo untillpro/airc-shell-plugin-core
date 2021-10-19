@@ -6,7 +6,7 @@ import _ from 'lodash';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Handlebars from 'handlebars';
+import Stubble from 'stubble4js';
 import { translate as t } from 'airc-shell-core';
 import DefaultHelpers from '../classes/DefaultHelpers';
 
@@ -19,17 +19,20 @@ import data from '../../../mock/data/TicketMockData';
 class TicketLayoutPreview extends Component {
     constructor() {
         super();
-    
+
         this.state = {
-          conten: null
+            conten: null
         };
 
         this.rendered = null;
+        this.stubble = new Stubble();
     }
 
     componentDidMount() {
         let Helpers = {};
         const { helpers, settings, template } = this.props;
+
+
 
         if (!template || typeof template !== 'string') {
             this.sendError(t("Layout's template not specified or wrong given", "errors"));
@@ -45,9 +48,11 @@ class TicketLayoutPreview extends Component {
             Helpers = { ...Helpers, ...DefaultHelpers };
         }
 
+        console.log("Helpers: ", Helpers);
+
         if (_.size(Helpers) > 0) {
             _.each(Helpers, (helper, name) => {
-                Handlebars.registerHelper(name, helper)
+                this.stubble.registerHelper(name, helper)
             });
         }
 
@@ -68,7 +73,7 @@ class TicketLayoutPreview extends Component {
 
     initTemplate(template) {
         const tpl = this.perfect(template);
-        this.rendered = Handlebars.compile(tpl);
+        this.rendered = this.stubble.compile(tpl);
     }
 
     perfect(tpl) {
@@ -89,10 +94,7 @@ class TicketLayoutPreview extends Component {
         let result = '';
 
         try {
-            result = this.rendered({
-                data: data,
-                settings
-            });
+            result = this.rendered({ data, settings });
 
             this.setState({
                 content: result
@@ -105,7 +107,6 @@ class TicketLayoutPreview extends Component {
 
     render() {
         const { content } = this.state;
-
         if (!content) return null;
 
         return (
