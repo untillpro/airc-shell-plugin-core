@@ -38,6 +38,8 @@ class ImageSelecotrField extends Component {
 
         if (!field) return null;
 
+        const size = getFileSize(maxImageSize);
+
         return (
             <Fragment>
                 <ImageSelector 
@@ -47,6 +49,22 @@ class ImageSelecotrField extends Component {
                     onChange={(event) => this.handleChange(event)}  
                     onError={(error) => {
                         this.props.sendError(error)
+                    }}
+                    dictionary={{
+                        "Save": t("Save", "common"),
+                        "Ok": t("Ok", "common"),
+                        "Edit image": t("Edit image", "form"),
+                        "Select image": t("Select image", "form"),
+                        "Select an image": t("Select an image", "form"),
+                        "Image max size exceeded.": t("Image max size exceeded. Available max image size {{size}}", "form", { size }),
+                        "Delete image?": t("Delete image?", "form"),
+                        "Are you sure delete image?": t("Are you sure delete image?", "form"),
+                        "Upload image file:": t("Upload image file:", "form"),
+                        "Width (px):": t("Width (px):", "form"),
+                        "Height (px):": t("Height (px)", "form"),
+                        "Yes": t("Yes", "common"),
+                        "No": t("No", "common"),
+                        
                     }}
                 />
 

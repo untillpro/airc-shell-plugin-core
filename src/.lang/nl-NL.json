@@ -49,7 +49,16 @@
                 "Leaving this page will cause all unsaved changes to be lost": "Als u de pagina verlaat worden wijzigingen niet opgeslagen",
                 "Discard changes and leave": "Wijzigingen ongedaan maken",
                 "Return to editing": "Verder met bewerken"
-            }
+            },
+            "Edit image": "Edit image",
+            "Select image": "Select image",
+            "Select an image": "Select an image",
+            "Image max size exceeded. Available max image size {{size}}": "Image max size exceeded. Available max image size {{size}}",
+            "Delete image?": "Delete image?",
+            "Are you sure delete image?": "Are you sure delete image?",
+            "Upload image file:": "Upload image file:",
+            "Width (px):": "Width (px):",
+            "Height (px):": "Height (px):"
         },
         "payment_kind": {
             "cash": "Contant",

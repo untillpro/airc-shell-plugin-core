@@ -66,7 +66,16 @@
                 "Leaving this page will cause all unsaved changes to be lost": "Если вы покинете эту страницу, все несохраненные изменения будут потеряны.",
                 "Discard changes and leave": "Отменить изменения и выйти",
                 "Return to editing": "Вернуться к редактированию"
-            }
+            },
+            "Edit image": "Редактировать",
+            "Select image": "Выбрать",
+            "Select an image": "Выберете изображение",
+            "Image max size exceeded. Available max image size {{size}}": "Превышен максимальный размер. Максимальный размер {{size}}",
+            "Delete image?": "Удалить изображение?",
+            "Are you sure delete image?": "Вы уверены, что хотите удалить изображение?",
+            "Upload image file:": "Изображение:",
+            "Width (px):": "Ширина (px):",
+            "Height (px):": "Высота (px):"
         },
         "payment_kind": {
             "cash": "Cash",
