@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { Message, Select, Button, Empty, translate as t } from 'airc-shell-core';
 import EMEditFormFieldsBuilder from '../EMEditFormFieldsBuilder';
 import TicketLayoutPreview from './TicketLayoutPreview';
+//import TicketLayoutMLEditor from './TicketLayoutMLEditor';
 
 import {
     sendError
@@ -44,7 +45,8 @@ class TicketLayoutField extends Component {
 
             layoutSettings: [],
             layoutTemplate: [],
-            layoutHelpers: []
+            layoutHelpers: [],
+            layoutDictionary: {}
         };
 
         this.onDataChanged = this.onDataChanged.bind(this);
@@ -78,6 +80,7 @@ class TicketLayoutField extends Component {
         let layoutTemplate = null;
         let layoutSettings = null;
         let layoutHelpers = null;
+        let layoutDictionary = null;
         let changedData = null;
         let templateChanged = false;
 
@@ -86,7 +89,7 @@ class TicketLayoutField extends Component {
         if (!contributions)
             throw new Error('Contributions property not specified');
 
-        const points = contributions.getPoints('layouts');
+        const points = contributions.getPoints(TYPE_LAYOUTS);
 
         if (points.length > 0) {
             _.each(points, (code) => {
@@ -108,8 +111,12 @@ class TicketLayoutField extends Component {
                     changedData = data.settings;
                 }
 
-                if (data.template && typeof data.code === 'string') {
+                if (data.template && typeof data.template === 'string') {
                     layoutTemplate = data.template;
+                }
+
+                if (data.dictionary && typeof data.dictionary === 'object') {
+                    layoutDictionary = data.dictionary;
                 }
 
                 if (data.code && typeof data.code === 'string') {
@@ -137,6 +144,7 @@ class TicketLayoutField extends Component {
                 layoutTemplate,
                 layoutSettings,
                 layoutHelpers,
+                layoutDictionary,
                 templateChanged
             });
         }
@@ -188,7 +196,7 @@ class TicketLayoutField extends Component {
     }
 
     handleChange() {
-        const { changedData, layoutTemplate, selectedLayout } = this.state;
+        const { changedData, layoutTemplate, selectedLayout, layoutDictionary } = this.state;
         const { onChange, field } = this.props;
         const { accessor } = field;
 
@@ -196,7 +204,8 @@ class TicketLayoutField extends Component {
             const result = {
                 settings: changedData,
                 template: layoutTemplate,
-                code: selectedLayout
+                code: selectedLayout,
+                dictionary: layoutDictionary
             };
 
             const value = 'airc' + JSON.stringify(result);
@@ -237,7 +246,7 @@ class TicketLayoutField extends Component {
         const HELPERS = contributions.getPointContributions(TYPE_HELPERS, code);
 
         if (_.size(HELPERS) > 0) {
-            _.each(HELPERS, (arr, name) => helpers[name] = arr[0]);
+            _.each(HELPERS, (helper, name) => helpers[name] = helper);
         }
 
         return helpers;
@@ -323,6 +332,7 @@ class TicketLayoutField extends Component {
             layoutSettings, 
             layoutTemplate, 
             layoutHelpers,  
+            layoutDictionary, 
             selectedLayout, 
             changedData } = this.state;
 
@@ -352,6 +362,16 @@ class TicketLayoutField extends Component {
                     </div>
 
                     <div className="ticket-layout-selector-field-preview">
+                        {/*
+                        
+                        <TicketLayoutMLEditor 
+                            template={layoutTemplate} 
+                            dictionary={layoutDictionary} 
+                        />
+                        
+                        */}
+                        
+
                         <TicketLayoutPreview
                             template={layoutTemplate}
                             settings={{ ...changedData }}
