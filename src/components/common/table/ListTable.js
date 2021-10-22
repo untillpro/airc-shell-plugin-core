@@ -30,7 +30,7 @@ import PriceCell from './cell_types/PriceCell';
 import StringCell from './cell_types/StringCell';
 import DateTimeCell from './cell_types/DateTimeCell';
 
-import { 
+import {
     funcOrString,
     getDynamicValue
 } from '../../../classes/helpers';
@@ -139,52 +139,52 @@ class ListTable extends PureComponent {
         const { defaultCurrency } = this.props;
         const { type, value_accessor, currency_accessor, editable, entity } = opts;
         const props = { cell: d, entity, editable, prop: value_accessor, dynamic: isDynamic, defaultCurrency };
-    
+
         if (isDynamic === true) {
-            props.value = _.get(d.value, [ value_accessor ]);
-            props.id = _.get(d.value, [ "id" ]);
-            props.index = _.get(d.value, [ "_index" ]);
+            props.value = _.get(d.value, [value_accessor]);
+            props.id = _.get(d.value, ["id"]);
+            props.index = _.get(d.value, ["_index"]);
 
             if (type === "price" && _.isString(currency_accessor)) {
-                props.currency = _.get(d.value, [ currency_accessor ]);
+                props.currency = _.get(d.value, [currency_accessor]);
             }
         } else {
             props.value = d.value;
-            props.id = _.get(d.original, [ "id" ]);
+            props.id = _.get(d.original, ["id"]);
             props.index = null;
 
             if (type === "price" && _.isString(currency_accessor)) {
-                props.currency = _.get(d.original, [ currency_accessor ]);
+                props.currency = _.get(d.original, [currency_accessor]);
             }
         }
-    
+
         props.onSave = this.handleCellSave;
-    
+
         switch (type) {
             case 'location':
                 return <LocationCell value={d.value} />;
-    
+
             case 'number':
                 return <NumberCell  {...props} />;
-    
+
             case 'float':
                 return <NumberCell {...props} type="float" />;
-    
+
             case 'boolean':
                 return <BooleanCell {...props} />;
-    
+
             case 'price':
                 return <PriceCell {...props} />;
-    
+
             case 'time':
                 return <DateTimeCell {...props} type="time" format="HH:mm" />;
-    
+
             case 'date':
                 return <DateTimeCell {...props} format="DD/MM/YYYY" />;
-    
+
             case 'datetime':
                 return <DateTimeCell {...props} format="DD/MM/YYYY HH:mm" />;
-    
+
             default:
                 return <StringCell {...props} />;
         }
@@ -341,18 +341,28 @@ class ListTable extends PureComponent {
     }
 
     handleRowsSelectorChange() {
-        const { selectedRows } = this.state;
-        const { data, allowMultyselect } = this.props;
+        const { selectedRows, component } = this.state;
+        const { onSelectedChange } = this.props;
+        const { pageRows } = this;
+        const { allowMultyselect } = component;
 
-        if (data && allowMultyselect && (!selectedRows || selectedRows.length <= 0)) {
-            const rows = data.map(row => row.index);
+        let selectedRowsNew = [];
+        let selectedFlatRowsNew = {};
 
-            this.setState({ selectedRows: rows, selectedFlatRows: data });
-        } else if (selectedRows && selectedRows.length > 0) {
-            this.setState({
-                selectedRows: [],
-                selectedFlatRows: {}
+        if (pageRows && allowMultyselect && (!selectedRows || selectedRows.length <= 0)) {
+            pageRows.forEach(row => {
+                selectedRowsNew.push(row._index);
+                selectedFlatRowsNew[row._index] = row._original;
             });
+        }
+
+        this.setState({
+            selectedRows: selectedRowsNew,
+            selectedFlatRows: selectedFlatRowsNew
+        });
+
+        if (_.isFunction(onSelectedChange)) {
+            onSelectedChange(selectedRowsNew, selectedFlatRowsNew);
         }
     }
 
@@ -363,7 +373,7 @@ class ListTable extends PureComponent {
         const { index } = row;
 
         //TODO: do validation before
-        
+
         if (_.isFunction(onValueSave)) {
             return onValueSave(entity, data, _entry, index);
         }
@@ -885,7 +895,7 @@ class ListTable extends PureComponent {
 
                                     showExport={component.showExport}
                                     exportFileName={exportFileName}
-                                    
+
                                     onVisibleChange={this.handleVisibleChange}
                                     onDeletedChange={this.handleShowDeletedChange}
                                 />
@@ -932,7 +942,7 @@ ListTable.propTypes = {
 const mapStateToProps = (state) => {
     const { contributions, api } = state.context;
     const { defaultCurrency } = state.options;
-    
+
 
     return {
         contributions,
