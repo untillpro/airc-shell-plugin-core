@@ -5,11 +5,19 @@ export const convert = (integer) => {
 };
 
 export const  encodePlaceholder = (symbol) => {
-    return 4096;
+    switch (symbol) {
+        case 'l': return [0 , 4]; //1024
+        case 'h': return [0 , 8]; //2048
+        default: return [0, 16]; //4096
+    }
 }
 
 export const  decodePlaceholder = (number) => {
-    return 'n';
+    switch (number) {
+        case 1024: return 'l';
+        case 2048: return 'h';
+        default: return 'n';
+    }
 }
 
 export const decodeCommand = (str) => {
@@ -39,13 +47,12 @@ export const encodeCommand = (str) => {
     if (ops.length > 0) {
         for (let i = 0; i < ops.length; i++) {
             let v = parseInt(ops[i], 16);
-
+            
             if (typeof v === 'number' && v < 255) {
                 arr.push(v);
                 arr.push(0);
             } else {
-                arr.push(0);
-                arr.push(16);
+                arr.push(...encodePlaceholder(ops[i]));
             }
         }
     }
