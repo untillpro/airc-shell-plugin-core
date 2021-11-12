@@ -4,5 +4,5 @@ on: [push]
 
 jobs:
   call-workflow-ci:
-    uses: untillpro/airc-shell-plugin-core/.github/workflows/ci_reuse.yml@main
+    uses: ci_reuse.yml@main
 
