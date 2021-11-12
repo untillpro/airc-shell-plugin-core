@@ -17,5 +17,5 @@ jobs:
 
   call-workflow-cd:
     if: ${{ github.event_name == 'push' }}
-    uses: ivvist/airc-shell-plugin-core/.github/workflows/cd.yml@main
+    uses: untillpro/airc-shell-plugin-core/.github/workflows/cd.yml@main
 
