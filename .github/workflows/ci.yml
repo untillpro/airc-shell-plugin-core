@@ -1,8 +1,20 @@
 name: CI node
-
-on: [push]
+on: 
+  push:
+    branches:
+      - main
+      - rc
+      - release
+  pull_request:
+    branches:
+      - main
+      - rc
+      - release
 
 jobs:
   call-workflow-ci:
     uses: untillpro/airc-shell-template/.github/workflows/ci_reuse.yml@v1
+#  call-workflow-cd:
+#    if: ${{ github.event_name == 'push' }}
+#    uses: ivvist/airc-shell3/.github/workflows/cd.yml@main
 
