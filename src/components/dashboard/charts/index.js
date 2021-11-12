@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import Area from './Area';
 import Avg from './Avg';
 import Bar from './Bar';

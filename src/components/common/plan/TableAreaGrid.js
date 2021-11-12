@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 

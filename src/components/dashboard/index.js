@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import ChartBuilder from './ChartBuilder';
 import DashboardBuilder from './DashboardBuilder';
 import DashboardGroup from './DashboardGroup';

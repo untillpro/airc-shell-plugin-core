@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import {
     //SET_CHART_SETTINGS,
     SET_CUSTOM_CHART_ORDER,
