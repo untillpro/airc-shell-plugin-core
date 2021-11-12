@@ -7,7 +7,7 @@ import React, { PureComponent } from "react";
 import { connect } from 'react-redux';
 import PropTypes from "prop-types";
 import blacklist from "blacklist";
-import { Checkbox, Logger, translate as t } from 'airc-shell-core';
+import { Checkbox, Logger, translate as t, Table } from 'airc-shell-core';
 import isEqual from 'react-fast-compare';
 
 import {
@@ -15,8 +15,6 @@ import {
     KEY_UP,
     KEY_DOWN
 } from 'keycode-js';
-
-import Table from 'react-table';
 
 import ListTableRowAction from './ListTableRowAction';
 import ListTableHeader from './ListTableHeader';
