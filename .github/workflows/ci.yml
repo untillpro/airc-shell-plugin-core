@@ -1,0 +1,17 @@
+name: CI node
+on: 
+  push:
+    branches:
+      - main
+      - rc
+      - release
+  pull_request:
+    branches:
+      - main
+      - rc
+      - release
+
+jobs:
+  call-workflow-ci:
+    uses: untillpro/airc-shell-template/.github/workflows/ci_reuse.yml@v1
+
