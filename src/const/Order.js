@@ -3,27 +3,21 @@
  */
 
 export const ORDER_BUTTON_TYPES = {
-    //"common_header": "",
-    //"confirm": "confirm",
-    //"cancel": "cancel",
     "order_header": "",
     "set_condiment": "set_condiment",
     "set_supplement": "set_supplement",
     "repeat": "repeat",
-    //"plus_article": "plus_article",
-    //"minus_article": "minus_article",
+
     "void_item": "void_item",
     "undo_option": "undo_option",
     "set_message": "set_message",
-    //"discount": "discount",
-    //"discount_cancel": "discount_cancel",
+
     "set_seat": "set_seat",
     "set_seat_name": "set_seat_name",
     "pay": "pay",
     "search": "search",
     "history": "history",
-    //"zoom": "zoom",
-    //"select": "select",
+
     "manual_price": "manual_price",
     "client": "client",
     "cust_history": "cust_history",
@@ -31,13 +25,28 @@ export const ORDER_BUTTON_TYPES = {
     "allergens": "allergens",
     "payment_header": "",
     "pay_with": "pay_with",
+
+    "reverse_split": "reverse_split",
+    "add_tips": "add_tips",
+    
+    "add_client": "add_client",
+    "next_course": "next_course",
+    "change_course": "change_course",
+    "fire_next_course": "fire_next_course",
+
+    //"common_header": "",
+    //"confirm": "confirm",
+    //"cancel": "cancel",
+    //"plus_article": "plus_article",
+    //"minus_article": "minus_article",
+    //"discount": "discount",
+    //"discount_cancel": "discount_cancel",
+    //"zoom": "zoom",
+    //"select": "select",
     //"split_by_items": "split_by_items",
     //"split_equal": "split_equal",
     //"split_by_seat": "split_by_seat",
     //"split_by_part": "split_by_part",
     //"split_by_course": "split_by_course",
-    "reverse_split": "reverse_split",
-    "add_tips": "add_tips",
     //"add_payer": "add_payer",
-    "add_client": "add_client",
 };
