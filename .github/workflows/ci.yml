@@ -2,12 +2,12 @@ name: CI node
 on: 
   push:
     branches:
-      - main
+      - master
       - rc
       - release
   pull_request:
     branches:
-      - main
+      - master
       - rc
       - release
 
