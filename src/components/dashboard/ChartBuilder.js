@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import _ from 'lodash';
 import React from 'react';
 import { DragDropContainer, DropTarget } from 'react-drag-drop-container';

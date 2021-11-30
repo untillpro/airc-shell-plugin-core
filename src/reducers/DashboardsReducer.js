@@ -1,7 +1,11 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 import _ from 'lodash';
-import moment from 'moment';
+//import moment from 'moment';
 import {
-    INIT_PLUGIN,
+    //INIT_PLUGIN,
     SET_CUSTOM_CHART_ORDER,
     SET_DASHBOARD_DATA,
     SET_CHART_SETTINGS,

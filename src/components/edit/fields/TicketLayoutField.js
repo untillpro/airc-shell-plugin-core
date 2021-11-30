@@ -332,7 +332,7 @@ class TicketLayoutField extends Component {
             layoutSettings, 
             layoutTemplate, 
             layoutHelpers,  
-            layoutDictionary, 
+            //layoutDictionary, 
             selectedLayout, 
             changedData } = this.state;
 

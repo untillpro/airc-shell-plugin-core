@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020-present unTill Pro, Ltd.
+ */
+
 // from base64 string to commands string
 export const convert = (integer) => {
     var str = Number(integer).toString(16);
