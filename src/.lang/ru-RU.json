@@ -75,7 +75,8 @@
             "Are you sure delete image?": "Вы уверены, что хотите удалить изображение?",
             "Upload image file:": "Изображение:",
             "Width (px):": "Ширина (px):",
-            "Height (px):": "Высота (px):"
+            "Height (px):": "Высота (px):",
+            "Refresh preview": "Обновить"
         },
         "payment_kind": {
             "cash": "Cash",
@@ -176,6 +177,26 @@
             "Layout's template not specified or wrong given": "Шаблон макета не указан или указан неверно",
             "Please select datetime range": "Please select datetime range",
             "No periods found": "No periods found"
+        },
+        "ticket": {
+            "KKT #": "ККТ №",
+            "INNJ": "ИННЖ",
+            "Order Num.": "Заказ №",
+            "ORDER TICKET": "* КАССОВЫЙ ЧЕК *",
+            "INCOME": "* ПРИХОД *",
+            "Including VATs": "В т.ч. налоги",
+            "PAYMENT": "ОПЛАТА",
+            "DATE": "ДАТА",
+            "TIME": "ВРЕМЯ",
+            "DOC #": "ДОК №",
+            "Drawer #": "Касса №",
+            "FN. EKZ.#": "ФН: ЭКЗ.№",
+            "REG. #": "РЕГ. №",
+            "CHANGE #": "СМЕНА №",
+            "VAT SYS.: COMMON": "СИСТ. НАЛОГООБЛ.: ОБЩАЯ",
+            "FD": "ФД",
+            "FP": "ФП",
+            "CASHIER ": "КАССИР"
         }
     }
 }

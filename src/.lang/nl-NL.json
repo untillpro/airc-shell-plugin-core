@@ -58,7 +58,8 @@
             "Are you sure delete image?": "Are you sure delete image?",
             "Upload image file:": "Upload image file:",
             "Width (px):": "Width (px):",
-            "Height (px):": "Height (px):"
+            "Height (px):": "Height (px):",
+            "Refresh preview": "Refresh preview"
         },
         "payment_kind": {
             "cash": "Contant",
@@ -159,6 +160,26 @@
             "Layout's template not specified or wrong given": "Er is geen layout gespecificeerd",
             "Please select datetime range": "Selecteer periode",
             "No periods found": "Geen periodes gevonden"
+        },
+        "ticket": {
+            "KKT #": "KKT №",
+            "INNJ": "INNJ",
+            "Order Num.": "Order Num.",
+            "ORDER TICKET": "* ORDER TICKET *",
+            "INCOME": "* INCOME *",
+            "Including VATs": "Including VATs",
+            "PAYMENT": "PAYMENT",
+            "DATE": "DATE",
+            "TIME": "TIME",
+            "DOC #": "DOC #",
+            "Drawer #": "Drawer #",
+            "FN. EKZ.#": "FN. EKZ.#",
+            "REG. #": "REG. #",
+            "CHANGE #": "CHANGE #",
+            "VAT SYS.: COMMON": "VAT SYS.: COMMON",
+            "FD": "FD",
+            "FP": "FP",
+            "CASHIER ": "CASHIER"
         }
     }
 }
