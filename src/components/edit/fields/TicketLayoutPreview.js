@@ -13,9 +13,6 @@ import DefaultHelpers from '../classes/DefaultHelpers';
 import {
     sendError
 } from '../../../actions/MessagesActions';
-
-import data from '../../../mock/data/TicketMockData';
-
 class TicketLayoutPreview extends Component {
     constructor() {
         super();
@@ -98,11 +95,11 @@ class TicketLayoutPreview extends Component {
     }
 
     build() {
-        const { settings } = this.props;
+        const { data, settings } = this.props;
         let result = '';
 
         try {
-            result = this.rendered({ data, settings });
+            result = this.rendered({ ...data, settings });
 
             this.setState({
                 content: result,

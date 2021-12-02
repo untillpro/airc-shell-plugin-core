@@ -23,7 +23,8 @@ import {
     TYPE_LAYOUTS,
     TYPE_HELPERS,
     C_LAYOUTS_NAME,
-    C_LAYOUTS_TEMPLATE
+    C_LAYOUTS_TEMPLATE,
+    C_LAYOUTS_TEMPLATE_DATA
 } from "../../../classes/contributions/Types";
 
 import buffer from 'buffer';
@@ -46,7 +47,8 @@ class TicketLayoutField extends Component {
             layoutSettings: [],
             layoutTemplate: [],
             layoutHelpers: [],
-            layoutDictionary: {}
+            layoutDictionary: {},
+            layoutData: {},
         };
 
         this.onDataChanged = this.onDataChanged.bind(this);
@@ -81,6 +83,7 @@ class TicketLayoutField extends Component {
         let layoutSettings = null;
         let layoutHelpers = null;
         let layoutDictionary = null;
+        let layoutData = {};
         let changedData = null;
         let templateChanged = false;
 
@@ -135,6 +138,7 @@ class TicketLayoutField extends Component {
             if (selectedLayout) {
                 layoutHelpers = this.getHelpers(selectedLayout);
                 layoutSettings = this.getSettings(selectedLayout);
+                layoutData = this.getData(selectedLayout);
             }
 
             this.setState({
@@ -145,6 +149,7 @@ class TicketLayoutField extends Component {
                 layoutSettings,
                 layoutHelpers,
                 layoutDictionary,
+                layoutData,
                 templateChanged
             });
         }
@@ -196,7 +201,7 @@ class TicketLayoutField extends Component {
     }
 
     handleChange() {
-        const { changedData, layoutTemplate, selectedLayout, layoutDictionary } = this.state;
+        const { changedData, layoutTemplate, selectedLayout } = this.state;
         const { onChange, field } = this.props;
         const { accessor } = field;
 
@@ -204,8 +209,7 @@ class TicketLayoutField extends Component {
             const result = {
                 settings: changedData,
                 template: layoutTemplate,
-                code: selectedLayout,
-                dictionary: layoutDictionary
+                code: selectedLayout
             };
 
             const value = 'airc' + JSON.stringify(result);
@@ -266,6 +270,13 @@ class TicketLayoutField extends Component {
         return values;
     }
 
+    getData(code) {
+        const { context } = this.props;
+        const { contributions } = context;
+
+        return contributions.getPointContributionValue(TYPE_LAYOUTS, code, C_LAYOUTS_TEMPLATE_DATA) || {};
+    }
+
     selectLayout(code) {
         const { layouts } = this.state;
 
@@ -278,6 +289,7 @@ class TicketLayoutField extends Component {
         const template = this.getTemplate(code);
         const settings = this.getSettings(code);
         const helpers = this.getHelpers(code);
+        const data = this.getData(code);
 
         if (settings && settings.length > 0) {
             defaultValues = this.getDefaultValues(settings)
@@ -291,6 +303,7 @@ class TicketLayoutField extends Component {
                 layoutTemplate: template,
                 layoutSettings: settings,
                 layoutHelpers: helpers,
+                layoutData: data,
                 changedData: defaultValues
             });
         }
@@ -332,7 +345,7 @@ class TicketLayoutField extends Component {
             layoutSettings, 
             layoutTemplate, 
             layoutHelpers,  
-            //layoutDictionary, 
+            layoutData, 
             selectedLayout, 
             changedData } = this.state;
 
@@ -376,6 +389,7 @@ class TicketLayoutField extends Component {
                             template={layoutTemplate}
                             settings={{ ...changedData }}
                             helpers={layoutHelpers}
+                            data={layoutData}
                         />
                     </div>
                 </div>
